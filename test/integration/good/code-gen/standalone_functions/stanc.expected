@@ -1,4 +1,4 @@
-  $ stanc --standalone-functions --allow-undefined --auto-format basic.stan
+/* $ stanc --standalone-functions --allow-undefined --auto-format basic.stan : [exit 0] */
 functions {
   real my_log1p_exp(real x) {
     return log1p_exp(x);
@@ -52,8 +52,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --standalone-functions --allow-undefined --auto-format basic.stanfunctions
+/* $ stanc --standalone-functions --allow-undefined --auto-format basic.stanfunctions : [exit 0] */
 real my_log1p_exp(real x) {
   return log1p_exp(x);
 }
@@ -91,8 +90,7 @@ real test_rng(real a) {
 real test_lpdf(real a, real b) {
   return normal_lpdf(a | b, 1);
 }
-[exit 0]
-  $ stanc --standalone-functions --allow-undefined --auto-format integrate.stan
+/* $ stanc --standalone-functions --allow-undefined --auto-format integrate.stan : [exit 0] */
 functions {
   vector integrand(vector x) {
     return exp(-square(x));
@@ -125,6 +123,7 @@ model {
   
 }
 
+/*
 warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     ┌─ integrate.stan:21:13
  20 │      // not ok
@@ -133,4 +132,4 @@ warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use od
  22 │                                rep_array(1.0 - 1E-5, 1), rep_array(0.0, 0),
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
+*/

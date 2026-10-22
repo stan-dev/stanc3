@@ -1,4 +1,4 @@
-  $ stanc --print-canonical blocks.stan
+/* $ stanc --print-canonical blocks.stan : [exit 0] */
 data {
   int N;
   vector[N] y;
@@ -148,8 +148,7 @@ model {
   } //comment after else branch
 }
 
-[exit 0]
-  $ stanc --print-canonical deprecated.stan
+/* $ stanc --print-canonical deprecated.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -192,6 +191,7 @@ generated quantities {
                                    x_r, x_i);
 }
 
+/*
 warning: Assignment of variable to itself.
     ┌─ deprecated.stan:24:16
  23 │    array[5,5] real idxs;
@@ -200,8 +200,8 @@ warning: Assignment of variable to itself.
     │    │
     │    Assigned to itself.
  25 │   }
-[exit 0]
-  $ stanc --print-canonical funs.stanfunctions
+*/
+/* $ stanc --print-canonical funs.stanfunctions : [exit 0] */
 // comment test comment
 void test(int x, int y) {
   print(x, y);
@@ -210,8 +210,7 @@ void test(int x, int y) {
 real return_lp() {
   return target();
 }
-[exit 0]
-  $ stanc --print-canonical parenthesize.stan
+/* $ stanc --print-canonical parenthesize.stan : [exit 0] */
 transformed data {
   int N = 12;
   real b = 1.5;
@@ -246,6 +245,7 @@ model {
   t.2 = (3, 4).1;
 }
 
+/*
 warning: Found chained comparison.
     ┌─ parenthesize.stan:27:14
  26 │  
@@ -268,8 +268,8 @@ warning: Found chained comparison.
       parentheses.
     = This can be automatically changed using the canonicalize flag for
       stanc.
-[exit 0]
-  $ stanc --print-canonical squaremc.stan
+*/
+/* $ stanc --print-canonical squaremc.stan : [exit 0] */
 /*
  * BUGS Volume 3, funshapes, square minus circle
  * http://www.openbugs.net/Examples/Funshapes.html
@@ -295,4 +295,3 @@ model {
   target += log1m(sqrt(1 - square(1 - abs(x_raw))));
 }
 
-[exit 0]

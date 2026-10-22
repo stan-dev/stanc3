@@ -1,4 +1,4 @@
-  $ stanc --auto-format good-empty-omni.stan
+/* $ stanc --auto-format good-empty-omni.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -841,8 +841,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-ints.stan
+/* $ stanc --auto-format good-ints.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -1685,8 +1684,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-lb.stan
+/* $ stanc --auto-format good-lb.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -2527,8 +2525,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-lub.stan
+/* $ stanc --auto-format good-lub.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -3393,8 +3390,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-omni.stan
+/* $ stanc --auto-format good-omni.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -4237,8 +4233,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-omni2.stan
+/* $ stanc --auto-format good-omni2.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -5081,8 +5076,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-omni3.stan
+/* $ stanc --auto-format good-omni3.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -5925,8 +5919,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good-ub.stan
+/* $ stanc --auto-format good-ub.stan : [exit 0] */
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -6767,4 +6760,3 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]

@@ -1,4 +1,4 @@
-  $ stanc --auto-format algebra_solver.stan
+/* $ stanc --auto-format algebra_solver.stan : [exit 0] */
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
                         array[] int x_i) {
@@ -30,43 +30,37 @@ generated quantities {
   y_s = algebra_solver(algebra_system, y, theta, x_r, x_i);
 }
 
-[exit 0]
-  $ stanc --auto-format cholesky_cov_data_block.stan
+/* $ stanc --auto-format cholesky_cov_data_block.stan : [exit 0] */
 data {
   cholesky_factor_cov[5, 4] cfcov_54;
   cholesky_factor_cov[3] cfcov_33;
 }
 
-[exit 0]
-  $ stanc --auto-format cholesky_cov_gqs_block.stan
+/* $ stanc --auto-format cholesky_cov_gqs_block.stan : [exit 0] */
 generated quantities {
   cholesky_factor_cov[5, 4] cfcov_54;
   cholesky_factor_cov[3] cfcov_33;
 }
 
-[exit 0]
-  $ stanc --auto-format cholesky_cov_param_block.stan
+/* $ stanc --auto-format cholesky_cov_param_block.stan : [exit 0] */
 parameters {
   cholesky_factor_cov[5, 4] cfcov_54;
   cholesky_factor_cov[3] cfcov_33;
 }
 
-[exit 0]
-  $ stanc --auto-format cholesky_cov_transform_data_block.stan
+/* $ stanc --auto-format cholesky_cov_transform_data_block.stan : [exit 0] */
 transformed data {
   cholesky_factor_cov[5, 4] cfcov_54;
   cholesky_factor_cov[3] cfcov_33;
 }
 
-[exit 0]
-  $ stanc --auto-format cholesky_cov_transform_param_block.stan
+/* $ stanc --auto-format cholesky_cov_transform_param_block.stan : [exit 0] */
 transformed parameters {
   cholesky_factor_cov[5, 4] cfcov_54;
   cholesky_factor_cov[3] cfcov_33;
 }
 
-[exit 0]
-  $ stanc --auto-format data_qualifier_scope_xformed_data.stan
+/* $ stanc --auto-format data_qualifier_scope_xformed_data.stan : [exit 0] */
 functions {
   vector target_(vector y, vector theta, array[] real x_r, array[] int x_i) {
     vector[2] deltas;
@@ -95,8 +89,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format deep-copy-warning.stan
+/* $ stanc --auto-format deep-copy-warning.stan : [exit 0] */
 transformed data {
   vector[5] v = [1, 2, 3, 4, 5]';
   real y = 0.1;
@@ -114,8 +107,7 @@ transformed data {
   print("expect: [3,7,7,8,5]  v: ", v);
 }
 
-[exit 0]
-  $ stanc --auto-format function_var.stan
+/* $ stanc --auto-format function_var.stan : [exit 0] */
 functions {
   void f0(int a1,
           array[] int a2,
@@ -313,8 +305,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format function_var_array_syntax.stan
+/* $ stanc --auto-format function_var_array_syntax.stan : [exit 0] */
 functions {
   void f0(int a1,
           array[] int a2,
@@ -527,8 +518,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format local_var_function_body.stan
+/* $ stanc --auto-format local_var_function_body.stan : [exit 0] */
 functions {
   void foo() {
     int a;
@@ -539,8 +529,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format local_var_gqs.stan
+/* $ stanc --auto-format local_var_gqs.stan : [exit 0] */
 generated quantities {
   real p2;
   for (x in 1 : 10) 
@@ -554,8 +543,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format local_var_transformed_data_block.stan
+/* $ stanc --auto-format local_var_transformed_data_block.stan : [exit 0] */
 transformed data {
   int a1;
   real d1;
@@ -570,8 +558,7 @@ transformed data {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format local_var_transformed_param_block.stan
+/* $ stanc --auto-format local_var_transformed_param_block.stan : [exit 0] */
 transformed parameters {
   real p2;
   for (x in 1 : 10) 
@@ -586,8 +573,7 @@ transformed parameters {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_all_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_all_ar45_mat23.stan : [exit 0] */
 functions {
   void bar(array[,] matrix a) {
     print("hello world");
@@ -621,8 +607,7 @@ generated quantities {
   array[4, 5] matrix[2, 3] gq_ar_mat = ar_mat;
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_data_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_data_ar45_mat23.stan : [exit 0] */
 data {
   array[4, 5] matrix<lower=0, upper=1>[2, 3] ar_mat;
 }
@@ -635,34 +620,29 @@ transformed data {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_gen_qs_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_gen_qs_ar45_mat23.stan : [exit 0] */
 generated quantities {
   array[4, 5] matrix<lower=0, upper=1>[2, 3] ar_mat;
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_param_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_param_ar45_mat23.stan : [exit 0] */
 parameters {
   array[4, 5] matrix<lower=0, upper=1>[2, 3] ar_mat;
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_transform_data_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_transform_data_ar45_mat23.stan : [exit 0] */
 transformed data {
   array[4, 5] matrix<lower=0, upper=1>[2, 3] ar_mat;
 }
 
-[exit 0]
-  $ stanc --auto-format multidim_var_transform_param_ar45_mat23.stan
+/* $ stanc --auto-format multidim_var_transform_param_ar45_mat23.stan : [exit 0] */
 transformed parameters {
   array[4, 5] matrix<lower=0, upper=1>[2, 3] ar_mat;
   real x;
   x = 1;
 }
 
-[exit 0]
-  $ stanc --auto-format ode.stan
+/* $ stanc --auto-format ode.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -697,6 +677,7 @@ generated quantities {
   }
 }
 
+/*
 warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     ┌─ ode.stan:26:11
  25 │    array[T, 2] real y_hat;
@@ -705,8 +686,8 @@ warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk
  27 │    
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format ode_control.stan
+*/
+/* $ stanc --auto-format ode_control.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -747,6 +728,7 @@ generated quantities {
   }
 }
 
+/*
 warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     ┌─ ode_control.stan:26:11
  25 │    array[T, 3] real y_hat;
@@ -771,8 +753,8 @@ warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use 
  31 │                                1e6);
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format prim_var_data_block.stan
+*/
+/* $ stanc --auto-format prim_var_data_block.stan : [exit 0] */
 data {
   int<lower=0, upper=1> p1;
   real p2;
@@ -780,8 +762,7 @@ data {
   array[4] real<lower=0, upper=1> ar_p2;
 }
 
-[exit 0]
-  $ stanc --auto-format prim_var_gqs.stan
+/* $ stanc --auto-format prim_var_gqs.stan : [exit 0] */
 generated quantities {
   int<lower=0, upper=1> p1;
   real p2;
@@ -789,15 +770,13 @@ generated quantities {
   array[4] real<lower=0, upper=1> ar_p2;
 }
 
-[exit 0]
-  $ stanc --auto-format prim_var_param_block.stan
+/* $ stanc --auto-format prim_var_param_block.stan : [exit 0] */
 parameters {
   real p2;
   array[4] real<lower=0, upper=1> ar_p2;
 }
 
-[exit 0]
-  $ stanc --auto-format prim_var_transformed_data_block.stan
+/* $ stanc --auto-format prim_var_transformed_data_block.stan : [exit 0] */
 transformed data {
   int<lower=0, upper=1> p1;
   real p2;
@@ -805,15 +784,13 @@ transformed data {
   array[4] real<lower=0, upper=1> ar_p2;
 }
 
-[exit 0]
-  $ stanc --auto-format prim_var_transformed_param_block.stan
+/* $ stanc --auto-format prim_var_transformed_param_block.stan : [exit 0] */
 transformed parameters {
   real p2;
   array[4] real<lower=0, upper=1> ar_p2;
 }
 
-[exit 0]
-  $ stanc --auto-format row_vector_expr_terms.stan
+/* $ stanc --auto-format row_vector_expr_terms.stan : [exit 0] */
 data {
   real x;
   real y;
@@ -836,15 +813,13 @@ model {
   z ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format test_transform_inits.stan
+/* $ stanc --auto-format test_transform_inits.stan : [exit 0] */
 parameters {
   real<lower=0> nu;
   real<lower=0, upper=(nu == 0 ? 1 : positive_infinity())> lambda;
 }
 
-[exit 0]
-  $ stanc --auto-format user-function-struct-const.stan
+/* $ stanc --auto-format user-function-struct-const.stan : [exit 0] */
 functions {
   real foo(real x) {
     return x;
@@ -854,4 +829,3 @@ model {
   
 }
 
-[exit 0]

@@ -1,4 +1,4 @@
-  $ stanc --auto-format exponential_boundary.stan
+/* $ stanc --auto-format exponential_boundary.stan : [exit 0] */
 transformed data {
   real alpha1 = 0.2;
   real alpha2 = 0.2;
@@ -21,8 +21,7 @@ model {
   t2 ~ exponential(nu);
 }
 
-[exit 0]
-  $ stanc --auto-format rosenbrock.stan
+/* $ stanc --auto-format rosenbrock.stan : [exit 0] */
 parameters {
   real x;
   real y;
@@ -31,4 +30,3 @@ model {
   target += -(pow(1 - x, 2) + 100 * pow(y - pow(x, 2), 2));
 }
 
-[exit 0]

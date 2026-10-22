@@ -1,4 +1,4 @@
-  $ stanc --auto-format data_jacobian.stan
+/* $ stanc --auto-format data_jacobian.stan : [exit 0] */
 functions {
   real my_upper_bound_jacobian(real x, real ub) {
     jacobian += x;
@@ -14,6 +14,7 @@ transformed parameters {
   real beta2 = my_upper_bound_jacobian(beta_raw, ub);
 }
 
+/*
 warning: Calling a _jacobian function without any parameter arguments still applies the Jacobian adjustments, ensure this is intentional?
     ┌─ data_jacobian.stan:14:15
  13 │  transformed parameters {
@@ -27,14 +28,15 @@ warning: Calling a _jacobian function without any parameter arguments still appl
  15 │    real beta2 = my_upper_bound_jacobian(beta_raw, ub);
     │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ _jacobian with no parameters
  16 │  }
-[exit 0]
-  $ stanc --auto-format deprecated_syntax.stan
+*/
+/* $ stanc --auto-format deprecated_syntax.stan : [exit 0] */
 model {
   if (1 < 2 < 3 < 4) {
     // multiple comparisons
   }
 }
 
+/*
 warning: Found chained comparison.
     ┌─ deprecated_syntax.stan:2:7
   1 │  model {
@@ -57,12 +59,13 @@ warning: Found chained comparison.
       parentheses.
     = This can be automatically changed using the canonicalize flag for
       stanc.
-[exit 0]
-  $ stanc --auto-format empty.stan
+*/
+/* $ stanc --auto-format empty.stan : [exit 0] */
 
+/*
 empty.stan:1:1: warning: Empty model detected; this is a valid Stan model but likely unintended!
-[exit 0]
-  $ stanc --auto-format fun_log_forward_decl.stan
+*/
+/* $ stanc --auto-format fun_log_forward_decl.stan : [exit 0] */
 /**
  * this one's for issue #1768, where there was a duplicate fun decl
  * because of the <false> instantiation of propto
@@ -83,6 +86,7 @@ model {
                    );
 }
 
+/*
 warning: Functions do not need to be declared before definition; all user defined
 function names are always in scope regardless of definition order.
     ┌─ fun_log_forward_decl.stan:6:8
@@ -90,8 +94,8 @@ function names are always in scope regardless of definition order.
   6 │    real n_lpdf(real y);
     │         ^^^^^^ Forward declaration.
   7 │  
-[exit 0]
-  $ stanc --auto-format functions-fwd-ref.stan
+*/
+/* $ stanc --auto-format functions-fwd-ref.stan : [exit 0] */
 functions {
   int foo(int n);
   
@@ -108,6 +112,7 @@ model {
   y ~ normal(0, 1);
 }
 
+/*
 warning: Functions do not need to be declared before definition; all user defined
 function names are always in scope regardless of definition order.
     ┌─ functions-fwd-ref.stan:3:7
@@ -115,8 +120,8 @@ function names are always in scope regardless of definition order.
   3 │    int foo(int n);
     │        ^^^ Forward declaration.
   4 │    
-[exit 0]
-  $ stanc --auto-format int_div_user.stan
+*/
+/* $ stanc --auto-format int_div_user.stan : [exit 0] */
 data {
   array[4] int a;
   array[3] int b;
@@ -129,6 +134,7 @@ model {
   
 }
 
+/*
 warning: Found integer division. The value will be rounded towards zero.
     ┌─ int_div_user.stan:7:7
   6 │    int c;
@@ -138,8 +144,8 @@ warning: Found integer division. The value will be rounded towards zero.
   8 │  }
     = If rounding is intended please use the integer division operator
       %%/%%.
-[exit 0]
-  $ stanc --auto-format integrate_ode_adams.stan
+*/
+/* $ stanc --auto-format integrate_ode_adams.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -192,6 +198,7 @@ generated quantities {
             1e-10, 1e8);
 }
 
+/*
 warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     ┌─ integrate_ode_adams.stan:25:11
  24 │    array[T, 2] real y_hat;
@@ -304,8 +311,8 @@ warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use 
  50 │                                1e-10, 1e8);
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format integrate_ode_bdf.stan
+*/
+/* $ stanc --auto-format integrate_ode_bdf.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -361,6 +368,7 @@ generated quantities {
             1e-10, 1e8);
 }
 
+/*
 warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     ┌─ integrate_ode_bdf.stan:25:11
  24 │    array[T, 2] real y_hat;
@@ -489,8 +497,8 @@ warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use od
  53 │                              1e-10, 1e8);
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format integrate_ode_deprecation.stan
+*/
+/* $ stanc --auto-format integrate_ode_deprecation.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -525,6 +533,7 @@ generated quantities {
   }
 }
 
+/*
 warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     ┌─ integrate_ode_deprecation.stan:26:11
  25 │    array[T, 2] real y_hat;
@@ -533,8 +542,8 @@ warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk
  27 │    
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format integrate_ode_rk45.stan
+*/
+/* $ stanc --auto-format integrate_ode_rk45.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -572,6 +581,7 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
+/*
 warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     ┌─ integrate_ode_rk45.stan:25:11
  24 │    array[T, 2] real y_hat;
@@ -636,8 +646,8 @@ warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use o
  36 │  }
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format lkj_cov_deprecation1.stan
+*/
+/* $ stanc --auto-format lkj_cov_deprecation1.stan : [exit 0] */
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -648,6 +658,7 @@ model {
   Sigma ~ lkj_cov(mu, sigma, eta);
 }
 
+/*
 warning: lkj_cov is deprecated and will be removed in Stan 3.0.
     ┌─ lkj_cov_deprecation1.stan:8:11
   7 │  model {
@@ -656,8 +667,8 @@ warning: lkj_cov is deprecated and will be removed in Stan 3.0.
   9 │  }
     = Use lkj_corr with an independent lognormal distribution on the scales, see:
       https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
-[exit 0]
-  $ stanc --auto-format lkj_cov_deprecation2.stan
+*/
+/* $ stanc --auto-format lkj_cov_deprecation2.stan : [exit 0] */
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -668,6 +679,7 @@ model {
   target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
 }
 
+/*
 warning: lkj_cov is deprecated and will be removed in Stan 3.0.
     ┌─ lkj_cov_deprecation2.stan:8:13
   7 │  model {
@@ -676,8 +688,8 @@ warning: lkj_cov is deprecated and will be removed in Stan 3.0.
   9 │  }
     = Use lkj_corr with an independent lognormal distribution on the scales, see:
       https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
-[exit 0]
-  $ stanc --auto-format matrix_pow_warning.stan
+*/
+/* $ stanc --auto-format matrix_pow_warning.stan : [exit 0] */
 data {
   int<lower=0> N;
   matrix[N, N] A;
@@ -688,6 +700,7 @@ transformed data {
   matrix[N, N] A_pow_r = A ^ 3.5;
 }
 
+/*
 warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exponentiation. If this is intended, you can silence this warning by using elementwise operator .^
     ┌─ matrix_pow_warning.stan:8:24
   7 │  transformed data {
@@ -700,8 +713,8 @@ warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exp
   9 │     matrix[N,N] A_pow_r = A ^ 3.5;
     │                           ^^^^^^^ If you intended matrix exponentiation, use matrix_power(A, 3.5) instead.
  10 │  
-[exit 0]
-  $ stanc --auto-format overloaded_forward_decl.stan
+*/
+/* $ stanc --auto-format overloaded_forward_decl.stan : [exit 0] */
 functions {
   int is_real(int x);
   int is_real(real x);
@@ -720,6 +733,7 @@ transformed data {
   }
 }
 
+/*
 warning: Functions do not need to be declared before definition; all user defined
 function names are always in scope regardless of definition order.
     ┌─ overloaded_forward_decl.stan:2:7
@@ -734,8 +748,8 @@ function names are always in scope regardless of definition order.
   3 │    int is_real(real x);
     │        ^^^^^^^ Forward declaration.
   4 │  
-[exit 0]
-  $ stanc --auto-format self-assign.stan
+*/
+/* $ stanc --auto-format self-assign.stan : [exit 0] */
 model {
   real foo = 1.5;
   // line 4: should warn
@@ -773,6 +787,7 @@ model {
   int k = n[k];
 }
 
+/*
 warning: Assignment of variable to itself.
     ┌─ self-assign.stan:4:9
   3 │    // line 4: should warn
@@ -837,8 +852,8 @@ warning: Assignment of variable to itself during declaration. This is almost cer
     │        │
     │        Assigned to itself.
  36 │  }
-[exit 0]
-  $ stanc --auto-format unreachable_statement.stan
+*/
+/* $ stanc --auto-format unreachable_statement.stan : [exit 0] */
 functions {
   void foo(real x) {
     if (x == 0.0) 
@@ -853,6 +868,7 @@ functions {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ unreachable_statement.stan:5:6
   3 │       if(x == 0.0) ; // bug - misplaced ; makes the next statement unconditional
@@ -869,8 +885,8 @@ warning: Unreachable statement found, is this intended?
  10 │      return x ;
     │      ^ Never reached
  11 │    }
-[exit 0]
-  $ stanc --auto-format validate_division_int_warning.stan
+*/
+/* $ stanc --auto-format validate_division_int_warning.stan : [exit 0] */
 transformed data {
   real u;
   int j;
@@ -889,6 +905,7 @@ model {
   y ~ normal(0, 1);
 }
 
+/*
 warning: Found integer division. The value will be rounded towards zero.
     ┌─ validate_division_int_warning.stan:7:7
   6 │    k = 3;
@@ -922,4 +939,4 @@ warning: Found integer division. The value will be rounded towards zero.
  11 │  }
     = If rounding is intended please use the integer division operator
       %%/%%.
-[exit 0]
+*/

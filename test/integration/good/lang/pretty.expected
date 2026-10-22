@@ -1,4 +1,4 @@
-  $ stanc --auto-format exit_model.stan
+/* $ stanc --auto-format exit_model.stan : [exit 0] */
 data {
   
 }
@@ -15,8 +15,7 @@ model {
   fatal_error("user requested termination");
 }
 
-[exit 0]
-  $ stanc --auto-format good_const.stan
+/* $ stanc --auto-format good_const.stan : [exit 0] */
 transformed data {
   real y;
   y = pi();
@@ -25,8 +24,7 @@ model {
   
 }
 
-[exit 0]
-  $ stanc --auto-format good_cov.stan
+/* $ stanc --auto-format good_cov.stan : [exit 0] */
 data {
   array[10] vector[5] y;
   array[10] vector[5] mu;
@@ -39,8 +37,7 @@ model {
     y[i] ~ multi_normal(mu[i], Sigma[i]);
 }
 
-[exit 0]
-  $ stanc --auto-format good_fun_name.stan
+/* $ stanc --auto-format good_fun_name.stan : [exit 0] */
 parameters {
   real e;
   real pi;
@@ -57,8 +54,7 @@ model {
   e ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good_funs.stan
+/* $ stanc --auto-format good_funs.stan : [exit 0] */
 transformed data {
   real x;
   real y;
@@ -73,8 +69,7 @@ model {
   
 }
 
-[exit 0]
-  $ stanc --auto-format good_intercept_var.stan
+/* $ stanc --auto-format good_intercept_var.stan : [exit 0] */
 data {
   int<lower=0> m1; // make sure didn't mess up spacing
   int<lower=0> m2;
@@ -89,8 +84,7 @@ model {
   
 }
 
-[exit 0]
-  $ stanc --auto-format good_local_var_array_size.stan
+/* $ stanc --auto-format good_local_var_array_size.stan : [exit 0] */
 data {
   array[5] int M;
 }
@@ -128,8 +122,7 @@ model {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format good_matrix_ops.stan
+/* $ stanc --auto-format good_matrix_ops.stan : [exit 0] */
 transformed data {
   matrix[5, 5] A;
   matrix[5, 5] B;
@@ -161,8 +154,7 @@ model {
   
 }
 
-[exit 0]
-  $ stanc --auto-format good_nested_decl.stan
+/* $ stanc --auto-format good_nested_decl.stan : [exit 0] */
 functions {
   real foo() {
     if (1) 
@@ -171,8 +163,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format good_semicolons.stan
+/* $ stanc --auto-format good_semicolons.stan : [exit 0] */
 data {
   ;
   real x;
@@ -204,8 +195,7 @@ generated quantities {
   ;
 }
 
-[exit 0]
-  $ stanc --auto-format good_trunc.stan
+/* $ stanc --auto-format good_trunc.stan : [exit 0] */
 data {
   real y;
 }
@@ -216,8 +206,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format good_vars.stan
+/* $ stanc --auto-format good_vars.stan : [exit 0] */
 data {
   real a;
 }
@@ -267,8 +256,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format good_vec_constraints.stan
+/* $ stanc --auto-format good_vec_constraints.stan : [exit 0] */
 data {
   vector<lower=0>[2] v0;
   vector<upper=1>[2] v1;
@@ -286,8 +274,7 @@ model {
   0 ~ bernoulli(0.5);
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_function_gq.stan
+/* $ stanc --auto-format print_reject_function_gq.stan : [exit 0] */
 functions {
   void foo(real x) {
     print("quitting time");
@@ -314,8 +301,7 @@ generated quantities {
   foo(v);
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_function_model.stan
+/* $ stanc --auto-format print_reject_function_model.stan : [exit 0] */
 functions {
   void foo(real x) {
     print("quitting time");
@@ -341,8 +327,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_function_tdata.stan
+/* $ stanc --auto-format print_reject_function_tdata.stan : [exit 0] */
 functions {
   void foo(real x) {
     print("quitting time");
@@ -368,8 +353,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_function_tparams.stan
+/* $ stanc --auto-format print_reject_function_tparams.stan : [exit 0] */
 functions {
   void foo(real x) {
     print("quitting time");
@@ -395,8 +379,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_gq_block.stan
+/* $ stanc --auto-format print_reject_gq_block.stan : [exit 0] */
 transformed data {
   print("In transformed data");
 }
@@ -416,8 +399,7 @@ generated quantities {
   reject("QUIT");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_model_block.stan
+/* $ stanc --auto-format print_reject_model_block.stan : [exit 0] */
 transformed data {
   print("In transformed data");
 }
@@ -437,8 +419,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_tdata_block.stan
+/* $ stanc --auto-format print_reject_tdata_block.stan : [exit 0] */
 transformed data {
   print("In transformed data");
   print("quitting time");
@@ -458,8 +439,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format print_reject_tparams_block.stan
+/* $ stanc --auto-format print_reject_tparams_block.stan : [exit 0] */
 transformed data {
   print("In transformed data");
 }
@@ -479,8 +459,7 @@ generated quantities {
   print("In generated quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format reject_func_call_generated_quantities.stan
+/* $ stanc --auto-format reject_func_call_generated_quantities.stan : [exit 0] */
 functions {
   void foo(real x) {
     reject("user-specified rejection");
@@ -496,8 +475,7 @@ generated quantities {
   foo(y);
 }
 
-[exit 0]
-  $ stanc --auto-format reject_func_call_model.stan
+/* $ stanc --auto-format reject_func_call_model.stan : [exit 0] */
 functions {
   void foo(real x) {
     reject("user-specified rejection");
@@ -511,8 +489,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format reject_func_call_transformed_data.stan
+/* $ stanc --auto-format reject_func_call_transformed_data.stan : [exit 0] */
 functions {
   void foo(real x) {
     reject("user-specified rejection");
@@ -529,8 +506,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format reject_func_call_transformed_parameters.stan
+/* $ stanc --auto-format reject_func_call_transformed_parameters.stan : [exit 0] */
 functions {
   void foo_bar() {
     reject("user-specified rejection");
@@ -547,8 +523,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format reject_generated_quantities.stan
+/* $ stanc --auto-format reject_generated_quantities.stan : [exit 0] */
 parameters {
   real y;
 }
@@ -560,8 +535,7 @@ generated quantities {
   reject("user-specified rejection");
 }
 
-[exit 0]
-  $ stanc --auto-format reject_model.stan
+/* $ stanc --auto-format reject_model.stan : [exit 0] */
 data {
   
 }
@@ -578,8 +552,7 @@ model {
   reject("user-specified rejection");
 }
 
-[exit 0]
-  $ stanc --auto-format reject_mult_args.stan
+/* $ stanc --auto-format reject_mult_args.stan : [exit 0] */
 functions {
   real relative_diff(real x, real y, real max_, real min_) {
     real abs_diff;
@@ -610,8 +583,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format reject_transformed_data.stan
+/* $ stanc --auto-format reject_transformed_data.stan : [exit 0] */
 transformed data {
   real<lower=0> x;
   reject("user-specified rejection");
@@ -626,8 +598,7 @@ generated quantities {
   print("generating quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format reject_transformed_parameters.stan
+/* $ stanc --auto-format reject_transformed_parameters.stan : [exit 0] */
 parameters {
   real y;
 }
@@ -642,8 +613,7 @@ generated quantities {
   print("generating quantities");
 }
 
-[exit 0]
-  $ stanc --auto-format test_lp.stan
+/* $ stanc --auto-format test_lp.stan : [exit 0] */
 parameters {
   array[2] real<lower=-10, upper=10> y;
 }
@@ -660,4 +630,3 @@ generated quantities {
   xgq = 2713;
 }
 
-[exit 0]

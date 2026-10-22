@@ -1,4 +1,4 @@
-  $ stanc --auto-format ode_adams_test_model.stan
+/* $ stanc --auto-format ode_adams_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -268,8 +268,7 @@ generated quantities {
   zg = ode_adams(f_0_arg, v, r, ra);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_adams_tol_test_model.stan
+/* $ stanc --auto-format ode_adams_tol_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -571,8 +570,7 @@ generated quantities {
   zg = ode_adams_tol(f_0_arg, v, r, ra, 1e-6, 1e-6, 100);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_adjoint_test_model.stan
+/* $ stanc --auto-format ode_adjoint_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -628,8 +626,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_bdf_test_model.stan
+/* $ stanc --auto-format ode_bdf_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -896,8 +893,7 @@ generated quantities {
   zg = ode_bdf(f_0_arg, v, r, ra);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_bdf_tol_test_model.stan
+/* $ stanc --auto-format ode_bdf_tol_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1196,8 +1192,7 @@ generated quantities {
   zg = ode_bdf_tol(f_0_arg, v, r, ra, 1e-6, 1e-6, 100);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_ckrk_test_model.stan
+/* $ stanc --auto-format ode_ckrk_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1464,8 +1459,7 @@ generated quantities {
   zg = ode_ckrk(f_0_arg, v, r, ra);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_ckrk_tol_test_model.stan
+/* $ stanc --auto-format ode_ckrk_tol_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1764,8 +1758,7 @@ generated quantities {
   zg = ode_ckrk_tol(f_0_arg, v, r, ra, 1e-6, 1e-6, 100);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_rk45_test_model.stan
+/* $ stanc --auto-format ode_rk45_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -2032,8 +2025,7 @@ generated quantities {
   zg = ode_rk45(f_0_arg, v, r, ra);
 }
 
-[exit 0]
-  $ stanc --auto-format ode_rk45_tol_test_model.stan
+/* $ stanc --auto-format ode_rk45_tol_test_model.stan : [exit 0] */
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -2332,4 +2324,3 @@ generated quantities {
   zg = ode_rk45_tol(f_0_arg, v, r, ra, 1e-6, 1e-6, 100);
 }
 
-[exit 0]

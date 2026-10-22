@@ -1,4 +1,4 @@
-  $ stanc completely_undefined1.stan
+/* $ stanc completely_undefined1.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "foo_lpdf" was supplied.
     ┌─ completely_undefined1.stan:2:13
   1 │  model {
@@ -6,8 +6,7 @@ error: A returning function was expected but an undeclared identifier "foo_lpdf"
     │              ^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                          "foo_lpdf" was supplied.
   3 │  }
-[exit 1]
-  $ stanc completely_undefined2.stan
+/* $ stanc completely_undefined2.stan : [exit 1] */
 error: Function "foo_lpdf" is not implemented for distribution "foo"
     ┌─ completely_undefined2.stan:5:13
   1 │  data {
@@ -19,8 +18,7 @@ error: Function "foo_lpdf" is not implemented for distribution "foo"
     │              ^^^^^^^^^^^ Function "foo_lpdf" is not implemented for distribution 
     │                          "foo"
   6 │  }
-[exit 1]
-  $ stanc lpmf_lpdf_replacement1.stan
+/* $ stanc lpmf_lpdf_replacement1.stan : [exit 1] */
 error: Function "binomial_lpdf" is not implemented for distribution "binomial"
     ┌─ lpmf_lpdf_replacement1.stan:5:15
   4 │      // known family, known suffix, not implemented  
@@ -29,8 +27,7 @@ error: Function "binomial_lpdf" is not implemented for distribution "binomial"
     │                                     "binomial"
   6 │  }
     = Did you mean "binomial_lpmf"?
-[exit 1]
-  $ stanc lpmf_lpdf_replacement2.stan
+/* $ stanc lpmf_lpdf_replacement2.stan : [exit 1] */
 error: Function "normal_lpmf" is not implemented for distribution "normal"
     ┌─ lpmf_lpdf_replacement2.stan:5:15
   4 │      // known family, known suffix, not implemented  
@@ -39,8 +36,7 @@ error: Function "normal_lpmf" is not implemented for distribution "normal"
     │                                   "normal"
   6 │  }
     = Did you mean "normal_lpdf"?
-[exit 1]
-  $ stanc lpmf_lpdf_replacement3.stan
+/* $ stanc lpmf_lpdf_replacement3.stan : [exit 1] */
 error: Function "binomial_lupdf" is not implemented for distribution "binomial"
     ┌─ lpmf_lpdf_replacement3.stan:5:15
   4 │      // known family, known suffix, not implemented
@@ -49,8 +45,7 @@ error: Function "binomial_lupdf" is not implemented for distribution "binomial"
     │                                      "binomial"
   6 │  }
     = Did you mean "binomial_lupmf"?
-[exit 1]
-  $ stanc no_rng_suffix.stan
+/* $ stanc no_rng_suffix.stan : [exit 1] */
 error: Function "multi_gp_cholesky_rng" is not implemented for distribution "multi_gp_cholesky".
     ┌─ no_rng_suffix.stan:2:13
   1 │  generated quantities {
@@ -58,8 +53,7 @@ error: Function "multi_gp_cholesky_rng" is not implemented for distribution "mul
     │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function "multi_gp_cholesky_rng" is not implemented for distribution 
     │                                                          "multi_gp_cholesky".
   3 │  }
-[exit 1]
-  $ stanc non_existing_distribution_suffix1.stan
+/* $ stanc non_existing_distribution_suffix1.stan : [exit 1] */
 error: Function "binomial_logit_cdf" is not implemented for distribution "binomial_logit".
     ┌─ non_existing_distribution_suffix1.stan:4:15
   3 │  model {  
@@ -67,8 +61,7 @@ error: Function "binomial_logit_cdf" is not implemented for distribution "binomi
     │                ^^^^^^^^^^^^^^^^^^^^^^^^^ Function "binomial_logit_cdf" is not implemented for distribution 
     │                                          "binomial_logit".
   5 │  }
-[exit 1]
-  $ stanc non_existing_distribution_suffix2.stan
+/* $ stanc non_existing_distribution_suffix2.stan : [exit 1] */
 error: Function "binomial_logit_lcdf" is not implemented for distribution "binomial_logit".
     ┌─ non_existing_distribution_suffix2.stan:4:15
   3 │  model {  
@@ -76,8 +69,7 @@ error: Function "binomial_logit_lcdf" is not implemented for distribution "binom
     │                ^^^^^^^^^^^^^^^^^^^^^^^^^^ Function "binomial_logit_lcdf" is not implemented for distribution 
     │                                           "binomial_logit".
   5 │  }
-[exit 1]
-  $ stanc non_existing_distribution_suffix3.stan
+/* $ stanc non_existing_distribution_suffix3.stan : [exit 1] */
 error: Function "binomial_logit_lccdf" is not implemented for distribution "binomial_logit".
     ┌─ non_existing_distribution_suffix3.stan:4:15
   3 │  model {  
@@ -85,8 +77,7 @@ error: Function "binomial_logit_lccdf" is not implemented for distribution "bino
     │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function "binomial_logit_lccdf" is not implemented for distribution 
     │                                            "binomial_logit".
   5 │  }
-[exit 1]
-  $ stanc non_existing_distribution_suffix4.stan
+/* $ stanc non_existing_distribution_suffix4.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "von_mises_notasuffix" was supplied.
     ┌─ non_existing_distribution_suffix4.stan:4:15
   3 │  model {  
@@ -94,8 +85,7 @@ error: A returning function was expected but an undeclared identifier "von_mises
     │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                            "von_mises_notasuffix" was supplied.
   5 │  }
-[exit 1]
-  $ stanc removed_suffix.stan
+/* $ stanc removed_suffix.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "binomial_logit_ccdf_log" was supplied.
     ┌─ removed_suffix.stan:4:15
   3 │  model {
@@ -103,8 +93,7 @@ error: A returning function was expected but an undeclared identifier "binomial_
     │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                                "binomial_logit_ccdf_log" was supplied.
   5 │  }
-[exit 1]
-  $ stanc user_defined.stan
+/* $ stanc user_defined.stan : [exit 1] */
 error: Function "bar_lpmf" is not implemented for distribution "bar"
     ┌─ user_defined.stan:7:14
   1 │  functions {
@@ -117,8 +106,7 @@ error: Function "bar_lpmf" is not implemented for distribution "bar"
     │               ^^^^^^^^^^^^^^ Function "bar_lpmf" is not implemented for distribution 
     │                              "bar"
   8 │  }
-[exit 1]
-  $ stanc user_defined_no_cdf.stan
+/* $ stanc user_defined_no_cdf.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "bar_lcdf" was supplied.
     ┌─ user_defined_no_cdf.stan:7:15
   1 │  functions {
@@ -131,8 +119,7 @@ error: A returning function was expected but an undeclared identifier "bar_lcdf"
     │                ^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                "bar_lcdf" was supplied.
   8 │  }
-[exit 1]
-  $ stanc user_defined_no_rng.stan
+/* $ stanc user_defined_no_rng.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "bar_rng" was supplied.
     ┌─ user_defined_no_rng.stan:7:13
   6 │  generated quantities {
@@ -140,8 +127,7 @@ error: A returning function was expected but an undeclared identifier "bar_rng" 
     │              ^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                          "bar_rng" was supplied.
   8 │  }
-[exit 1]
-  $ stanc user_defined_unnormalized.stan
+/* $ stanc user_defined_unnormalized.stan : [exit 1] */
 error: Function "bar_lupmf" is not implemented for distribution "bar"
     ┌─ user_defined_unnormalized.stan:7:14
   1 │  functions {
@@ -154,4 +140,3 @@ error: Function "bar_lupmf" is not implemented for distribution "bar"
     │               ^^^^^^^^^^^^^^^ Function "bar_lupmf" is not implemented for distribution 
     │                               "bar"
   8 │  }
-[exit 1]

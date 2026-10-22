@@ -1,4 +1,4 @@
-  $ stanc --auto-format funnel.stan
+/* $ stanc --auto-format funnel.stan : [exit 0] */
 transformed data {
   int N;
   N = 10;
@@ -12,4 +12,3 @@ model {
   x ~ normal(0, exp(v));
 }
 
-[exit 0]

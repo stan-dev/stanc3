@@ -1,4 +1,4 @@
-  $ stanc --auto-format arK.stan
+/* $ stanc --auto-format arK.stan : [exit 0] */
 data {
   int<lower=0> K;
   int<lower=0> T;
@@ -25,8 +25,7 @@ model {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format arma.stan
+/* $ stanc --auto-format arma.stan : [exit 0] */
 // ARMA(1, 1)
 
 data {
@@ -58,8 +57,7 @@ model {
   err ~ normal(0, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format eight_schools.stan
+/* $ stanc --auto-format eight_schools.stan : [exit 0] */
 data {
   int<lower=0> J;
   array[J] real y;
@@ -82,8 +80,7 @@ model {
   y ~ normal(theta, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format garch.stan
+/* $ stanc --auto-format garch.stan : [exit 0] */
 data {
   int<lower=0> T;
   array[T] real y;
@@ -106,8 +103,7 @@ model {
   y ~ normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format gen_gp_data.stan
+/* $ stanc --auto-format gen_gp_data.stan : [exit 0] */
 transformed data {
   real rho = 5.5;
   real alpha = 3;
@@ -137,8 +133,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format gp_pois_regr.stan
+/* $ stanc --auto-format gp_pois_regr.stan : [exit 0] */
 data {
   int<lower=1> N;
   array[N] real x;
@@ -166,8 +161,7 @@ model {
   k ~ poisson_log(f);
 }
 
-[exit 0]
-  $ stanc --auto-format gp_regr.stan
+/* $ stanc --auto-format gp_regr.stan : [exit 0] */
 data {
   int<lower=1> N;
   array[N] real x;
@@ -190,8 +184,7 @@ model {
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
-[exit 0]
-  $ stanc --auto-format irt_2pl.stan
+/* $ stanc --auto-format irt_2pl.stan : [exit 0] */
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -223,8 +216,7 @@ model {
     y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
 }
 
-[exit 0]
-  $ stanc --auto-format low_dim_corr_gauss.stan
+/* $ stanc --auto-format low_dim_corr_gauss.stan : [exit 0] */
 transformed data {
   vector[2] mu;
   real sigma1;
@@ -265,8 +257,7 @@ generated quantities {
   delta_corr = (z[1] - mu[1]) * (z[2] - mu[2]) / (sigma1 * sigma2) - rho;
 }
 
-[exit 0]
-  $ stanc --auto-format low_dim_gauss_mix.stan
+/* $ stanc --auto-format low_dim_gauss_mix.stan : [exit 0] */
 data {
   int<lower=0> N;
   vector[N] y;
@@ -285,8 +276,7 @@ model {
                       normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
-[exit 0]
-  $ stanc --auto-format low_dim_gauss_mix_collapse.stan
+/* $ stanc --auto-format low_dim_gauss_mix_collapse.stan : [exit 0] */
 data {
   int<lower=0> N;
   vector[N] y;
@@ -305,8 +295,7 @@ model {
                       normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
-[exit 0]
-  $ stanc --auto-format one_comp_mm_elim_abs.stan
+/* $ stanc --auto-format one_comp_mm_elim_abs.stan : [exit 0] */
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
                                     array[] real theta, array[] real x_r,
@@ -376,6 +365,7 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
+/*
 warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     ┌─ one_comp_mm_elim_abs.stan:49:9
  48 │      array[3] real theta = {k_a, K_m, V_m};
@@ -384,8 +374,8 @@ warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use od
  50 │                            x_i);
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format sim_one_comp_mm_elim_abs.stan
+*/
+/* $ stanc --auto-format sim_one_comp_mm_elim_abs.stan : [exit 0] */
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
                                     array[] real theta, array[] real x_r,
@@ -446,6 +436,7 @@ generated quantities {
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
+/*
 warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     ┌─ sim_one_comp_mm_elim_abs.stan:55:7
  54 │    
@@ -454,8 +445,8 @@ warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use od
  56 │    
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
-  $ stanc --auto-format sir.stan
+*/
+/* $ stanc --auto-format sir.stan : [exit 0] */
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
 
@@ -517,6 +508,7 @@ model {
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 
+/*
 warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     ┌─ sir.stan:46:9
  45 │      array[5] real theta = {beta, kappa, gamma, xi, delta};
@@ -525,4 +517,4 @@ warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use o
  47 │    }
     = The new interface is slightly different, see:
       https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-[exit 0]
+*/
