@@ -1,0 +1,58 @@
+  $ stanc --include-paths=.,includes --info info.stan
+  {
+    "inputs": {
+      "a": { "type": "int", "dimensions": 0 },
+      "b": { "type": "real", "dimensions": 0 },
+      "c": { "type": "real", "dimensions": 1 },
+      "d1": { "type": "real", "dimensions": 1 },
+      "d2": { "type": "real", "dimensions": 1 },
+      "e": { "type": "real", "dimensions": 2 },
+      "f": { "type": "int", "dimensions": 1 },
+      "g": { "type": "real", "dimensions": 1 },
+      "h": { "type": "real", "dimensions": 2 },
+      "i": { "type": "real", "dimensions": 3 },
+      "j": { "type": "int", "dimensions": 3 },
+      "cplx": { "type": "complex", "dimensions": 1 },
+      "cplx_vec": { "type": "complex", "dimensions": 1 },
+      "cplx_row": { "type": "complex", "dimensions": 1 },
+      "cplx_mat": { "type": "complex", "dimensions": 2 },
+      "tuples": {
+        "type": [
+          { "type": "int", "dimensions": 0 },
+          { "type": "real", "dimensions": 0 },
+          {
+            "type": [
+              { "type": "real", "dimensions": 0 },
+              { "type": "int", "dimensions": 1 }
+            ],
+            "dimensions": 0
+          }
+        ],
+        "dimensions": 1
+      }
+    },
+    "parameters": {
+      "l": { "type": "real", "dimensions": 1 },
+      "m": { "type": "real", "dimensions": 1 },
+      "n": { "type": "real", "dimensions": 1 },
+      "o": { "type": "real", "dimensions": 1 },
+      "p": { "type": "real", "dimensions": 2 },
+      "q": { "type": "real", "dimensions": 2 },
+      "r": { "type": "real", "dimensions": 2 },
+      "s": { "type": "real", "dimensions": 2 },
+      "y": { "type": "real", "dimensions": 0 }
+    },
+    "transformed parameters": { "t": { "type": "real", "dimensions": 2 } },
+    "generated quantities": { "u": { "type": "real", "dimensions": 0 } },
+    "functions": [
+      "fatal_error", "log", "print", "reduce_sum", "reject", "sin", "square"
+    ],
+    "distributions": [
+      "dirichlet_lupdf", "normal_lccdf", "normal_lcdf", "normal_lpdf",
+      "std_normal_lupdf"
+    ],
+    "included_files": [
+      "./included.stan", "includes/recursive.stan",
+      "includes/another_include.stan", "includes/foo.stanfunctions"
+    ]
+  }

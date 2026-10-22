@@ -1,10 +1,23 @@
-Test model name mangeling for non-alphanumeric characters
-  $ echo 'parameters {real y;}' >> añd.stan
-Filename
+Basic behavior
+  $ stanc --name=foo good.stan
+Renaming a model that would otherwise fail
+  $ stanc 8start_with_number.stan
+  $ stanc --name=foo 8start_with_number.stan
+Name clash
+  $ stanc --name=foo bad.stan
+  error: Identifier "foo" clashes with model name.
+      ┌─ bad.stan:3:7
+    2 │    // declare matching model name should fail
+    3 │    int foo;  
+      │        ^^^ Identifier "foo" clashes with model name.
+    4 │  }
+  [1]
+ error: Identifier "foo" clashes with model name.
+Filename mangling
   $ stanc añd.stan
   $ grep "namespace a" añd.hpp
   namespace ax195x177d_model_namespace {
-Name argument
+Name argument is also mangled
   $ stanc --name=añd añd.stan
   $ grep "namespace a" añd.hpp
   namespace ax195x177d_namespace {
@@ -24,4 +37,3 @@ Empty name
   $ stanc --name="" añd.stan
   $ grep "class " añd.hpp
   class _model final : public model_base_crtp<_model> {
-  $ rm añd.hpp añd.stan

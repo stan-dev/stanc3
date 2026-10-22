@@ -20,10 +20,24 @@
  dunes
  (rule
   (deps
+   (:stanfiles
+    ../filename_error.stan
+    ../filename_syntax_error.stan
+    ../includes.stan))
+  (action
+   (with-stdout-to
+    filename_error.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     txt
+     "--filename-in-msg=foo.stan --include-paths=.."
+     %{stanfiles}))))
+ (rule
+  (deps
    (:stanfiles ../filename_good.stan ../empty.stan))
   (action
    (with-stdout-to
-    cpp.inc
+    cpp.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -32,4 +46,8 @@
 
 (subdir
  expected_cpp
- (dynamic_include ../dunes/cpp.inc))
+ (dynamic_include ../dunes/cpp.dune))
+
+(subdir
+ expected_errors
+ (dynamic_include ../dunes/filename_error.dune))

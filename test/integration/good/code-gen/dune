@@ -7,7 +7,7 @@
    (:stanfiles ../mother.stan))
   (action
    (with-stdout-to
-    lir.inc
+    lir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      lir
@@ -18,7 +18,7 @@
    (:stanfiles ../mother.stan))
   (action
    (with-stdout-to
-    mir.inc
+    mir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      mir
@@ -29,7 +29,7 @@
    (:stanfiles ../mother.stan))
   (action
    (with-stdout-to
-    txmir.inc
+    txmir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      mir
@@ -38,12 +38,12 @@
 
 (subdir
  expected_lir
- (dynamic_include ../dunes/lir.inc))
+ (dynamic_include ../dunes/lir.dune))
 
 (subdir
  expected_mir
- (dynamic_include ../dunes/mir.inc))
+ (dynamic_include ../dunes/mir.dune))
 
 (subdir
  expected_transformed_mir
- (dynamic_include ../dunes/txmir.inc))
+ (dynamic_include ../dunes/txmir.dune))

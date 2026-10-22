@@ -6,7 +6,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    O0.inc
+    O0.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -18,7 +18,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    O1.inc
+    O1.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -30,7 +30,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    Oexperimental.inc
+    Oexperimental.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -39,12 +39,12 @@
 
 (subdir
  expected_O0
- (dynamic_include ../dunes/O0.inc))
+ (dynamic_include ../dunes/O0.dune))
 
 (subdir
  expected_O1
- (dynamic_include ../dunes/O1.inc))
+ (dynamic_include ../dunes/O1.dune))
 
 (subdir
  expected_experimental
- (dynamic_include ../dunes/Oexperimental.inc))
+ (dynamic_include ../dunes/Oexperimental.dune))

@@ -1,18 +1,18 @@
-(rule
- (targets stanc.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --warn-pedantic "
-    %{stanfiles}))))
+(subdir
+ dunes
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan)))
+  (action
+   (with-stdout-to
+    output.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     txt
+     "--warn-pedantic"
+     %{stanfiles})))))
 
-(rule
- (alias runtest)
- (action
-  (diff stanc.expected stanc.output)))
+(subdir
+ expected_warnings
+ (dynamic_include ../dunes/output.dune))

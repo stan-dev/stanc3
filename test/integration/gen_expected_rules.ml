@@ -4,15 +4,22 @@
 
 open Std
 
-(** [name] is the file name without a trailing [.stan], so [foo.stanfunctions]
-    and [foo.stan] get different expected files *)
-let print_rules ~ext ~flags file =
-  let name =
-    Filename.basename (String.chop_suffix_if_exists file ~suffix:".stan") in
-  let output = Printf.sprintf "%s.%s.output" name ext in
+(** test inputs either end in .stan or .stanfunctions. We need to make sure the
+    extension is different for [foo.stan] and [foo.stanfunctions] *)
+let get_filename ~ext file =
+  if String.trim ext = "preserve" then Filename.basename file
+  else
+    let name =
+      Filename.basename (String.chop_suffix_if_exists file ~suffix:".stan")
+    in
+    Printf.sprintf "%s.%s" name ext
+
+let print_rules ~ext ~flags input_file =
+  let expected_file = get_filename ~ext input_file in
   let deps =
+    (* depend on sibling files when the test has #includes *)
     if String.includes ~affix:"include-paths" flags then
-      "\n (deps (glob_files ../*.stan))"
+      "\n (deps (glob_files_rec ../*.*))"
     else "" in
   Printf.printf
     {|
@@ -21,16 +28,14 @@ let print_rules ~ext ~flags file =
  (action
   (progn
    (with-stdout-to
-    %s
+    %s.output
     (run
      %%{project_root}/test/integration/run_bin_on_args.exe
      "%%{bin:stanc} %s"
      %%{dep:%s}))
-   (diff? %s %s))))
+   (diff? %s %s.output))))
 |}
-    deps output flags file
-    (name ^ "." ^ ext)
-    output
+    deps expected_file flags input_file expected_file expected_file
 
 let () =
   match List.tl_exn (Array.to_list Sys.argv) with

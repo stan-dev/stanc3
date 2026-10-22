@@ -8,7 +8,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    mir.inc
+    mir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      mir
@@ -17,4 +17,4 @@
 
 (subdir
  expected_transformed_mir
- (dynamic_include ../dunes/mir.inc))
+ (dynamic_include ../dunes/mir.dune))
