@@ -1,6 +1,12 @@
 (executable
  (name run_bin_on_args)
+ (modules run_bin_on_args)
  (libraries std unix))
+
+(executable
+ (name gen_expected_rules)
+ (modules gen_expected_rules)
+ (libraries std))
 
 (cram
  (applies_to :whole_subtree)

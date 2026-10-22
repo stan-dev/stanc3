@@ -1,16 +1,19 @@
 all:
 	dune build src/stanc/stanc.exe
 
-.PHONY: doc test testcoverage format cross static clean re
+.PHONY: doc test update-rules testcoverage format cross static clean re
 
-test:
+test: update-rules
 	dune runtest
+
+update-rules:
+	test/integration/remove_orphan_expected.sh
 
 PARALLEL ?= auto
 BISECT_FLAGS = --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml --do-not-expect src/frontend/parser_strip_redundant_state.ml --do-not-expect src/frontend/parser_messages_add_type.ml
 
 
-testcoverage: clean
+testcoverage: clean update-rules
 	BISECT_FILE=`pwd`/bisect dune runtest --instrument-with bisect_ppx --force --root=. -j$(PARALLEL)
 	bisect-ppx-report html $(BISECT_FLAGS)
 	bisect-ppx-report summary $(BISECT_FLAGS)
