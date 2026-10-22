@@ -49,6 +49,9 @@ failures. If you are knowingly changing the output, and the differences highligh
 [dune runtest] look correct, you can run [dune promote] to change the expected output to match
 your current tests.
 
+Integration tests that generate C++ or MIR keep one expected file per model in
+[expected_<kind>/] folders next to the [.stan] files.
+
 {4 Test coverage}
 
 We have support for computing test coverage using the {{:https://github.com/aantron/bisect_ppx}bisect_ppx}
@@ -191,4 +194,3 @@ good starting command is
 {[
 OCAML_LANDMARKS="on,output=prof.txt" stanc.exe mymodel.stan
 ]}
-
