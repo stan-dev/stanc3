@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad28.stan : [exit 1] */
+error: Identifier "extern" clashes with reserved keyword.
+    ┌─ ../functions-bad28.stan:5:3
+  4 │  generated quantities {
+  5 │    extern(y);
+    │    ^^^^^^ Identifier "extern" clashes with reserved keyword.
+  6 │  }

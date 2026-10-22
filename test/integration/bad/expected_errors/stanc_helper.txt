@@ -1,0 +1,7 @@
+/* $ stanc ../stanc_helper.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../stanc_helper.stan:5:7
+  4 │  model {
+  5 │    y ~ ormal(0, 1);
+    │        ^^^^^ No function "ormal_lpdf" was found when looking for distribution "ormal".
+  6 │  }

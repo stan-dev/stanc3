@@ -1,0 +1,9 @@
+/* $ stanc ../old-log-funs.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
+    ┌─ ../old-log-funs.stan:3:7
+  2 │    real x;
+  3 │    x = multiply_log(x, x);  // should raise deprecation warning
+    │        ^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                           "multiply_log" was supplied.
+  4 │    x = binomial_coefficient_log(x, x);  // ditto
+    = Did you mean "multiply"?

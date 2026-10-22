@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-statement14.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-statement14.stan:1:34
+  1 │  transformed data { for ( T in T: while)}
+    │                                   ^^^^^ here.
+    = Expected an expression followed by ")" after "for (" identifier "in" expression ":".

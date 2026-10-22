@@ -1,0 +1,9 @@
+/* $ stanc ../call_dist_no_suffix.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "std_normal" was supplied.
+    ┌─ ../call_dist_no_suffix.stan:5:13
+  4 │  model {
+  5 │    target += std_normal(x);
+    │              ^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                            "std_normal" was supplied.
+  6 │  }
+    = Did you mean "std_normal_qf"?

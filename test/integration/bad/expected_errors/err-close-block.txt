@@ -1,0 +1,8 @@
+/* $ stanc ../err-close-block.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../err-close-block.stan:3:1
+  2 │  
+  3 │  model {
+    │  ^^^^^ here.
+  4 │  }
+    = Expected a function forward declaration, definition, or "}" after "functions {".

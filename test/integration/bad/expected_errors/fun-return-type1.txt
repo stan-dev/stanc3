@@ -1,0 +1,7 @@
+/* $ stanc ../fun-return-type1.stan : [exit 1] */
+error: Invalid return statement.
+    ┌─ ../fun-return-type1.stan:2:60
+  1 │  functions {
+  2 │    real foo() { if (1) reject(""); else {if (1) reject(""); return {1};}}
+    │                                                             ^^^^^^^^^^^ Function is declared to return real, but this statement returns array[] int instead.
+  3 │  }

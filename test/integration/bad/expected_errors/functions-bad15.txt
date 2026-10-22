@@ -1,0 +1,13 @@
+/* $ stanc ../functions-bad15.stan : [exit 1] */
+error: A returning function was expected but a non-returning function "unit_normal_lp" was supplied.
+    ┌─ ../functions-bad15.stan:10:13
+  1 │  functions {
+  2 │    void unit_normal_lp(real u) {
+    │         -------------- Function defined here.
+  3 │      target += normal_lpdf(u|0,1);
+    ⋯  
+  9 │  model {
+ 10 │    target += unit_normal_lp(y);
+    │              ^^^^^^^^^^^^^^^^^ A returning function was expected but a non-returning function 
+    │                                "unit_normal_lp" was supplied.
+ 11 │  }

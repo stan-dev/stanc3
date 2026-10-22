@@ -1,0 +1,8 @@
+/* $ stanc ../err-if-else-no-cond.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../err-if-else-no-cond.stan:3:7
+  2 │    real y;
+  3 │    if () y = 2;
+    │        ^ here.
+  4 │  }
+    = Expected "(" expression ")" for the test of the if statement.

@@ -1,0 +1,12 @@
+/* $ stanc ../plus_equals_type_mismatch.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_type_mismatch.stan:4:8
+  3 │    real y;
+  4 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type int.
+  5 │  }
+    = For the given left hand side, expected the right hand side to have type
+      int.
+      Instead found type real.

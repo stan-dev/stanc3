@@ -1,0 +1,12 @@
+/* $ stanc ../completely_undefined2.stan : [exit 1] */
+error: Function "foo_lpdf" is not implemented for distribution "foo"
+    ┌─ ../completely_undefined2.stan:5:13
+  1 │  data {
+  2 │     int foo_lpmf;
+    │         -------- Did you mean "foo_lpmf", declared here?
+  3 │  }
+  4 │  model {
+  5 │    target += foo_lpdf(1);
+    │              ^^^^^^^^^^^ Function "foo_lpdf" is not implemented for distribution 
+    │                          "foo"
+  6 │  }

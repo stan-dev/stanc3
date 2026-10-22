@@ -1,0 +1,9 @@
+/* $ stanc ../lpmf_lpdf_replacement2.stan : [exit 1] */
+error: Function "normal_lpmf" is not implemented for distribution "normal"
+    ┌─ ../lpmf_lpdf_replacement2.stan:5:15
+  4 │      // known family, known suffix, not implemented  
+  5 │      target += normal_lpmf(1|0,1);
+    │                ^^^^^^^^^^^^^^^^^^ Function "normal_lpmf" is not implemented for distribution 
+    │                                   "normal"
+  6 │  }
+    = Did you mean "normal_lpdf"?

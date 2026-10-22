@@ -1,0 +1,9 @@
+/* $ stanc ../bad_theta0.stan : [exit 1] */
+error: The first element of the control parameter tuple (initial guess) to "laplace_marginal_tol" must be vector. Instead found type array[] real.
+    ┌─ ../bad_theta0.stan:43:10
+ 42 │                                   hessian_block_size, K_function, (x, n_obs, alpha, rho),
+ 43 │          (theta_0, tolerance, max_num_steps,
+    │           ^^^^^^^ The first element of the control parameter tuple (initial guess) to 
+    │                   "laplace_marginal_tol" must be vector.
+    │                   Instead found type array[] real.
+ 44 │          solver, max_steps_line_search, allow_fallthrough));

@@ -1,0 +1,9 @@
+/* $ stanc ../bad_decl3.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_decl3.stan:3:29
+  2 │      void test(real alpha, real tau, real beta, real delta) {
+  3 │        real t, x = tau, beta * alpha; // this errors saying
+    │                              ^ here.
+  4 │        return;
+    = Expected a new identifier after comma in declaration.
+      All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.

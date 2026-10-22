@@ -1,0 +1,8 @@
+/* $ stanc ../unit_vector.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../unit_vector.stan:2:8
+  1 │  data {
+  2 │    real unit_vector;
+    │         ^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "unit_vector".

@@ -1,0 +1,9 @@
+/* $ stanc ../incomplete4.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../incomplete4.stan:2:46
+  1 │  data {
+  2 │      tuple( real , tuple( complex , complex ) while
+    │                                               ^^^^^ here.
+  3 │  
+    = Expected either ")" or "," followed by
+      further types and ")" to complete tuple.

@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-statement23.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../ill-formed-statement23.stan:1:36
+  1 │  transformed data { if ( 1 ) ; else void
+    │                                     ^^^^ here.
+    = Expected a statement after "else".

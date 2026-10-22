@@ -1,0 +1,6 @@
+/* $ stanc ../tilde-bad12.stan : [exit 1] */
+error: Syntax error: Ill-formed "~"-statement.
+    ┌─ ../tilde-bad12.stan:1:22
+  1 │  model { 1.0 ~ normal while
+    │                       ^^^^^ here.
+    = Expected "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".

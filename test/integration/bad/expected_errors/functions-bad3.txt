@@ -1,0 +1,8 @@
+/* $ stanc ../functions-bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../functions-bad3.stan:2:11
+  1 │  functions {
+  2 │    real foo^3(real x) {
+    │            ^ here.
+  3 │      return 2.0 * x;
+    = Expected "(" after function name.

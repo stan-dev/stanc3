@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression3.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../ill-formed-expression3.stan:1:23
+  1 │  data { vector<upper=T/while> x;}
+    │                        ^^^^^ here.
+    = Expected an expression (not containing binary logical operators).

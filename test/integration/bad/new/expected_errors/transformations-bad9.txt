@@ -1,0 +1,6 @@
+/* $ stanc ../transformations-bad9.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../transformations-bad9.stan:1:28
+  1 │  data { vector<upper = -0.0 while> x;}
+    │                             ^^^^^ here.
+    = Expected an expression (not containing binary logical operators).

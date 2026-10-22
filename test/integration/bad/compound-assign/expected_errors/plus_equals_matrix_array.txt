@@ -1,0 +1,10 @@
+/* $ stanc ../plus_equals_matrix_array.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_matrix_array.stan:7:8
+  6 │    x[3,1,1] += y[3,1,1];
+  7 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] matrix.
+  8 │  }
+    = There are no valid right hand side types for the given left hand side.

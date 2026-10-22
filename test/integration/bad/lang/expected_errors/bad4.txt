@@ -1,0 +1,7 @@
+/* $ stanc ../bad4.stan : [exit 1] */
+error: Lower bound of for-loop must be of type int. Instead found type real.
+    ┌─ ../bad4.stan:1:45
+  1 │  data { array[5] real a; } model { for (n in a[1]:5) a[n] = n; }
+    │                                              ^^^^ Lower bound of for-loop must be of type int.
+    │                                                   Instead found type real.
+  2 │  

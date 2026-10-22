@@ -1,0 +1,7 @@
+/* $ stanc ../decl-mutual-inits.stan : [exit 1] */
+error: Identifier "y" not in scope.
+    ┌─ ../decl-mutual-inits.stan:2:12
+  1 │  transformed parameters {
+  2 │    real x = y, y = x;
+    │             ^ Identifier "y" not in scope.
+  3 │  }

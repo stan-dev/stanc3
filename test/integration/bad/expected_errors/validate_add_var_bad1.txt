@@ -1,0 +1,9 @@
+/* $ stanc ../validate_add_var_bad1.stan : [exit 1] */
+error: Identifier "x" is already in use.
+    ┌─ ../validate_add_var_bad1.stan:3:8
+  1 │  data {
+  2 │    real x;
+    │         - Previous declaration here.
+  3 │    real x;
+    │         ^ Identifier "x" is already in use.
+  4 │  }

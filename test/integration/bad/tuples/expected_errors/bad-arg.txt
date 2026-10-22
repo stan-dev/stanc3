@@ -1,0 +1,8 @@
+/* $ stanc ../bad-arg.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad-arg.stan:2:24
+  1 │  functions {
+  2 │    void foo(tuple(real, data real) x) {
+    │                         ^^^^ here.
+  3 │      print(x.1);
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.

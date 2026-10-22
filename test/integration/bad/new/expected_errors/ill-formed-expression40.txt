@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression40.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression40.stan:1:22
+  1 │  transformed data { + while
+    │                       ^^^^^ here.
+    = Expected an expression after "+".

@@ -1,0 +1,8 @@
+/* $ stanc ../validate_validate_int_expr_bad4.stan : [exit 1] */
+error: Matrix column size must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad4.stan:4:12
+  3 │    row_vector[3] b;
+  4 │    matrix[3,3.1] c;
+    │             ^^^ Matrix column size must be of type int.
+    │                 Instead found type real.
+  5 │    unit_vector[3] d;

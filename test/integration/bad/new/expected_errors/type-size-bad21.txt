@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad21.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad21.stan:1:18
+  1 │  data { matrix[T, print(0)] x;}
+    │                   ^^^^^ here.
+    = Expected "[" expression "," expression "]" for matrix sizes.

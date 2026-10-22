@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete6.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../incomplete6.stan:3:17
+  2 │    print(foo[2.0]);
+  3 │    real x = sars[while (0)];
+    │                  ^^^^^ here.
+  4 │  }
+    = Expected a comma separated list of expressions, followed by "]".

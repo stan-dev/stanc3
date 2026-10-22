@@ -1,0 +1,8 @@
+/* $ stanc ../validate_set_int_range_upper_bad1.stan : [exit 1] */
+error: Bounds of integer variable must be of type int. Instead found type real.
+    ┌─ ../validate_set_int_range_upper_bad1.stan:2:3
+  1 │  data {
+  2 │    int<upper=1.7> a;
+    │    ^^^^^^^^^^^^^^^^^ Bounds of integer variable must be of type int.
+    │                      Instead found type real.
+  3 │    int<lower=1,upper=3> b;

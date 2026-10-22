@@ -1,0 +1,27 @@
+/* $ stanc ../functions-bad22-ode.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "integrate_ode_rk45".
+    ┌─ ../functions-bad22-ode.stan:15:12
+  1 │  functions {
+  2 │    array[] real sho(real t,
+    │                 --- Callback defined here.
+  3 │               array[] real y,
+    ⋯  
+ 14 │      array[0] int x_i;
+ 15 │      return(integrate_ode_rk45(sho, y0, t0, ts, theta, to_array_1d(xmat_r[1]), x_i));
+    │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 16 │    }
+    = Supplied arguments:
+      (<F1>, array[] real, real, array[] real, array[] real, array[] real,
+       array[] int)
+      where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+    = Available signatures:
+      (<F2>, array[] real, real, array[] real, array[] real,
+       data array[] real, data array[] int) => array[,] real
+      where F2 = (real, array[] real, array[] real, data array[] real,
+                  data array[] int) => array[] real
+        The 6th argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, array[] real, real, array[] real, array[] real,
+       data array[] real, data array[] int, data real, data real, data real) => array[,] real
+        Expected 10 arguments but found 7 arguments.

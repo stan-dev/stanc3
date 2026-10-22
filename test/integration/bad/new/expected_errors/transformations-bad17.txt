@@ -1,0 +1,6 @@
+/* $ stanc ../transformations-bad17.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../transformations-bad17.stan:1:15
+  1 │  data { vector<while> x;}
+    │                ^^^^^ here.
+    = Expected "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<".

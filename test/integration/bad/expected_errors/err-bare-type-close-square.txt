@@ -1,0 +1,8 @@
+/* $ stanc ../err-bare-type-close-square.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../err-bare-type-close-square.stan:2:10
+  1 │  functions {
+  2 │    array[ real foo(int n) { return n; }
+    │           ^^^^ here.
+  3 │  }
+    = Expected "[" (list of commas) "]" in an unsized type in a function signature.

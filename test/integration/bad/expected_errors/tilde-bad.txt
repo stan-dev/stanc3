@@ -1,0 +1,8 @@
+/* $ stanc ../tilde-bad.stan : [exit 1] */
+error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+    ┌─ ../tilde-bad.stan:8:9
+  7 │  model {
+  8 │    foo ~ normal_lpdf(0, 1);
+    │          ^^^^^^^^^^^ ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+  9 │  }
+    = For example, "y ~ normal_lpdf(0, 1)" should become "y ~ normal(0, 1)".

@@ -1,0 +1,13 @@
+/* $ stanc ../missing_args5.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ ../missing_args5.stan:3:21
+  2 │  generated quantities {
+  3 │    vector[2] theta = laplace_latent_rng();
+    │                      ^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                           laplace_latent_rng((vector, T_l...) => real,
+    │                                             tuple(T_l...), data int,
+    │                                             (T_k...) => matrix, tuple(T_k...))@]
+  4 │  }
+    = We were unable to start more in-depth checking. Please ensure you
+      are passing enough arguments and that the first argument is
+      a function.

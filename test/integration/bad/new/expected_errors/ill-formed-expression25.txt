@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression25.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../ill-formed-expression25.stan:1:18
+  1 │  model { real T = while ;}
+    │                   ^^^^^ here.
+    = Expected an expression followed by ";" after "=".

@@ -1,0 +1,8 @@
+/* $ stanc ../cov_exp_quad.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "cov_exp_quad" was supplied.
+    ┌─ ../cov_exp_quad.stan:17:29
+ 16 │  
+ 17 │    transformed_data_matrix = cov_exp_quad(d_arr_1, d_sigma, d_len);
+    │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                                    "cov_exp_quad" was supplied.
+ 18 │    transformed_data_matrix = cov_exp_quad(d_arr_1, d_arr_2, d_sigma, d_len);

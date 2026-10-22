@@ -1,0 +1,12 @@
+/* $ stanc ../plus_equals_bad_var_lhs2.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../plus_equals_bad_var_lhs2.stan:6:3
+  1 │  transformed data {
+  2 │    real x;
+    │         - Variable was declared in transformed data block here.
+  3 │  }
+  4 │  generated quantities {
+  5 │    real y;
+  6 │    x += y;
+    │    ^ "x" was declared in a previous block and cannot be assigned to.
+  7 │  }

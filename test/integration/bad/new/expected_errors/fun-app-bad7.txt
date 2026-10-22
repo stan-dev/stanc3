@@ -1,0 +1,6 @@
+/* $ stanc ../fun-app-bad7.stan : [exit 1] */
+error: Syntax error: Ill-formed function application.
+    ┌─ ../fun-app-bad7.stan:1:28
+  1 │  transformed data { T (T, id]
+    │                             ^ here.
+    = Expected a comma separated list of expressions followed by ")" after "(".

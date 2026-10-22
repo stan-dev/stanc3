@@ -1,0 +1,9 @@
+/* $ stanc ../bad_decl1.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../bad_decl1.stan:2:11
+  1 │  data {
+  2 │    real x, int y;
+    │            ^^^ here.
+  3 │  }
+    = Found a type ("int") where an identifier was expected.
+      All variables declared in a comma-separated list must be of the same type.

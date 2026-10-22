@@ -1,0 +1,6 @@
+/* $ stanc ../fundef-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../fundef-bad5.stan:1:23
+  1 │  functions { void T () void }
+    │                        ^^^^ here.
+    = Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.

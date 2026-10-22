@@ -1,0 +1,8 @@
+/* $ stanc ../cov_matrix.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../cov_matrix.stan:2:8
+  1 │  data {
+  2 │    real cov_matrix;
+    │         ^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "cov_matrix".

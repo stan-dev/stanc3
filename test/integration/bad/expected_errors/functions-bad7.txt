@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad7.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../functions-bad7.stan:14:7
+ 13 │    real z;
+ 14 │    z = barfoo_lp(1.3);
+    │        ^^^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+ 15 │  }

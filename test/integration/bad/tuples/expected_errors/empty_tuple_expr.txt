@@ -1,0 +1,8 @@
+/* $ stanc ../empty_tuple_expr.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../empty_tuple_expr.stan:2:26
+  1 │  model {
+  2 │    tuple(real, real) y = ();
+    │                           ^ here.
+  3 │  }
+    = Expected an expression or comma separated list of expressions followed by ")" after "(".

@@ -1,0 +1,7 @@
+/* $ stanc ../bad11.stan : [exit 1] */
+error: Parameters cannot be integers.
+    ┌─ ../bad11.stan:2:3
+  1 │  parameters {
+  2 │    int theta;
+    │    ^^^^^^^^^^ Parameters cannot be integers.
+  3 │  }

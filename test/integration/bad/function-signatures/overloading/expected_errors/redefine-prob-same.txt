@@ -1,0 +1,9 @@
+/* $ stanc ../redefine-prob-same.stan : [exit 1] */
+error: Function "poisson_lpmf" is already declared in the Stan Math library with signature (int, real) => real
+    ┌─ ../redefine-prob-same.stan:2:3
+  1 │    functions {
+  2 │ ╭    real poisson_lpmf(int n, real x) {
+  3 │ │      return -x^2;
+  4 │ │    }
+    │ ╰────^ Function "poisson_lpmf" is already declared in the Stan Math library with signature (int, real) => real
+  5 │    }

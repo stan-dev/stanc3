@@ -1,0 +1,7 @@
+/* $ stanc ../signature_sampling_reserved.stan : [exit 1] */
+error: Identifier "extern" clashes with reserved keyword.
+    ┌─ ../signature_sampling_reserved.stan:8:7
+  7 │  model {
+  8 │    x ~ extern(theta);
+    │        ^^^^^^ Identifier "extern" clashes with reserved keyword.
+  9 │  }

@@ -1,0 +1,7 @@
+/* $ stanc ../mystery105.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../mystery105.stan:1:28
+  1 │  transformed data { T > T[] while
+    │                             ^^^^^ here.
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

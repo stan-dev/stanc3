@@ -1,0 +1,7 @@
+/* $ stanc ../validate_validate_int_expr_bad1.stan : [exit 1] */
+error: Vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad1.stan:2:10
+  1 │  data {
+  2 │    vector[3.7] a;
+    │           ^^^ Vector sizes must be of type int. Instead found type real.
+  3 │    row_vector[3] b;

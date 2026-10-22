@@ -1,0 +1,8 @@
+/* $ stanc ../err-expected-end-of-tp.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../err-expected-end-of-tp.stan:4:1
+  3 │  }
+  4 │  mdel {}
+    │  ^^^^ here.
+  5 │  
+    = Expected "model {" or "generated quantities {" after end of transformed parameters block.

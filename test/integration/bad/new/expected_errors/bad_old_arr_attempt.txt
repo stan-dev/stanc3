@@ -1,0 +1,11 @@
+/* $ stanc ../bad_old_arr_attempt.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_old_arr_attempt.stan:2:17
+  1 │  model {
+  2 │    complex foo [ while
+    │                  ^^^^^ here.
+  3 │  }
+    = Expected ";" after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax, see:
+        https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section

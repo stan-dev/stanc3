@@ -1,0 +1,27 @@
+/* $ stanc ../bad_fun_first_arg_static.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum_static".
+    ┌─ ../bad_fun_first_arg_static.stan:12:31
+  1 │  functions {
+  2 │    real my_func(array[] real y_slice, real start, int end, real mu, real sigma) {
+    │         ------- Callback defined here.
+  3 │      return normal_lpdf(y_slice | mu, sigma);
+    ⋯  
+ 11 │  model {
+ 12 │    target += reduce_sum_static(my_func, a, 1, 0.0);
+    │                                ^^^^^^^ Function called here.
+ 13 │  }
+    = Supplied arguments:
+      (<F1>, array[] real, int, real)
+      where F1 = (array[] real, real, int, real, real) => real
+    = Available signatures:
+      (<F2>, array[] real, int) => real
+      where F2 = (array[] real, data int, data int) => real
+        The first argument must be
+         (array[] real, data int, data int) => real
+        but got
+         (array[] real, real, int, real, real) => real
+        These are not compatible because:
+          The types for the second argument are incompatible: one is
+           real
+          but the other is
+           int

@@ -1,0 +1,7 @@
+/* $ stanc ../statement-outside-of-block-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../statement-outside-of-block-bad1.stan:1:10
+  1 │  data { } while
+    │           ^^^^^ here.
+    = Expected "transformed data {", "parameters {",
+      "transformed parameters {", "model {", "generated quantities {", or end-of-file.

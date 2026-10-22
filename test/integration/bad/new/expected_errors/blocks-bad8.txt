@@ -1,0 +1,7 @@
+/* $ stanc ../blocks-bad8.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../blocks-bad8.stan:1:22
+  1 │  transformed data { T }
+    │                       ^ here.
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

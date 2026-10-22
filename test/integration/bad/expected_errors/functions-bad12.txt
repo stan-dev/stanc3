@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad12.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../functions-bad12.stan:3:5
+  2 │    void badlp(real x) {
+  3 │      target += normal_lpdf(x|0,1);
+    │      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+  4 │      return;

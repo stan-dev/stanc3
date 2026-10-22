@@ -1,0 +1,10 @@
+/* $ stanc ../name_in_use.stan : [exit 1] */
+error: Identifier "foo" is already in use.
+    ┌─ ../name_in_use.stan:7:8
+  4 │  generated quantities {
+  5 │    int foo;
+    │        --- Previous declaration here.
+  6 │  
+  7 │    for (foo in 1:N) {
+    │         ^^^ Identifier "foo" is already in use.
+  8 │      print("foo");

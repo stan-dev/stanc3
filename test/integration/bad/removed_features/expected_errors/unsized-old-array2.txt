@@ -1,0 +1,12 @@
+/* $ stanc ../unsized-old-array2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../unsized-old-array2.stan:2:7
+  1 │  functions{
+  2 │    real[] foo(real v){
+    │        ^ here.
+  3 │      return sum(v);
+    = Expected an unsized type in function signature.
+        For example, this means a type like "matrix", not "matrix[3,4]".
+        If you are trying to use the old array syntax, you will need to use
+        the new syntax, see:
+        https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section

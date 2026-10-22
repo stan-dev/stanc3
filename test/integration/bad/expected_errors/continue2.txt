@@ -1,0 +1,7 @@
+/* $ stanc ../continue2.stan : [exit 1] */
+error: Continue statements may only be used in loops.
+    ┌─ ../continue2.stan:4:3
+  3 │    real y;
+  4 │    continue;
+    │    ^^^^^^^^^ Continue statements may only be used in loops.
+  5 │  }

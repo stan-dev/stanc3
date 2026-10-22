@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression31.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../ill-formed-expression31.stan:1:21
+  1 │  transformed data { {void
+    │                      ^^^^ here.
+    = Expected either a list of statements followed by a "}" for a block, or a list of expressions expressions followed by a "}" for an array literal.

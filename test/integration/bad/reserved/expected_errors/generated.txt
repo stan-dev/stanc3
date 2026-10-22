@@ -1,0 +1,7 @@
+/* $ stanc ../generated.stan : [exit 1] */
+error: Identifier "generated" clashes with reserved keyword.
+    ┌─ ../generated.stan:2:8
+  1 │  data {
+  2 │    real generated;
+    │         ^^^^^^^^^ Identifier "generated" clashes with reserved keyword.
+  3 │  }

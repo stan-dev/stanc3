@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-statement27.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../ill-formed-statement27.stan:1:29
+  1 │  transformed data { if ( T ) void
+    │                              ^^^^ here.
+    = Expected a statement for the true branch of conditional.

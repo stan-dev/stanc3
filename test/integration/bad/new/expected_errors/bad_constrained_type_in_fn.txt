@@ -1,0 +1,9 @@
+/* $ stanc ../bad_constrained_type_in_fn.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_constrained_type_in_fn.stan:2:20
+  1 │  functions{
+  2 │    void foo(array[] simplex x){
+    │                     ^^^^^^^ here.
+  3 │      print(x);
+    = Functions do not enforce type constraints.
+        Use "vector" instead.

@@ -1,0 +1,11 @@
+/* $ stanc ../declarations.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../declarations.stan:3:19
+  2 │    int a0;
+  3 │    int<lower=0> a1[1];
+    │                    ^ here.
+  4 │    int a2[2,3];
+    = ";" expected after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax:
+        array[1] int<lower=0> a1;

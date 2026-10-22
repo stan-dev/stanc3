@@ -1,0 +1,8 @@
+/* $ stanc ../functions-bad25.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../functions-bad25.stan:5:3
+  4 │      return
+  5 │    }
+    │    ^ here.
+  6 │  }
+    = Expected ";" or expression followed by ";" after "return".

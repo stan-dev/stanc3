@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad39.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad39.stan:1:16
+  1 │  data { simplex[while] x;}
+    │                 ^^^^^ here.
+    = Expected "[" expression "]" for size of simplex.

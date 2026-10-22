@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete14.stan : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../incomplete14.stan:2:16
+  1 │  functions {
+  2 │    real foo(int , real x) {
+    │                 ^ here.
+  3 │      return y + x;
+    = Expected an identifier after the type.

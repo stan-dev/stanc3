@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad44.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad44.stan:1:31
+  1 │  data { vector<multiplier = y> while;}
+    │                                ^^^^^ here.
+    = Expected "[" expression "]" for vector size.

@@ -1,0 +1,11 @@
+/* $ stanc ../arg-decl-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed function argument.
+    ┌─ ../arg-decl-bad1.stan:2:17
+  1 │  functions {
+  2 │  void foo(int x, while);
+    │                  ^^^^^ here.
+  3 │  }
+    = Expected an argument declaration (unsized and unconstrained type followed by identifier).
+        For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+        See the complete table of types at:
+        https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section

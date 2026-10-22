@@ -1,0 +1,9 @@
+/* $ stanc ../err-if-else.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../err-if-else.stan:3:9
+  2 │    real y;
+  3 │    if (1 y = 2;
+    │          ^ here.
+  4 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

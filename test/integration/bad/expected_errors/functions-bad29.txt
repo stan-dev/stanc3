@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad29.stan : [exit 1] */
+error: Identifier "bar_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+    ┌─ ../functions-bad29.stan:2:17
+  1 │  functions {
+  2 │    real foo(real bar_lupdf) {
+    │                  ^^^^^^^^^ Identifier "bar_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+  3 │      return bar_lupdf;

@@ -1,0 +1,7 @@
+/* $ stanc ../variable-decl-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../variable-decl-bad2.stan:1:28
+  1 │  data { matrix<multiplier=5>;
+    │                             ^ here.
+  2 │  }
+    = Expected "[" expression "," expression "]" for matrix sizes.

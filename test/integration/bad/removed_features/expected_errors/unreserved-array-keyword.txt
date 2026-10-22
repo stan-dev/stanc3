@@ -1,0 +1,8 @@
+/* $ stanc ../unreserved-array-keyword.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../unreserved-array-keyword.stan:2:25
+  1 │  functions {
+  2 │    real f(array[,,] real array) { return array[1,2,3]; }
+    │                          ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "array".

@@ -1,0 +1,9 @@
+/* $ stanc ../bad_lmpf.stan : [exit 1] */
+error: Probability mass functions require int variates (first argument). Instead found type real.
+    ┌─ ../bad_lmpf.stan:2:3
+  1 │    functions {
+  2 │ ╭    real my_dist_lpmf(real foo){
+  3 │ │      return 1.0;
+  4 │ │    }
+    │ ╰────^ Probability mass functions require int variates (first argument). Instead found type real.
+  5 │    }

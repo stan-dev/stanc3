@@ -1,0 +1,15 @@
+/* $ stanc ../autodiff_incompatibility1.stan : [exit 1] */
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ ../autodiff_incompatibility1.stan:56:30
+ 14 │      if (0) {
+ 15 │        vector[1] t = algebra_solver(algebra_system, [1]', [1]', {0.1}, {2});
+    │                      -------------- Call to incompatible function occurs here.
+ 16 │      }
+    ⋯  
+ 55 │  
+ 56 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
+    │                               ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                           "algebra_solver",
+    │                                           which does not currently support higher-order derivatives and
+    │                                           cannot be used in an embedded Laplace approximation.
+ 57 │                                    K_function, (x, n_obs, alpha, rho));

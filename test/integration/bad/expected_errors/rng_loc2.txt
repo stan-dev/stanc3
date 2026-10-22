@@ -1,0 +1,10 @@
+/* $ stanc ../rng_loc2.stan : [exit 1] */
+error: Invalid call to random number generator.
+    ┌─ ../rng_loc2.stan:3:12
+  2 │    real foo_lp(real x) {
+  3 │      return exponential_rng(x);
+    │             ^^^^^^^^^^^^^^^^^^ Random number generators are only allowed in
+    │                                transformed data block, generated quantities
+    │                                block or user-defined functions with names
+    │                                ending in _rng.
+  4 │    }

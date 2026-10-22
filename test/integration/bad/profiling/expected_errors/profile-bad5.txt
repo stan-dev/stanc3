@@ -1,0 +1,8 @@
+/* $ stanc ../profile-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../profile-bad5.stan:2:10
+  1 │  transformed data {
+  2 │      real profile;
+    │           ^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "profile".

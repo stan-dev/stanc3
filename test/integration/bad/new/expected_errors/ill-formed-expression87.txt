@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression87.stan : [exit 1] */
+error: Syntax error: Ill-formed compound assignment statement.
+    ┌─ ../ill-formed-expression87.stan:1:27
+  1 │  transformed data { T +=   while
+    │                            ^^^^^ here.
+    = Expected an expression followed by ";" next.

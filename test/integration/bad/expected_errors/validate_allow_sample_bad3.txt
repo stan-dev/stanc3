@@ -1,0 +1,7 @@
+/* $ stanc ../validate_allow_sample_bad3.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../validate_allow_sample_bad3.stan:9:3
+  8 │    real z;
+  9 │    z ~ normal(0,1);
+    │    ^^^^^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+ 10 │  }

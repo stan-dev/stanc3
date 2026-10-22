@@ -1,0 +1,8 @@
+/* $ stanc ../matrix.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../matrix.stan:2:8
+  1 │  data {
+  2 │    real matrix;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "matrix".

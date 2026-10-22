@@ -1,0 +1,9 @@
+/* $ stanc ../incomplete.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../incomplete.stan:2:19
+  1 │  transformed data {
+  2 │    real x = 2.0 .^ ;
+    │                    ^ here.
+  3 │  }
+    = Found an incomplete binary expression.
+      Are you missing the right hand side?

@@ -1,0 +1,10 @@
+/* $ stanc ../plus_equals_bad_var_rhs.stan : [exit 1] */
+error: Identifier "a2" not in scope.
+    ┌─ ../plus_equals_bad_var_rhs.stan:4:12
+  1 │  functions {
+  2 │    void foo(real a1) {
+    │                  -- Did you mean "a1", declared here?
+  3 │      int lf2;
+  4 │      lf2 += a2;
+    │             ^^ Identifier "a2" not in scope.
+  5 │    }

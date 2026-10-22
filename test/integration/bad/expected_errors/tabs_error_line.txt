@@ -1,0 +1,9 @@
+/* $ stanc ../tabs_error_line.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../tabs_error_line.stan:5:17
+  4 │    int<lower=0> some_long_line =
+  5 │                1 4;
+    │                  ^ here.
+  6 │  
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

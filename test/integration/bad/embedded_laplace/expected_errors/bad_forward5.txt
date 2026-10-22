@@ -1,0 +1,15 @@
+/* $ stanc ../bad_forward5.stan : [exit 1] */
+error: Ill-typed arguments forwarded to "K_function" in "laplace_latent_rng".
+    ┌─ ../bad_forward5.stan:38:36
+ 11 │    // specify covariance function
+ 12 │    matrix K_function(array[] vector x, int n_obs, real alpha, real rho) {
+    │           ---------- Callback defined here.
+ 13 │      matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
+    ⋯  
+ 37 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+ 38 │                      1, K_function, (x, n_obs, alpha, {rho}));
+    │                                     ^^^^^^^^^^^^^^^^^^^^^^^^ Cannot call "K_function"
+    │                                                              with arguments forwarded from
+    │                                                              call to "laplace_latent_rng"
+ 39 │  }
+    = The fourth argument must be real but got array[] real.

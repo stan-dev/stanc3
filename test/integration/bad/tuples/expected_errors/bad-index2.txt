@@ -1,0 +1,8 @@
+/* $ stanc ../bad-index2.stan : [exit 1] */
+error: Invalid tuple index.
+    ┌─ ../bad-index2.stan:3:12
+  2 │    tuple(real, real) pair = (3.14, 34.2);
+  3 │    real x = pair.3;
+    │             ^^^^^^ Tried to access index 3 for a tuple of length 2.
+    │                    Only indices between 1 and 2 are valid.
+  4 │  }

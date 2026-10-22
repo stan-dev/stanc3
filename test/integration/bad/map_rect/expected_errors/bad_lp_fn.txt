@@ -1,0 +1,19 @@
+/* $ stanc ../bad_lp_fn.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "map_rect".
+    ┌─ ../bad_lp_fn.stan:22:17
+  1 │  functions {
+  2 │    vector lr_lp(vector beta, vector theta, array[] real x, array[] int y) {
+    │           ----- Callback defined here.
+  3 │      real lp = bernoulli_logit_lpmf(y | beta[1] + to_vector(x) * beta[2]);
+    ⋯  
+ 21 │  model {
+ 22 │    target += sum(map_rect(lr_lp, beta, theta, xs, ys));
+    │                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 23 │  }
+    = Supplied arguments:
+      (<F1>, vector, array[] vector, array[,] real, array[,] int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be a pure function but got an _lp function. These function types are not compatible.

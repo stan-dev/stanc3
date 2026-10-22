@@ -1,0 +1,7 @@
+/* $ stanc ../static.stan : [exit 1] */
+error: Identifier "static" clashes with reserved keyword.
+    ┌─ ../static.stan:2:8
+  1 │  data {
+  2 │    real static;
+    │         ^^^^^^ Identifier "static" clashes with reserved keyword.
+  3 │  }

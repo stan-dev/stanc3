@@ -1,0 +1,8 @@
+/* $ stanc ../type-size-bad8.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../type-size-bad8.stan:1:24
+  1 │  data { corr_matrix[0.0 while] x;
+    │                         ^^^^^ here.
+  2 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

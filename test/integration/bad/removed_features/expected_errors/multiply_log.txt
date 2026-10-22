@@ -1,0 +1,9 @@
+/* $ stanc ../multiply_log.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
+    ┌─ ../multiply_log.stan:11:27
+ 10 │  
+ 11 │    transformed_data_real = multiply_log(d_real, r_real);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                         "multiply_log" was supplied.
+ 12 │    transformed_data_real = multiply_log(d_int, r_real);
+    = Did you mean "multiply"?

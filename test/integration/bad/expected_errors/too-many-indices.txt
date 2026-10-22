@@ -1,0 +1,7 @@
+/* $ stanc ../too-many-indices.stan : [exit 1] */
+error: Too many indices. Expression only has 3 dimensions, but received 4 indices.
+    ┌─ ../too-many-indices.stan:4:17
+  3 │           [ [2,2,3], [2,5,6] ] };
+  4 │    vector[2] b = a[1, 1, 1:2, 1];
+    │                  ^^^^^^^^^^^^^^^ Too many indices. Expression only has 3 dimensions, but received 4 indices.
+  5 │  }

@@ -1,0 +1,11 @@
+/* $ stanc ../bad_solve_lik.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_latent_solve".
+    ┌─ ../bad_solve_lik.stan:38:44
+ 37 │     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+ 38 │        = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
+    │                                             ^^^ All arguments to "laplace_latent_solve" must be a data-only
+    │                                                 if used outside the generated quantities
+    │                                                 block.]
+ 39 │                               K_function, (x, n_obs, alpha, rho));
+    = (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)

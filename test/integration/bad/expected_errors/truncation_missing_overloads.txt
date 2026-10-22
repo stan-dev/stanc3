@@ -1,0 +1,10 @@
+/* $ stanc ../truncation_missing_overloads.stan : [exit 1] */
+error: Unable to truncate distribution with given arguments.
+    ┌─ ../truncation_missing_overloads.stan:28:3
+ 27 │    X ~ foo(alpha, beta) T[0, ]; // does not fail
+ 28 │    X ~ foo(mu, sigma) T[0, ]; // this does
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^ Unable to truncate distribution with given arguments.
+ 29 │  }
+    = Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+      No matching signature for arguments: 
+      (data int, vector, vector)

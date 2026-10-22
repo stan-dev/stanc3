@@ -1,0 +1,7 @@
+/* $ stanc ../not_in_scope.stan : [exit 1] */
+error: Identifier "foo_lupdf" not in scope.
+    ┌─ ../not_in_scope.stan:2:23
+  1 │  generated quantities {
+  2 │    real x = reduce_sum(foo_lupdf, blah, blah);
+    │                        ^^^^^^^^^ Identifier "foo_lupdf" not in scope.
+  3 │  }

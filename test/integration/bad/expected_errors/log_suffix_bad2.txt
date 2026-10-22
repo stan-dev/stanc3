@@ -1,0 +1,11 @@
+/* $ stanc ../log_suffix_bad2.stan : [exit 1] */
+error: Invalid call to unnormalized probability function.
+    ┌─ ../log_suffix_bad2.stan:3:13
+  2 │      real foo_log(real alpha, real beta){
+  3 │       return normal_lupdf(alpha | beta, 1);
+    │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                            "normal_lupdf" can
+    │                                            only be used in the model block or in user-defined functions with names
+    │                                            ending in _lpdf or _lpmf.
+    │                                            Did you mean "normal_lpdf"?
+  4 │     }

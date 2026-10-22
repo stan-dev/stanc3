@@ -1,0 +1,7 @@
+/* $ stanc ../bad12.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../bad12.stan:2:3
+  1 │  generated quantities {
+  2 │    beta = 1;
+    │    ^^^^ "beta" was declared in the Stan Math library and cannot be assigned to.
+  3 │  }

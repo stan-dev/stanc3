@@ -1,0 +1,11 @@
+/* $ stanc ../bad_decl5.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_decl5.stan:2:14
+  1 │  model {
+  2 │    array[3,3] x;
+    │               ^ here.
+  3 │  }
+    = Expected an unconstrained, non-array type after "array" declaration.
+        For example, this means a type like "matrix", not "corr_matrix".
+        See the complete table of types at:
+        https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section

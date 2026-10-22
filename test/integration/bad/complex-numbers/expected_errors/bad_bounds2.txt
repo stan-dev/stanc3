@@ -1,0 +1,7 @@
+/* $ stanc ../bad_bounds2.stan : [exit 1] */
+error: Complex types do not support transformations.
+    ┌─ ../bad_bounds2.stan:2:3
+  1 │  data {
+  2 │    array[10] complex<lower=1> x;
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Complex types do not support transformations.
+  3 │  }

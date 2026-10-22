@@ -1,0 +1,10 @@
+/* $ stanc ../udf_lupmf.stan : [exit 1] */
+error: Invalid user-defined function name.
+    ┌─ ../udf_lupmf.stan:2:10
+  1 │  functions {
+  2 │      real foo_lupmf(real y) {
+    │           ^^^^^^^^^ "foo_lupmf" is an invalid user-defined function name.
+    │                     User-defined probability mass and density functions must
+    │                     be defined as normalized.
+  3 │          return 1.0;
+    = Function names should end with _lpdf/_lpmf not _lupdf/_lupmf.

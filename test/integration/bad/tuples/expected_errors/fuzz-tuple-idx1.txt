@@ -1,0 +1,8 @@
+/* $ stanc ../fuzz-tuple-idx1.stan : [exit 1] */
+error: Syntax error: Ill-formed index.
+    ┌─ ../fuzz-tuple-idx1.stan:1:40
+  1 │  functions{void f(tuple(matrix,int)t){t.40000000000000000000}
+    │                                         ^^^^^^^^^^^^^^^^^^^^ here.
+  2 │  
+    = Failed to parse integer from string "40000000000000000000" in tuple index.
+      The index is likely too large.

@@ -1,0 +1,24 @@
+/* $ stanc ../bad_data_qualifer.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ ../bad_data_qualifer.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (data vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real, real, real, int)
+      where F1 = (data vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (data vector, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The first argument has an incompatible data-qualifier.

@@ -1,0 +1,6 @@
+/* $ stanc ../indices-bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../indices-bad3.stan:1:23
+  1 │  transformed data { T [while
+    │                        ^^^^^ here.
+    = Expected a comma separated list of expressions, followed by "]".

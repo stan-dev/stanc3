@@ -1,0 +1,8 @@
+/* $ stanc ../target_pe_bad.stan : [exit 1] */
+error: A (container of) real or int was expected. Instead found type () => real.
+    ┌─ ../target_pe_bad.stan:8:3
+  7 │  model {
+  8 │    target += foo;
+    │    ^^^^^^^^^^^^^^ A (container of) real or int was expected.
+    │                   Instead found type () => real.
+  9 │  }

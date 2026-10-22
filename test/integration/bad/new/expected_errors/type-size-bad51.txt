@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad51.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../type-size-bad51.stan:1:20
+  1 │  model { matrix[T,0 while] x;}
+    │                     ^^^^^ here.
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

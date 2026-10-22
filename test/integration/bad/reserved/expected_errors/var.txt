@@ -1,0 +1,7 @@
+/* $ stanc ../var.stan : [exit 1] */
+error: Identifier "var" clashes with reserved keyword.
+    ┌─ ../var.stan:2:8
+  1 │  data {
+  2 │    real var;
+    │         ^^^ Identifier "var" clashes with reserved keyword.
+  3 │  }

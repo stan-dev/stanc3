@@ -1,0 +1,8 @@
+/* $ stanc ../signature_sampling_unknown2.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../signature_sampling_unknown2.stan:8:7
+  7 │  model {
+  8 │    x ~ foo_whatev(theta);
+    │        ^^^^^^^^^^ No function "foo_whatev_lpmf" or "foo_whatev_lpdf" was found when looking for distribution 
+    │                   "foo_whatev".
+  9 │  }

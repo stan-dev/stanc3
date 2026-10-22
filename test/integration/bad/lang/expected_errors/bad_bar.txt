@@ -1,0 +1,10 @@
+/* $ stanc ../bad_bar.stan : [exit 1] */
+error: Invalid conditioning in function.
+    ┌─ ../bad_bar.stan:3:10
+  2 │     vector[3] foo;
+  3 │     foo = rep_vector(1.2 | 3);
+    │           ^^^^^^^^^^^^^^^^^^^ Only functions with names ending in _lpdf,
+    │                               _lupdf, _lpmf, _lupmf, _cdf, _lcdf,
+    │                               _lccdf can make use of
+    │                               conditional notation ("|").
+  4 │  }

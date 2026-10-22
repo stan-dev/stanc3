@@ -1,0 +1,7 @@
+/* $ stanc ../bad9.stan : [exit 1] */
+error: Parameters cannot be integers.
+    ┌─ ../bad9.stan:5:4
+  4 │  parameters {
+  5 │     int N;
+    │     ^^^^^^ Parameters cannot be integers.
+  6 │     array[N] real z;

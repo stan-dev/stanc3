@@ -1,0 +1,13 @@
+/* $ stanc ../rng-no-suffix.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "newdistribution" was supplied.
+    ┌─ ../rng-no-suffix.stan:7:14
+  1 │  functions {
+  2 │      real newdistribution_rng(real x) {
+    │           ------------------- Did you mean "newdistribution_rng", declared here?
+  3 │          return x;
+    ⋯  
+  6 │  transformed data {
+  7 │      real x = newdistribution(1);
+    │               ^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                  "newdistribution" was supplied.
+  8 │  }

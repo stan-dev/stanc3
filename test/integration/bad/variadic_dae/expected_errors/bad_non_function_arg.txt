@@ -1,0 +1,18 @@
+/* $ stanc ../bad_non_function_arg.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "dae".
+    ┌─ ../bad_non_function_arg.stan:21:15
+  7 │    array[4] vector[3] y;
+  8 │    real g;
+    │         - Callback defined here.
+  9 │  }
+    ⋯  
+ 20 │    array[4] vector[3] y_hat;
+ 21 │    y_hat = dae(g, yy0, yp0, t0, ts, theta, x);
+    │                ^ Function called here.
+ 22 │  }
+    = Supplied arguments:
+      (real, vector, vector, real, array[] real, array[] real, array[] real)
+    = Available signatures:
+      (<F1>, vector, vector, data real, data array[] real) => vector
+      where F1 = (real, vector, vector) => vector
+        The first argument must be <F1> but got real

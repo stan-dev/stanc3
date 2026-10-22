@@ -1,0 +1,8 @@
+/* $ stanc ../cholesky_factor_cov.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../cholesky_factor_cov.stan:2:8
+  1 │  data {
+  2 │    real cholesky_factor_cov;
+    │         ^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "cholesky_factor_cov".

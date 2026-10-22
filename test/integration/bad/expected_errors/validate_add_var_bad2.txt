@@ -1,0 +1,7 @@
+/* $ stanc ../validate_add_var_bad2.stan : [exit 1] */
+error: Parameters cannot be integers.
+    ┌─ ../validate_add_var_bad2.stan:2:3
+  1 │  parameters {
+  2 │    int m;
+    │    ^^^^^^ Parameters cannot be integers.
+  3 │    real y;

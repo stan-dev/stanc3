@@ -1,0 +1,10 @@
+/* $ stanc ../op_intdivide_bad.stan : [exit 1] */
+error: Ill-typed arguments supplied to infix operator %/%.
+    ┌─ ../op_intdivide_bad.stan:7:7
+  6 │    matrix[3,3] c;
+  7 │    c = b %/% a;
+    │        ^^^^^^^ Operator used here.
+  8 │  }
+    = Available signatures for %/%:
+        (int, int) => int
+      Instead supplied arguments of incompatible type: array[] int, matrix.

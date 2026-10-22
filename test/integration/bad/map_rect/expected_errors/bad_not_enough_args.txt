@@ -1,0 +1,24 @@
+/* $ stanc ../bad_not_enough_args.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "map_rect".
+    ┌─ ../bad_not_enough_args.stan:13:9
+  1 │  functions {
+  2 │    vector foo(vector shared_params, vector job_params,
+    │           --- Callback defined here.
+  3 │               array[] real data_r) {
+    ⋯  
+ 12 │    vector[3] y_hat_tp1
+ 13 │        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+    │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 14 │  }
+    = Supplied arguments:
+      (<F1>, vector, array[] vector, array[,] real, array[,] int)
+      where F1 = (vector, vector, array[] real) => vector
+    = Available signatures:
+      (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (vector, vector, array[] real) => vector
+        These are not compatible because:
+          One takes 3 arguments but the other takes 4 arguments.

@@ -1,0 +1,8 @@
+/* $ stanc ../print-bad6.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../print-bad6.stan:1:43
+  1 │   transformed data { print ( "hello world" while
+    │                                            ^^^^^ here.
+  2 │  
+    = Expected a comma separated list of expressions or
+      strings followed by ");" after "print(".

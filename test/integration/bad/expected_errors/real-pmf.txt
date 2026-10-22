@@ -1,0 +1,9 @@
+/* $ stanc ../real-pmf.stan : [exit 1] */
+error: Probability mass functions require int variates (first argument). Instead found type real.
+    ┌─ ../real-pmf.stan:2:3
+  1 │    functions {
+  2 │ ╭    real foo_lpmf(real y, real sigma) {
+  3 │ │      return -(y / sigma)^2;
+  4 │ │    }
+    │ ╰────^ Probability mass functions require int variates (first argument). Instead found type real.
+  5 │    }

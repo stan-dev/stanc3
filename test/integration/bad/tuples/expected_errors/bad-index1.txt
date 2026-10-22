@@ -1,0 +1,7 @@
+/* $ stanc ../bad-index1.stan : [exit 1] */
+error: Tried to index a non-tuple type.
+    ┌─ ../bad-index1.stan:3:10
+  2 │     real x = 3.4;
+  3 │     print(x.1);
+    │           ^^^ Expression has type real.
+  4 │  }

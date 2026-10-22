@@ -1,0 +1,7 @@
+/* $ stanc ../then.stan : [exit 1] */
+error: Identifier "then" clashes with reserved keyword.
+    ┌─ ../then.stan:2:8
+  1 │  data {
+  2 │    real then;
+    │         ^^^^ Identifier "then" clashes with reserved keyword.
+  3 │  }

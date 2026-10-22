@@ -1,0 +1,6 @@
+/* $ stanc ../return-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../return-bad1.stan:1:34
+  1 │  transformed data { return target while
+    │                                   ^^^^^ here.
+    = Expected "()" after "target".

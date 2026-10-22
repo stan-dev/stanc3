@@ -1,0 +1,7 @@
+/* $ stanc ../plus_equals_bad_lhs_idxs.stan : [exit 1] */
+error: Too many indices. Expression only has 1 dimensions, but received 2 indices.
+    ┌─ ../plus_equals_bad_lhs_idxs.stan:4:3
+  3 │    real y;
+  4 │    x[3,3] += y;
+    │    ^^^^^^ Too many indices. Expression only has 1 dimensions, but received 2 indices.
+  5 │  }

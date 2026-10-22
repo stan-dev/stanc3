@@ -1,0 +1,27 @@
+/* $ stanc ../no_minimum_variadic.stan : [exit 1] */
+error: No unique minimum promotion found for function "simple_SIR".
+    ┌─ ../no_minimum_variadic.stan:82:38
+ 21 │    
+ 22 │        vector simple_SIR(real t, vector y, real beta,
+    │               ---------- Function defined here.
+ 23 │                        // water contact rate
+    ⋯    
+ 39 │    
+ 40 │        vector simple_SIR(real t, vector y, real beta,
+    │               ---------- Function defined here.
+ 41 │                        // water contact rate
+    ⋯    
+ 81 │      // overloaded
+ 82 │      array[N_t] vector<lower=0>[4] y2 = ode_rk45_tol(simple_SIR, y0, t0, t, 1e-6,
+    │ ╭───────────────────────────────────────^
+ 83 │ │                                                  1e-6, 1000, beta, kappa,
+ 84 │ │                                                  gamma, xi, delta, unused, unused);
+    │ ╰──────────────────────────────────────────────────────────────────────────────────^ No unique minimum promotion found for function "simple_SIR".
+ 85 │    }
+    = Overloaded functions must not have multiple equally valid promotion paths.
+      This function has several:
+      (real, vector, real, real, real, real, real, real, int) => vector
+      (real, vector, real, real, real, real, real, int, real) => vector
+    = Consider defining a new signature for the exact types needed or
+      re-thinking
+      existing definitions.

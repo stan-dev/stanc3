@@ -1,0 +1,19 @@
+/* $ stanc ../bad_data_i_type.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "map_rect".
+    ┌─ ../bad_data_i_type.stan:19:9
+  1 │  functions {
+  2 │    vector foo(vector shared_params, vector job_params,
+    │           --- Callback defined here.
+  3 │               array[] real data_r, array[] int data_i) {
+    ⋯  
+ 18 │    vector[3] y_hat_gq
+ 19 │        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+    │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 20 │  }
+    = Supplied arguments:
+      (<F1>, vector, array[] vector, array[,] real, array[,,] int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[,] int but got array[,,] int

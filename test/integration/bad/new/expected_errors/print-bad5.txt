@@ -1,0 +1,8 @@
+/* $ stanc ../print-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../print-bad5.stan:2:12
+  1 │  transformed data {
+  2 │      print(1:10);
+    │             ^ here.
+  3 │  }
+    = Expected a comma separated list of either expressions or strings, followed by ");".

@@ -1,0 +1,9 @@
+/* $ stanc ../declare-define-var-double-3.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../declare-define-var-double-3.stan:3:11
+  2 │    array[2] real a1;
+  3 │    real a2 = 1.0; // cannot assign in data block
+    │            ^ here.
+  4 │  }
+    = Cannot assign to variables in the "data" or "parameters" blocks.
+      Expected ";" after variable declaration.

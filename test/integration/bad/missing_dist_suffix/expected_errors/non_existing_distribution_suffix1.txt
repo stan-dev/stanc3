@@ -1,0 +1,8 @@
+/* $ stanc ../non_existing_distribution_suffix1.stan : [exit 1] */
+error: Function "binomial_logit_cdf" is not implemented for distribution "binomial_logit".
+    ┌─ ../non_existing_distribution_suffix1.stan:4:15
+  3 │  model {  
+  4 │      target += binomial_logit_cdf(1|0,1);
+    │                ^^^^^^^^^^^^^^^^^^^^^^^^^ Function "binomial_logit_cdf" is not implemented for distribution 
+    │                                          "binomial_logit".
+  5 │  }

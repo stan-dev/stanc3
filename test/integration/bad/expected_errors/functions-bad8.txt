@@ -1,0 +1,9 @@
+/* $ stanc ../functions-bad8.stan : [exit 1] */
+error: Function "bar" has already been declared. A definition is expected.
+    ┌─ ../functions-bad8.stan:3:3
+  1 │  functions {
+  2 │    void bar(int x);
+    │         --- Previous declaration here.
+  3 │    void bar(int x);
+    │    ^^^^^^^^^^^^^^^^ Function "bar" has already been declared. A definition is expected.
+  4 │  }

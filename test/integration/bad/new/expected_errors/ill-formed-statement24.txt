@@ -1,0 +1,8 @@
+/* $ stanc ../ill-formed-statement24.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../ill-formed-statement24.stan:1:34
+  1 │  transformed data { if ( 1 ) ; foo}
+    │                                   ^ here.
+  2 │  
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

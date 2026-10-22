@@ -1,0 +1,8 @@
+/* $ stanc ../for_statements_bad_indices3.stan : [exit 1] */
+error: Foreach-loop must be over array, vector, row_vector, or matrix. Instead found type int.
+    ┌─ ../for_statements_bad_indices3.stan:5:17
+  4 │        int xx = 3;
+  5 │        for (i in xx) continue;
+    │                  ^^ Foreach-loop must be over array, vector, row_vector,
+    │                     or matrix. Instead found type int.
+  6 │      }

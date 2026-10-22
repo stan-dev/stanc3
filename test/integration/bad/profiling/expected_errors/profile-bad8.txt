@@ -1,0 +1,8 @@
+/* $ stanc ../profile-bad8.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../profile-bad8.stan:2:17
+  1 │  transformed data {
+  2 │      profile ("" {
+    │                  ^ here.
+  3 │          
+    = Expected ")" after profile name.

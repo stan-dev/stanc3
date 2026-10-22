@@ -1,0 +1,9 @@
+/* $ stanc ../for_statements_bad_indices2.stan : [exit 1] */
+error: Cannot assign to read-only variable.
+    ┌─ ../for_statements_bad_indices2.stan:5:21
+  4 │        array[2,3] int vs;
+  5 │        for (v in vs) v = 3;
+    │             -        ^ "v" was previously used as a function argument or loop identifier.
+    │             │
+    │             Previous declaration here.
+  6 │      }

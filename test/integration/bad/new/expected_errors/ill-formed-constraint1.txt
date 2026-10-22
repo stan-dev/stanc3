@@ -1,0 +1,8 @@
+/* $ stanc ../ill-formed-constraint1.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../ill-formed-constraint1.stan:1:37
+  1 │  data { vector < upper = foo , lower while
+    │                                      ^^^^^ here.
+  2 │  
+    = Expected "=" expression
+      (not containing binary logical operators) after "lower".

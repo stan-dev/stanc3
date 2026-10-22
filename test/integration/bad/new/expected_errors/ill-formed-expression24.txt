@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression24.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../ill-formed-expression24.stan:1:20
+  1 │  model { real T = T ~ normal(0,1);}
+    │                     ^ here.
+    = Expected a ";" to complete the definition or a "," to start a new declaration of the same type.

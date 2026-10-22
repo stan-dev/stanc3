@@ -1,0 +1,8 @@
+/* $ stanc ../real-bad1.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../real-bad1.stan:2:14
+  1 │  transformed data {
+  2 │      real x = .e+44;
+    │               ^ here.
+  3 │  }

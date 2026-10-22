@@ -1,0 +1,6 @@
+/* $ stanc ../fun-app-bad9.stan : [exit 1] */
+error: Syntax error: Ill-formed function application.
+    ┌─ ../fun-app-bad9.stan:1:23
+  1 │  transformed data { T (while
+    │                        ^^^^^ here.
+    = Expected a comma separated list of expressions followed by ")" after "(".

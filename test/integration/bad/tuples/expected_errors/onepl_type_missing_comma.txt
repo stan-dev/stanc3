@@ -1,0 +1,8 @@
+/* $ stanc ../onepl_type_missing_comma.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../onepl_type_missing_comma.stan:2:13
+  1 │  model {
+  2 │    tuple(real) y = (1,);
+    │              ^ here.
+  3 │  }
+    = Expected "," followed by further types and ")" to complete tuple.

@@ -1,0 +1,7 @@
+/* $ stanc ../incomplete5.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../incomplete5.stan:3:1
+  2 │    if (2.0) ;
+  3 │  
+    │  ^ here.
+    = Expected "else", a statement, or "}" to end the block.

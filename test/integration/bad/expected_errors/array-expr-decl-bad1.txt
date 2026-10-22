@@ -1,0 +1,9 @@
+/* $ stanc ../array-expr-decl-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../array-expr-decl-bad1.stan:2:10
+  1 │  data {
+  2 │    array[1:2,2,:] real x;
+    │           ^ here.
+  3 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

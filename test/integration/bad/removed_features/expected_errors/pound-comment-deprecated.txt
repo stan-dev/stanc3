@@ -1,0 +1,8 @@
+/* $ stanc ../pound-comment-deprecated.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../pound-comment-deprecated.stan:2:3
+  1 │  data {
+  2 │    # hey, this is the old way to do things, should raise warning
+    │    ^ here.
+  3 │    int N;

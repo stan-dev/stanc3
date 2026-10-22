@@ -1,0 +1,7 @@
+/* $ stanc ../location-scale-bad9.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../location-scale-bad9.stan:1:30
+  1 │  data { vector<multiplier = y,> x;}
+    │                               ^ here.
+    = Expected ">" or ", offset = " expression
+      (not containing binary logical operators) ">" after "multiplier = " expression.

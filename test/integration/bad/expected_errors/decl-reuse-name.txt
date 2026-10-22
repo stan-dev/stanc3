@@ -1,0 +1,9 @@
+/* $ stanc ../decl-reuse-name.stan : [exit 1] */
+error: Identifier "x" is already in use.
+    ┌─ ../decl-reuse-name.stan:2:14
+  1 │  parameters {
+  2 │    real x, y, x;
+    │         -     ^ Identifier "x" is already in use.
+    │         │
+    │         Previous declaration here.
+  3 │  }

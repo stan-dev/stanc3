@@ -1,0 +1,7 @@
+/* $ stanc ../struct.stan : [exit 1] */
+error: Identifier "struct" clashes with reserved keyword.
+    ┌─ ../struct.stan:2:8
+  1 │  data {
+  2 │    real struct;
+    │         ^^^^^^ Identifier "struct" clashes with reserved keyword.
+  3 │  }

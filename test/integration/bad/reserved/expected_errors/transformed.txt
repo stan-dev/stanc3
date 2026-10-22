@@ -1,0 +1,7 @@
+/* $ stanc ../transformed.stan : [exit 1] */
+error: Identifier "transformed" clashes with reserved keyword.
+    ┌─ ../transformed.stan:2:8
+  1 │  data {
+  2 │    real transformed;
+    │         ^^^^^^^^^^^ Identifier "transformed" clashes with reserved keyword.
+  3 │  }

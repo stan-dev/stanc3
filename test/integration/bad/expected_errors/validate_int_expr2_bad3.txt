@@ -1,0 +1,7 @@
+/* $ stanc ../validate_int_expr2_bad3.stan : [exit 1] */
+error: Vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_int_expr2_bad3.stan:2:10
+  1 │  parameters {
+  2 │    vector[10.9] y;
+    │           ^^^^ Vector sizes must be of type int. Instead found type real.
+  3 │  }

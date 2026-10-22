@@ -1,0 +1,8 @@
+/* $ stanc ../target-pe-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../target-pe-bad1.stan:3:11
+  2 │  
+  3 │  target += "hallo";
+    │            ^^^^^^^ here.
+  4 │  }
+    = Expected an expression followed by ";" after "target +=".

@@ -1,0 +1,8 @@
+/* $ stanc ../row_vector_expr_bad2.stan : [exit 1] */
+error: Row vector expression must have all int, real, or complex entries. Instead found type row_vector.
+    ┌─ ../row_vector_expr_bad2.stan:5:26
+  4 │    row_vector[3] B;
+  5 │    row_vector[2] X = [ x, A ];
+    │                           ^ Row vector expression must have all int, real,
+    │                             or complex entries. Instead found type row_vector.
+  6 │  }

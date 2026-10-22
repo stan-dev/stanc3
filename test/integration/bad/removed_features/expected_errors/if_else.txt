@@ -1,0 +1,9 @@
+/* $ stanc ../if_else.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "if_else" was supplied.
+    ┌─ ../if_else.stan:9:27
+  8 │  
+  9 │    transformed_data_real = if_else(d_int, d_int, d_int);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                         "if_else" was supplied.
+ 10 │    transformed_data_real = if_else(d_int, d_int, d_real);
+    = Did you mean "inverse"?

@@ -1,0 +1,7 @@
+/* $ stanc ../err-decl-double-params.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../err-decl-double-params.stan:4:1
+  4 │  }
+    │  ^ here.
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

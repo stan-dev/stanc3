@@ -1,0 +1,13 @@
+/* $ stanc ../bad_non_var_arg.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "dae".
+    ┌─ ../bad_non_var_arg.stan:20:15
+ 19 │    array[4] vector[3] y_hat;
+ 20 │    y_hat = dae(0.0, yy0, yp0, t0, ts, theta, x);
+    │                ^^^ Function called here.
+ 21 │  }
+    = Supplied arguments:
+      (real, vector, vector, real, array[] real, array[] real, array[] real)
+    = Available signatures:
+      (<F1>, vector, vector, data real, data array[] real) => vector
+      where F1 = (real, vector, vector) => vector
+        The first argument must be <F1> but got real

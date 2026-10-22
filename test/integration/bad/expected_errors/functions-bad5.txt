@@ -1,0 +1,12 @@
+/* $ stanc ../functions-bad5.stan : [exit 1] */
+error: A returning function was expected but a non-returning function "baz" was supplied.
+    ┌─ ../functions-bad5.stan:11:7
+  1 │  functions {
+  2 │    void baz(real x) {
+    │         --- Function defined here.
+  3 │      return;
+    ⋯  
+ 10 │    real z;
+ 11 │    z = baz(y); // illegal use of void function as expression
+    │        ^^^^^^ A returning function was expected but a non-returning function "baz" was supplied.
+ 12 │    y ~ normal(0,1);

@@ -1,0 +1,6 @@
+/* $ stanc ../indices-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed index.
+    ┌─ ../indices-bad1.stan:1:28
+  1 │  transformed data { 1.0 [ , while
+    │                             ^^^^^ here.
+    = Expected index after indices followed by ",".

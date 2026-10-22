@@ -1,0 +1,8 @@
+/* $ stanc ../for_statements_bad_indices4.stan : [exit 1] */
+error: Foreach-loop must be over array, vector, row_vector, or matrix. Instead found type real.
+    ┌─ ../for_statements_bad_indices4.stan:6:19
+  5 │        for (v in vs) {
+  6 │          for (a in v) continue;
+    │                    ^ Foreach-loop must be over array, vector, row_vector,
+    │                      or matrix. Instead found type real.
+  7 │        }

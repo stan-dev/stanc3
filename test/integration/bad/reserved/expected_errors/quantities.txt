@@ -1,0 +1,7 @@
+/* $ stanc ../quantities.stan : [exit 1] */
+error: Identifier "quantities" clashes with reserved keyword.
+    ┌─ ../quantities.stan:2:8
+  1 │  data {
+  2 │    real quantities;
+    │         ^^^^^^^^^^ Identifier "quantities" clashes with reserved keyword.
+  3 │  }

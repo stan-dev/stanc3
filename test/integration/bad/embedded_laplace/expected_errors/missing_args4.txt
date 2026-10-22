@@ -1,0 +1,13 @@
+/* $ stanc ../missing_args4.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_marginal".
+    ┌─ ../missing_args4.stan:29:59
+ 28 │  model {
+ 29 │    target += laplace_marginal(ll_function, (eta, log_ye, y));
+    │                                                            ^ The valid signature of this function is
+    │                                                             laplace_marginal((vector, T_l...) => real,
+    │                                                               tuple(T_l...),
+    │                                                               data int,
+    │                                                               (T_k...) => matrix,
+    │                                                               tuple(T_k...))@]
+ 30 │  
+    = Missing the hessian block size (data-only int) and remaining arguments.

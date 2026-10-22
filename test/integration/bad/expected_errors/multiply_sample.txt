@@ -1,0 +1,8 @@
+/* $ stanc ../multiply_sample.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../multiply_sample.stan:5:7
+  4 │  model {
+  5 │    y ~ multiply(3);
+    │        ^^^^^^^^ No function "multiply_lpdf" was found when looking for distribution 
+    │                 "multiply".
+  6 │  }

@@ -1,0 +1,14 @@
+/* $ stanc ../bad_callback2.stan : [exit 1] */
+error: Invalid signature for forwarded function "ll_function_jacobian" in "laplace_marginal".
+    ┌─ ../bad_callback2.stan:38:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function_jacobian(vector theta, // latent Gaussian
+    │         -------------------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 37 │  model {
+ 38 │    target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y), 1, 
+    │                               ^^^^^^^^^^^^^^^^^^^^ Function "ll_function_jacobian" does not have a valid signature for use in 
+    │                                                    "laplace_marginal"
+ 39 │                                    K_function, (x, n_obs, alpha, rho));
+    = Expected a pure function but got a _jacobian function.

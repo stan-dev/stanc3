@@ -1,0 +1,7 @@
+/* $ stanc ../get_lp_bad_scope2.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../get_lp_bad_scope2.stan:3:16
+  2 │    real foo(real x) {
+  3 │      return x + target();
+    │                 ^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+  4 │    }

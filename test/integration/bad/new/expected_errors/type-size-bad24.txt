@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad24.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../type-size-bad24.stan:1:20
+  1 │  data { ordered[0.0 while] x;}
+    │                     ^^^^^ here.
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

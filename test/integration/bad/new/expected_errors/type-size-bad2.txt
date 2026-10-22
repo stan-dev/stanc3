@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad2.stan:1:28
+  1 │  data { cholesky_factor_cov[while]x;
+    │                             ^^^^^ here.
+  2 │  }
+    = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.

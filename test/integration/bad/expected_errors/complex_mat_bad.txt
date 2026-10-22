@@ -1,0 +1,10 @@
+/* $ stanc ../complex_mat_bad.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../complex_mat_bad.stan:7:12
+  6 │  model {
+  7 │    real x = Z[1,1];
+    │         -   ^^^^^^ Expected the right hand side to have a type matching the destination.
+    │         │          Instead found type complex.
+    │         │
+    │         Left hand side has type real.
+  8 │    target += x;

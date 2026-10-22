@@ -1,0 +1,9 @@
+/* $ stanc ../incomplete4.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../incomplete4.stan:2:14
+  1 │  transformed data {
+  2 │    2.0 %/% 1.0; while (1) { print("hi"); }
+    │               ^ here.
+  3 │  }
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

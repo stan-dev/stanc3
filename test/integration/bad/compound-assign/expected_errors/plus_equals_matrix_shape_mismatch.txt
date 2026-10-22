@@ -1,0 +1,8 @@
+/* $ stanc ../plus_equals_matrix_shape_mismatch.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../plus_equals_matrix_shape_mismatch.stan:4:11
+  3 │    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
+  4 │    vector[2,2] ident = [[1, 0], [0, 1]];
+    │            ^ here.
+  5 │    z += ident;
+    = Expected "[" expression "]" for vector size.

@@ -1,0 +1,7 @@
+/* $ stanc ../reserved.stan : [exit 1] */
+error: Identifier "var" clashes with reserved keyword.
+    ┌─ ../reserved.stan:5:8
+  4 │  generated quantities {
+  5 │    for (var in 1:N) {
+    │         ^^^ Identifier "var" clashes with reserved keyword.
+  6 │      print("foo");

@@ -1,0 +1,8 @@
+/* $ stanc ../expect_statement_seq_close_brace_3.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../expect_statement_seq_close_brace_3.stan:8:1
+  7 │  
+  8 │  parameters {
+    │  ^^^^^^^^^^ here.
+  9 │    real y;
+    = Expected top-level variable declaration, statement, or "}".

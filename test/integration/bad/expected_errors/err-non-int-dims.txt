@@ -1,0 +1,8 @@
+/* $ stanc ../err-non-int-dims.stan : [exit 1] */
+error: Index must be of type int or array[] int or must be a range (int:int). Instead found type real.
+    ┌─ ../err-non-int-dims.stan:4:11
+  3 │    real x;
+  4 │    x = y[1,2.3];
+    │            ^^^ Index must be of type int or array[] int or must be a range (int:int).
+    │                Instead found type real.
+  5 │  }

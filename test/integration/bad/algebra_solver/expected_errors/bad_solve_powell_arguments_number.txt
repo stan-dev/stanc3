@@ -1,0 +1,27 @@
+/* $ stanc ../bad_solve_powell_arguments_number.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "solve_powell".
+    ┌─ ../bad_solve_powell_arguments_number.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_powell(algebra_system, y, theta_p, x_r, x_i, x_i);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector

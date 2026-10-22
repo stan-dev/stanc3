@@ -1,0 +1,8 @@
+/* $ stanc ../int-bad2.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../int-bad2.stan:2:15
+  1 │  transformed data {
+  2 │      int n = 10__000;
+    │                ^ here.
+  3 │  }

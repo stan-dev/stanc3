@@ -1,0 +1,12 @@
+/* $ stanc ../times_equals_matrix_array.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../times_equals_matrix_array.stan:5:13
+  4 │    x[3] *= y[3];
+  5 │    x[3,1] *= y[3,1];
+    │    ------    ^^^^^^ Ill-typed assignment operator *=.
+    │    │
+    │    Left hand side has type row_vector.
+  6 │    x[3,1,1] *= y[3,1,1];
+    = For the given left hand side, expected the right hand side to have type
+      int, real, or matrix.
+      Instead found type row_vector.

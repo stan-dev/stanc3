@@ -1,0 +1,7 @@
+/* $ stanc ../extern.stan : [exit 1] */
+error: Identifier "extern" clashes with reserved keyword.
+    ┌─ ../extern.stan:2:8
+  1 │  data {
+  2 │    real extern;
+    │         ^^^^^^ Identifier "extern" clashes with reserved keyword.
+  3 │  }

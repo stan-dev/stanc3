@@ -1,0 +1,8 @@
+/* $ stanc ../err-no-cond-else-if.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../err-no-cond-else-if.stan:5:13
+  4 │      x = 2;
+  5 │    } else if {
+    │              ^ here.
+  6 │      x = 3;
+    = Expected "(" expression ")" for the test of the if statement.

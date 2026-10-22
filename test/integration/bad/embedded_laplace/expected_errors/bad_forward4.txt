@@ -1,0 +1,15 @@
+/* $ stanc ../bad_forward4.stan : [exit 1] */
+error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
+    ┌─ ../bad_forward4.stan:37:50
+ 11 │    // specify covariance function
+ 12 │    matrix K_function(array[] vector x, int n_obs, real alpha, real rho) {
+    │           ---------- Callback defined here.
+ 13 │      matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
+    ⋯  
+ 36 │    target += laplace_marginal(ll_function, (eta, log_ye, y),
+ 37 │                                    1, K_function, (x, alpha, rho, rho, rho));
+    │                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot call "K_function"
+    │                                                                             with arguments forwarded from
+    │                                                                             call to "laplace_marginal"
+ 38 │  }
+    = Expected 4 arguments but got 5 arguments.

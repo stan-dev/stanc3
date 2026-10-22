@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-statement2.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../ill-formed-statement2.stan:1:29
+  1 │  transformed data { continue while
+    │                              ^^^^^ here.
+    = Expected ";" after "continue".

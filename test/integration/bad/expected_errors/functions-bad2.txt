@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad2.stan : [exit 1] */
+error: Function "barfoo" is declared without specifying a definition.
+    ┌─ ../functions-bad2.stan:8:8
+  7 │    
+  8 │    real barfoo(real x);
+    │         ^^^^^^ Function "barfoo" is declared without specifying a definition.
+  9 │    // error not defining barfoo

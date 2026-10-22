@@ -1,0 +1,8 @@
+/* $ stanc ../truncation-bad-type4.stan : [exit 1] */
+error: Unable to truncate distribution with given arguments.
+    ┌─ ../truncation-bad-type4.stan:1:9
+  1 │  model { 1 ~ bernoulli(0.2) T[0.0, ]; }
+    │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Unable to truncate distribution with given arguments.
+    = Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+      No matching signature for arguments: 
+      (data real, data real)

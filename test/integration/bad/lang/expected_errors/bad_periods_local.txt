@@ -1,0 +1,8 @@
+/* $ stanc ../bad_periods_local.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../bad_periods_local.stan:5:9
+  4 │  model {
+  5 │    real x.y;
+    │          ^ here.
+  6 │    z ~ normal(x.y,1);

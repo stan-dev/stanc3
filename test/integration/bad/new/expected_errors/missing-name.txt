@@ -1,0 +1,7 @@
+/* $ stanc ../missing-name.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../missing-name.stan:1:36
+  1 │  data { array [ foo ] vector [ 24 ] &&
+    │                                     ^^ here.
+  2 │  
+    = Expected identifier after type in variable declaration.

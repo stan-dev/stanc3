@@ -1,0 +1,9 @@
+/* $ stanc ../abs-deprecate.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "fabs" was supplied.
+    ┌─ ../abs-deprecate.stan:3:8
+  2 │    real mu;
+  3 │    mu = fabs(-1.2);
+    │         ^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                    "fabs" was supplied.
+  4 │  }
+    = Did you mean "abs"?

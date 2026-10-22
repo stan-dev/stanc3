@@ -1,0 +1,7 @@
+/* $ stanc ../ill-formed-constraint5.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../ill-formed-constraint5.stan:1:49
+  1 │  data { vector < multiplier = foo , offset = foo ,
+    │                                                  ^ here.
+  2 │  
+    = Expected ">" after "offset = " expression.

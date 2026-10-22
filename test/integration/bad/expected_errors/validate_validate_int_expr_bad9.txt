@@ -1,0 +1,8 @@
+/* $ stanc ../validate_validate_int_expr_bad9.stan : [exit 1] */
+error: Matrix row size must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad9.stan:9:23
+  8 │    positive_ordered[3] g;
+  9 │    cholesky_factor_cov[4.1,5] h;
+    │                        ^^^ Matrix row size must be of type int.
+    │                            Instead found type real.
+ 10 │    cholesky_factor_cov[3] j;

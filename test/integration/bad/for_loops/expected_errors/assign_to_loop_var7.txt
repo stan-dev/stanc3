@@ -1,0 +1,9 @@
+/* $ stanc ../assign_to_loop_var7.stan : [exit 1] */
+error: Cannot assign to read-only variable.
+    ┌─ ../assign_to_loop_var7.stan:4:5
+  2 │    matrix[2, 2] vs;
+  3 │    for (v in vs) {
+    │         - Previous declaration here.
+  4 │      v[1] = 3.2;
+    │      ^ "v" was previously used as a function argument or loop identifier.
+  5 │    }

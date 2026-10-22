@@ -1,0 +1,7 @@
+/* $ stanc ../err-jacobian-plusequals-scope2.stan : [exit 1] */
+error: The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+    ┌─ ../err-jacobian-plusequals-scope2.stan:3:5
+  2 │    real upper_bound(real x, real ub) {
+  3 │      jacobian += x;
+    │      ^^^^^^^^^^^^^^ The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+  4 │      return ub - exp(x);

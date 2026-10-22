@@ -1,0 +1,12 @@
+/* $ stanc ../non_data_index11.stan : [exit 1] */
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ ../non_data_index11.stan:6:31
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    cholesky_factor_cov[3, size(y)] z;
+    │                                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }

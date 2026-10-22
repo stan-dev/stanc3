@@ -1,0 +1,7 @@
+/* $ stanc ../typedef.stan : [exit 1] */
+error: Identifier "typedef" clashes with reserved keyword.
+    ┌─ ../typedef.stan:2:8
+  1 │  data {
+  2 │    real typedef;
+    │         ^^^^^^^ Identifier "typedef" clashes with reserved keyword.
+  3 │  }

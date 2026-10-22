@@ -1,0 +1,6 @@
+/* $ stanc ../mystery54.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../mystery54.stan:1:29
+  1 │  transformed data { return T ~
+    │                              ^ here.
+    = Expected ";" or expression followed by ";" after "return".

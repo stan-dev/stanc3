@@ -1,0 +1,12 @@
+/* $ stanc ../functions-bad18.stan : [exit 1] */
+error: A non-returning function was expected but a non-function value "foo" was supplied.
+    ┌─ ../functions-bad18.stan:11:3
+  6 │  parameters {
+  7 │    real foo;
+    │         --- Variable was declared here.
+  8 │  }
+  9 │  model {
+ 10 │    foo ~ normal(0.0, 1.0);
+ 11 │    foo();  // the function has been shadowed, this `foo` is a number
+    │    ^^^^^^ A non-returning function was expected but a non-function value "foo" was supplied.
+ 12 │  }

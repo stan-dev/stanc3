@@ -1,0 +1,6 @@
+/* $ stanc ../location-scale-bad6.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../location-scale-bad6.stan:1:25
+  1 │  data { vector<offset =  while> x;}
+    │                          ^^^^^ here.
+    = Expected "offset = " expression (not containing binary logical operators).

@@ -1,0 +1,9 @@
+/* $ stanc ../ill-formed-expression2.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression2.stan:2:15
+  1 │  model {
+  2 │  normal(0, 1.0 while);
+    │                ^^^^^ here.
+  3 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

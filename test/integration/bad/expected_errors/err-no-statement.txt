@@ -1,0 +1,6 @@
+/* $ stanc ../err-no-statement.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../err-no-statement.stan:4:1
+  4 │  }
+    │  ^ here.
+    = Expected a statement for the true branch of conditional.

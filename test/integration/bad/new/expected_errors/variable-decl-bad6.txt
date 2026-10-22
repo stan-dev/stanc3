@@ -1,0 +1,6 @@
+/* $ stanc ../variable-decl-bad6.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../variable-decl-bad6.stan:1:16
+  1 │  data { simplex while;}
+    │                 ^^^^^ here.
+    = Expected "[" expression "]" for size of simplex.

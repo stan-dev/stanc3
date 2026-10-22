@@ -1,0 +1,11 @@
+/* $ stanc ../bad8.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../bad8.stan:5:5
+  1 │  data {
+  2 │     real y;
+    │          - Variable was declared in data block here.
+  3 │  }
+  4 │  model {
+  5 │      y = 10.0;
+    │      ^ "y" was declared in a previous block and cannot be assigned to.
+  6 │  }

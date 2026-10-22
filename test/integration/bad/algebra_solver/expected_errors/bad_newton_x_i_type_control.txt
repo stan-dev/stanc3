@@ -1,0 +1,22 @@
+/* $ stanc ../bad_newton_x_i_type_control.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ ../bad_newton_x_i_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real, real, real, int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[] int but got array[] real
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.

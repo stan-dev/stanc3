@@ -1,0 +1,8 @@
+/* $ stanc ../sum_to_zero_vector.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../sum_to_zero_vector.stan:2:8
+  1 │  data {
+  2 │    real sum_to_zero_vector;
+    │         ^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "sum_to_zero_vector".

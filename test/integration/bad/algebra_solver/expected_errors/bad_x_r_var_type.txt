@@ -1,0 +1,24 @@
+/* $ stanc ../bad_x_r_var_type.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ ../bad_x_r_var_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r_p, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The fourth argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.

@@ -1,0 +1,13 @@
+/* $ stanc ../user_defined_unnormalized.stan : [exit 1] */
+error: Function "bar_lupmf" is not implemented for distribution "bar"
+    ┌─ ../user_defined_unnormalized.stan:7:14
+  1 │  functions {
+  2 │     real bar_lpdf(real x){
+    │          -------- Did you mean "bar_lupdf", declared here?
+  3 │       return 1.0;
+    ⋯  
+  6 │  model {
+  7 │     target += bar_lupmf(19.2);
+    │               ^^^^^^^^^^^^^^^ Function "bar_lupmf" is not implemented for distribution 
+    │                               "bar"
+  8 │  }

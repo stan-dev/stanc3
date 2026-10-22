@@ -1,0 +1,10 @@
+/* $ stanc ../shadow.stan : [exit 1] */
+error: Function "log10" cannot be overloaded by return type only.
+    ┌─ ../shadow.stan:2:4
+  1 │    functions {
+  2 │ ╭     int log10(int x) {
+  3 │ │      return 1;
+  4 │ │     }
+    │ ╰─────^ Function "log10" cannot be overloaded by return type only.
+  5 │    }
+    = Previously used return type real.

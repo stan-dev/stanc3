@@ -1,0 +1,8 @@
+/* $ stanc ../err-expected-model.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../err-expected-model.stan:8:1
+  7 │  }
+  8 │  model {
+    │  ^^^^^ here.
+  9 │  }
+    = Expected end of file after end of generated quantities block.

@@ -1,0 +1,6 @@
+/* $ stanc ../fundef-bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../fundef-bad3.stan:1:24
+  1 │  functions { void id(); while }
+    │                         ^^^^^ here.
+    = Expected a "}" or a function definition or declaration.

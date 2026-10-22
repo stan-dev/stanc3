@@ -1,0 +1,19 @@
+/* $ stanc ../missing_args6.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ ../missing_args6.stan:40:23
+ 39 │  
+ 40 │  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1);
+    │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                                                             laplace_latent_rng((vector, T_l...) => real,
+    │                                                                               tuple(T_l...),
+    │                                                                               data int,
+    │                                                                               (T_k...) => matrix,
+    │                                                                               tuple(T_k...))
+    │                                                                             However, we received the types:
+    │                                                                             ((vector, real, vector, array[] int) => real,
+    │                                                                               tuple(real, vector,
+    │                                                                                     array[] int),
+    │                                                                               data int)@]
+ 41 │  
+    = Typechecking failed after checking the first 3 arguments.
+      Please ensure you are passing enough arguments and that the 4th is a function.

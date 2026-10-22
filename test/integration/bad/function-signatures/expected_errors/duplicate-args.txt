@@ -1,0 +1,9 @@
+/* $ stanc ../duplicate-args.stan : [exit 1] */
+error: All function arguments must have distinct identifiers.
+    ┌─ ../duplicate-args.stan:2:26
+  1 │  functions {
+  2 │    void foo(int bar, real bar){
+    │                 ---       ^^^ Argument "bar" is duplicated.
+    │                 │
+    │                 Previous declaration here.
+  3 │      ;

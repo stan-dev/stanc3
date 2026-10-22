@@ -1,0 +1,10 @@
+/* $ stanc ../tuple_ternary.stan : [exit 1] */
+error: Type mismatch in ternary expression.
+    ┌─ ../tuple_ternary.stan:2:26
+  1 │  transformed data {
+  2 │     tuple(real, real) x = 1 ? (1, 2) : (3, 4, 5);
+    │                           ^^^^^^^^^^^^^^^^^^^^^^ Expression when true is:
+    │                                                    tuple(int, int);
+    │                                                  Expression when false is:
+    │                                                    tuple(int, int, int)
+  3 │  }

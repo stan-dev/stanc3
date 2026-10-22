@@ -1,0 +1,23 @@
+/* $ stanc ../bad_to_int1.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "to_int".
+    ┌─ ../bad_to_int1.stan:6:20
+  5 │  model {
+  6 │    array[3] int Y = to_int(X);
+    │                     ^^^^^^^^^ Function called here.
+  7 │  }
+    = Supplied arguments:
+      (array[] real)
+    = Available signatures:
+      (data array[] real) => array[] int
+        The first argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (data array[] int) => array[] int
+        The first argument must be array[] int but got array[] real
+      (data real) => int
+        The first argument must be real but got array[] real
+      (data array[,] real) => array[,] int
+        The first argument must be array[,] real but got array[] real
+      (data array[,,] real) => array[,,] int
+        The first argument must be array[,,] real but got array[] real
+      (Additional signatures omitted)

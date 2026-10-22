@@ -1,0 +1,7 @@
+/* $ stanc ../lupdf_ident.stan : [exit 1] */
+error: Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+    ┌─ ../lupdf_ident.stan:2:10
+  1 │  parameters {
+  2 │      real y_lupdf;
+    │           ^^^^^^^ Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+  3 │  }

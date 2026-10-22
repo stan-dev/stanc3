@@ -1,0 +1,7 @@
+/* $ stanc ../transformations-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../transformations-bad1.stan:1:12
+  1 │  data { int<x=5> x;
+    │             ^ here.
+  2 │  }
+    = Expected "lower = " expression or "upper = " expression for integer bounds.

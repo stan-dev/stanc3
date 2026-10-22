@@ -1,0 +1,8 @@
+/* $ stanc ../validate_validate_int_expr_bad13.stan : [exit 1] */
+error: Matrix row size must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad13.stan:12:15
+ 11 │    cov_matrix[3] k;
+ 12 │    corr_matrix[3.3] l;
+    │                ^^^ Matrix row size must be of type int.
+    │                    Instead found type real.
+ 13 │  }

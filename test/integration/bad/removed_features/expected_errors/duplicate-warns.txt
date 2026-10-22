@@ -1,0 +1,8 @@
+/* $ stanc ../duplicate-warns.stan : [exit 1] */
+error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+    ┌─ ../duplicate-warns.stan:4:3
+  3 │    foo = 1;
+  4 │    increment_log_prob(0);
+    │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
+    │                           "increment_log_prob" was supplied.
+  5 │    foo = get_lp();

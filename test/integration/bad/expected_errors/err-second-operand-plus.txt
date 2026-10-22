@@ -1,0 +1,7 @@
+/* $ stanc ../err-second-operand-plus.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../err-second-operand-plus.stan:4:1
+  4 │  }
+    │  ^ here.
+    = Found an incomplete binary expression.
+      Are you missing the right hand side?

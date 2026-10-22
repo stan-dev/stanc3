@@ -1,0 +1,8 @@
+/* $ stanc ../plus_equals_bad_init.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../plus_equals_bad_init.stan:3:21
+  2 │    vector[3] gq_v3_a = [1, 2, 3]';
+  3 │    vector[3] gq_v3_b += gq_v3_a;
+    │                      ^^ here.
+  4 │  }
+    = Expected ";" or plain assignment after variable declaration.

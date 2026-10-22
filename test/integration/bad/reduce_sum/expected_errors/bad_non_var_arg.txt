@@ -1,0 +1,13 @@
+/* $ stanc ../bad_non_var_arg.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum".
+    ┌─ ../bad_non_var_arg.stan:11:24
+ 10 │  model {
+ 11 │    target += reduce_sum(0.0, y1, 1);
+    │                         ^^^ Function called here.
+ 12 │  }
+    = Supplied arguments:
+      (real, array[] real, int)
+    = Available signatures:
+      (<F1>, array[] real, int) => real
+      where F1 = (array[] real, data int, data int) => real
+        The first argument must be <F1> but got real

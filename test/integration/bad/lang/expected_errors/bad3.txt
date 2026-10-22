@@ -1,0 +1,6 @@
+/* $ stanc ../bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad3.stan:1:22
+  1 │  data { real a; matrix(2,3) b; } model { a = b; }
+    │                       ^ here.
+    = Expected "[" expression "," expression "]" for matrix sizes.

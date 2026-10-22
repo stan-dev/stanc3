@@ -1,0 +1,7 @@
+/* $ stanc ../validate_validate_int_expr_bad6.stan : [exit 1] */
+error: Vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad6.stan:6:11
+  5 │    unit_vector[3] d;
+  6 │    simplex[3.9] e;
+    │            ^^^ Vector sizes must be of type int. Instead found type real.
+  7 │    ordered[3] f;

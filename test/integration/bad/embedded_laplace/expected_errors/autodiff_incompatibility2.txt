@@ -1,0 +1,15 @@
+/* $ stanc ../autodiff_incompatibility2.stan : [exit 1] */
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ ../autodiff_incompatibility2.stan:59:44
+ 18 │      if (0) {
+ 19 │        array[1] vector[3] y = ode_rk45(sir, [1.0]', 1.0, {1.0}, .5, .5, 10);
+    │                               -------- Call to incompatible function occurs here.
+ 20 │      }
+    ⋯  
+ 58 │  generated quantities {
+ 59 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    │                                             ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                                         "ode_rk45",
+    │                                                         which does not currently support higher-order derivatives and
+    │                                                         cannot be used in an embedded Laplace approximation.
+ 60 │                          1, K_function, (x, n_obs, alpha, rho));

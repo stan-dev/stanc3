@@ -1,0 +1,7 @@
+/* $ stanc ../int-bad4.stan : [exit 1] */
+error: Integer literal cannot be larger than 2_147_483_647.
+    ┌─ ../int-bad4.stan:2:13
+  1 │  transformed data {
+  2 │      int n = 2_147_483_648;
+    │              ^^^^^^^^^^^^^ Integer literal cannot be larger than 2_147_483_647.
+  3 │  }

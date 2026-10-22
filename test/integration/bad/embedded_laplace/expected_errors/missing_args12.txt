@@ -1,0 +1,16 @@
+/* $ stanc ../missing_args12.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
+    ┌─ ../missing_args12.stan:2:65
+  1 │  model {
+  2 │    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]');
+    │                                                                  ^ The valid signature of this function is
+    │                                                                   laplace_marginal_tol_poisson_log_lpmf(array[] int,
+    │                                                                     array[] int, vector,
+    │                                                                     data int,
+    │                                                                     (T_k...) => matrix,
+    │                                                                     tuple(T_k...), vector,
+    │                                                                     data real, data int,
+    │                                                                     data int, data int,
+    │                                                                     data int)@]
+  3 │  }
+    = Missing the hessian block size (data-only int) and remaining arguments.

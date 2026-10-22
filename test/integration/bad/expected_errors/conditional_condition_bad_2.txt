@@ -1,0 +1,8 @@
+/* $ stanc ../conditional_condition_bad_2.stan : [exit 1] */
+error: Condition in conditional must be of type int. Instead found type vector.
+    ┌─ ../conditional_condition_bad_2.stan:9:12
+  8 │      y ~ normal(0,1);
+  9 │    else if (x)               // ERROR HERE
+    │             ^ Condition in conditional must be of type int.
+    │               Instead found type vector.
+ 10 │      y ~ normal(0,1);

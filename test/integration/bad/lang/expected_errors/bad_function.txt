@@ -1,0 +1,9 @@
+/* $ stanc ../bad_function.stan : [exit 1] */
+error: A non-returning function was expected but a non-function value "x" was supplied.
+    ┌─ ../bad_function.stan:3:4
+  1 │  generated quantities {
+  2 │     real x;
+    │          - Variable was declared here.
+  3 │     x();
+    │     ^^^^ A non-returning function was expected but a non-function value "x" was supplied.
+  4 │  }

@@ -1,0 +1,10 @@
+/* $ stanc ../validate_logical_negate_expr_bad.stan : [exit 1] */
+error: Ill-typed arguments supplied to prefix operator !.
+    ┌─ ../validate_logical_negate_expr_bad.stan:3:7
+  2 │    vector[3] v;
+  3 │    v = !v;
+    │        ^^ Operator used here.
+  4 │  }
+    = Available signatures for !:
+        (int) => int
+      Instead supplied argument of incompatible type: vector.

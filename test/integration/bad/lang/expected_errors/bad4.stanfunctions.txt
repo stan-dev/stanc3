@@ -1,0 +1,10 @@
+/* $ stanc ../bad4.stanfunctions : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad4.stanfunctions:1:11
+  1 │  array[,,] x() {
+    │            ^ here.
+  2 │      return ones_array(3, 3);
+    = Expected an unconstrained, non-array type after "array" declaration.
+        For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+        See the complete table of types at:
+        https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section

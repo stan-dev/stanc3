@@ -1,0 +1,6 @@
+/* $ stanc ../statement-in-data-block-bad.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../statement-in-data-block-bad.stan:1:16
+  1 │  data { real T; print(0);}
+    │                 ^^^^^ here.
+    = Only top-level variable declarations are allowed in the "data" and "parameters" blocks.

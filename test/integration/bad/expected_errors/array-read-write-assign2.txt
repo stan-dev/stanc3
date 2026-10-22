@@ -1,0 +1,9 @@
+/* $ stanc ../array-read-write-assign2.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../array-read-write-assign2.stan:4:5
+  3 │  array[2] int x = {1,2};
+  4 │  x[n[x[1]]] = 2;
+    │  -   ^ The variable "x" cannot be read from at the same time as it is being assigned to.
+    │  │
+    │  Assigning to "x" here.
+  5 │  }

@@ -1,0 +1,9 @@
+/* $ stanc ../fundef-bad10.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../fundef-bad10.stan:2:13
+  1 │  functions {
+  2 │     void foo(corr_matrix x){
+    │              ^^^^^^^^^^^ here.
+  3 │       return;
+    = Functions do not enforce type constraints.
+        Use "matrix" instead.

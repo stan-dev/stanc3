@@ -1,0 +1,8 @@
+/* $ stanc ../validate_array_expr_bad3a.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../validate_array_expr_bad3a.stan:5:37
+  4 │  model {
+  5 │    array[2,1] real loc_real_dim2 = {{},{}}; // cannot be empty
+    │                                      ^ here.
+  6 │    y ~ normal(0,1);
+    = Expected an expression after "{" in array expression.

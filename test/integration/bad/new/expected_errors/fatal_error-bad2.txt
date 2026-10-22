@@ -1,0 +1,8 @@
+/* $ stanc ../fatal_error-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../fatal_error-bad2.stan:2:18
+  1 │  transformed data {
+  2 │      fatal_error(1:10);
+    │                   ^ here.
+  3 │  }
+    = Expected a comma separated list of either expressions or strings, followed by ");".

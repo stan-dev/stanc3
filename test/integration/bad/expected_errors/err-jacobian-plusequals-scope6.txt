@@ -1,0 +1,7 @@
+/* $ stanc ../err-jacobian-plusequals-scope6.stan : [exit 1] */
+error: The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+    ┌─ ../err-jacobian-plusequals-scope6.stan:11:12
+ 10 │    real bar(real x) {
+ 11 │      return bar_jacobian(x);
+    │             ^^^^^^^^^^^^^^^ The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+ 12 │    }

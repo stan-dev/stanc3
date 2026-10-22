@@ -1,0 +1,8 @@
+/* $ stanc ../bad_periods_data.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../bad_periods_data.stan:2:9
+  1 │  data {
+  2 │    real x.y;
+    │          ^ here.
+  3 │  }

@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad9.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad9.stan:1:22
+  1 │  data { corr_matrix[T ~ normal(0,1)] x;
+    │                       ^ here.
+  2 │  }
+    = Expected "[" expression "]" for size of corr_matrix.

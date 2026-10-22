@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression10.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression10.stan:1:23
+  1 │  data { vector<upper=T[while> x;}
+    │                        ^^^^^ here.
+    = Expected a comma separated list of expressions, followed by "]".

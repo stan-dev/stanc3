@@ -1,0 +1,18 @@
+/* $ stanc ../bad_non_matching_arg_types3_static.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum_static".
+    ┌─ ../bad_non_matching_arg_types3_static.stan:13:53
+  1 │  functions {
+  2 │    real my_func(array[] real y_slice, int start, int end, real mu, real sigma) {
+    │         ------- Callback defined here.
+  3 │      return normal_lpdf(y_slice | mu, sigma);
+    ⋯  
+ 12 │  model {
+ 13 │      target += reduce_sum_static(my_func, a, 1, 0.0, b);
+    │                                                      ^ Function called here.
+ 14 │  }
+    = Supplied arguments:
+      (<F1>, array[] real, int, real, vector)
+      where F1 = (array[] real, int, int, real, real) => real
+    = Available signatures:
+      (<F1>, array[] real, int, real, real) => real
+        The 5th argument must be real but got vector

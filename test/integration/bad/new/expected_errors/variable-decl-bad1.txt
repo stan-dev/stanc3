@@ -1,0 +1,7 @@
+/* $ stanc ../variable-decl-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../variable-decl-bad1.stan:1:11
+  1 │  data { int;
+    │            ^ here.
+  2 │  }
+    = Expected "<" constraint ">" or identifier next as part of top-level variable declaration.

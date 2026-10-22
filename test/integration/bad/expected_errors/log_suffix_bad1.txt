@@ -1,0 +1,8 @@
+/* $ stanc ../log_suffix_bad1.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../log_suffix_bad1.stan:8:9
+  7 │  model {
+  8 │    1.5 ~ foo_t(3.4);
+    │          ^^^^^ No function "foo_t_lpdf" was found when looking for distribution 
+    │                "foo_t".
+  9 │  }

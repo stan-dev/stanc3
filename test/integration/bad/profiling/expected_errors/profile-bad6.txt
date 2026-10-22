@@ -1,0 +1,8 @@
+/* $ stanc ../profile-bad6.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../profile-bad6.stan:2:10
+  1 │  functions {
+  2 │      real profile(int i) {
+    │           ^^^^^^^ here.
+  3 │          return i + 1.0;
+    = Expected a new identifier but found reserved keyword "profile".

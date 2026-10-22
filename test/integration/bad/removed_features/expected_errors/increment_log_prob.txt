@@ -1,0 +1,8 @@
+/* $ stanc ../increment_log_prob.stan : [exit 1] */
+error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+    ┌─ ../increment_log_prob.stan:42:3
+ 41 │  model {
+ 42 │    increment_log_prob(n);
+    │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
+    │                           "increment_log_prob" was supplied.
+ 43 │    increment_log_prob(nn);
