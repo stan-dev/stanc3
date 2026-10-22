@@ -443,11 +443,9 @@ let gen_get_dims {Program.output_vars; _} =
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body
        ~cv_qualifiers:[Const] ())
 
-module GenSymIdx = (val Common.Gensym.make ~prefix:"idx")
-
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   let iter d gen_body =
-    let loopvar, gensym_exit = GenSymIdx.enter () in
+    let loopvar, gensym_exit = Common.Gensym.enter ~prefix:"idx" in
     let forloop =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)

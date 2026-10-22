@@ -77,10 +77,8 @@ let block_no_loc l = Stmt.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-module GenSymInline = (val Gensym.make ~prefix:"inline")
-
 let gen_inline_var (name : string) (id_var : string) =
-  GenSymInline.next ~infix:("_" ^ name ^ "_" ^ id_var) ()
+  Gensym.next ~prefix:"inline" ~extra:("_" ^ name ^ "_" ^ id_var) ()
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : string String.Map.t) = function
@@ -1182,8 +1180,6 @@ let transform_mir_blocks (mir : Program.Typed.t)
 let allow_uninitialized_decls mir =
   transform_mir_blocks mir unenforce_initialize
 
-module GenSymLCM = (val Common.Gensym.make ~prefix:"lcm")
-
 let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
@@ -1239,7 +1235,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         | _ when cannot_duplicate_expr ~preserve_stability e ->
             (* Immovable expressions might have movable subexpressions *)
             Expr.Pattern.fold collect_expressions accum e.pattern
-        | _ -> ExprMap.add accum ~key:e ~data:(GenSymLCM.next ()) in
+        | _ -> ExprMap.add accum ~key:e ~data:(Gensym.next ~prefix:"lcm" ())
+      in
       ExprSet.fold
         (Monotone_framework.used_expressions_stmt s.pattern)
         ~init:ExprMap.empty
