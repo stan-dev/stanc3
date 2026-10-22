@@ -38,6 +38,29 @@ var opt_test = stanc.stanc("optimization", ad_model, ["O0"]);
 var ind = opt_test.result.search("\\<local_scalar_t__,-1,-1\\> X_tp1");
 console.assert(ind > -1, "ERROR: AD optimization without the O1 flag!")
 
+var inline_model = `
+functions {
+    real add_one(real x) {
+        return x + 1;
+    }
+}
+model {
+    target += add_one(2.0);
+}
+`
+
+var opt_test = stanc.stanc("optimization", inline_model, []);
+var ind = opt_test.result.search("inline_add_one_return");
+console.assert(ind < 0, "ERROR: Inlining without the finlining flag!")
+
+var opt_test = stanc.stanc("optimization", inline_model, ["finlining"]);
+var ind = opt_test.result.search("inline_add_one_return");
+console.assert(ind > -1, "ERROR: No inlining with the finlining flag!")
+
+var opt_test = stanc.stanc("optimization", inline_model, ["O1", "fno-inlining"]);
+var ind = opt_test.result.search("inline_add_one_return");
+console.assert(ind < 0, "ERROR: Inlining with the fno-inlining flag!")
+
 var glm_model = `
 data {
     int<lower=1> k;
