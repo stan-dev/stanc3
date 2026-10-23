@@ -38,7 +38,7 @@ foo(const T0__& N, const T1__& M, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    Eigen::Matrix<double,-1,-1> lcm_sym1__;
+    Eigen::Matrix<double,-1,-1> lcm1__;
     {
       current_statement__ = 8;
       return stan::math::rep_matrix(static_cast<double>(1), N, M);
@@ -49,11 +49,11 @@ foo(const T0__& N, const T1__& M, std::ostream* pstream__) {
 }
 class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
  private:
-  Eigen::Matrix<double,-1,-1> lcm_sym6___data__;
+  Eigen::Matrix<double,-1,-1> lcm6___data__;
   int N;
   int M;
   Eigen::Matrix<double,-1,-1> bar_data__;
-  Eigen::Map<Eigen::Matrix<double,-1,-1>> lcm_sym6__{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,-1>> lcm6__{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double,-1,-1>> bar{nullptr, 0, 0};
  public:
   ~inline_tdata_model() {}
@@ -131,7 +131,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
+      double lcm5__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       {
@@ -169,7 +169,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym4__;
+      double lcm4__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       {
@@ -218,8 +218,8 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym3__;
-      int lcm_sym2__;
+      int lcm3__;
+      int lcm2__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       out__.write(alpha);

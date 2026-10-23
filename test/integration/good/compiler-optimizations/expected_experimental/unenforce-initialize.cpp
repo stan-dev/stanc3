@@ -73,9 +73,9 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
@@ -163,9 +163,9 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
@@ -264,11 +264,11 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
-      int lcm_sym4__;
-      int lcm_sym3__;
-      double lcm_sym2__;
-      double lcm_sym1__;
+      double lcm5__;
+      int lcm4__;
+      int lcm3__;
+      double lcm2__;
+      double lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
@@ -283,10 +283,10 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      lcm_sym2__ = (y * 5.0);
-      init_from_param = lcm_sym2__;
-      lcm_sym1__ = (no_init * y);
-      dependent_no_init = lcm_sym1__;
+      lcm2__ = (y * 5.0);
+      init_from_param = lcm2__;
+      lcm1__ = (no_init * y);
+      dependent_no_init = lcm1__;
       current_statement__ = 5;
       // self-assignment omitted: used_on_lhs
       {
@@ -334,8 +334,8 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       }
       if (emit_transformed_parameters__) {
         out__.write(no_init);
-        out__.write(lcm_sym2__);
-        out__.write(lcm_sym1__);
+        out__.write(lcm2__);
+        out__.write(lcm1__);
         out__.write(used_on_lhs);
         out__.write(no_init_if);
         out__.write(for_loop_var);

@@ -16,8 +16,8 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in '../expr-prop-experiment2.stan', line 12, column 2 to column 23)"};
 class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_experiment2_model> {
  private:
-  double lcm_sym5__;
-  double lcm_sym4__;
+  double lcm5__;
+  double lcm4__;
   int j;
   double z;
   double y;
@@ -56,10 +56,10 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
         double x;
         current_statement__ = 4;
         x = stan::math::normal_rng(123, 1, base_rng__);
-        lcm_sym4__ = (x * 2);
-        z = lcm_sym4__;
+        lcm4__ = (x * 2);
+        z = lcm4__;
         current_statement__ = 5;
-        y = stan::math::normal_rng(lcm_sym4__, 1, base_rng__);
+        y = stan::math::normal_rng(lcm4__, 1, base_rng__);
       }
       current_statement__ = 7;
       y = stan::math::normal_rng(z, 1, base_rng__);
@@ -162,8 +162,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

@@ -164,9 +164,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm_sym10__;
-      local_scalar_t__ lcm_sym9__;
-      double lcm_sym8__;
+      Eigen::Matrix<double,-1,1> lcm10__;
+      local_scalar_t__ lcm9__;
+      double lcm8__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -186,18 +186,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       auto phi_std_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
-      lcm_sym9__ = stan::math::inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym9__;
+      lcm9__ = stan::math::inv_sqrt(tau_phi);
+      sigma_phi = lcm9__;
       Eigen::Matrix<local_scalar_t__,-1,1> phi;
       current_statement__ = 9;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
-        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym9__),
+        stan::math::multiply(stan::model::deep_copy(phi), lcm9__),
         "assigning variable phi");
       current_statement__ = 7;
-      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm_sym9__,
-        0);
+      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm9__, 0);
       {
         current_statement__ = 11;
         lp_accum__.add(stan::math::dot_self(
@@ -234,9 +233,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm_sym7__;
-      local_scalar_t__ lcm_sym6__;
-      double lcm_sym5__;
+      Eigen::Matrix<double,-1,1> lcm7__;
+      local_scalar_t__ lcm6__;
+      double lcm5__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -258,18 +257,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,1>>>(N);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
-      lcm_sym6__ = stan::math::inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym6__;
+      lcm6__ = stan::math::inv_sqrt(tau_phi);
+      sigma_phi = lcm6__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> phi;
       current_statement__ = 9;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
-        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym6__),
+        stan::math::multiply(stan::model::deep_copy(phi), lcm6__),
         "assigning variable phi");
       current_statement__ = 7;
-      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm_sym6__,
-        0);
+      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm6__, 0);
       {
         current_statement__ = 11;
         lp_accum__.add(stan::math::dot_self(
@@ -317,10 +315,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
-      Eigen::Matrix<double,-1,1> lcm_sym2__;
-      double lcm_sym1__;
+      int lcm4__;
+      int lcm3__;
+      Eigen::Matrix<double,-1,1> lcm2__;
+      double lcm1__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -354,19 +352,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      lcm_sym1__ = stan::math::inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym1__;
+      lcm1__ = stan::math::inv_sqrt(tau_phi);
+      sigma_phi = lcm1__;
       current_statement__ = 9;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
-        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym1__),
+        stan::math::multiply(stan::model::deep_copy(phi), lcm1__),
         "assigning variable phi");
       current_statement__ = 7;
-      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm_sym1__,
-        0);
+      stan::math::check_greater_or_equal(function__, "sigma_phi", lcm1__, 0);
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym1__);
+        out__.write(lcm1__);
         out__.write(phi);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
@@ -526,19 +523,19 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     param_names__.emplace_back(std::string() + "beta1");
     param_names__.emplace_back(std::string() + "tau_theta");
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta_std" + '.' +
-        std::to_string(sym11__));
+        std::to_string(idx1__));
     }
-    for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "phi_std_raw" + '.' +
-        std::to_string(sym11__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "phi" + '.' +
-          std::to_string(sym11__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -551,19 +548,19 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     param_names__.emplace_back(std::string() + "beta1");
     param_names__.emplace_back(std::string() + "tau_theta");
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta_std" + '.' +
-        std::to_string(sym11__));
+        std::to_string(idx1__));
     }
-    for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "phi_std_raw" + '.' +
-        std::to_string(sym11__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym11__ = 1; sym11__ <= N; ++sym11__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "phi" + '.' +
-          std::to_string(sym11__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

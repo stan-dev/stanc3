@@ -293,23 +293,23 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym36__;
-      int lcm_sym35__;
-      double lcm_sym34__;
-      double lcm_sym33__;
-      double lcm_sym32__;
-      double lcm_sym31__;
-      double lcm_sym30__;
-      double lcm_sym29__;
-      double lcm_sym28__;
-      double lcm_sym27__;
-      double lcm_sym26__;
-      double lcm_sym25__;
-      double lcm_sym24__;
-      double lcm_sym23__;
-      double lcm_sym22__;
-      Eigen::Matrix<double,-1,1> lcm_sym21__;
-      double lcm_sym20__;
+      int lcm36__;
+      int lcm35__;
+      double lcm34__;
+      double lcm33__;
+      double lcm32__;
+      double lcm31__;
+      double lcm30__;
+      double lcm29__;
+      double lcm28__;
+      double lcm27__;
+      double lcm26__;
+      double lcm25__;
+      double lcm24__;
+      double lcm23__;
+      double lcm22__;
+      Eigen::Matrix<double,-1,1> lcm21__;
+      double lcm20__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -535,23 +535,23 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym19__;
-      int lcm_sym18__;
-      double lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      Eigen::Matrix<double,-1,1> lcm_sym4__;
-      double lcm_sym3__;
+      int lcm19__;
+      int lcm18__;
+      double lcm17__;
+      double lcm16__;
+      double lcm15__;
+      double lcm14__;
+      double lcm13__;
+      double lcm12__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
+      double lcm5__;
+      Eigen::Matrix<double,-1,1> lcm4__;
+      double lcm3__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -790,8 +790,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -1148,27 +1148,27 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int sym37__ = 1; sym37__ <= n_age; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_age; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_edu; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_region; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_region; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_edu; ++sym37__) {
-      for (int sym38__ = 1; sym38__ <= n_age; ++sym38__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n_age; ++idx2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(sym38__) + '.' + std::to_string(sym37__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym37__ = 1; sym37__ <= n_state; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_state; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -1188,27 +1188,27 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int sym37__ = 1; sym37__ <= n_age; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_age; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_edu; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_region; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_region; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
-    for (int sym37__ = 1; sym37__ <= n_edu; ++sym37__) {
-      for (int sym38__ = 1; sym38__ <= n_age; ++sym38__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n_age; ++idx2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(sym38__) + '.' + std::to_string(sym37__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym37__ = 1; sym37__ <= n_state; ++sym37__) {
+    for (int idx1__ = 1; idx1__ <= n_state; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(sym37__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

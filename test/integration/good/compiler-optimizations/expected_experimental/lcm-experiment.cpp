@@ -15,8 +15,8 @@ static constexpr std::array<const char*, 7> locations_array__ =
   " (in '../lcm-experiment.stan', line 11, column 2 to column 38)"};
 class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> {
  private:
-  double lcm_sym4__;
-  double lcm_sym3__;
+  double lcm4__;
+  double lcm3__;
   int j;
   double z;
   double x;
@@ -49,20 +49,20 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       stan::io::read_from_context(j, context__, "j");
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
-      lcm_sym4__ = static_cast<double>(1);
+      lcm4__ = static_cast<double>(1);
       z = static_cast<double>(1);
       current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
       {
         current_statement__ = 4;
         x = stan::math::normal_rng(123, 1, base_rng__);
-        lcm_sym3__ = stan::math::fma(stan::math::sqrt(j),
-                       static_cast<double>(2), static_cast<double>(1));
-        z = stan::math::normal_rng(lcm_sym3__, 1, base_rng__);
+        lcm3__ = stan::math::fma(stan::math::sqrt(j), static_cast<double>(2),
+                   static_cast<double>(1));
+        z = stan::math::normal_rng(lcm3__, 1, base_rng__);
       }
       current_statement__ = 6;
       current_statement__ = 6;
-      i = stan::math::normal_rng(lcm_sym3__, 1, base_rng__);
+      i = stan::math::normal_rng(lcm3__, 1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -162,8 +162,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

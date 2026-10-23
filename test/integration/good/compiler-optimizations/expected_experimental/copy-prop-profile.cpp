@@ -93,8 +93,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ lcm_sym6__;
-      Eigen::Matrix<local_scalar_t__,1,-1> lcm_sym5__;
+      local_scalar_t__ lcm6__;
+      Eigen::Matrix<local_scalar_t__,1,-1> lcm5__;
       current_statement__ = 1;
       auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
@@ -113,11 +113,11 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
           Eigen::Matrix<double,1,-1> vec2 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
-          stan::model::assign(lcm_sym5__, stan::math::columns_dot_self(X),
-            "assigning variable lcm_sym5__");
+          stan::model::assign(lcm5__, stan::math::columns_dot_self(X),
+            "assigning variable lcm5__");
         }
-        lcm_sym6__ = stan::math::sum(lcm_sym5__);
-        lp_accum__.add(lcm_sym6__);
+        lcm6__ = stan::math::sum(lcm5__);
+        lp_accum__.add(lcm6__);
         current_statement__ = 7;
         stan::math::validate_non_negative_index("vec3", "N", N);
         Eigen::Matrix<double,1,-1> vec3 =
@@ -131,7 +131,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
               std::numeric_limits<double>::quiet_NaN());
         }
         current_statement__ = 12;
-        lp_accum__.add(lcm_sym6__);
+        lp_accum__.add(lcm6__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -163,8 +163,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ lcm_sym4__;
-      Eigen::Matrix<local_scalar_t__,1,-1> lcm_sym3__;
+      local_scalar_t__ lcm4__;
+      Eigen::Matrix<local_scalar_t__,1,-1> lcm3__;
       current_statement__ = 1;
       auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
@@ -183,11 +183,11 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
           Eigen::Matrix<double,1,-1> vec2 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
-          stan::model::assign(lcm_sym3__, stan::math::columns_dot_self(X),
-            "assigning variable lcm_sym3__");
+          stan::model::assign(lcm3__, stan::math::columns_dot_self(X),
+            "assigning variable lcm3__");
         }
-        lcm_sym4__ = stan::math::sum(lcm_sym3__);
-        lp_accum__.add(lcm_sym4__);
+        lcm4__ = stan::math::sum(lcm3__);
+        lp_accum__.add(lcm4__);
         current_statement__ = 7;
         stan::math::validate_non_negative_index("vec3", "N", N);
         Eigen::Matrix<double,1,-1> vec3 =
@@ -201,7 +201,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
               std::numeric_limits<double>::quiet_NaN());
         }
         current_statement__ = 12;
-        lp_accum__.add(lcm_sym4__);
+        lp_accum__.add(lcm4__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -244,8 +244,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
@@ -336,10 +336,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= N; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= N; ++sym8__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -349,10 +349,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= N; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= N; ++sym8__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}

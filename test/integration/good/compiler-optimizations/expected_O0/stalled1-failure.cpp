@@ -376,9 +376,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       out__.write(alpha12);
       out__.write(tau);
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-          out__.write(b[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
+          out__.write(b[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
       if (stan::math::logical_negation(
@@ -438,12 +438,12 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__));
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
           current_statement__ = 6;
           stan::model::assign(b, in__.read<local_scalar_t__>(),
-            "assigning variable b", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable b", stan::model::index_uni(idx2__),
+            stan::model::index_uni(idx1__));
         }
       }
       out__.write(b);
@@ -552,10 +552,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
@@ -572,10 +572,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {

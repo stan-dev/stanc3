@@ -610,26 +610,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     param_names__.emplace_back(std::string() + "alpha_p");
     param_names__.emplace_back(std::string() + "beta_p");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "logit_psi" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
-      for (int sym1__ = 1; sym1__ <= T; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= R; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= T; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= R; ++idx2__) {
           param_names__.emplace_back(std::string() + "logit_p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "occ_fs");
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "psi_con" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
     }
   }
@@ -642,26 +642,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     param_names__.emplace_back(std::string() + "alpha_p");
     param_names__.emplace_back(std::string() + "beta_p");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "logit_psi" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
-      for (int sym1__ = 1; sym1__ <= T; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= R; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= T; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= R; ++idx2__) {
           param_names__.emplace_back(std::string() + "logit_p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "occ_fs");
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "psi_con" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
-      for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= R; ++idx1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx1__));
       }
     }
   }

@@ -78,7 +78,7 @@ let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
 let gen_inline_var (name : string) (id_var : string) =
-  Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
+  Gensym.next ~prefix:"inline" ~extra:("_" ^ name ^ "_" ^ id_var) ()
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : string String.Map.t) = function
@@ -1235,8 +1235,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         | _ when cannot_duplicate_expr ~preserve_stability e ->
             (* Immovable expressions might have movable subexpressions *)
             Expr.Pattern.fold collect_expressions accum e.pattern
-        | _ ->
-            ExprMap.add accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
+        | _ -> ExprMap.add accum ~key:e ~data:(Gensym.next ~prefix:"lcm" ())
       in
       ExprSet.fold
         (Monotone_framework.used_expressions_stmt s.pattern)

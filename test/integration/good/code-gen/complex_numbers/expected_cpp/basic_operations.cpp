@@ -864,9 +864,9 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       out__.write(gq_c_rowvector);
       out__.write(gq_c);
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
+          out__.write(carray[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
@@ -942,37 +942,37 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "real");
           param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
       param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "real");
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "imag");
         }
       }
@@ -984,37 +984,37 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "real");
           param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
       param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "real");
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
             "imag");
         }
       }

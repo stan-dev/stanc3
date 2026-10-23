@@ -52,7 +52,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym30__;
+    local_scalar_t__ lcm1__;
     {
       current_statement__ = 7;
       return stan::math::normal_lpdf<propto__>(x, mu, static_cast<double>(1));
@@ -76,7 +76,7 @@ bar_lpmf(const T0__& n, const T1__& mu, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym31__;
+    local_scalar_t__ lcm2__;
     {
       current_statement__ = 9;
       return stan::math::poisson_lpmf<propto__>(n, mu);
@@ -98,7 +98,7 @@ stan::return_type_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym32__;
+    local_scalar_t__ lcm3__;
     {
       current_statement__ = 11;
       return foo_lpdf<propto__>(x, 0.5, pstream__);
@@ -172,33 +172,33 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ lcm_sym43__;
-      local_scalar_t__ lcm_sym42__;
-      local_scalar_t__ lcm_sym41__;
+      local_scalar_t__ lcm14__;
+      local_scalar_t__ lcm13__;
+      local_scalar_t__ lcm12__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
-      double inline_foo_lpdf_return_sym23__;
+      double inline_foo_lpdf_return23__;
       {
-        lcm_sym41__ = stan::math::normal_lpdf<false>(mu, 1.0,
-                        static_cast<double>(1));
+        lcm12__ = stan::math::normal_lpdf<false>(mu, 1.0,
+                    static_cast<double>(1));
       }
-      tp = lcm_sym41__;
+      tp = lcm12__;
       {
-        double inline_baz_lpdf_return_sym25__;
+        double inline_baz_lpdf_return25__;
         {
-          double inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym26__;
+          double inline_baz_lpdf_inline_foo_lpdf_return7__26__;
           {
-            lcm_sym42__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
-                            static_cast<double>(1));
+            lcm13__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
+                        static_cast<double>(1));
           }
         }
-        lp_accum__.add(lcm_sym42__);
-        double inline_bar_lpmf_return_sym28__;
+        lp_accum__.add(lcm13__);
+        double inline_bar_lpmf_return28__;
         {
-          lcm_sym43__ = stan::math::poisson_lpmf<propto__>(n, mu);
+          lcm14__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
-        lp_accum__.add(lcm_sym43__);
+        lp_accum__.add(lcm14__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -230,33 +230,33 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ lcm_sym40__;
-      local_scalar_t__ lcm_sym39__;
-      local_scalar_t__ lcm_sym38__;
+      local_scalar_t__ lcm11__;
+      local_scalar_t__ lcm10__;
+      local_scalar_t__ lcm9__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
-      double inline_foo_lpdf_return_sym16__;
+      double inline_foo_lpdf_return16__;
       {
-        lcm_sym38__ = stan::math::normal_lpdf<false>(mu, 1.0,
-                        static_cast<double>(1));
+        lcm9__ = stan::math::normal_lpdf<false>(mu, 1.0,
+                   static_cast<double>(1));
       }
-      tp = lcm_sym38__;
+      tp = lcm9__;
       {
-        double inline_baz_lpdf_return_sym18__;
+        double inline_baz_lpdf_return18__;
         {
-          double inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__;
+          double inline_baz_lpdf_inline_foo_lpdf_return7__19__;
           {
-            lcm_sym39__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
-                            static_cast<double>(1));
+            lcm10__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
+                        static_cast<double>(1));
           }
         }
-        lp_accum__.add(lcm_sym39__);
-        double inline_bar_lpmf_return_sym21__;
+        lp_accum__.add(lcm10__);
+        double inline_bar_lpmf_return21__;
         {
-          lcm_sym40__ = stan::math::poisson_lpmf<propto__>(n, mu);
+          lcm11__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
-        lp_accum__.add(lcm_sym40__);
+        lp_accum__.add(lcm11__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -299,11 +299,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym37__;
-      int lcm_sym36__;
-      double lcm_sym35__;
-      double lcm_sym34__;
-      double lcm_sym33__;
+      int lcm8__;
+      int lcm7__;
+      double lcm6__;
+      double lcm5__;
+      double lcm4__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       double tp = std::numeric_limits<double>::quiet_NaN();
@@ -313,36 +313,36 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      double inline_foo_lpdf_return_sym9__;
+      double inline_foo_lpdf_return9__;
       {
-        lcm_sym34__ = stan::math::normal_lpdf<false>(mu, 1.0,
-                        static_cast<double>(1));
+        lcm5__ = stan::math::normal_lpdf<false>(mu, 1.0,
+                   static_cast<double>(1));
       }
-      tp = lcm_sym34__;
+      tp = lcm5__;
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym34__);
+        out__.write(lcm5__);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       }
       double lbaz = std::numeric_limits<double>::quiet_NaN();
-      double inline_baz_lpdf_return_sym11__;
+      double inline_baz_lpdf_return11__;
       {
-        double inline_baz_lpdf_inline_foo_lpdf_return_sym1___sym12__;
+        double inline_baz_lpdf_inline_foo_lpdf_return1__12__;
         {
-          lcm_sym33__ = stan::math::normal_lpdf<false>(mu, 0.5,
-                          static_cast<double>(1));
+          lcm4__ = stan::math::normal_lpdf<false>(mu, 0.5,
+                     static_cast<double>(1));
         }
       }
-      lbaz = lcm_sym33__;
+      lbaz = lcm4__;
       double lbar = std::numeric_limits<double>::quiet_NaN();
-      double inline_bar_lpmf_return_sym14__;
+      double inline_bar_lpmf_return14__;
       {
-        lcm_sym35__ = stan::math::poisson_lpmf<false>(n, mu);
+        lcm6__ = stan::math::poisson_lpmf<false>(n, mu);
       }
-      lbar = lcm_sym35__;
-      out__.write(lcm_sym33__);
-      out__.write(lcm_sym35__);
+      lbar = lcm6__;
+      out__.write(lcm4__);
+      out__.write(lcm6__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

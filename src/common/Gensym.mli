@@ -1,7 +1,5 @@
-(** Generate fresh (never before used) symbols.
+(** Generate fresh (never before used) symbols. *)
 
-    Uses an internal (mutable) counter *)
-
-val generate : ?prefix:string -> unit -> string
-val enter : unit -> string * (unit -> unit)
+val next : prefix:string -> ?extra:string -> unit -> string
+val enter : prefix:string -> string * (unit -> unit)
 val reset_danger_use_cautiously : unit -> unit

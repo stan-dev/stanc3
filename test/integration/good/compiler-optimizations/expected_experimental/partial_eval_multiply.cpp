@@ -113,9 +113,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym8__;
-      double lcm_sym7__;
-      Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym6__;
+      Eigen::Matrix<local_scalar_t__,-1,-1> lcm8__;
+      double lcm7__;
+      Eigen::Matrix<local_scalar_t__,-1,-1> lcm6__;
       current_statement__ = 1;
       auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -126,24 +126,24 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         Eigen::Matrix<double,-1,-1> m5 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym8__,
+        stan::model::assign(lcm8__,
           stan::math::add(
             stan::math::multiply(m1,
               stan::math::elt_multiply(m2,
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
-          "assigning variable lcm_sym8__");
+          "assigning variable lcm8__");
         Eigen::Matrix<double,-1,-1> m6 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym6__, stan::math::fma(m1, m2, m4),
-          "assigning variable lcm_sym6__");
+        stan::model::assign(lcm6__, stan::math::fma(m1, m2, m4),
+          "assigning variable lcm6__");
         Eigen::Matrix<double,-1,-1> m7 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
-        lp_accum__.add(((stan::math::sum(lcm_sym8__) +
-          stan::math::sum(lcm_sym6__)) + stan::math::sum(lcm_sym6__)));
+        lp_accum__.add(((stan::math::sum(lcm8__) + stan::math::sum(lcm6__)) +
+          stan::math::sum(lcm6__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -175,9 +175,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym5__;
-      double lcm_sym4__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym3__;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm5__;
+      double lcm4__;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm3__;
       current_statement__ = 1;
       auto m2 =
         in__.template read<
@@ -190,24 +190,24 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         Eigen::Matrix<double,-1,-1> m5 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym5__,
+        stan::model::assign(lcm5__,
           stan::math::add(
             stan::math::multiply(m1,
               stan::math::elt_multiply(m2,
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
-          "assigning variable lcm_sym5__");
+          "assigning variable lcm5__");
         Eigen::Matrix<double,-1,-1> m6 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym3__, stan::math::fma(m1, m2, m4),
-          "assigning variable lcm_sym3__");
+        stan::model::assign(lcm3__, stan::math::fma(m1, m2, m4),
+          "assigning variable lcm3__");
         Eigen::Matrix<double,-1,-1> m7 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
-        lp_accum__.add(((stan::math::sum(lcm_sym5__) +
-          stan::math::sum(lcm_sym3__)) + stan::math::sum(lcm_sym3__)));
+        lp_accum__.add(((stan::math::sum(lcm5__) + stan::math::sum(lcm3__)) +
+          stan::math::sum(lcm3__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -250,8 +250,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -364,16 +364,16 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "m2" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "m3" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -383,16 +383,16 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "m2" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "m3" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}

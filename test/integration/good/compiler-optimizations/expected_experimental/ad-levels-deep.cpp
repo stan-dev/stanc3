@@ -84,19 +84,19 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym8__;
-      Eigen::Matrix<double,-1,-1> lcm_sym7__;
+      Eigen::Matrix<double,-1,-1> lcm8__;
+      Eigen::Matrix<double,-1,-1> lcm7__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      stan::model::assign(lcm_sym7__, stan::math::exp(X_data),
-        "assigning variable lcm_sym7__");
-      stan::model::assign(X_tp1, lcm_sym7__, "assigning variable X_tp1");
+      stan::model::assign(lcm7__, stan::math::exp(X_data),
+        "assigning variable lcm7__");
+      stan::model::assign(X_tp1, lcm7__, "assigning variable X_tp1");
       Eigen::Matrix<double,-1,-1> X_tp2;
       current_statement__ = 3;
-      stan::model::assign(X_tp2, stan::math::exp(lcm_sym7__),
+      stan::model::assign(X_tp2, stan::math::exp(lcm7__),
         "assigning variable X_tp2");
       current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
@@ -133,8 +133,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym6__;
-      Eigen::Matrix<double,-1,-1> lcm_sym5__;
+      Eigen::Matrix<double,-1,-1> lcm6__;
+      Eigen::Matrix<double,-1,-1> lcm5__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -144,12 +144,12 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
                                                              10,
                                                              std::numeric_limits<double>::quiet_NaN(
                                                                )));
-      stan::model::assign(lcm_sym5__, stan::math::exp(X_data),
-        "assigning variable lcm_sym5__");
-      stan::model::assign(X_tp1, lcm_sym5__, "assigning variable X_tp1");
+      stan::model::assign(lcm5__, stan::math::exp(X_data),
+        "assigning variable lcm5__");
+      stan::model::assign(X_tp1, lcm5__, "assigning variable X_tp1");
       Eigen::Matrix<double,-1,-1> X_tp2;
       current_statement__ = 3;
-      stan::model::assign(X_tp2, stan::math::exp(lcm_sym5__),
+      stan::model::assign(X_tp2, stan::math::exp(lcm5__),
         "assigning variable X_tp2");
       current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
@@ -197,10 +197,10 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
-      Eigen::Matrix<double,-1,-1> lcm_sym2__;
-      Eigen::Matrix<double,-1,-1> lcm_sym1__;
+      int lcm4__;
+      int lcm3__;
+      Eigen::Matrix<double,-1,-1> lcm2__;
+      Eigen::Matrix<double,-1,-1> lcm1__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -217,19 +217,19 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      stan::model::assign(lcm_sym1__, stan::math::exp(X_data),
-        "assigning variable lcm_sym1__");
-      stan::model::assign(X_tp1, lcm_sym1__, "assigning variable X_tp1");
-      stan::model::assign(lcm_sym2__, stan::math::exp(lcm_sym1__),
-        "assigning variable lcm_sym2__");
-      stan::model::assign(X_tp2, lcm_sym2__, "assigning variable X_tp2");
+      stan::model::assign(lcm1__, stan::math::exp(X_data),
+        "assigning variable lcm1__");
+      stan::model::assign(X_tp1, lcm1__, "assigning variable X_tp1");
+      stan::model::assign(lcm2__, stan::math::exp(lcm1__),
+        "assigning variable lcm2__");
+      stan::model::assign(X_tp2, lcm2__, "assigning variable X_tp2");
       current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
       current_statement__ = 4;
       z = stan::math::get_lp(lp__, lp_accum__);
       if (emit_transformed_parameters__) {
         out__.write(X_p);
-        out__.write(lcm_sym2__);
+        out__.write(lcm2__);
         out__.write(z);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
@@ -327,23 +327,23 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-        for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(sym10__) + '.' + std::to_string(sym9__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-        for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(sym10__) + '.' + std::to_string(sym9__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
       param_names__.emplace_back(std::string() + "z");
@@ -354,23 +354,23 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-        for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(sym10__) + '.' + std::to_string(sym9__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-        for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(sym10__) + '.' + std::to_string(sym9__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
       param_names__.emplace_back(std::string() + "z");

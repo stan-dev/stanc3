@@ -138,18 +138,18 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym12__;
-      int lcm_sym11__;
-      int lcm_sym10__;
-      int lcm_sym9__;
-      int lcm_sym8__;
-      int lcm_sym7__;
-      int lcm_sym6__;
-      int lcm_sym5__;
-      int lcm_sym4__;
-      int lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm12__;
+      int lcm11__;
+      int lcm10__;
+      int lcm9__;
+      int lcm8__;
+      int lcm7__;
+      int lcm6__;
+      int lcm5__;
+      int lcm4__;
+      int lcm3__;
+      int lcm2__;
+      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

@@ -59,14 +59,14 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
         *(pstream__) << std::endl;
       }
       {
-        std::tuple<int, int> sym1__;
+        std::tuple<int, int> unpack1__;
         current_statement__ = 4;
-        stan::model::assign(sym1__, std::forward_as_tuple(5, 6),
-          "assigning variable sym1__");
+        stan::model::assign(unpack1__, std::forward_as_tuple(5, 6),
+          "assigning variable unpack1__");
         current_statement__ = 5;
-        x = std::get<0>(sym1__);
+        x = std::get<0>(unpack1__);
         current_statement__ = 5;
-        y = std::get<1>(sym1__);
+        y = std::get<1>(unpack1__);
       }
       current_statement__ = 6;
       if (pstream__) {
@@ -75,14 +75,14 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
         *(pstream__) << std::endl;
       }
       {
-        std::tuple<int, int> sym1__;
+        std::tuple<int, int> unpack1__;
         current_statement__ = 7;
-        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
-          "assigning variable sym1__");
+        stan::model::assign(unpack1__, std::forward_as_tuple(y, x),
+          "assigning variable unpack1__");
         current_statement__ = 8;
-        x = std::get<0>(sym1__);
+        x = std::get<0>(unpack1__);
         current_statement__ = 8;
-        y = std::get<1>(sym1__);
+        y = std::get<1>(unpack1__);
       }
       current_statement__ = 9;
       if (pstream__) {
@@ -91,24 +91,24 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
         *(pstream__) << std::endl;
       }
       {
-        std::tuple<int, int> sym1__;
+        std::tuple<int, int> unpack1__;
         current_statement__ = 10;
-        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
-          "assigning variable sym1__");
+        stan::model::assign(unpack1__, std::forward_as_tuple(y, x),
+          "assigning variable unpack1__");
         current_statement__ = 11;
-        x = std::get<0>(sym1__);
+        x = std::get<0>(unpack1__);
         current_statement__ = 11;
-        y = std::get<1>(sym1__);
+        y = std::get<1>(unpack1__);
       }
       {
-        std::tuple<int, int> sym1__;
+        std::tuple<int, int> unpack1__;
         current_statement__ = 12;
-        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
-          "assigning variable sym1__");
+        stan::model::assign(unpack1__, std::forward_as_tuple(y, x),
+          "assigning variable unpack1__");
         current_statement__ = 13;
-        x = std::get<0>(sym1__);
+        x = std::get<0>(unpack1__);
         current_statement__ = 13;
-        y = std::get<1>(sym1__);
+        y = std::get<1>(unpack1__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -69,17 +69,17 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym8__;
-      double lcm_sym7__;
-      local_scalar_t__ lcm_sym6__;
+      double lcm8__;
+      double lcm7__;
+      local_scalar_t__ lcm6__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
-        lcm_sym6__ = stan::math::log(x);
+        lcm6__ = stan::math::log(x);
         {
           current_statement__ = 3;
-          y = (lcm_sym6__ + 1);
+          y = (lcm6__ + 1);
         }
         {
           current_statement__ = 5;
@@ -118,17 +118,17 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
-      double lcm_sym4__;
-      local_scalar_t__ lcm_sym3__;
+      double lcm5__;
+      double lcm4__;
+      local_scalar_t__ lcm3__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
-        lcm_sym3__ = stan::math::log(x);
+        lcm3__ = stan::math::log(x);
         {
           current_statement__ = 3;
-          y = (lcm_sym3__ + 1);
+          y = (lcm3__ + 1);
         }
         {
           current_statement__ = 5;
@@ -178,8 +178,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       out__.write(x);

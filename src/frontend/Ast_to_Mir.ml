@@ -738,7 +738,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
       { loc
       ; flow_type= {controlflow= Incomplete Next; breaks= []; continues= false}
       } in
-  let sym, reset = Common.Gensym.enter () in
+  let sym, reset = Common.Gensym.enter ~prefix:"unpack" in
   let rhs_type = rhs.emeta.type_ in
   let temp =
     { Stmt.pattern=

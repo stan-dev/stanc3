@@ -75,14 +75,14 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym26__;
-      double lcm_sym25__;
-      double lcm_sym24__;
-      double lcm_sym23__;
-      double lcm_sym22__;
-      double lcm_sym21__;
-      double lcm_sym20__;
-      double lcm_sym19__;
+      double lcm26__;
+      double lcm25__;
+      double lcm24__;
+      double lcm23__;
+      double lcm22__;
+      double lcm21__;
+      double lcm20__;
+      double lcm19__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
@@ -230,14 +230,14 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym18__;
-      double lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
-      double lcm_sym11__;
+      double lcm18__;
+      double lcm17__;
+      double lcm16__;
+      double lcm15__;
+      double lcm14__;
+      double lcm13__;
+      double lcm12__;
+      double lcm11__;
       current_statement__ = 1;
       auto y =
         in__.template read<
@@ -398,16 +398,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      double lcm_sym4__;
-      double lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
+      double lcm5__;
+      double lcm4__;
+      double lcm3__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
@@ -826,11 +826,11 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
           std::vector<std::vector<local_scalar_t__>>(4,
             std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
             current_statement__ = 2;
-            arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+            arr[(idx3__ - 1)][(idx2__ - 1)][(idx1__ -
               1)] = in__.read<local_scalar_t__>();
           }
         }
@@ -900,16 +900,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym27__ = 1; sym27__ <= 2; ++sym27__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym27__));
+        std::to_string(idx1__));
     }
-    for (int sym27__ = 1; sym27__ <= 5; ++sym27__) {
-      for (int sym28__ = 1; sym28__ <= 4; ++sym28__) {
-        for (int sym29__ = 1; sym29__ <= 3; ++sym29__) {
+    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym29__) + '.' + std::to_string(sym28__) + '.' +
-            std::to_string(sym27__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
@@ -920,16 +920,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym27__ = 1; sym27__ <= 2; ++sym27__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym27__));
+        std::to_string(idx1__));
     }
-    for (int sym27__ = 1; sym27__ <= 5; ++sym27__) {
-      for (int sym28__ = 1; sym28__ <= 4; ++sym28__) {
-        for (int sym29__ = 1; sym29__ <= 3; ++sym29__) {
+    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym29__) + '.' + std::to_string(sym28__) + '.' +
-            std::to_string(sym27__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }

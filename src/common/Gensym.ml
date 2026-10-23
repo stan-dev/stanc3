@@ -1,11 +1,20 @@
-let _counter = ref 0
+let refs : (string * int ref) list ref = ref []
+let reset_danger_use_cautiously () = refs := []
 
-let generate ?(prefix : string = "") () =
-  _counter := !_counter + 1;
-  Format.sprintf "%ssym%d__" prefix !_counter
+let counter prefix =
+  assert (not (String.is_empty prefix));
+  match List.assoc_opt prefix !refs with
+  | Some count -> count
+  | None ->
+      let count = ref 0 in
+      refs := (prefix, count) :: !refs;
+      count
 
-let enter () =
-  let old_counter = !_counter in
-  (generate (), fun () -> _counter := old_counter)
+let next ~prefix ?(extra = "") () =
+  let count = counter prefix in
+  incr count;
+  Format.sprintf "%s%s%d__" prefix extra !count
 
-let reset_danger_use_cautiously () = _counter := 0
+let enter ~prefix =
+  let old_count = !(counter prefix) in
+  (next ~prefix (), fun () -> counter prefix := old_count)

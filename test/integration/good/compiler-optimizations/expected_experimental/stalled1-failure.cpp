@@ -41,7 +41,7 @@ static constexpr std::array<const char*, 33> locations_array__ =
   " (in '../stalled1-failure.stan', line 32, column 18 to column 19)"};
 class stalled1_failure_model final : public model_base_crtp<stalled1_failure_model> {
  private:
-  Eigen::Matrix<double,-1,1> lcm_sym31___data__;
+  Eigen::Matrix<double,-1,1> lcm31___data__;
   int I;
   std::vector<int> n;
   std::vector<int> N;
@@ -49,7 +49,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   Eigen::Matrix<double,-1,1> x2_data__;
   int K;
   Eigen::Matrix<double,-1,1> x1x2_data__;
-  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm_sym31__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm31__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> x1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> x2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> x1x2{nullptr, 0};
@@ -177,17 +177,17 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym30__;
-      local_scalar_t__ lcm_sym29__;
-      double lcm_sym28__;
-      double lcm_sym27__;
-      double lcm_sym26__;
-      double lcm_sym25__;
-      double lcm_sym24__;
-      double lcm_sym23__;
-      double lcm_sym22__;
-      double lcm_sym21__;
-      double lcm_sym20__;
+      int lcm30__;
+      local_scalar_t__ lcm29__;
+      double lcm28__;
+      double lcm27__;
+      double lcm26__;
+      double lcm25__;
+      double lcm24__;
+      double lcm23__;
+      double lcm22__;
+      double lcm21__;
+      double lcm20__;
       current_statement__ = 1;
       auto alpha0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -205,8 +205,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(I, 8);
       local_scalar_t__ sigma = DUMMY_VAR__;
-      lcm_sym29__ = (1 / stan::math::sqrt(tau));
-      sigma = lcm_sym29__;
+      lcm29__ = (1 / stan::math::sqrt(tau));
+      sigma = lcm29__;
       {
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha0, 0.0, 1.0E3));
@@ -223,7 +223,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           current_statement__ = 13;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::model::rvalue(b, "b",
-                             stan::model::index_uni(1)), 0.0, lcm_sym29__));
+                             stan::model::index_uni(1)), 0.0, lcm29__));
           current_statement__ = 14;
           lp_accum__.add(stan::math::binomial_logit_lpmf<propto__>(
                            stan::model::rvalue(n, "n",
@@ -247,7 +247,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             current_statement__ = 13;
             lp_accum__.add(stan::math::normal_lpdf<propto__>(
                              stan::model::rvalue(b, "b",
-                               stan::model::index_uni(i)), 0.0, lcm_sym29__));
+                               stan::model::index_uni(i)), 0.0, lcm29__));
             current_statement__ = 14;
             lp_accum__.add(stan::math::binomial_logit_lpmf<propto__>(
                              stan::model::rvalue(n, "n",
@@ -300,17 +300,17 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym19__;
-      local_scalar_t__ lcm_sym18__;
-      double lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
+      int lcm19__;
+      local_scalar_t__ lcm18__;
+      double lcm17__;
+      double lcm16__;
+      double lcm15__;
+      double lcm14__;
+      double lcm13__;
+      double lcm12__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
       current_statement__ = 1;
       auto alpha0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -329,8 +329,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>>(I,
           8);
       local_scalar_t__ sigma = DUMMY_VAR__;
-      lcm_sym18__ = (1 / stan::math::sqrt(tau));
-      sigma = lcm_sym18__;
+      lcm18__ = (1 / stan::math::sqrt(tau));
+      sigma = lcm18__;
       {
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha0, 0.0, 1.0E3));
@@ -347,7 +347,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           current_statement__ = 13;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::model::rvalue(b, "b",
-                             stan::model::index_uni(1)), 0.0, lcm_sym18__));
+                             stan::model::index_uni(1)), 0.0, lcm18__));
           current_statement__ = 14;
           lp_accum__.add(stan::math::binomial_logit_lpmf<propto__>(
                            stan::model::rvalue(n, "n",
@@ -371,7 +371,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             current_statement__ = 13;
             lp_accum__.add(stan::math::normal_lpdf<propto__>(
                              stan::model::rvalue(b, "b",
-                               stan::model::index_uni(i)), 0.0, lcm_sym18__));
+                               stan::model::index_uni(i)), 0.0, lcm18__));
             current_statement__ = 14;
             lp_accum__.add(stan::math::binomial_logit_lpmf<propto__>(
                              stan::model::rvalue(n, "n",
@@ -435,14 +435,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      int lcm_sym4__;
-      int lcm_sym3__;
-      int lcm_sym2__;
-      double lcm_sym1__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
+      double lcm5__;
+      int lcm4__;
+      int lcm3__;
+      int lcm2__;
+      double lcm1__;
       current_statement__ = 1;
       auto alpha0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -466,96 +466,96 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       out__.write(alpha12);
       out__.write(tau);
       {
-        lcm_sym2__ = stan::math::logical_gte(I, 1);
-        if (lcm_sym2__) {
+        lcm2__ = stan::math::logical_gte(I, 1);
+        if (lcm2__) {
           out__.write(stan::model::rvalue(b, "b", stan::model::index_uni(1),
                         stan::model::index_uni(1)));
-          for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+          for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
             out__.write(stan::model::rvalue(b, "b",
-                          stan::model::index_uni(sym2__),
+                          stan::model::index_uni(idx2__),
                           stan::model::index_uni(1)));
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(2)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(2)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(3)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(3)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(4)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(4)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(5)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(5)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(6)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(6)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(7)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(7)));
             }
           }
         }
         {
-          if (lcm_sym2__) {
+          if (lcm2__) {
             out__.write(stan::model::rvalue(b, "b",
                           stan::model::index_uni(1),
                           stan::model::index_uni(8)));
-            for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+            for (int idx2__ = 2; idx2__ <= I; ++idx2__) {
               out__.write(stan::model::rvalue(b, "b",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx2__),
                             stan::model::index_uni(8)));
             }
           }
@@ -566,10 +566,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      lcm_sym1__ = (1 / stan::math::sqrt(tau));
-      sigma = lcm_sym1__;
+      lcm1__ = (1 / stan::math::sqrt(tau));
+      sigma = lcm1__;
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym1__);
+        out__.write(lcm1__);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -618,12 +618,12 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__));
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
           current_statement__ = 6;
           stan::model::assign(b, in__.read<local_scalar_t__>(),
-            "assigning variable b", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable b", stan::model::index_uni(idx2__),
+            stan::model::index_uni(idx1__));
         }
       }
       out__.write(b);
@@ -732,10 +732,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym32__ = 1; sym32__ <= K; ++sym32__) {
-      for (int sym33__ = 1; sym33__ <= I; ++sym33__) {
+    for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym33__) + '.' + std::to_string(sym32__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
@@ -752,10 +752,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym32__ = 1; sym32__ <= K; ++sym32__) {
-      for (int sym33__ = 1; sym33__ <= I; ++sym33__) {
+    for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= I; ++idx2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym33__) + '.' + std::to_string(sym32__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {

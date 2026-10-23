@@ -425,53 +425,53 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -481,53 +481,53 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

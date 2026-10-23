@@ -135,12 +135,12 @@
        ((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
-              (decl_id sym1__) (decl_type (Unsized (UTuple (UMatrix UMatrix))))
+             (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+              (decl_id unpack1__) (decl_type (Unsized (UTuple (UMatrix UMatrix))))
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern
-             (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
+             (Assignment ((LVariable unpack1__) ()) (UTuple (UMatrix UMatrix))
               ((pattern
                 (FunApp (StanLib qr_thin FnPlain)
                  (((pattern (Var A))
@@ -153,7 +153,7 @@
              (Assignment ((LVariable Q) ()) UMatrix
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack1__))
                   (meta
                    ((type_ (UTuple (UMatrix UMatrix))) (loc <opaque>)
                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
@@ -164,7 +164,7 @@
              (Assignment ((LVariable R) ()) UMatrix
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack1__))
                   (meta
                    ((type_ (UTuple (UMatrix UMatrix))) (loc <opaque>)
                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
@@ -270,8 +270,8 @@
        ((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
-              (decl_id sym1__)
+             (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+              (decl_id unpack1__)
               (decl_type
                (Sized
                 (STuple
@@ -288,7 +288,7 @@
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern
-             (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
+             (Assignment ((LVariable unpack1__) ()) (UTuple (UMatrix UMatrix))
               ((pattern
                 (FunApp (StanLib qr_thin FnPlain)
                  (((pattern (Var A))
@@ -301,7 +301,7 @@
              (Assignment ((LVariable Q) ()) UMatrix
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack1__))
                   (meta
                    ((type_ (UTuple (UMatrix UMatrix))) (loc <opaque>)
                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
@@ -312,7 +312,7 @@
              (Assignment ((LVariable R) ()) UMatrix
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack1__))
                   (meta
                    ((type_ (UTuple (UMatrix UMatrix))) (loc <opaque>)
                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))

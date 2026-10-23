@@ -2132,36 +2132,36 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "alpha_v" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "cuts" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n; ++idx2__) {
         param_names__.emplace_back(std::string() + "beta_m" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
       param_names__.emplace_back(std::string() + "X_rv_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -2170,36 +2170,36 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "alpha_v" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "cuts" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n; ++idx2__) {
         param_names__.emplace_back(std::string() + "beta_m" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
       param_names__.emplace_back(std::string() + "X_rv_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

@@ -261,10 +261,10 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
           std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       out__.write(y);
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            out__.write(arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
+            out__.write(arr[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -308,11 +308,11 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
           std::vector<std::vector<local_scalar_t__>>(4,
             std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
             current_statement__ = 2;
-            arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+            arr[(idx3__ - 1)][(idx2__ - 1)][(idx1__ -
               1)] = in__.read<local_scalar_t__>();
           }
         }
@@ -383,16 +383,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
@@ -403,16 +403,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 3; ++idx3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }

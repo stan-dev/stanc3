@@ -171,14 +171,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::complex<double> lcm_sym19__;
-      std::complex<double> lcm_sym18__;
-      double lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      Eigen::Matrix<double,-1,1> lcm_sym12__;
+      std::complex<double> lcm19__;
+      std::complex<double> lcm18__;
+      double lcm17__;
+      double lcm16__;
+      double lcm15__;
+      double lcm14__;
+      double lcm13__;
+      Eigen::Matrix<double,-1,1> lcm12__;
       current_statement__ = 1;
       auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
@@ -220,15 +220,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::complex<double> z =
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN());
-        lcm_sym19__ = stan::math::to_complex(7, 5);
+        lcm19__ = stan::math::to_complex(7, 5);
         current_statement__ = 13;
         if (pstream__) {
-          stan::math::stan_print(pstream__, lcm_sym19__);
+          stan::math::stan_print(pstream__, lcm19__);
           *(pstream__) << std::endl;
         }
-        lcm_sym18__ = stan::math::to_complex(5, 4);
+        lcm18__ = stan::math::to_complex(5, 4);
         current_statement__ = 14;
-        lp_accum__.add(stan::math::get_real(lcm_sym18__));
+        lp_accum__.add(stan::math::get_real(lcm18__));
         if (pstream__) {
           stan::math::stan_print(pstream__, 0);
           *(pstream__) << std::endl;
@@ -264,14 +264,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::complex<double> lcm_sym11__;
-      std::complex<double> lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      Eigen::Matrix<double,-1,1> lcm_sym4__;
+      std::complex<double> lcm11__;
+      std::complex<double> lcm10__;
+      double lcm9__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
+      double lcm5__;
+      Eigen::Matrix<double,-1,1> lcm4__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -316,15 +316,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::complex<double> z =
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN());
-        lcm_sym11__ = stan::math::to_complex(7, 5);
+        lcm11__ = stan::math::to_complex(7, 5);
         current_statement__ = 13;
         if (pstream__) {
-          stan::math::stan_print(pstream__, lcm_sym11__);
+          stan::math::stan_print(pstream__, lcm11__);
           *(pstream__) << std::endl;
         }
-        lcm_sym10__ = stan::math::to_complex(5, 4);
+        lcm10__ = stan::math::to_complex(5, 4);
         current_statement__ = 14;
-        lp_accum__.add(stan::math::get_real(lcm_sym10__));
+        lp_accum__.add(stan::math::get_real(lcm10__));
         if (pstream__) {
           stan::math::stan_print(pstream__, 0);
           *(pstream__) << std::endl;
@@ -371,9 +371,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym3__;
-      int lcm_sym2__;
-      Eigen::Matrix<double,-1,1> lcm_sym1__;
+      int lcm3__;
+      int lcm2__;
+      Eigen::Matrix<double,-1,1> lcm1__;
       current_statement__ = 1;
       auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
@@ -557,21 +557,21 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym20__ = 1; sym20__ <= n_pair; ++sym20__) {
+    for (int idx1__ = 1; idx1__ <= n_pair; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym20__));
+        std::to_string(idx1__));
     }
-    for (int sym20__ = 1; sym20__ <= 2; ++sym20__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym20__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "mu_a");
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym20__ = 1; sym20__ <= N; ++sym20__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym20__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -580,21 +580,21 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym20__ = 1; sym20__ <= n_pair; ++sym20__) {
+    for (int idx1__ = 1; idx1__ <= n_pair; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym20__));
+        std::to_string(idx1__));
     }
-    for (int sym20__ = 1; sym20__ <= 2; ++sym20__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym20__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "mu_a");
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym20__ = 1; sym20__ <= N; ++sym20__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym20__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

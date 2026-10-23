@@ -381,13 +381,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "mu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "sigma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {}
@@ -397,13 +397,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "mu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "sigma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {}

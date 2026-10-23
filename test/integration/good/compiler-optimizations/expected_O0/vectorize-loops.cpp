@@ -752,13 +752,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -770,13 +770,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

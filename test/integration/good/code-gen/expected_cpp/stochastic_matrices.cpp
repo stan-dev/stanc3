@@ -356,15 +356,15 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
       out__.write(p_csm);
       out__.write(p_rsm);
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               out__.write(stan::model::rvalue(p_arsm, "p_arsm",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx4__),
+                            stan::model::index_uni(idx3__),
+                            stan::model::index_uni(idx2__),
+                            stan::model::index_uni(idx1__)));
             }
           }
         }
@@ -390,15 +390,15 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
         out__.write(tp_csm);
         out__.write(tp_rsm);
         current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+        for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+            for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+              for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
                 out__.write(stan::model::rvalue(tp_arsm, "tp_arsm",
-                              stan::model::index_uni(sym4__),
-                              stan::model::index_uni(sym3__),
-                              stan::model::index_uni(sym2__),
-                              stan::model::index_uni(sym1__)));
+                              stan::model::index_uni(idx4__),
+                              stan::model::index_uni(idx3__),
+                              stan::model::index_uni(idx2__),
+                              stan::model::index_uni(idx1__)));
               }
             }
           }
@@ -433,15 +433,15 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
       out__.write(gq_csm);
       out__.write(gq_rsm);
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               out__.write(stan::model::rvalue(gq_arsm, "gq_arsm",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx4__),
+                            stan::model::index_uni(idx3__),
+                            stan::model::index_uni(idx2__),
+                            stan::model::index_uni(idx1__)));
             }
           }
         }
@@ -489,16 +489,16 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
             Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(ROWS, COLS,
               DUMMY_VAR__)));
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               current_statement__ = 3;
               stan::model::assign(p_arsm, in__.read<local_scalar_t__>(),
-                "assigning variable p_arsm", stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                "assigning variable p_arsm", stan::model::index_uni(idx4__),
+                stan::model::index_uni(idx3__),
+                stan::model::index_uni(idx2__),
+                stan::model::index_uni(idx1__));
             }
           }
         }
@@ -618,74 +618,74 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_csm" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_rsm" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+    for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+          for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
             param_names__.emplace_back(std::string() + "p_arsm" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+              std::to_string(idx2__) + '.' + std::to_string(idx1__));
           }
         }
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_csm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_rsm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               param_names__.emplace_back(std::string() + "tp_arsm" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+                std::to_string(idx2__) + '.' + std::to_string(idx1__));
             }
           }
         }
       }
     }
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_csm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_rsm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               param_names__.emplace_back(std::string() + "gq_arsm" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+                std::to_string(idx2__) + '.' + std::to_string(idx1__));
             }
           }
         }
@@ -696,74 +696,74 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= COLS; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= (ROWS - 1); ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= COLS; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= (ROWS - 1); ++idx2__) {
         param_names__.emplace_back(std::string() + "p_csm" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= (COLS - 1); ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
+    for (int idx1__ = 1; idx1__ <= (COLS - 1); ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_rsm" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= (COLS - 1); ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= ROWS; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+    for (int idx1__ = 1; idx1__ <= (COLS - 1); ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= ROWS; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+          for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
             param_names__.emplace_back(std::string() + "p_arsm" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+              std::to_string(idx2__) + '.' + std::to_string(idx1__));
           }
         }
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= (10 - 1); ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= (10 - 1); ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_csm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= (10 - 1); ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_rsm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= (10 - 1); ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               param_names__.emplace_back(std::string() + "tp_arsm" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+                std::to_string(idx2__) + '.' + std::to_string(idx1__));
             }
           }
         }
       }
     }
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= (10 - 1); ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= (10 - 1); ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_csm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int idx1__ = 1; idx1__ <= (10 - 1); ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "gq_rsm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+      for (int idx1__ = 1; idx1__ <= (10 - 1); ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= 2; ++idx3__) {
+            for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
               param_names__.emplace_back(std::string() + "gq_arsm" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(idx4__) + '.' + std::to_string(idx3__) + '.' +
+                std::to_string(idx2__) + '.' + std::to_string(idx1__));
             }
           }
         }

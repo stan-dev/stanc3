@@ -60,8 +60,8 @@ static constexpr std::array<const char*, 52> locations_array__ =
   " (in '../vectorize-loops.stan', line 23, column 9 to column 10)"};
 class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model> {
  private:
-  Eigen::Matrix<double,-1,1> lcm_sym44___data__;
-  int lcm_sym43__;
+  Eigen::Matrix<double,-1,1> lcm44___data__;
+  int lcm43__;
   int N;
   int J;
   Eigen::Matrix<double,-1,1> x_data__;
@@ -71,7 +71,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
   int M;
   Eigen::Matrix<double,-1,1> copied_data__;
   Eigen::Matrix<double,-1,1> shorter_data__;
-  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm_sym44__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm44__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> x{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> y{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> copied{nullptr, 0};
@@ -170,20 +170,19 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         Eigen::Map<Eigen::Matrix<double,-1,1>>(copied_data__.data(), N);
       current_statement__ = 46;
       stan::model::assign(copied, x, "assigning variable copied");
-      lcm_sym43__ = (N - 1);
-      M = lcm_sym43__;
+      lcm43__ = (N - 1);
+      M = lcm43__;
       current_statement__ = 47;
-      stan::math::validate_non_negative_index("shorter", "M", lcm_sym43__);
+      stan::math::validate_non_negative_index("shorter", "M", lcm43__);
       current_statement__ = 48;
-      shorter_data__ = Eigen::Matrix<double,-1,1>::Constant(lcm_sym43__,
+      shorter_data__ = Eigen::Matrix<double,-1,1>::Constant(lcm43__,
                          std::numeric_limits<double>::quiet_NaN());
       new (&shorter)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(shorter_data__.data(),
-        lcm_sym43__);
+        lcm43__);
       current_statement__ = 49;
       stan::model::assign(shorter,
-        stan::model::rvalue(x, "x",
-          stan::model::index_min_max(1, lcm_sym43__)),
+        stan::model::rvalue(x, "x", stan::model::index_min_max(1, lcm43__)),
         "assigning variable shorter");
       current_statement__ = 50;
       stan::math::validate_non_negative_index("eta", "N", N);
@@ -225,26 +224,26 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym42__;
-      int lcm_sym41__;
-      Eigen::Matrix<double,-1,1> lcm_sym40__;
-      double lcm_sym39__;
-      double lcm_sym38__;
-      Eigen::Matrix<double,-1,1> lcm_sym37__;
-      double lcm_sym36__;
-      double lcm_sym35__;
-      Eigen::Matrix<double,-1,1> lcm_sym34__;
-      double lcm_sym33__;
-      double lcm_sym32__;
-      double lcm_sym31__;
-      double lcm_sym30__;
-      double lcm_sym29__;
-      double lcm_sym28__;
-      double lcm_sym27__;
-      double lcm_sym26__;
-      double lcm_sym25__;
-      Eigen::Matrix<double,-1,1> lcm_sym24__;
-      double lcm_sym23__;
+      int lcm42__;
+      int lcm41__;
+      Eigen::Matrix<double,-1,1> lcm40__;
+      double lcm39__;
+      double lcm38__;
+      Eigen::Matrix<double,-1,1> lcm37__;
+      double lcm36__;
+      double lcm35__;
+      Eigen::Matrix<double,-1,1> lcm34__;
+      double lcm33__;
+      double lcm32__;
+      double lcm31__;
+      double lcm30__;
+      double lcm29__;
+      double lcm28__;
+      double lcm27__;
+      double lcm26__;
+      double lcm25__;
+      Eigen::Matrix<double,-1,1> lcm24__;
+      double lcm23__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -308,8 +307,8 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
           current_statement__ = 22;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y, scratch, sigma));
         }
-        lcm_sym41__ = stan::math::logical_gte(N, 1);
-        if (lcm_sym41__) {
+        lcm41__ = stan::math::logical_gte(N, 1);
+        if (lcm41__) {
           current_statement__ = 24;
           stan::model::assign(scratch, (alpha +
             stan::model::rvalue(eta, "eta", stan::model::index_uni(1))),
@@ -350,7 +349,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
           }
         }
         current_statement__ = 32;
-        if (lcm_sym41__) {
+        if (lcm41__) {
           current_statement__ = 30;
           lp_accum__.add(stan::math::normal_lpdf<false>(
                            stan::model::rvalue(y, "y",
@@ -395,26 +394,26 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym22__;
-      int lcm_sym21__;
-      Eigen::Matrix<double,-1,1> lcm_sym20__;
-      double lcm_sym19__;
-      double lcm_sym18__;
-      Eigen::Matrix<double,-1,1> lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      Eigen::Matrix<double,-1,1> lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      double lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      Eigen::Matrix<double,-1,1> lcm_sym4__;
-      double lcm_sym3__;
+      int lcm22__;
+      int lcm21__;
+      Eigen::Matrix<double,-1,1> lcm20__;
+      double lcm19__;
+      double lcm18__;
+      Eigen::Matrix<double,-1,1> lcm17__;
+      double lcm16__;
+      double lcm15__;
+      Eigen::Matrix<double,-1,1> lcm14__;
+      double lcm13__;
+      double lcm12__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
+      double lcm7__;
+      double lcm6__;
+      double lcm5__;
+      Eigen::Matrix<double,-1,1> lcm4__;
+      double lcm3__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -482,8 +481,8 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
           current_statement__ = 22;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y, scratch, sigma));
         }
-        lcm_sym21__ = stan::math::logical_gte(N, 1);
-        if (lcm_sym21__) {
+        lcm21__ = stan::math::logical_gte(N, 1);
+        if (lcm21__) {
           current_statement__ = 24;
           stan::model::assign(scratch, (alpha +
             stan::model::rvalue(eta, "eta", stan::model::index_uni(1))),
@@ -524,7 +523,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
           }
         }
         current_statement__ = 32;
-        if (lcm_sym21__) {
+        if (lcm21__) {
           current_statement__ = 30;
           lp_accum__.add(stan::math::normal_lpdf<false>(
                            stan::model::rvalue(y, "y",
@@ -580,8 +579,8 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -737,13 +736,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym45__ = 1; sym45__ <= N; ++sym45__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta" + '.' +
-        std::to_string(sym45__));
+        std::to_string(idx1__));
     }
-    for (int sym45__ = 1; sym45__ <= J; ++sym45__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym45__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -755,13 +754,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym45__ = 1; sym45__ <= N; ++sym45__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta" + '.' +
-        std::to_string(sym45__));
+        std::to_string(idx1__));
     }
-    for (int sym45__ = 1; sym45__ <= J; ++sym45__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym45__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

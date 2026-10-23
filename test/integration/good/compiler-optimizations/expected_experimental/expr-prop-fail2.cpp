@@ -108,8 +108,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
-      double lcm_sym5__;
+      double lcm6__;
+      double lcm5__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -154,8 +154,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym4__;
-      double lcm_sym3__;
+      double lcm4__;
+      double lcm3__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -211,8 +211,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -331,9 +331,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym7__ = 1; sym7__ <= J; ++sym7__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym7__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "tau");
     if (emit_transformed_parameters__) {}
@@ -344,9 +344,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym7__ = 1; sym7__ <= J; ++sym7__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym7__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "tau");
     if (emit_transformed_parameters__) {}

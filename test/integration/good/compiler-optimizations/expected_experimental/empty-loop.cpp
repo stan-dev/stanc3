@@ -65,10 +65,10 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      double lcm_sym7__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
+      double lcm7__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
@@ -106,10 +106,10 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
-      double lcm_sym5__;
-      double lcm_sym4__;
-      double lcm_sym3__;
+      double lcm6__;
+      double lcm5__;
+      double lcm4__;
+      double lcm3__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
@@ -158,8 +158,8 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       out__.write(y);

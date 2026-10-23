@@ -14,10 +14,10 @@ static constexpr std::array<const char*, 6> locations_array__ =
   " (in '../partial_eval_zeros.stan', line 6, column 2 to column 11)"};
 class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros_model> {
  private:
-  Eigen::Matrix<double,-1,1> lcm_sym3___data__;
+  Eigen::Matrix<double,-1,1> lcm3___data__;
   Eigen::Matrix<double,-1,1> v_data__;
   double y;
-  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm_sym3__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,1>> lcm3__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> v{nullptr, 0};
  public:
   ~partial_eval_zeros_model() {}
@@ -162,8 +162,8 @@ class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
