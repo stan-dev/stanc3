@@ -10,9 +10,9 @@ while read -r dir; do
     base="$(basename $file)"
     name="${base%%.*}"
 
-    if [ ! -f "$parent_dir/$name.stan" ]; then
+    if [ ! -f "$parent_dir/$name.stan" -a ! -f "$parent_dir/$name.stanfunctions" ]; then
         removed=1
-        echo "Deleting test file $file, which does not have a matching .stan source!"
+        echo "Deleting test file $file, which does not have a matching .stan[functions] source!"
         rm -f "$file"
     fi
   done

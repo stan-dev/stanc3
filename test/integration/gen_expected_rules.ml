@@ -30,7 +30,7 @@ let print_rules ~ext ~flags input_file =
    (with-stdout-to
     %s.output
     (run
-     %%{project_root}/test/integration/run_bin_on_args.exe
+     %%{project_root}/test/integration/runner.exe
      "%%{bin:stanc} %s"
      %%{dep:%s}))
    (diff? %s %s.output))))
