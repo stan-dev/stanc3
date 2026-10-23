@@ -727,6 +727,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

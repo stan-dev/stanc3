@@ -678,6 +678,48 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"data_tuple\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(std::get<0>(data_tuple),
+                          "data_tuple.1", stan::model::index_uni(idx1__),
+                          stan::model::index_uni(idx2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<1>(data_tuple)[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

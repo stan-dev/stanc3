@@ -51,16 +51,18 @@
  (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly DataOnly))) (decl_id x3)
-      (decl_type (Sized (STuple (SInt SInt SInt)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly DataOnly))) (decl_id x3)
+       (decl_type (Sized (STuple (SInt SInt SInt)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x3) ()) (UTuple (UInt UInt UInt))
@@ -74,8 +76,9 @@
          (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x2)
-      (decl_type (Sized (STuple (SInt SInt)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x2)
+       (decl_type (Sized (STuple (SInt SInt)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x2) ()) (UTuple (UInt UInt))
@@ -88,8 +91,8 @@
          (adlevel (TupleAD (DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id y3) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id y3) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y3) ()) UInt
@@ -102,8 +105,8 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id y2) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id y2) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y2) ()) UInt
@@ -116,8 +119,8 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id y4) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id y4) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y4) ()) UInt

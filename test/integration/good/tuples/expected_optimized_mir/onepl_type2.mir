@@ -4,16 +4,18 @@
   (((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
-          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+         (Decl
+          ((decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+           (decl_type (Sized (STuple (SReal)))) (initialize Default))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
-          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+         (Decl
+          ((decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+           (decl_type (Sized (STuple (SReal)))) (initialize Default))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (generate_quantities

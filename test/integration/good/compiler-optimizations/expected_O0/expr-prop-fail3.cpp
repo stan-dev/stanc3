@@ -998,6 +998,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age_edu) + "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_state) + "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_region_full) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

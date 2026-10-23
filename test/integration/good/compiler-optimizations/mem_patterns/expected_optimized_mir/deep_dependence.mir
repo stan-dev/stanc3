@@ -20,35 +20,41 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_p)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_p)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp1)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp1)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp1) ()) UMatrix
@@ -59,13 +65,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp2)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp2)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp2) ()) UMatrix
@@ -76,13 +85,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp3)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp3)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp3) ()) UMatrix
@@ -93,13 +105,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp4)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp4)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp4) ()) UMatrix
@@ -110,13 +125,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp5)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp5)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp5) ()) UMatrix
@@ -127,13 +145,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp6)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp6)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp6) ()) UMatrix
@@ -144,13 +165,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp7)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp7)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp7) ()) UMatrix
@@ -212,35 +236,41 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_p)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_p)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp1)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp1)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp1) ()) UMatrix
@@ -251,13 +281,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp2)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp2)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp2) ()) UMatrix
@@ -268,13 +301,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp3)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp3)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp3) ()) UMatrix
@@ -285,13 +321,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp4)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp4)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp4) ()) UMatrix
@@ -302,13 +341,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp5)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp5)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp5) ()) UMatrix
@@ -319,13 +361,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp6)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp6)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp6) ()) UMatrix
@@ -336,13 +381,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_tp7)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_tp7)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_tp7) ()) UMatrix
@@ -404,89 +452,113 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_p)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_p)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp1)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp1)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp2)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp2)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp3)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp3)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp4)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp4)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp5)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp5)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp6)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp6)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id X_tp7)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id X_tp7)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -699,21 +771,25 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_p)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_p)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -733,13 +809,16 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id X_p)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id X_p)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable X_p) ()) UMatrix

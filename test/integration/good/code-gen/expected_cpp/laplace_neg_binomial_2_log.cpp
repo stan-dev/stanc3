@@ -740,6 +740,68 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << ",\n";
+    json_stream << "\"prior_mean\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(prior_mean[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
