@@ -1,4 +1,4 @@
-  $ stanc --auto-format array_overloaded.stan
+/* $ stanc --auto-format array_overloaded.stan : [exit 0] */
 functions {
   real bar(array[] real xs) {
     return 1.0;
@@ -13,8 +13,7 @@ model {
   print(bar({2.3, 3}));
 }
 
-[exit 0]
-  $ stanc --auto-format array_promotion.stan
+/* $ stanc --auto-format array_promotion.stan : [exit 0] */
 functions {
   void printer(array[] real x) {
     print(x);
@@ -50,8 +49,7 @@ model {
   print(nested(zs));
 }
 
-[exit 0]
-  $ stanc --auto-format complex_functions.stan
+/* $ stanc --auto-format complex_functions.stan : [exit 0] */
 functions {
   void promote_complex_array(array[] complex zs) {
     print(zs[0]);
@@ -90,8 +88,7 @@ generated quantities {
   real answer = sum_weird(A);
 }
 
-[exit 0]
-  $ stanc --auto-format newton_x_r_type.stan
+/* $ stanc --auto-format newton_x_r_type.stan : [exit 0] */
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
                         array[] int x_i) {
@@ -121,8 +118,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format newton_x_r_type_control.stan
+/* $ stanc --auto-format newton_x_r_type_control.stan : [exit 0] */
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
                         array[] int x_i) {
@@ -153,14 +149,12 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format propto.stan
+/* $ stanc --auto-format propto.stan : [exit 0] */
 model {
   target += normal_lupdf(1 | {0}, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format return_position.stan
+/* $ stanc --auto-format return_position.stan : [exit 0] */
 functions {
   array[] complex foo(real a) {
     return {1, 2};
@@ -178,8 +172,7 @@ transformed parameters {
   complex_vector[2] c = bar(a);
 }
 
-[exit 0]
-  $ stanc --auto-format tilde_syntax.stan
+/* $ stanc --auto-format tilde_syntax.stan : [exit 0] */
 functions {
   real multi_wallenius_integral(real t, // Function argument
                                 real xc,
@@ -232,8 +225,7 @@ model {
     y[i] ~ multi_wallenius(m, probs, x_i, tol);
 }
 
-[exit 0]
-  $ stanc --auto-format x_r_type.stan
+/* $ stanc --auto-format x_r_type.stan : [exit 0] */
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
                         array[] int x_i) {
@@ -263,8 +255,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format x_r_type_control.stan
+/* $ stanc --auto-format x_r_type_control.stan : [exit 0] */
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
                         array[] int x_i) {
@@ -295,4 +286,3 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-[exit 0]

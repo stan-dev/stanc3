@@ -1,37 +1,34 @@
-(rule
- (targets cpp.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fsoa --print-cpp"
-    %{stanfiles}))))
+(subdir
+ dunes
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan)))
+  (action
+   (with-stdout-to
+    cpp.inc
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     cpp
+     "-fsoa --print-cpp"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan)))
+  (action
+   (with-stdout-to
+    mir.inc
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     mir
+     "-fsoa --debug-optimized-mir --debug-mem-patterns"
+     %{stanfiles})))))
 
-(rule
- (alias runtest)
- (action
-  (diff cpp.expected cpp.output)))
+(subdir
+ expected_cpp
+ (dynamic_include ../dunes/cpp.inc))
 
-(rule
- (targets transformed_mir.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fsoa --debug-optimized-mir --debug-mem-patterns"
-    %{stanfiles}))))
-
-(rule
- (alias runtest)
- (action
-  (diff transformed_mir.expected transformed_mir.output)))
+(subdir
+ expected_optimized_mir
+ (dynamic_include ../dunes/mir.inc))

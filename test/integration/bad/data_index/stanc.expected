@@ -1,4 +1,4 @@
-  $ stanc non_data_index1.stan
+/* $ stanc non_data_index1.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index1.stan:6:14
   1 │  parameters {
@@ -10,8 +10,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    array[size(y)] real z;
     │               ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index10.stan
+/* $ stanc non_data_index10.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index10.stan:6:28
   1 │  parameters {
@@ -23,8 +22,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    cholesky_factor_cov[size(y)] z;
     │                             ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index11.stan
+/* $ stanc non_data_index11.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index11.stan:6:31
   1 │  parameters {
@@ -36,8 +34,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    cholesky_factor_cov[3, size(y)] z;
     │                                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index12.stan
+/* $ stanc non_data_index12.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index12.stan:6:29
   1 │  parameters {
@@ -49,8 +46,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    cholesky_factor_corr[size(y)] z;
     │                              ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index13.stan
+/* $ stanc non_data_index13.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index13.stan:6:20
   1 │  parameters {
@@ -62,8 +58,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    corr_matrix[size(y)] z;
     │                     ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index14.stan
+/* $ stanc non_data_index14.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index14.stan:6:19
   1 │  parameters {
@@ -75,8 +70,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    cov_matrix[size(y)] z;
     │                    ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index2.stan
+/* $ stanc non_data_index2.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index2.stan:6:15
   1 │  parameters {
@@ -88,8 +82,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    vector[size(y)] z;
     │                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index3.stan
+/* $ stanc non_data_index3.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index3.stan:6:19
   1 │  parameters {
@@ -101,8 +94,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    row_vector[size(y)] z;
     │                    ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index4.stan
+/* $ stanc non_data_index4.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index4.stan:5:15
   1 │  parameters {
@@ -113,8 +105,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   5 │    matrix[size(y), 2] m;
     │                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   6 │  }
-[exit 1]
-  $ stanc non_data_index5.stan
+/* $ stanc non_data_index5.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index5.stan:6:18
   1 │  parameters {
@@ -126,8 +117,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    matrix[2, size(y)] m;
     │                   ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  
-[exit 1]
-  $ stanc non_data_index6.stan
+/* $ stanc non_data_index6.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index6.stan:6:16
   1 │  parameters {
@@ -139,8 +129,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    simplex[size(y)] z;
     │                 ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index7.stan
+/* $ stanc non_data_index7.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index7.stan:6:16
   1 │  parameters {
@@ -152,8 +141,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    ordered[size(y)] z;
     │                 ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index8.stan
+/* $ stanc non_data_index8.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index8.stan:6:25
   1 │  parameters {
@@ -165,8 +153,7 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    positive_ordered[size(y)] z;
     │                          ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc non_data_index9.stan
+/* $ stanc non_data_index9.stan : [exit 1] */
 error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
     ┌─ non_data_index9.stan:6:20
   1 │  parameters {
@@ -178,12 +165,10 @@ error: Top level variable sizes must be variables from the (transformed) data bl
   6 │    unit_vector[size(y)] z;
     │                     ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
   7 │  }
-[exit 1]
-  $ stanc rng_index1.stan
+/* $ stanc rng_index1.stan : [exit 1] */
 error: Random number generators are not allowed in top level size declarations.
     ┌─ rng_index1.stan:6:9
   5 │  transformed parameters {
   6 │    array[poisson_rng(10)] real z;
     │          ^^^^^^^^^^^^^^^ Random number generators are not allowed in top level size declarations.
   7 │  }
-[exit 1]

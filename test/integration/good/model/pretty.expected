@@ -1,4 +1,4 @@
-  $ stanc --auto-format domain_fail.stan
+/* $ stanc --auto-format domain_fail.stan : [exit 0] */
 parameters {
   real<lower=0> x;
 }
@@ -6,8 +6,7 @@ model {
   target += -sqrt(-x);
 }
 
-[exit 0]
-  $ stanc --auto-format valid.stan
+/* $ stanc --auto-format valid.stan : [exit 0] */
 parameters {
   real x;
 }
@@ -15,4 +14,3 @@ model {
   target += -0.5 * square(x);
 }
 
-[exit 0]

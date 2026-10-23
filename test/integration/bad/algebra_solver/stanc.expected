@@ -1,4 +1,4 @@
-  $ stanc bad_data_qualifer.stan
+/* $ stanc bad_data_qualifer.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_data_qualifer.stan:31:24
   1 │  functions {
@@ -22,8 +22,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
          (data vector, vector, array[] real, array[] int) => vector
         These are not compatible because:
           The first argument has an incompatible data-qualifier.
-[exit 1]
-  $ stanc bad_fun_type.stan
+/* $ stanc bad_fun_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_fun_type.stan:31:11
   1 │  functions {
@@ -53,8 +52,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_fun_type_control.stan
+/* $ stanc bad_fun_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_fun_type_control.stan:31:11
   1 │  functions {
@@ -84,8 +82,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
            vector
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_newton_fun_type_control.stan
+/* $ stanc bad_newton_fun_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_fun_type_control.stan:31:11
   1 │  functions {
@@ -115,8 +112,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
            vector
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_newton_x_i_type.stan
+/* $ stanc bad_newton_x_i_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_x_i_type.stan:31:11
   1 │  functions {
@@ -138,8 +134,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_newton_x_i_type_control.stan
+/* $ stanc bad_newton_x_i_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_x_i_type_control.stan:31:11
   1 │  functions {
@@ -161,8 +156,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
         The 5th argument must be array[] int but got array[] real
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_newton_x_r_var_type.stan
+/* $ stanc bad_newton_x_r_var_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_x_r_var_type.stan:31:11
   1 │  functions {
@@ -186,8 +180,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_newton_x_r_var_type_control.stan
+/* $ stanc bad_newton_x_r_var_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_x_r_var_type_control.stan:31:11
   1 │  functions {
@@ -211,8 +204,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
         function inputs unless they are marked with the keyword "data".)
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_newton_y_type.stan
+/* $ stanc bad_newton_y_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_y_type.stan:31:11
   1 │  functions {
@@ -242,8 +234,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_newton_y_type_control.stan
+/* $ stanc bad_newton_y_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver_newton".
     ┌─ bad_newton_y_type_control.stan:31:11
   1 │  functions {
@@ -273,8 +264,7 @@ error: Ill-typed arguments supplied to function "algebra_solver_newton".
            vector
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_solve_newton_arguments_number.stan
+/* $ stanc bad_solve_newton_arguments_number.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_solve_newton_arguments_number.stan:31:24
   1 │  functions {
@@ -301,8 +291,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_newton_arguments_type.stan
+/* $ stanc bad_solve_newton_arguments_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_solve_newton_arguments_type.stan:31:24
   1 │  functions {
@@ -329,8 +318,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_newton_lpdf.stan
+/* $ stanc bad_solve_newton_lpdf.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_solve_newton_lpdf.stan:28:26
   2 │  
@@ -349,8 +337,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
       (<F2>, vector) => vector
       where F2 = (vector) => vector
         The first argument must be a pure function but got a probability density function. These function types are not compatible.
-[exit 1]
-  $ stanc bad_solve_newton_lpmf.stan
+/* $ stanc bad_solve_newton_lpmf.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_solve_newton_lpmf.stan:28:26
   2 │  
@@ -369,8 +356,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
       (<F2>, vector) => vector
       where F2 = (vector) => vector
         The first argument must be a pure function but got a probability mass function. These function types are not compatible.
-[exit 1]
-  $ stanc bad_solve_newton_tol_arguments_number.stan
+/* $ stanc bad_solve_newton_tol_arguments_number.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton_tol".
     ┌─ bad_solve_newton_tol_arguments_number.stan:34:28
   1 │  functions {
@@ -398,8 +384,7 @@ error: Ill-typed arguments supplied to function "solve_newton_tol".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_newton_tol_arguments_type.stan
+/* $ stanc bad_solve_newton_tol_arguments_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_newton".
     ┌─ bad_solve_newton_tol_arguments_type.stan:34:24
   1 │  functions {
@@ -426,8 +411,7 @@ error: Ill-typed arguments supplied to function "solve_newton".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_powell_arguments_number.stan
+/* $ stanc bad_solve_powell_arguments_number.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_powell".
     ┌─ bad_solve_powell_arguments_number.stan:31:24
   1 │  functions {
@@ -454,8 +438,7 @@ error: Ill-typed arguments supplied to function "solve_powell".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_powell_arguments_type.stan
+/* $ stanc bad_solve_powell_arguments_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_powell".
     ┌─ bad_solve_powell_arguments_type.stan:31:24
   1 │  functions {
@@ -482,8 +465,7 @@ error: Ill-typed arguments supplied to function "solve_powell".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_powell_tol_arguments_number.stan
+/* $ stanc bad_solve_powell_tol_arguments_number.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_powell_tol".
     ┌─ bad_solve_powell_tol_arguments_number.stan:34:28
   1 │  functions {
@@ -511,8 +493,7 @@ error: Ill-typed arguments supplied to function "solve_powell_tol".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_solve_powell_tol_arguments_type.stan
+/* $ stanc bad_solve_powell_tol_arguments_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "solve_powell".
     ┌─ bad_solve_powell_tol_arguments_type.stan:34:24
   1 │  functions {
@@ -539,8 +520,7 @@ error: Ill-typed arguments supplied to function "solve_powell".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_theta_type.stan
+/* $ stanc bad_theta_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_theta_type.stan:31:11
   1 │  functions {
@@ -570,8 +550,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_theta_type_control.stan
+/* $ stanc bad_theta_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_theta_type_control.stan:31:11
   1 │  functions {
@@ -601,8 +580,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
            vector
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_x_i_type.stan
+/* $ stanc bad_x_i_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_x_i_type.stan:31:11
   1 │  functions {
@@ -624,8 +602,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_x_i_type_control.stan
+/* $ stanc bad_x_i_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_x_i_type_control.stan:31:11
   1 │  functions {
@@ -647,8 +624,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
         The 5th argument must be array[] int but got array[] real
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_x_r_var_type.stan
+/* $ stanc bad_x_r_var_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_x_r_var_type.stan:31:11
   1 │  functions {
@@ -672,8 +648,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_x_r_var_type_control.stan
+/* $ stanc bad_x_r_var_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_x_r_var_type_control.stan:31:11
   1 │  functions {
@@ -697,8 +672,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
         function inputs unless they are marked with the keyword "data".)
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]
-  $ stanc bad_y_type.stan
+/* $ stanc bad_y_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_y_type.stan:31:11
   1 │  functions {
@@ -728,8 +702,7 @@ error: Ill-typed arguments supplied to function "algebra_solver".
       (<F2>, vector, vector, data array[] real, data array[] int, data real,
        data real, data real) => vector
         Expected 8 arguments but found 5 arguments.
-[exit 1]
-  $ stanc bad_y_type_control.stan
+/* $ stanc bad_y_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "algebra_solver".
     ┌─ bad_y_type_control.stan:31:11
   1 │  functions {
@@ -759,4 +732,3 @@ error: Ill-typed arguments supplied to function "algebra_solver".
            vector
       (<F2>, vector, vector, data array[] real, data array[] int) => vector
         Expected 5 arguments but found 8 arguments.
-[exit 1]

@@ -1,4 +1,4 @@
-  $ stanc elt_divide_equals_prim.stan
+/* $ stanc elt_divide_equals_prim.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ elt_divide_equals_prim.stan:4:9
   3 │    real y;
@@ -8,8 +8,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type real.
   5 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc elt_times_equals_prim.stan
+/* $ stanc elt_times_equals_prim.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ elt_times_equals_prim.stan:4:9
   3 │    real y;
@@ -19,8 +18,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type real.
   5 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc plus_equals_bad_init.stan
+/* $ stanc plus_equals_bad_init.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ plus_equals_bad_init.stan:3:21
   2 │    vector[3] gq_v3_a = [1, 2, 3]';
@@ -28,16 +26,14 @@ error: Syntax error: Ill-formed declaration.
     │                      ^^ here.
   4 │  }
     = Expected ";" or plain assignment after variable declaration.
-[exit 1]
-  $ stanc plus_equals_bad_lhs_idxs.stan
+/* $ stanc plus_equals_bad_lhs_idxs.stan : [exit 1] */
 error: Too many indices. Expression only has 1 dimensions, but received 2 indices.
     ┌─ plus_equals_bad_lhs_idxs.stan:4:3
   3 │    real y;
   4 │    x[3,3] += y;
     │    ^^^^^^ Too many indices. Expression only has 1 dimensions, but received 2 indices.
   5 │  }
-[exit 1]
-  $ stanc plus_equals_bad_var_lhs.stan
+/* $ stanc plus_equals_bad_var_lhs.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_bad_var_lhs.stan:3:12
   2 │    real foo(real a1) {
@@ -47,8 +43,7 @@ error: Ill-typed compound assignment statement.
     │      Left hand side has type (real) => real.
   4 │      return foo;
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc plus_equals_bad_var_lhs2.stan
+/* $ stanc plus_equals_bad_var_lhs2.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ plus_equals_bad_var_lhs2.stan:6:3
   1 │  transformed data {
@@ -60,8 +55,7 @@ error: Cannot assign to global variable.
   6 │    x += y;
     │    ^ "x" was declared in a previous block and cannot be assigned to.
   7 │  }
-[exit 1]
-  $ stanc plus_equals_bad_var_rhs.stan
+/* $ stanc plus_equals_bad_var_rhs.stan : [exit 1] */
 error: Identifier "a2" not in scope.
     ┌─ plus_equals_bad_var_rhs.stan:4:12
   1 │  functions {
@@ -71,8 +65,7 @@ error: Identifier "a2" not in scope.
   4 │      lf2 += a2;
     │             ^^ Identifier "a2" not in scope.
   5 │    }
-[exit 1]
-  $ stanc plus_equals_matrix_array.stan
+/* $ stanc plus_equals_matrix_array.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_matrix_array.stan:7:8
   6 │    x[3,1,1] += y[3,1,1];
@@ -82,8 +75,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type array[] matrix.
   8 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc plus_equals_matrix_array2.stan
+/* $ stanc plus_equals_matrix_array2.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_matrix_array2.stan:7:11
   6 │    x[3,1,1] += y[3,1,1];
@@ -95,8 +87,7 @@ error: Ill-typed compound assignment statement.
     = For the given left hand side, expected the right hand side to have type
       int, real, or matrix.
       Instead found type row_vector.
-[exit 1]
-  $ stanc plus_equals_matrix_shape_mismatch.stan
+/* $ stanc plus_equals_matrix_shape_mismatch.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ plus_equals_matrix_shape_mismatch.stan:4:11
   3 │    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
@@ -104,8 +95,7 @@ error: Syntax error: Ill-formed type.
     │            ^ here.
   5 │    z += ident;
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc plus_equals_prim_array.stan
+/* $ stanc plus_equals_prim_array.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_prim_array.stan:5:8
   4 │    x[1] += y[1];
@@ -115,8 +105,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type array[] real.
   6 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc plus_equals_row_vec_array.stan
+/* $ stanc plus_equals_row_vec_array.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_row_vec_array.stan:5:8
   4 │    x[1] += y[1];
@@ -126,8 +115,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type array[] row_vector.
   6 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc plus_equals_sliced.stan
+/* $ stanc plus_equals_sliced.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_sliced.stan:6:16
   5 │      matrix[3, 4] bb;
@@ -139,8 +127,7 @@ error: Ill-typed compound assignment statement.
     = For the given left hand side, expected the right hand side to have type
       int, real, or vector.
       Instead found type matrix.
-[exit 1]
-  $ stanc plus_equals_type_mismatch.stan
+/* $ stanc plus_equals_type_mismatch.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_type_mismatch.stan:4:8
   3 │    real y;
@@ -152,8 +139,7 @@ error: Ill-typed compound assignment statement.
     = For the given left hand side, expected the right hand side to have type
       int.
       Instead found type real.
-[exit 1]
-  $ stanc plus_equals_type_mismatch2.stan
+/* $ stanc plus_equals_type_mismatch2.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_type_mismatch2.stan:4:8
   3 │    vector[2] y = [1.0, 2.0]';
@@ -165,8 +151,7 @@ error: Ill-typed compound assignment statement.
     = For the given left hand side, expected the right hand side to have type
       int or real.
       Instead found type vector.
-[exit 1]
-  $ stanc plus_equals_vector_array.stan
+/* $ stanc plus_equals_vector_array.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ plus_equals_vector_array.stan:5:8
   4 │    x[1] += y[1];
@@ -176,8 +161,7 @@ error: Ill-typed compound assignment statement.
     │    Left hand side has type array[] vector.
   6 │  }
     = There are no valid right hand side types for the given left hand side.
-[exit 1]
-  $ stanc times_equals_matrix_array.stan
+/* $ stanc times_equals_matrix_array.stan : [exit 1] */
 error: Ill-typed compound assignment statement.
     ┌─ times_equals_matrix_array.stan:5:13
   4 │    x[3] *= y[3];
@@ -189,4 +173,3 @@ error: Ill-typed compound assignment statement.
     = For the given left hand side, expected the right hand side to have type
       int, real, or matrix.
       Instead found type row_vector.
-[exit 1]

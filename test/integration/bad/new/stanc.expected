@@ -1,4 +1,4 @@
-  $ stanc arg-decl-bad1.stan
+/* $ stanc arg-decl-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed function argument.
     ┌─ arg-decl-bad1.stan:2:17
   1 │  functions {
@@ -9,8 +9,7 @@ error: Syntax error: Ill-formed function argument.
         For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
         See the complete table of types at:
         https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
-[exit 1]
-  $ stanc bad_constrained_type_in_fn.stan
+/* $ stanc bad_constrained_type_in_fn.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_fn.stan:2:20
   1 │  functions{
@@ -19,8 +18,7 @@ error: Syntax error: Ill-formed type.
   3 │      print(x);
     = Functions do not enforce type constraints.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_fn2.stan
+/* $ stanc bad_constrained_type_in_fn2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_fn2.stan:2:12
   1 │  functions{
@@ -29,8 +27,7 @@ error: Syntax error: Ill-formed type.
   3 │      print(x);
     = Functions do not enforce type constraints.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_fn3.stan
+/* $ stanc bad_constrained_type_in_fn3.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_fn3.stan:2:3
   1 │  functions{
@@ -39,8 +36,7 @@ error: Syntax error: Ill-formed type.
   3 │    }
     = Functions do not enforce type constraints.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_fn4.stan
+/* $ stanc bad_constrained_type_in_fn4.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_fn4.stan:3:15
   2 │    // TODO: would be nice to specialize for this mistake
@@ -48,8 +44,7 @@ error: Syntax error: Ill-formed type.
     │                ^ here.
   4 │      print(x);
     = Did not expect "<". Functions do not support type constraints.
-[exit 1]
-  $ stanc bad_constrained_type_in_local.stan
+/* $ stanc bad_constrained_type_in_local.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_local.stan:4:14
   3 │    {
@@ -58,8 +53,7 @@ error: Syntax error: Ill-formed type.
   5 │      print(y);
     = Constrained types are not supported in local (or model block) variable declarations.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_local2.stan
+/* $ stanc bad_constrained_type_in_local2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_local2.stan:4:5
   3 │    {
@@ -68,8 +62,7 @@ error: Syntax error: Ill-formed type.
   5 │      print(y);
     = Constrained types are not supported in local (or model block) variable declarations.
         Use "matrix" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_model.stan
+/* $ stanc bad_constrained_type_in_model.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_model.stan:2:12
   1 │  model {
@@ -78,8 +71,7 @@ error: Syntax error: Ill-formed type.
   3 │    print(x);
     = Constrained types are not supported in local (or model block) variable declarations.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_constrained_type_in_model2.stan
+/* $ stanc bad_constrained_type_in_model2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_constrained_type_in_model2.stan:2:3
   1 │  model {
@@ -88,8 +80,7 @@ error: Syntax error: Ill-formed type.
   3 │    print(x);
     = Constrained types are not supported in local (or model block) variable declarations.
         Use "vector" instead.
-[exit 1]
-  $ stanc bad_data_modifier_decl.stan
+/* $ stanc bad_data_modifier_decl.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ bad_data_modifier_decl.stan:2:3
   1 │  generated quantities {
@@ -97,8 +88,7 @@ error: Syntax error: Ill-formed declaration.
     │    ^^^^ here.
   3 │  }
     = The "data" specifier is only valid in function arguments, not declarations.
-[exit 1]
-  $ stanc bad_decl_in_functions.stan
+/* $ stanc bad_decl_in_functions.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ bad_decl_in_functions.stan:2:20
   1 │  // TODO: would be nice to specialize for this mistake
@@ -106,8 +96,7 @@ error: Syntax error: Ill-formed function.
     │                     ^ here.
   3 │  
     = Expected "(" after function name.
-[exit 1]
-  $ stanc bad_multi_decl.stan
+/* $ stanc bad_multi_decl.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ bad_multi_decl.stan:2:22
   1 │  // TODO: would be nice to specialize for this mistake
@@ -116,8 +105,7 @@ error: Syntax error: Ill-formed expression.
   3 │  
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc bad_old_arr_attempt.stan
+/* $ stanc bad_old_arr_attempt.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ bad_old_arr_attempt.stan:2:17
   1 │  model {
@@ -128,8 +116,7 @@ error: Syntax error: Ill-formed declaration.
         It looks like you are trying to use the old array syntax.
         Please use the new syntax, see:
         https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-[exit 1]
-  $ stanc bad_sized_type_in_fn.stan
+/* $ stanc bad_sized_type_in_fn.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_sized_type_in_fn.stan:2:18
   1 │  functions{
@@ -137,8 +124,7 @@ error: Syntax error: Ill-formed type.
     │                   ^ here.
   3 │      print(x);
     = Expected "[" (list of commas) "]" in an unsized type in a function signature.
-[exit 1]
-  $ stanc bad_sized_type_in_fn2.stan
+/* $ stanc bad_sized_type_in_fn2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_sized_type_in_fn2.stan:2:18
   1 │  functions{
@@ -150,8 +136,7 @@ error: Syntax error: Ill-formed type.
         If you are trying to use the old array syntax, you will need to use
         the new syntax, see:
         https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-[exit 1]
-  $ stanc bad_sized_type_in_fn3.stan
+/* $ stanc bad_sized_type_in_fn3.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_sized_type_in_fn3.stan:2:9
   1 │  functions{
@@ -163,104 +148,90 @@ error: Syntax error: Ill-formed type.
         If you are trying to use the old array syntax, you will need to use
         the new syntax, see:
         https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-[exit 1]
-  $ stanc blocks-bad1.stan
+/* $ stanc blocks-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad1.stan:1:6
   1 │  data while
     │       ^^^^^ here.
     = Expected "{" followed by a list of top-level variable declarations after "data".
-[exit 1]
-  $ stanc blocks-bad10.stan
+/* $ stanc blocks-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ blocks-bad10.stan:1:19
   1 │  transformed data  while
     │                    ^^^^^ here.
     = Expected "{" after "transformed data".
-[exit 1]
-  $ stanc blocks-bad11.stan
+/* $ stanc blocks-bad11.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad11.stan:1:26
   1 │  transformed parameters { void
     │                           ^^^^ here.
     = Expected top-level variable declaration, statement, or "}".
-[exit 1]
-  $ stanc blocks-bad12.stan
+/* $ stanc blocks-bad12.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad12.stan:1:24
   1 │  transformed parameters while
     │                         ^^^^^ here.
     = Expected "{" after "transformed parameters".
-[exit 1]
-  $ stanc blocks-bad2.stan
+/* $ stanc blocks-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ blocks-bad2.stan:1:14
   1 │  functions {} cov_matrix
     │               ^^^^^^^^^^ here.
     = Expected "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", "generated quantities {", or end-of-file.
-[exit 1]
-  $ stanc blocks-bad3.stan
+/* $ stanc blocks-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad3.stan:1:7
   1 │  model while
     │        ^^^^^ here.
     = Expected "{" after "model".
-[exit 1]
-  $ stanc blocks-bad4.stan
+/* $ stanc blocks-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad4.stan:1:14
   1 │  parameters { while  }
     │               ^^^^^ here.
     = Expected top-level variable declaration or "}".
-[exit 1]
-  $ stanc blocks-bad5.stan
+/* $ stanc blocks-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad5.stan:1:12
   1 │  parameters while
     │             ^^^^^ here.
     = Expected "{" after "parameters".
-[exit 1]
-  $ stanc blocks-bad6.stan
+/* $ stanc blocks-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ blocks-bad6.stan:1:26
   1 │  transformed data { ! 1.0 while }
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc blocks-bad7.stan
+/* $ stanc blocks-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ blocks-bad7.stan:1:22
   1 │  transformed data { } .*=
     │                       ^^^ here.
     = Expected "parameters {", "transformed parameters {",
       "model {", "generated quantities {", or end-of-file.
-[exit 1]
-  $ stanc blocks-bad8.stan
+/* $ stanc blocks-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ blocks-bad8.stan:1:22
   1 │  transformed data { T }
     │                       ^ here.
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc blocks-bad9.stan
+/* $ stanc blocks-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ blocks-bad9.stan:1:20
   1 │  transformed data { void
     │                     ^^^^ here.
     = Expected top-level variable declaration, statement, or "}".
-[exit 1]
-  $ stanc fatal_error-bad1.stan
+/* $ stanc fatal_error-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ fatal_error-bad1.stan:1:49
   1 │   transformed data { fatal_error ( "hello world" while
     │                                                  ^^^^^ here.
   2 │  
     = Expected a comma separated list of either expressions or strings followed by ");" after "fatal_error(".
-[exit 1]
-  $ stanc fatal_error-bad2.stan
+/* $ stanc fatal_error-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ fatal_error-bad2.stan:2:18
   1 │  transformed data {
@@ -268,72 +239,62 @@ error: Syntax error: Ill-formed statement.
     │                   ^ here.
   3 │  }
     = Expected a comma separated list of either expressions or strings, followed by ");".
-[exit 1]
-  $ stanc fun-app-bad1.stan
+/* $ stanc fun-app-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed conditional distribution evaluation.
     ┌─ fun-app-bad1.stan:1:31
   1 │  transformed data { T ( 1.0 | T]
     │                                ^ here.
     = Expected a comma separated list of expressions followed by ")" after "|".
-[exit 1]
-  $ stanc fun-app-bad2.stan
+/* $ stanc fun-app-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed conditional distribution evaluation.
     ┌─ fun-app-bad2.stan:1:30
   1 │  transformed data { T ( 1.0 | while
     │                               ^^^^^ here.
     = Expected a comma separated list of expressions followed by ")" after "|".
-[exit 1]
-  $ stanc fun-app-bad3.stan
+/* $ stanc fun-app-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ fun-app-bad3.stan:1:28
   1 │  transformed data { T ( 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc fun-app-bad4.stan
+/* $ stanc fun-app-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ fun-app-bad4.stan:1:25
   1 │  transformed data { T () while
     │                          ^^^^^ here.
     = Found a well-formed function application. Expected either a ";" or a valid continuation of the expression.
-[exit 1]
-  $ stanc fun-app-bad5.stan
+/* $ stanc fun-app-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed conditional distribution evaluation.
     ┌─ fun-app-bad5.stan:1:27
   1 │  transformed data { T (T| T]
     │                            ^ here.
     = Expected a comma separated list of expressions followed by ")" after "|".
-[exit 1]
-  $ stanc fun-app-bad6.stan
+/* $ stanc fun-app-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed conditional distribution evaluation.
     ┌─ fun-app-bad6.stan:1:26
   1 │  transformed data { T (T| while
     │                           ^^^^^ here.
     = Expected a comma separated list of expressions followed by ")" after "|".
-[exit 1]
-  $ stanc fun-app-bad7.stan
+/* $ stanc fun-app-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed function application.
     ┌─ fun-app-bad7.stan:1:28
   1 │  transformed data { T (T, id]
     │                             ^ here.
     = Expected a comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ stanc fun-app-bad8.stan
+/* $ stanc fun-app-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed function application.
     ┌─ fun-app-bad8.stan:1:24
   1 │  transformed data { T (T~
     │                         ^ here.
     = Expected a comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ stanc fun-app-bad9.stan
+/* $ stanc fun-app-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed function application.
     ┌─ fun-app-bad9.stan:1:23
   1 │  transformed data { T (while
     │                        ^^^^^ here.
     = Expected a comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ stanc fundef-bad10.stan
+/* $ stanc fundef-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ fundef-bad10.stan:2:13
   1 │  functions {
@@ -342,45 +303,39 @@ error: Syntax error: Ill-formed type.
   3 │       return;
     = Functions do not enforce type constraints.
         Use "matrix" instead.
-[exit 1]
-  $ stanc fundef-bad2.stan
+/* $ stanc fundef-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ fundef-bad2.stan:1:24
   1 │  functions { vector foo }
     │                         ^ here.
   2 │  
     = Expected "(" after function name.
-[exit 1]
-  $ stanc fundef-bad3.stan
+/* $ stanc fundef-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ fundef-bad3.stan:1:24
   1 │  functions { void id(); while }
     │                         ^^^^^ here.
     = Expected a "}" or a function definition or declaration.
-[exit 1]
-  $ stanc fundef-bad4.stan
+/* $ stanc fundef-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed function argument.
     ┌─ fundef-bad4.stan:1:25
   1 │  functions { void T(data while); }
     │                          ^^^^^ here.
     = Expected a type after the "data" specifier.
-[exit 1]
-  $ stanc fundef-bad5.stan
+/* $ stanc fundef-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ fundef-bad5.stan:1:23
   1 │  functions { void T () void }
     │                        ^^^^ here.
     = Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.
-[exit 1]
-  $ stanc fundef-bad6.stan
+/* $ stanc fundef-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ fundef-bad6.stan:1:38
   1 │  functions { void T ( array [] vector while);}
     │                                       ^^^^^ here.
   2 │  
     = Expected a new identifier but found reserved keyword "while".
-[exit 1]
-  $ stanc fundef-bad7.stan
+/* $ stanc fundef-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed function argument.
     ┌─ fundef-bad7.stan:1:22
   1 │  functions { void T ( while x);}
@@ -389,22 +344,19 @@ error: Syntax error: Ill-formed function argument.
         For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
         See the complete table of types at:
         https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
-[exit 1]
-  $ stanc fundef-bad8.stan
+/* $ stanc fundef-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ fundef-bad8.stan:1:18
   1 │  functions { void while();}
     │                   ^^^^^ here.
     = Expected a new identifier but found reserved keyword "while".
-[exit 1]
-  $ stanc fundef-bad9.stan
+/* $ stanc fundef-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ fundef-bad9.stan:1:24
   1 │  generated quantities { void foo(); }
     │                         ^^^^ here.
     = Expected top-level variable declaration, statement, or "}".
-[exit 1]
-  $ stanc ill-formed-constraint1.stan
+/* $ stanc ill-formed-constraint1.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-constraint1.stan:1:37
   1 │  data { vector < upper = foo , lower while
@@ -412,16 +364,14 @@ error: Syntax error: Ill-formed constraint.
   2 │  
     = Expected "=" expression
       (not containing binary logical operators) after "lower".
-[exit 1]
-  $ stanc ill-formed-constraint2.stan
+/* $ stanc ill-formed-constraint2.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-constraint2.stan:1:43
   1 │  data { vector < upper = foo , lower = foo ,
     │                                            ^ here.
   2 │  
     = Expected ">" after "lower = " expression.
-[exit 1]
-  $ stanc ill-formed-constraint3.stan
+/* $ stanc ill-formed-constraint3.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-constraint3.stan:1:43
   1 │  data { vector < multiplier = foo , offset while
@@ -429,8 +379,7 @@ error: Syntax error: Ill-formed constraint.
   2 │  
     = Expected "=" expression
       (not containing binary logical operators) after "offset".
-[exit 1]
-  $ stanc ill-formed-constraint4.stan
+/* $ stanc ill-formed-constraint4.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-constraint4.stan:1:45
   1 │  data { vector < multiplier = foo , offset = while
@@ -438,94 +387,81 @@ error: Syntax error: Ill-formed constraint.
   2 │  
     = Expected an expression (not containing binary logical operators)
       after "offset =".
-[exit 1]
-  $ stanc ill-formed-constraint5.stan
+/* $ stanc ill-formed-constraint5.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-constraint5.stan:1:49
   1 │  data { vector < multiplier = foo , offset = foo ,
     │                                                  ^ here.
   2 │  
     = Expected ">" after "offset = " expression.
-[exit 1]
-  $ stanc ill-formed-expression1.stan
+/* $ stanc ill-formed-expression1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression1.stan:1:35
   1 │  transformed data { real x = T/0.0 while;}
     │                                    ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression10.stan
+/* $ stanc ill-formed-expression10.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression10.stan:1:23
   1 │  data { vector<upper=T[while> x;}
     │                        ^^^^^ here.
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc ill-formed-expression11.stan
+/* $ stanc ill-formed-expression11.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression11.stan:1:28
   1 │  data { vector<upper=T\ 0.0 while> x;}
     │                             ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression12.stan
+/* $ stanc ill-formed-expression12.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression12.stan:1:25
   1 │  data { vector<upper=T\  while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression13.stan
+/* $ stanc ill-formed-expression13.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression13.stan:1:29
   1 │  data { vector<upper=T- 0.0  while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression14.stan
+/* $ stanc ill-formed-expression14.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression14.stan:1:26
   1 │  data { vector<upper=T-   while> x;}
     │                           ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression15.stan
+/* $ stanc ill-formed-expression15.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression15.stan:1:29
   1 │  data { vector<upper=T%0.0   while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression16.stan
+/* $ stanc ill-formed-expression16.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression16.stan:1:25
   1 │  data { vector<upper=T%  while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression17.stan
+/* $ stanc ill-formed-expression17.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression17.stan:1:30
   1 │  data { vector<upper=T + 0.0  while> x;}
     │                               ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression18.stan
+/* $ stanc ill-formed-expression18.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression18.stan:1:25
   1 │  data { vector<upper=T + while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression19.stan
+/* $ stanc ill-formed-expression19.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression19.stan:1:29
   1 │  data { vector<upper=T * 0.0 while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression2.stan
+/* $ stanc ill-formed-expression2.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression2.stan:2:15
   1 │  model {
@@ -534,23 +470,20 @@ error: Syntax error: Ill-formed expression.
   3 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression20.stan
+/* $ stanc ill-formed-expression20.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression20.stan:1:25
   1 │  data { vector<upper=T * while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression21.stan
+/* $ stanc ill-formed-expression21.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression21.stan:1:23
   1 │  data { vector<upper=T while> x;}
     │                        ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression22.stan
+/* $ stanc ill-formed-expression22.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-expression22.stan:2:15
   1 │  model {
@@ -559,289 +492,251 @@ error: Syntax error: Ill-formed phrase.
   3 │  }
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc ill-formed-expression23.stan
+/* $ stanc ill-formed-expression23.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression23.stan:1:22
   1 │  model { real T = 0.0 while;}
     │                       ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression24.stan
+/* $ stanc ill-formed-expression24.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ ill-formed-expression24.stan:1:20
   1 │  model { real T = T ~ normal(0,1);}
     │                     ^ here.
     = Expected a ";" to complete the definition or a "," to start a new declaration of the same type.
-[exit 1]
-  $ stanc ill-formed-expression25.stan
+/* $ stanc ill-formed-expression25.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ ill-formed-expression25.stan:1:18
   1 │  model { real T = while ;}
     │                   ^^^^^ here.
     = Expected an expression followed by ";" after "=".
-[exit 1]
-  $ stanc ill-formed-expression28.stan
+/* $ stanc ill-formed-expression28.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression28.stan:1:22
   1 │  transformed data { ! while
     │                       ^^^^^ here.
     = Expected an expression after "!".
-[exit 1]
-  $ stanc ill-formed-expression29.stan
+/* $ stanc ill-formed-expression29.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression29.stan:1:26
   1 │  transformed data { {1.0, while}}
     │                           ^^^^^ here.
     = Expected a comma separated list of expressions.
-[exit 1]
-  $ stanc ill-formed-expression3.stan
+/* $ stanc ill-formed-expression3.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression3.stan:1:23
   1 │  data { vector<upper=T/while> x;}
     │                        ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression30.stan
+/* $ stanc ill-formed-expression30.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-expression30.stan:1:25
   1 │  transformed data { {1.0 while
     │                          ^^^^^ here.
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc ill-formed-expression31.stan
+/* $ stanc ill-formed-expression31.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-expression31.stan:1:21
   1 │  transformed data { {void
     │                      ^^^^ here.
     = Expected either a list of statements followed by a "}" for a block, or a list of expressions expressions followed by a "}" for an array literal.
-[exit 1]
-  $ stanc ill-formed-expression32.stan
+/* $ stanc ill-formed-expression32.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-expression32.stan:1:25
   1 │  transformed data { {T[] while
     │                          ^^^^^ here.
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc ill-formed-expression33.stan
+/* $ stanc ill-formed-expression33.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression33.stan:1:26
   1 │  transformed data { [ 1.0 while
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression34.stan
+/* $ stanc ill-formed-expression34.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression34.stan:1:25
   1 │  transformed data { [ T, while
     │                          ^^^^^ here.
     = Expected a comma separated list of expressions.
-[exit 1]
-  $ stanc ill-formed-expression35.stan
+/* $ stanc ill-formed-expression35.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression35.stan:1:23
   1 │  transformed data { [ T)
     │                        ^ here.
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc ill-formed-expression36.stan
+/* $ stanc ill-formed-expression36.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression36.stan:1:27
   1 │  transformed data { -T [ ] while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression37.stan
+/* $ stanc ill-formed-expression37.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression37.stan:1:26
   1 │  transformed data { + 0.1 while
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression38.stan
+/* $ stanc ill-formed-expression38.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression38.stan:1:22
   1 │  transformed data { - while
     │                       ^^^^^ here.
     = Expected an expression after "-".
-[exit 1]
-  $ stanc ill-formed-expression39.stan
+/* $ stanc ill-formed-expression39.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression39.stan:1:27
   1 │  transformed data { + T [] while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression4.stan
+/* $ stanc ill-formed-expression4.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression4.stan:1:28
   1 │  data { vector<upper=T./0.0 while> x;}
     │                             ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression40.stan
+/* $ stanc ill-formed-expression40.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression40.stan:1:22
   1 │  transformed data { + while
     │                       ^^^^^ here.
     = Expected an expression after "+".
-[exit 1]
-  $ stanc ill-formed-expression41.stan
+/* $ stanc ill-formed-expression41.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression41.stan:1:28
   1 │  transformed data { x= 1 && while
     │                             ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression42.stan
+/* $ stanc ill-formed-expression42.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression42.stan:1:24
   1 │  transformed data { 1 / while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression43.stan
+/* $ stanc ill-formed-expression43.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression43.stan:1:25
   1 │  transformed data { 1 ./ while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression44.stan
+/* $ stanc ill-formed-expression44.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression44.stan:1:26
   1 │  transformed data { 1 .*  while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression45.stan
+/* $ stanc ill-formed-expression45.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression45.stan:1:27
   1 │  transformed data { 1 ==   while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression46.stan
+/* $ stanc ill-formed-expression46.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression46.stan:1:25
   1 │  transformed data { 1 >= while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression47.stan
+/* $ stanc ill-formed-expression47.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression47.stan:1:25
   1 │  transformed data { 1 ^  while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression48.stan
+/* $ stanc ill-formed-expression48.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression48.stan:1:25
   1 │  transformed data { 1 <  while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression49.stan
+/* $ stanc ill-formed-expression49.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression49.stan:1:25
   1 │  transformed data { x[ : while
     │                          ^^^^^ here.
     = Expected an expression or "]" or "," after ":".
-[exit 1]
-  $ stanc ill-formed-expression5.stan
+/* $ stanc ill-formed-expression5.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression5.stan:1:25
   1 │  data { vector<upper=T./ while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression50.stan
+/* $ stanc ill-formed-expression50.stan : [exit 1] */
 error: Syntax error: Ill-formed index.
     ┌─ ill-formed-expression50.stan:1:25
   1 │  transformed data { x[32:while
     │                          ^^^^^ here.
     = Expected an expression or "]" or "," after ":".
-[exit 1]
-  $ stanc ill-formed-expression51.stan
+/* $ stanc ill-formed-expression51.stan : [exit 1] */
 error: Syntax error: Ill-formed index.
     ┌─ ill-formed-expression51.stan:1:25
   1 │  transformed data { x[T :while
     │                          ^^^^^ here.
     = Expected an expression or "]" or "," after ":".
-[exit 1]
-  $ stanc ill-formed-expression52.stan
+/* $ stanc ill-formed-expression52.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression52.stan:1:26
   1 │  transformed data { 1.0 \ while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression53.stan
+/* $ stanc ill-formed-expression53.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression53.stan:1:28
   1 │  transformed data { 1.0 <=  while
     │                             ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression54.stan
+/* $ stanc ill-formed-expression54.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression54.stan:1:26
   1 │  transformed data { 1.0 - while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression55.stan
+/* $ stanc ill-formed-expression55.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression55.stan:1:27
   1 │  transformed data { 1.0 %  while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression56.stan
+/* $ stanc ill-formed-expression56.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression56.stan:1:28
   1 │  transformed data { 1.0 !=  while
     │                             ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression57.stan
+/* $ stanc ill-formed-expression57.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression57.stan:1:29
   1 │  transformed data { 1.0 ||   while
     │                              ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression58.stan
+/* $ stanc ill-formed-expression58.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression58.stan:1:29
   1 │  transformed data { 1.0 +    while
     │                              ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression59.stan
+/* $ stanc ill-formed-expression59.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression59.stan:1:36
   1 │  transformed data { 1.0 ? 1.0 :     while
@@ -850,23 +745,20 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression6.stan
+/* $ stanc ill-formed-expression6.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression6.stan:1:29
   1 │  data { vector<upper=T.* 0.0 while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression60.stan
+/* $ stanc ill-formed-expression60.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression60.stan:1:35
   1 │  transformed data { 1.0 ? 1.0      while
     │                                    ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-expression61.stan
+/* $ stanc ill-formed-expression61.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression61.stan:1:31
   1 │  transformed data { 1.0 ? T :  while
@@ -875,8 +767,7 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression62.stan
+/* $ stanc ill-formed-expression62.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression62.stan:1:26
   1 │  transformed data { 1.0 ? while
@@ -885,215 +776,187 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression63.stan
+/* $ stanc ill-formed-expression63.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression63.stan:1:26
   1 │  transformed data { 1.0 > while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression64.stan
+/* $ stanc ill-formed-expression64.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression64.stan:1:15
   1 │  model { 1.0 * while
     │                ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression65.stan
+/* $ stanc ill-formed-expression65.stan : [exit 1] */
 error: Syntax error: Ill-formed function application.
     ┌─ ill-formed-expression65.stan:1:32
   1 │  transformed data { return T(T,x]
     │                                 ^ here.
     = Expected a comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ stanc ill-formed-expression66.stan
+/* $ stanc ill-formed-expression66.stan : [exit 1] */
 error: Syntax error: Ill-formed function application.
     ┌─ ill-formed-expression66.stan:1:29
   1 │  transformed data { return T(while
     │                              ^^^^^ here.
     = Expected a comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ stanc ill-formed-expression67.stan
+/* $ stanc ill-formed-expression67.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression67.stan:1:25
   1 │  transformed data { T && while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression68.stan
+/* $ stanc ill-formed-expression68.stan : [exit 1] */
 error: Syntax error: Ill-formed assignment statement.
     ┌─ ill-formed-expression68.stan:1:25
   1 │  transformed data { T =  while
     │                          ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-expression69.stan
+/* $ stanc ill-formed-expression69.stan : [exit 1] */
 error: Syntax error: Ill-formed assignment statement.
     ┌─ ill-formed-expression69.stan:1:25
   1 │  transformed data { T =  while
     │                          ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-expression7.stan
+/* $ stanc ill-formed-expression7.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression7.stan:1:25
   1 │  data { vector<upper=T.* while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression70.stan
+/* $ stanc ill-formed-expression70.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression70.stan:1:24
   1 │  transformed data { T / while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression71.stan
+/* $ stanc ill-formed-expression71.stan : [exit 1] */
 error: Syntax error: Ill-formed compound assignment statement.
     ┌─ ill-formed-expression71.stan:1:25
   1 │  transformed data { T /= while
     │                          ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-expression72.stan
+/* $ stanc ill-formed-expression72.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression72.stan:1:25
   1 │  transformed data { T ./ while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression73.stan
+/* $ stanc ill-formed-expression73.stan : [exit 1] */
 error: Syntax error: Ill-formed compound assignment statement.
     ┌─ ill-formed-expression73.stan:1:26
   1 │  transformed data { T ./= while
     │                           ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-expression74.stan
+/* $ stanc ill-formed-expression74.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression74.stan:1:26
   1 │  transformed data { T .*  while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression75.stan
+/* $ stanc ill-formed-expression75.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression75.stan:1:28
   1 │  transformed data { T .*=   while
     │                             ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression76.stan
+/* $ stanc ill-formed-expression76.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression76.stan:1:27
   1 │  transformed data { T ==   while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression77.stan
+/* $ stanc ill-formed-expression77.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression77.stan:1:27
   1 │  transformed data { T <=   while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression78.stan
+/* $ stanc ill-formed-expression78.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression78.stan:1:28
   1 │  transformed data { T >=    while
     │                             ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression79.stan
+/* $ stanc ill-formed-expression79.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression79.stan:1:27
   1 │  transformed data { T ^    while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression8.stan
+/* $ stanc ill-formed-expression8.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression8.stan:1:27
   1 │  data { vector<upper=T^0.0 while> x;}
     │                            ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression80.stan
+/* $ stanc ill-formed-expression80.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression80.stan:1:27
   1 │  transformed data { T <    while
     │                            ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression81.stan
+/* $ stanc ill-formed-expression81.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression81.stan:1:25
   1 │  transformed data { T \  while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression82.stan
+/* $ stanc ill-formed-expression82.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression82.stan:1:24
   1 │  transformed data { T - while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression83.stan
+/* $ stanc ill-formed-expression83.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression83.stan:1:24
   1 │  transformed data { T % while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression84.stan
+/* $ stanc ill-formed-expression84.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression84.stan:1:25
   1 │  transformed data { T != while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression85.stan
+/* $ stanc ill-formed-expression85.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression85.stan:1:26
   1 │  transformed data { T ||  while
     │                           ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression86.stan
+/* $ stanc ill-formed-expression86.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression86.stan:1:25
   1 │  transformed data { T +  while
     │                          ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression87.stan
+/* $ stanc ill-formed-expression87.stan : [exit 1] */
 error: Syntax error: Ill-formed compound assignment statement.
     ┌─ ill-formed-expression87.stan:1:27
   1 │  transformed data { T +=   while
     │                            ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-expression88.stan
+/* $ stanc ill-formed-expression88.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression88.stan:1:31
   1 │  transformed data { T ? 1.0 :  while
@@ -1102,8 +965,7 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression89.stan
+/* $ stanc ill-formed-expression89.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression89.stan:1:25
   1 │  transformed data { T ?  while
@@ -1112,15 +974,13 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression9.stan
+/* $ stanc ill-formed-expression9.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ ill-formed-expression9.stan:1:23
   1 │  data { vector<upper=T^while> x;}
     │                        ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc ill-formed-expression90.stan
+/* $ stanc ill-formed-expression90.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression90.stan:1:26
   1 │  transformed data { T ?  T~
@@ -1129,8 +989,7 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression91.stan
+/* $ stanc ill-formed-expression91.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression91.stan:1:25
   1 │  transformed data { T ?  while
@@ -1139,130 +998,112 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc ill-formed-expression92.stan
+/* $ stanc ill-formed-expression92.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression92.stan:1:24
   1 │  transformed data { T > while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression93.stan
+/* $ stanc ill-formed-expression93.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-expression93.stan:1:24
   1 │  transformed data { T * while
     │                         ^^^^^ here.
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc ill-formed-expression94.stan
+/* $ stanc ill-formed-expression94.stan : [exit 1] */
 error: Syntax error: Ill-formed compound assignment statement.
     ┌─ ill-formed-expression94.stan:1:25
   1 │  transformed data { T *= while
     │                          ^^^^^ here.
     = Expected an expression followed by ";" next.
-[exit 1]
-  $ stanc ill-formed-statement1.stan
+/* $ stanc ill-formed-statement1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement1.stan:1:26
   1 │  transformed data { break while
     │                           ^^^^^ here.
     = Expected ";" after "break".
-[exit 1]
-  $ stanc ill-formed-statement10.stan
+/* $ stanc ill-formed-statement10.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement10.stan:1:39
   1 │  transformed data { for ( T in T : 25) void
     │                                        ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement11.stan
+/* $ stanc ill-formed-statement11.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement11.stan:1:38
   1 │  transformed data { for ( T in T : 42 while
     │                                       ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-statement12.stan
+/* $ stanc ill-formed-statement12.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement12.stan:1:39
   1 │  transformed data { for ( T in T : T ) void
     │                                        ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement13.stan
+/* $ stanc ill-formed-statement13.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement13.stan:1:36
   1 │  transformed data { for ( T in T: T ~normal(0,1)) }
     │                                     ^ here.
     = Expected an expression followed by ")" after "for (" identifier "in" expression ":".
-[exit 1]
-  $ stanc ill-formed-statement14.stan
+/* $ stanc ill-formed-statement14.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement14.stan:1:34
   1 │  transformed data { for ( T in T: while)}
     │                                   ^^^^^ here.
     = Expected an expression followed by ")" after "for (" identifier "in" expression ":".
-[exit 1]
-  $ stanc ill-formed-statement15.stan
+/* $ stanc ill-formed-statement15.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement15.stan:1:35
   1 │  transformed data { for ( T in T ) void }
     │                                    ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement16.stan
+/* $ stanc ill-formed-statement16.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement16.stan:1:33
   1 │  transformed data { for ( T in T ~normal(0,1))}
     │                                  ^ here.
     = Expected an expression followed by ")" or ":" after "for (" identifier "in".
-[exit 1]
-  $ stanc ill-formed-statement17.stan
+/* $ stanc ill-formed-statement17.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement17.stan:1:31
   1 │  transformed data { for ( T in while
     │                                ^^^^^ here.
     = Expected an expression followed by ")" or ":" after "for (" identifier "in".
-[exit 1]
-  $ stanc ill-formed-statement18.stan
+/* $ stanc ill-formed-statement18.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement18.stan:1:28
   1 │  transformed data { for ( T while
     │                             ^^^^^ here.
     = Expected "in" after loop identifier.
-[exit 1]
-  $ stanc ill-formed-statement19.stan
+/* $ stanc ill-formed-statement19.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement19.stan:1:26
   1 │  transformed data { for ( while
     │                           ^^^^^ here.
     = Expected (loop) identifier after "(".
-[exit 1]
-  $ stanc ill-formed-statement2.stan
+/* $ stanc ill-formed-statement2.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement2.stan:1:29
   1 │  transformed data { continue while
     │                              ^^^^^ here.
     = Expected ";" after "continue".
-[exit 1]
-  $ stanc ill-formed-statement20.stan
+/* $ stanc ill-formed-statement20.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement20.stan:1:24
   1 │  transformed data { for while
     │                         ^^^^^ here.
     = Expected "(" after "for".
-[exit 1]
-  $ stanc ill-formed-statement23.stan
+/* $ stanc ill-formed-statement23.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement23.stan:1:36
   1 │  transformed data { if ( 1 ) ; else void
     │                                     ^^^^ here.
     = Expected a statement after "else".
-[exit 1]
-  $ stanc ill-formed-statement24.stan
+/* $ stanc ill-formed-statement24.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-statement24.stan:1:34
   1 │  transformed data { if ( 1 ) ; foo}
@@ -1270,15 +1111,13 @@ error: Syntax error: Ill-formed phrase.
   2 │  
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc ill-formed-statement25.stan
+/* $ stanc ill-formed-statement25.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement25.stan:1:35
   1 │  transformed data { if ( T) ; else void
     │                                    ^^^^ here.
     = Expected a statement after "else".
-[exit 1]
-  $ stanc ill-formed-statement26.stan
+/* $ stanc ill-formed-statement26.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ ill-formed-statement26.stan:2:1
   1 │  transformed data { if ( T) ; foo
@@ -1286,602 +1125,524 @@ error: Syntax error: Ill-formed phrase.
     │  ^ here.
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc ill-formed-statement27.stan
+/* $ stanc ill-formed-statement27.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement27.stan:1:29
   1 │  transformed data { if ( T ) void
     │                              ^^^^ here.
     = Expected a statement for the true branch of conditional.
-[exit 1]
-  $ stanc ill-formed-statement28.stan
+/* $ stanc ill-formed-statement28.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement28.stan:1:26
   1 │  transformed data { if (T ~ normal(0,1))}
     │                           ^ here.
     = Expected "(" expression ")" for the test of the if statement.
       A valid expression was found, but it was not followed by a closing parenthesis.
-[exit 1]
-  $ stanc ill-formed-statement3.stan
+/* $ stanc ill-formed-statement3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement3.stan:1:37
   1 │  transformed data { for ( T in 1:42) void
     │                                      ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement30.stan
+/* $ stanc ill-formed-statement30.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement30.stan:1:43
   1 │  transformed data { increment_log_prob ( 1 while
     │                                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-statement35.stan
+/* $ stanc ill-formed-statement35.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement35.stan:1:25
   1 │  transformed data { -1.0 while
     │                          ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-statement4.stan
+/* $ stanc ill-formed-statement4.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement4.stan:1:36
   1 │  transformed data { for ( T in 1:24 while
     │                                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc ill-formed-statement5.stan
+/* $ stanc ill-formed-statement5.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement5.stan:1:35
   1 │  transformed data { for ( T in 1:T)void
     │                                    ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement6.stan
+/* $ stanc ill-formed-statement6.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement6.stan:1:36
   1 │  transformed data { for ( T in 1 : T~normal(0,1))}
     │                                     ^ here.
     = Expected an expression followed by ")" after "for (" identifier "in" expression ":".
-[exit 1]
-  $ stanc ill-formed-statement7.stan
+/* $ stanc ill-formed-statement7.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement7.stan:1:34
   1 │  transformed data { for ( T in 1: while)}
     │                                   ^^^^^ here.
     = Expected an expression followed by ")" after "for (" identifier "in" expression ":".
-[exit 1]
-  $ stanc ill-formed-statement8.stan
+/* $ stanc ill-formed-statement8.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ ill-formed-statement8.stan:1:34
   1 │  transformed data { for ( T in 1) void }
     │                                   ^^^^ here.
     = Expected a statement after ")" for the loop body of the "for" loop.
-[exit 1]
-  $ stanc ill-formed-statement9.stan
+/* $ stanc ill-formed-statement9.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ ill-formed-statement9.stan:1:33
   1 │  transformed data { for ( T in 1 while)}
     │                                  ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc immediate_error.stan
+/* $ stanc immediate_error.stan : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ immediate_error.stan:1:1
   1 │  while
     │  ^^^^^ here.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
-[exit 1]
-  $ stanc indices-bad1.stan
+/* $ stanc indices-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed index.
     ┌─ indices-bad1.stan:1:28
   1 │  transformed data { 1.0 [ , while
     │                             ^^^^^ here.
     = Expected index after indices followed by ",".
-[exit 1]
-  $ stanc indices-bad2.stan
+/* $ stanc indices-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ indices-bad2.stan:1:25
   1 │  transformed data { 1.0[ while
     │                          ^^^^^ here.
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc indices-bad3.stan
+/* $ stanc indices-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ indices-bad3.stan:1:23
   1 │  transformed data { T [while
     │                        ^^^^^ here.
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc lexing_error.stan
+/* $ stanc lexing_error.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ lexing_error.stan:1:8
   1 │  model {½ }
     │         ^ here.
-[exit 1]
-  $ stanc location-scale-bad1.stan
+/* $ stanc location-scale-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad1.stan:1:28
   1 │  data { vector<offset = 0.0 while> x;}
     │                             ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad10.stan
+/* $ stanc location-scale-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad10.stan:1:28
   1 │  data { vector<multiplier = while> x;}
     │                             ^^^^^ here.
     = Expected and expression (not containing binary logical operators)
       after "multiplier =".
-[exit 1]
-  $ stanc location-scale-bad11.stan
+/* $ stanc location-scale-bad11.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad11.stan:1:26
   1 │  data { vector<multiplier while> x;}
     │                           ^^^^^ here.
     = Expected "=" expression
       (not containing binary logical operators) ">" after "multiplier".
-[exit 1]
-  $ stanc location-scale-bad2.stan
+/* $ stanc location-scale-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad2.stan:1:41
   1 │  data { vector<offset = T, multiplier = T,> x;}
     │                                          ^ here.
     = Expected ">" after "multiplier = " expression.
-[exit 1]
-  $ stanc location-scale-bad3.stan
+/* $ stanc location-scale-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad3.stan:1:40
   1 │  data { vector<offset = T, multiplier = while> x;}
     │                                         ^^^^^ here.
     = Expected "multiplier = " expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad4.stan
+/* $ stanc location-scale-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad4.stan:1:39
   1 │  data { vector<offset = T, multiplier  while> x;}
     │                                        ^^^^^ here.
     = Expected "multiplier = " expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad5.stan
+/* $ stanc location-scale-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad5.stan:1:29
   1 │  data { vector<offset = T,   while> x;}
     │                              ^^^^^ here.
     = Expected ">" or ", multiplier = " expression
       (not containing binary logical operators) ">" after "offset = " expression.
-[exit 1]
-  $ stanc location-scale-bad6.stan
+/* $ stanc location-scale-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad6.stan:1:25
   1 │  data { vector<offset =  while> x;}
     │                          ^^^^^ here.
     = Expected "offset = " expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad7.stan
+/* $ stanc location-scale-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad7.stan:1:25
   1 │  data { vector<offset =  while> x;}
     │                          ^^^^^ here.
     = Expected "offset = " expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad8.stan
+/* $ stanc location-scale-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad8.stan:1:23
   1 │  data { vector<offset  while> x;}
     │                        ^^^^^ here.
     = Expected "offset = " expression (not containing binary logical operators).
-[exit 1]
-  $ stanc location-scale-bad9.stan
+/* $ stanc location-scale-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ location-scale-bad9.stan:1:30
   1 │  data { vector<multiplier = y,> x;}
     │                               ^ here.
     = Expected ">" or ", offset = " expression
       (not containing binary logical operators) ">" after "multiplier = " expression.
-[exit 1]
-  $ stanc missing-name.stan
+/* $ stanc missing-name.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ missing-name.stan:1:36
   1 │  data { array [ foo ] vector [ 24 ] &&
     │                                     ^^ here.
   2 │  
     = Expected identifier after type in variable declaration.
-[exit 1]
-  $ stanc mystery1.stan
+/* $ stanc mystery1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery1.stan:1:23
   1 │  transformed data { [ T~
     │                        ^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery10.stan
+/* $ stanc mystery10.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery10.stan:1:29
   1 │  transformed data { 1 .* T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery100.stan
+/* $ stanc mystery100.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery100.stan:1:34
   1 │  transformed data { T ? 1.0 : T[] while
     │                                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery101.stan
+/* $ stanc mystery101.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery101.stan:1:28
   1 │  transformed data { T ? 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery102.stan
+/* $ stanc mystery102.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery102.stan:1:28
   1 │  transformed data { T ? T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery103.stan
+/* $ stanc mystery103.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery103.stan:1:35
   1 │  transformed data { T ?  1.0 : 1.0 while
     │                                    ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery104.stan
+/* $ stanc mystery104.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery104.stan:1:28
   1 │  transformed data { T > 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery105.stan
+/* $ stanc mystery105.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery105.stan:1:28
   1 │  transformed data { T > T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery106.stan
+/* $ stanc mystery106.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery106.stan:1:28
   1 │  transformed data { T * 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery107.stan
+/* $ stanc mystery107.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery107.stan:1:28
   1 │  transformed data { T * T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery108.stan
+/* $ stanc mystery108.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery108.stan:1:29
   1 │  transformed data { T *= T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery109.stan
+/* $ stanc mystery109.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery109.stan:1:29
   1 │  transformed data { T *= 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery11.stan
+/* $ stanc mystery11.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery11.stan:1:28
   1 │  transformed data { 1 == 1  while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery12.stan
+/* $ stanc mystery12.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery12.stan:1:30
   1 │  transformed data { 1 == T[]  while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery13.stan
+/* $ stanc mystery13.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery13.stan:1:27
   1 │  transformed data { 1 >= 1 while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery14.stan
+/* $ stanc mystery14.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery14.stan:1:29
   1 │  transformed data { 1 >= T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery15.stan
+/* $ stanc mystery15.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery15.stan:1:26
   1 │  transformed data { 1 ^ 1 while
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery16.stan
+/* $ stanc mystery16.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery16.stan:1:28
   1 │  transformed data { 1 ^ T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery17.stan
+/* $ stanc mystery17.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery17.stan:1:27
   1 │  transformed data { 1 < 1  while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery18.stan
+/* $ stanc mystery18.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery18.stan:1:29
   1 │  transformed data { 1 < T[]  while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery19.stan
+/* $ stanc mystery19.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery19.stan:1:29
   1 │  transformed data { x[ : 242 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery2.stan
+/* $ stanc mystery2.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ mystery2.stan:1:24
   1 │  transformed data { ( T ~
     │                         ^ here.
     = Found "(" followed by expression. Expected a "[", "," or ")" or an infix or postfix operator.
-[exit 1]
-  $ stanc mystery20.stan
+/* $ stanc mystery20.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ mystery20.stan:1:27
   1 │  transformed data { x[ : T ~
     │                            ^ here.
     = Found ":" expression. Expected either an infix or postfix operator, or "," or "[" or "]" next.
-[exit 1]
-  $ stanc mystery21.stan
+/* $ stanc mystery21.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery21.stan:1:36
   1 │  transformed data { 1.0 [ 1.0 : 1.0 while
     │                                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery22.stan
+/* $ stanc mystery22.stan : [exit 1] */
 error: Syntax error: Ill-formed index.
     ┌─ mystery22.stan:1:33
   1 │  transformed data { 1.0 [ 1.0 : T~
     │                                  ^ here.
     = Expected an expression or "]" or "," after ":".
-[exit 1]
-  $ stanc mystery23.stan
+/* $ stanc mystery23.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery23.stan:1:25
   1 │  transformed data { x[32 while
     │                          ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery24.stan
+/* $ stanc mystery24.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery24.stan:1:26
   1 │  transformed data { x[T:1 while
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery25.stan
+/* $ stanc mystery25.stan : [exit 1] */
 error: Syntax error: Ill-formed index.
     ┌─ mystery25.stan:1:26
   1 │  transformed data { x[T :T~
     │                           ^ here.
     = Expected an expression or "]" or "," after ":".
-[exit 1]
-  $ stanc mystery26.stan
+/* $ stanc mystery26.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery26.stan:1:24
   1 │  transformed data { x[T ~
     │                         ^ here.
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc mystery27.stan
+/* $ stanc mystery27.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery27.stan:1:30
   1 │  transformed data { 1.0 \ 1.0 while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery28.stan
+/* $ stanc mystery28.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery28.stan:1:30
   1 │  transformed data { 1.0 \ T[] while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery29.stan
+/* $ stanc mystery29.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery29.stan:1:31
   1 │  transformed data { 1.0 <= 1.0 while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery3.stan
+/* $ stanc mystery3.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery3.stan:1:27
   1 │  transformed data { 1 && 1 while }
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery30.stan
+/* $ stanc mystery30.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery30.stan:1:31
   1 │  transformed data { 1.0 <= T[] while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery31.stan
+/* $ stanc mystery31.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery31.stan:1:30
   1 │  transformed data { 1.0 - 1.0 while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery32.stan
+/* $ stanc mystery32.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery32.stan:1:30
   1 │  transformed data { 1.0 - T[] while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery33.stan
+/* $ stanc mystery33.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery33.stan:1:30
   1 │  transformed data { 1.0 % 1.0 while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery34.stan
+/* $ stanc mystery34.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery34.stan:1:30
   1 │  transformed data { 1.0 % T[] while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery35.stan
+/* $ stanc mystery35.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery35.stan:1:32
   1 │  transformed data { 1.0 != 1.0  while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery36.stan
+/* $ stanc mystery36.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery36.stan:1:31
   1 │  transformed data { 1.0 != T[] while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery37.stan
+/* $ stanc mystery37.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery37.stan:1:32
   1 │  transformed data { 1.0 || 1.0  while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery38.stan
+/* $ stanc mystery38.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery38.stan:1:32
   1 │  transformed data { 1.0 || T[]  while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery39.stan
+/* $ stanc mystery39.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery39.stan:1:32
   1 │  transformed data { 1.0 + 1.0   while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery4.stan
+/* $ stanc mystery4.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery4.stan:1:33
   1 │  transformed data { x= 1 && T [] while
     │                                  ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery40.stan
+/* $ stanc mystery40.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery40.stan:1:32
   1 │  transformed data { 1.0 + T[]   while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery41.stan
+/* $ stanc mystery41.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery41.stan:1:39
   1 │  transformed data { 1.0 ? 1.0 : 1.0    while
     │                                        ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery42.stan
+/* $ stanc mystery42.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery42.stan:1:39
   1 │  transformed data { 1.0 ? 1.0 : T[]    while
     │                                        ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery43.stan
+/* $ stanc mystery43.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery43.stan:1:34
   1 │  transformed data { 1.0 ? T : 1.0 while
     │                                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery44.stan
+/* $ stanc mystery44.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery44.stan:1:34
   1 │  transformed data { 1.0 ? T : T[] while
     │                                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery45.stan
+/* $ stanc mystery45.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery45.stan:1:28
   1 │  transformed data { 1.0 ? T ~
@@ -1890,509 +1651,445 @@ error: Syntax error: Ill-formed expression.
       Did you forget to add a colon or a false branch?
       For example, this returns 3.0:
         1 ? 3.0 : 0.0
-[exit 1]
-  $ stanc mystery46.stan
+/* $ stanc mystery46.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery46.stan:1:30
   1 │  transformed data { 1.0 > 1.0 while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery47.stan
+/* $ stanc mystery47.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery47.stan:1:30
   1 │  transformed data { 1.0 > T[] while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery48.stan
+/* $ stanc mystery48.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery48.stan:1:19
   1 │  model { 1.0 * 1.0 while
     │                    ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery49.stan
+/* $ stanc mystery49.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery49.stan:1:19
   1 │  model { 1.0 * T[] while
     │                    ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery5.stan
+/* $ stanc mystery5.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery5.stan:1:26
   1 │  transformed data { 1 / 1 while
     │                           ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery50.stan
+/* $ stanc mystery50.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ mystery50.stan:1:13
   1 │  model { 1.0 while
     │              ^^^^^ here.
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc mystery51.stan
+/* $ stanc mystery51.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ mystery51.stan:1:30
   1 │  transformed data { reject( T ~
     │                               ^ here.
     = Expected a comma separated list of either expressions or strings, followed by ");".
-[exit 1]
-  $ stanc mystery52.stan
+/* $ stanc mystery52.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery52.stan:1:30
   1 │  transformed data { return { T)
     │                               ^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery53.stan
+/* $ stanc mystery53.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery53.stan:1:31
   1 │  transformed data { return 1.0 while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery54.stan
+/* $ stanc mystery54.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ mystery54.stan:1:29
   1 │  transformed data { return T ~
     │                              ^ here.
     = Expected ";" or expression followed by ";" after "return".
-[exit 1]
-  $ stanc mystery55.stan
+/* $ stanc mystery55.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery55.stan:1:29
   1 │  transformed data { T && 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery56.stan
+/* $ stanc mystery56.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery56.stan:1:29
   1 │  transformed data { T && T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery57.stan
+/* $ stanc mystery57.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery57.stan:1:28
   1 │  transformed data { T = 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery58.stan
+/* $ stanc mystery58.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery58.stan:1:28
   1 │  transformed data { T = T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery59.stan
+/* $ stanc mystery59.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery59.stan:1:28
   1 │  transformed data { T = 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery6.stan
+/* $ stanc mystery6.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery6.stan:1:28
   1 │  transformed data { 1 / T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery60.stan
+/* $ stanc mystery60.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery60.stan:1:28
   1 │  transformed data { T = T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery61.stan
+/* $ stanc mystery61.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery61.stan:1:28
   1 │  transformed data { T / 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery62.stan
+/* $ stanc mystery62.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery62.stan:1:28
   1 │  transformed data { T / T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery63.stan
+/* $ stanc mystery63.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery63.stan:1:29
   1 │  transformed data { T /= 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery64.stan
+/* $ stanc mystery64.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery64.stan:1:29
   1 │  transformed data { T /= T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery65.stan
+/* $ stanc mystery65.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery65.stan:1:29
   1 │  transformed data { T ./ 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery66.stan
+/* $ stanc mystery66.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery66.stan:1:29
   1 │  transformed data { T ./ T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery67.stan
+/* $ stanc mystery67.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery67.stan:1:30
   1 │  transformed data { T ./= 1.0 while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery68.stan
+/* $ stanc mystery68.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery68.stan:1:30
   1 │  transformed data { T ./= T[] while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery69.stan
+/* $ stanc mystery69.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery69.stan:1:29
   1 │  transformed data { T .* 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery7.stan
+/* $ stanc mystery7.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery7.stan:1:27
   1 │  transformed data { 1 ./ 1 while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery70.stan
+/* $ stanc mystery70.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery70.stan:1:29
   1 │  transformed data { T .* T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery71.stan
+/* $ stanc mystery71.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery71.stan:1:31
   1 │  transformed data { T .*= 1.0  while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery72.stan
+/* $ stanc mystery72.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery72.stan:1:31
   1 │  transformed data { T .*= T[]  while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery73.stan
+/* $ stanc mystery73.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery73.stan:1:30
   1 │  transformed data { T == 1.0  while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery74.stan
+/* $ stanc mystery74.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery74.stan:1:30
   1 │  transformed data { T == T[]  while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery75.stan
+/* $ stanc mystery75.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery75.stan:1:31
   1 │  transformed data { T <= 1.0   while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery76.stan
+/* $ stanc mystery76.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery76.stan:1:31
   1 │  transformed data { T <= T[]   while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery77.stan
+/* $ stanc mystery77.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery77.stan:1:31
   1 │  transformed data { T >= T[]   while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery78.stan
+/* $ stanc mystery78.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery78.stan:1:31
   1 │  transformed data { T >= 1.0   while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery79.stan
+/* $ stanc mystery79.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery79.stan:1:31
   1 │  transformed data { T ^ 1.0    while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery8.stan
+/* $ stanc mystery8.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery8.stan:1:29
   1 │  transformed data { 1 ./ T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery80.stan
+/* $ stanc mystery80.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery80.stan:1:31
   1 │  transformed data { T ^ T[]    while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery81.stan
+/* $ stanc mystery81.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery81.stan:1:31
   1 │  transformed data { T < 1.0    while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery82.stan
+/* $ stanc mystery82.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery82.stan:1:30
   1 │  transformed data { T <T[]    while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery83.stan
+/* $ stanc mystery83.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery83.stan:1:28
   1 │  transformed data { T \ 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery84.stan
+/* $ stanc mystery84.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery84.stan:1:28
   1 │  transformed data { T \ T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery85.stan
+/* $ stanc mystery85.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery85.stan:1:28
   1 │  transformed data { T - 0.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery86.stan
+/* $ stanc mystery86.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery86.stan:1:28
   1 │  transformed data { T - T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery87.stan
+/* $ stanc mystery87.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery87.stan:1:29
   1 │  transformed data { T -= 0.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery88.stan
+/* $ stanc mystery88.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery88.stan:1:29
   1 │  transformed data { T -= T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery89.stan
+/* $ stanc mystery89.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery89.stan:1:28
   1 │  transformed data { T % 1.0 while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery9.stan
+/* $ stanc mystery9.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery9.stan:1:27
   1 │  transformed data { 1 .* 1 while
     │                            ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery90.stan
+/* $ stanc mystery90.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery90.stan:1:28
   1 │  transformed data { T % T[] while
     │                             ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery91.stan
+/* $ stanc mystery91.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery91.stan:1:29
   1 │  transformed data { T != T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery92.stan
+/* $ stanc mystery92.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery92.stan:1:29
   1 │  transformed data { T != 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery93.stan
+/* $ stanc mystery93.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery93.stan:1:29
   1 │  transformed data { T || 1.0 while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery94.stan
+/* $ stanc mystery94.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery94.stan:1:29
   1 │  transformed data { T || T[] while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery95.stan
+/* $ stanc mystery95.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery95.stan:1:29
   1 │  transformed data { T + 1.0  while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery96.stan
+/* $ stanc mystery96.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery96.stan:1:29
   1 │  transformed data { T + T[]  while
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery97.stan
+/* $ stanc mystery97.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery97.stan:1:30
   1 │  transformed data { T += T[]  while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery98.stan
+/* $ stanc mystery98.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery98.stan:1:30
   1 │  transformed data { T += 1.0  while
     │                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc mystery99.stan
+/* $ stanc mystery99.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ mystery99.stan:1:34
   1 │  transformed data { T ? 1.0 : 1.0 while
     │                                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc print-bad1.stan
+/* $ stanc print-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad1.stan:1:30
   1 │  transformed data { print("a" while);}
     │                               ^^^^^ here.
     = Expected a comma separated list of expressions or
       strings followed by ");" after "print(".
-[exit 1]
-  $ stanc print-bad2.stan
+/* $ stanc print-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad2.stan:1:28
   1 │  transformed data { print(T)while;}
     │                             ^^^^^ here.
     = Expected a ";" after "print(...)".
-[exit 1]
-  $ stanc print-bad3.stan
+/* $ stanc print-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad3.stan:1:26
   1 │  transformed data { print(while);}
     │                           ^^^^^ here.
     = Expected a comma separated list of expressions or
       strings followed by ");" after "print(".
-[exit 1]
-  $ stanc print-bad4.stan
+/* $ stanc print-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad4.stan:1:26
   1 │  transformed data { print while;}
     │                           ^^^^^ here.
     = Expected "(" followed by a comma separated list of expressions or
       strings followed by ");" after "print".
-[exit 1]
-  $ stanc print-bad5.stan
+/* $ stanc print-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad5.stan:2:12
   1 │  transformed data {
@@ -2400,8 +2097,7 @@ error: Syntax error: Ill-formed statement.
     │             ^ here.
   3 │  }
     = Expected a comma separated list of either expressions or strings, followed by ");".
-[exit 1]
-  $ stanc print-bad6.stan
+/* $ stanc print-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ print-bad6.stan:1:43
   1 │   transformed data { print ( "hello world" while
@@ -2409,110 +2105,95 @@ error: Syntax error: Ill-formed statement.
   2 │  
     = Expected a comma separated list of expressions or
       strings followed by ");" after "print(".
-[exit 1]
-  $ stanc reject-bad1.stan
+/* $ stanc reject-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ reject-bad1.stan:1:32
   1 │  transformed data { reject( 1.0 while
     │                                 ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc reject-bad2.stan
+/* $ stanc reject-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad2.stan:1:32
   1 │  transformed data { reject( "a" while
     │                                 ^^^^^ here.
     = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
-[exit 1]
-  $ stanc reject-bad3.stan
+/* $ stanc reject-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad3.stan:1:35
   1 │  transformed data { reject( T, "a" while
     │                                    ^^^^^ here.
     = Expected a comma separated list of either expressions or strings, followed by ");".
-[exit 1]
-  $ stanc reject-bad4.stan
+/* $ stanc reject-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad4.stan:1:30
   1 │  transformed data { reject( T,while
     │                               ^^^^^ here.
     = Expected a comma separated list of either expressions or strings, followed by ");".
-[exit 1]
-  $ stanc reject-bad5.stan
+/* $ stanc reject-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad5.stan:1:30
   1 │  transformed data { reject( T)while
     │                               ^^^^^ here.
     = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
-[exit 1]
-  $ stanc reject-bad6.stan
+/* $ stanc reject-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad6.stan:1:28
   1 │  transformed data { reject( while
     │                             ^^^^^ here.
     = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
-[exit 1]
-  $ stanc reject-bad7.stan
+/* $ stanc reject-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad7.stan:1:27
   1 │  transformed data { reject while
     │                            ^^^^^ here.
     = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
-[exit 1]
-  $ stanc reject-bad8.stan
+/* $ stanc reject-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ reject-bad8.stan:1:44
   1 │   transformed data { reject ( "hello world" while
     │                                             ^^^^^ here.
   2 │  
     = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
-[exit 1]
-  $ stanc return-bad1.stan
+/* $ stanc return-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ return-bad1.stan:1:34
   1 │  transformed data { return target while
     │                                   ^^^^^ here.
     = Expected "()" after "target".
-[exit 1]
-  $ stanc statement-in-data-block-bad.stan
+/* $ stanc statement-in-data-block-bad.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ statement-in-data-block-bad.stan:1:16
   1 │  data { real T; print(0);}
     │                 ^^^^^ here.
     = Only top-level variable declarations are allowed in the "data" and "parameters" blocks.
-[exit 1]
-  $ stanc statement-outside-of-block-bad1.stan
+/* $ stanc statement-outside-of-block-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ statement-outside-of-block-bad1.stan:1:10
   1 │  data { } while
     │           ^^^^^ here.
     = Expected "transformed data {", "parameters {",
       "transformed parameters {", "model {", "generated quantities {", or end-of-file.
-[exit 1]
-  $ stanc statement-outside-of-block-bad2.stan
+/* $ stanc statement-outside-of-block-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ statement-outside-of-block-bad2.stan:1:15
   1 │  functions { } while
     │                ^^^^^ here.
     = Expected "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", "generated quantities {", or end-of-file.
-[exit 1]
-  $ stanc target-bad1.stan
+/* $ stanc target-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ target-bad1.stan:1:28
   1 │  transformed data { target( while
     │                             ^^^^^ here.
     = Expected "()" after "target".
-[exit 1]
-  $ stanc target-bad2.stan
+/* $ stanc target-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ target-bad2.stan:1:28
   1 │  transformed data { target  while
     │                             ^^^^^ here.
     = Expected either "+=" expression or "()" after "target".
-[exit 1]
-  $ stanc target-pe-bad1.stan
+/* $ stanc target-pe-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ target-pe-bad1.stan:3:11
   2 │  
@@ -2520,299 +2201,258 @@ error: Syntax error: Ill-formed statement.
     │            ^^^^^^^ here.
   4 │  }
     = Expected an expression followed by ";" after "target +=".
-[exit 1]
-  $ stanc target-pe-bad2.stan
+/* $ stanc target-pe-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ target-pe-bad2.stan:1:34
   1 │  transformed data { target += 1.0 while
     │                                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc target-pe-bad3.stan
+/* $ stanc target-pe-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ target-pe-bad3.stan:1:31
   1 │  transformed data { target += T~
     │                                ^ here.
     = Expected an expression followed by ";" after "target +=".
-[exit 1]
-  $ stanc target-pe-bad4.stan
+/* $ stanc target-pe-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ target-pe-bad4.stan:1:30
   1 │  transformed data { target += while
     │                               ^^^^^ here.
     = Expected an expression followed by ";" after "target +=".
-[exit 1]
-  $ stanc tilde-bad1.stan
+/* $ stanc tilde-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ tilde-bad1.stan:1:44
   1 │  transformed data { 1.0 ~ normal(0,1) T [,] multiplier
     │                                             ^^^^^^^^^^ here.
     = Expected ";" after truncated "~"-statement.
-[exit 1]
-  $ stanc tilde-bad10.stan
+/* $ stanc tilde-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad10.stan:1:34
   1 │  transformed data { 1.0 ~ normal(x]
     │                                   ^ here.
     = Expected a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad11.stan
+/* $ stanc tilde-bad11.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad11.stan:1:22
   1 │  model { 1.0 ~ normal(while
     │                       ^^^^^ here.
     = Expected a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad12.stan
+/* $ stanc tilde-bad12.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad12.stan:1:22
   1 │  model { 1.0 ~ normal while
     │                       ^^^^^ here.
     = Expected "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad13.stan
+/* $ stanc tilde-bad13.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad13.stan:1:16
   1 │  model { 1.0 ~  while
     │                 ^^^^^ here.
     = Expected an distribution name after "~".
-[exit 1]
-  $ stanc tilde-bad14.stan
+/* $ stanc tilde-bad14.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ tilde-bad14.stan:1:31
   1 │  transformed data { T~T() T[,] multiplier
     │                                ^^^^^^^^^^ here.
     = Expected ";" after truncated "~"-statement.
-[exit 1]
-  $ stanc tilde-bad15.stan
+/* $ stanc tilde-bad15.stan : [exit 1] */
 error: Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
 
     ┌─ tilde-bad15.stan:1:26
   1 │  transformed data { T~T() while
     │                           ^^^^^ here.
     = Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad16.stan
+/* $ stanc tilde-bad16.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad16.stan:1:25
   1 │  transformed data { T~T(T]
     │                          ^ here.
     = Expected a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad17.stan
+/* $ stanc tilde-bad17.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad17.stan:1:24
   1 │  transformed data { T~T(while
     │                         ^^^^^ here.
     = Expected a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad18.stan
+/* $ stanc tilde-bad18.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad18.stan:1:24
   1 │  transformed data { T~T while
     │                         ^^^^^ here.
     = Expected "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".
-[exit 1]
-  $ stanc tilde-bad19.stan
+/* $ stanc tilde-bad19.stan : [exit 1] */
 error: Syntax error: Ill-formed "~"-statement.
     ┌─ tilde-bad19.stan:1:22
   1 │  transformed data { T~while
     │                       ^^^^^ here.
     = Expected an distribution name after "~".
-[exit 1]
-  $ stanc tilde-bad2.stan
+/* $ stanc tilde-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad2.stan:1:44
   1 │  transformed data { 1.0 ~ normal(0,1) T [,35,
     │                                             ^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad3.stan
+/* $ stanc tilde-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad3.stan:1:42
   1 │  transformed data { 1.0 ~ normal(0,1) T [,while
     │                                           ^^^^^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad4.stan
+/* $ stanc tilde-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ tilde-bad4.stan:1:46
   1 │  transformed data { 1.0 ~ normal(0,1) T [,1.0 while
     │                                               ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc tilde-bad5.stan
+/* $ stanc tilde-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad5.stan:1:42
   1 │  transformed data { 1.0 ~ normal(0,1) T [x~
     │                                           ^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad6.stan
+/* $ stanc tilde-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad6.stan:1:42
   1 │  transformed data { 1.0 ~ normal(0,1) T [x]
     │                                           ^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad7.stan
+/* $ stanc tilde-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad7.stan:1:41
   1 │  transformed data { 1.0 ~ normal(0,1) T [while
     │                                          ^^^^^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad8.stan
+/* $ stanc tilde-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed truncation.
     ┌─ tilde-bad8.stan:1:40
   1 │  transformed data { 1.0 ~ normal(0,1) T while
     │                                         ^^^^^ here.
     = Expected "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc tilde-bad9.stan
+/* $ stanc tilde-bad9.stan : [exit 1] */
 error: Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
 
     ┌─ tilde-bad9.stan:1:39
   1 │  transformed data { 1.0 ~ normal(0,1)  while
     │                                        ^^^^^ here.
     = Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
-[exit 1]
-  $ stanc transformations-bad1.stan
+/* $ stanc transformations-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ transformations-bad1.stan:1:12
   1 │  data { int<x=5> x;
     │             ^ here.
   2 │  }
     = Expected "lower = " expression or "upper = " expression for integer bounds.
-[exit 1]
-  $ stanc transformations-bad10.stan
+/* $ stanc transformations-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad10.stan:1:25
   1 │  data { vector<upper = - while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad11.stan
+/* $ stanc transformations-bad11.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad11.stan:1:29
   1 │  data { vector<upper = + 0.0 while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad12.stan
+/* $ stanc transformations-bad12.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad12.stan:1:25
   1 │  data { vector<upper = + while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad13.stan
+/* $ stanc transformations-bad13.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad13.stan:1:25
   1 │  data { vector<upper = T,> x;}
     │                          ^ here.
     = Expected "lower =" expression (not containing binary logical operators) ">"
       after "<upper =" expression "," in top-level variable declaration.
-[exit 1]
-  $ stanc transformations-bad14.stan
+/* $ stanc transformations-bad14.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad14.stan:1:29
   1 │  data { vector<upper = T/0.0 while> x;}
     │                              ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad15.stan
+/* $ stanc transformations-bad15.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad15.stan:1:21
   1 │  data { vector<upper=while> x;}
     │                      ^^^^^ here.
     = Expected an expression (not containing binary logical operators)
       after "upper =".
-[exit 1]
-  $ stanc transformations-bad16.stan
+/* $ stanc transformations-bad16.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad16.stan:1:21
   1 │  data { vector<upper while> x;}
     │                      ^^^^^ here.
     = Expected "=" expression ">" after seeing "upper".
-[exit 1]
-  $ stanc transformations-bad17.stan
+/* $ stanc transformations-bad17.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad17.stan:1:15
   1 │  data { vector<while> x;}
     │                ^^^^^ here.
     = Expected "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<".
-[exit 1]
-  $ stanc transformations-bad2.stan
+/* $ stanc transformations-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad2.stan:1:31
   1 │  data { vector<lower=T, upper=T,> x;}
     │                                ^ here.
     = Expected ">" after "upper = " expression.
-[exit 1]
-  $ stanc transformations-bad3.stan
+/* $ stanc transformations-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad3.stan:1:30
   1 │  data { vector<lower=T, upper=while> x;}
     │                               ^^^^^ here.
     = Expected an expression (not containing binary logical operators)
       after "upper =".
-[exit 1]
-  $ stanc transformations-bad4.stan
+/* $ stanc transformations-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad4.stan:1:30
   1 │  data { vector<lower=T, upper while> x;}
     │                               ^^^^^ here.
     = Expected "=" expression
       (not containing binary logical operators) after "upper".
-[exit 1]
-  $ stanc transformations-bad5.stan
+/* $ stanc transformations-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad5.stan:1:25
   1 │  data { vector<lower=T,  while> x;}
     │                          ^^^^^ here.
     = Expected "upper =" expression (not containing binary logical operators) ">"
       after "<lower =" expression "," in top-level variable declaration.
-[exit 1]
-  $ stanc transformations-bad6.stan
+/* $ stanc transformations-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad6.stan:1:22
   1 │  data { vector<lower  while> x;}
     │                       ^^^^^ here.
     = Expected "=" expression
       (not containing binary logical operators) after "lower".
-[exit 1]
-  $ stanc transformations-bad7.stan
+/* $ stanc transformations-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad7.stan:1:28
   1 │  data { vector<upper = !0.0 while> x;}
     │                             ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad8.stan
+/* $ stanc transformations-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad8.stan:1:25
   1 │  data { vector<upper = ! while> x;}
     │                          ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc transformations-bad9.stan
+/* $ stanc transformations-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ transformations-bad9.stan:1:28
   1 │  data { vector<upper = -0.0 while> x;}
     │                             ^^^^^ here.
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc type-bad1.stan
+/* $ stanc type-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ type-bad1.stan:1:17
   1 │  data { vector[1]^
     │                  ^ here.
     = Expected identifier after type in variable declaration.
-[exit 1]
-  $ stanc type-size-bad1.stan
+/* $ stanc type-size-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad1.stan:1:32
   1 │  data { cholesky_factor_cov[0.0 while] x;
@@ -2820,24 +2460,21 @@ error: Syntax error: Ill-formed expression.
   2 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad10.stan
+/* $ stanc type-size-bad10.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad10.stan:1:20
   1 │  data { corr_matrix[while] x;
     │                     ^^^^^ here.
   2 │  }
     = Expected "[" expression "]" for size of corr_matrix.
-[exit 1]
-  $ stanc type-size-bad11.stan
+/* $ stanc type-size-bad11.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad11.stan:1:20
   1 │  data { corr_matrix x;
     │                     ^ here.
   2 │  }
     = Expected "[" expression "]" for size of corr_matrix.
-[exit 1]
-  $ stanc type-size-bad12.stan
+/* $ stanc type-size-bad12.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad12.stan:1:23
   1 │  data { cov_matrix[0.0 while] x;
@@ -2845,32 +2482,28 @@ error: Syntax error: Ill-formed expression.
   2 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad13.stan
+/* $ stanc type-size-bad13.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad13.stan:1:21
   1 │  data { cov_matrix[T ~ normal(0,1)] x;
     │                      ^ here.
   2 │  }
     = Expected "[" expression "]" for size of cov_matrix.
-[exit 1]
-  $ stanc type-size-bad14.stan
+/* $ stanc type-size-bad14.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad14.stan:1:19
   1 │  data { cov_matrix[while] x;
     │                    ^^^^^ here.
   2 │  }
     = Expected "[" expression "]" for size of cov_matrix.
-[exit 1]
-  $ stanc type-size-bad15.stan
+/* $ stanc type-size-bad15.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad15.stan:1:19
   1 │  data { cov_matrix x;
     │                    ^ here.
   2 │  }
     = Expected "[" expression "]" for size of cov_matrix.
-[exit 1]
-  $ stanc type-size-bad16.stan
+/* $ stanc type-size-bad16.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad16.stan:1:24
   1 │  data { matrix[0.0, 0.0 while] x;
@@ -2878,112 +2511,97 @@ error: Syntax error: Ill-formed expression.
   2 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad17.stan
+/* $ stanc type-size-bad17.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad17.stan:1:21
   1 │  data { matrix[0.0, T~normal(0,1)] x;
     │                      ^ here.
   2 │  }
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad18.stan
+/* $ stanc type-size-bad18.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad18.stan:1:20
   1 │  data { matrix[0.0, print(0)] x;
     │                     ^^^^^ here.
   2 │  }
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad19.stan
+/* $ stanc type-size-bad19.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad19.stan:1:22
   1 │  data { matrix[T, 0.0 while] x}
     │                       ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad2.stan
+/* $ stanc type-size-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad2.stan:1:28
   1 │  data { cholesky_factor_cov[while]x;
     │                             ^^^^^ here.
   2 │  }
     = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
-[exit 1]
-  $ stanc type-size-bad20.stan
+/* $ stanc type-size-bad20.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad20.stan:1:19
   1 │  data { matrix[T, T~normal(0,1)] x}
     │                    ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad21.stan
+/* $ stanc type-size-bad21.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad21.stan:1:18
   1 │  data { matrix[T, print(0)] x;}
     │                   ^^^^^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad22.stan
+/* $ stanc type-size-bad22.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad22.stan:1:17
   1 │  data { matrix[T ~ normal(0,1), 1] x;}
     │                  ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad23.stan
+/* $ stanc type-size-bad23.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad23.stan:1:15
   1 │  data { matrix[print(0), 1] x;}
     │                ^^^^^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad24.stan
+/* $ stanc type-size-bad24.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad24.stan:1:20
   1 │  data { ordered[0.0 while] x;}
     │                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad25.stan
+/* $ stanc type-size-bad25.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad25.stan:1:18
   1 │  data { ordered[T ~ normal(0,1)] x;}
     │                   ^ here.
     = Expected "[" expression "]" for size of ordered.
-[exit 1]
-  $ stanc type-size-bad26.stan
+/* $ stanc type-size-bad26.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad26.stan:1:16
   1 │  data { ordered x;}
     │                 ^ here.
     = Expected "[" expression "]" for size of ordered.
-[exit 1]
-  $ stanc type-size-bad27.stan
+/* $ stanc type-size-bad27.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad27.stan:1:29
   1 │  data { positive_ordered[0.0 while] x;}
     │                              ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad28.stan
+/* $ stanc type-size-bad28.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad28.stan:1:26
   1 │  data { positive_ordered[T~normal(0,1)] x;}
     │                           ^ here.
     = Expected "[" expression "]" for size of positive_ordered.
-[exit 1]
-  $ stanc type-size-bad29.stan
+/* $ stanc type-size-bad29.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad29.stan:1:25
   1 │  data { positive_ordered[while] x;}
     │                          ^^^^^ here.
     = Expected "[" expression "]" for size of positive_ordered.
-[exit 1]
-  $ stanc type-size-bad3.stan
+/* $ stanc type-size-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad3.stan:1:34
   1 │  data { cholesky_factor_cov[T,0.0 while]x;
@@ -2991,298 +2609,258 @@ error: Syntax error: Ill-formed expression.
   2 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad30.stan
+/* $ stanc type-size-bad30.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad30.stan:1:25
   1 │  data { positive_ordered x;}
     │                          ^ here.
     = Expected "[" expression "]" for size of positive_ordered.
-[exit 1]
-  $ stanc type-size-bad32.stan
+/* $ stanc type-size-bad32.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad32.stan:1:14
   1 │  data { array[] real T;}
     │               ^ here.
   2 │  
     = Expected expressions for size of array.
-[exit 1]
-  $ stanc type-size-bad34.stan
+/* $ stanc type-size-bad34.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad34.stan:1:23
   1 │  data { row_vector[0.0 while] x;}
     │                        ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad35.stan
+/* $ stanc type-size-bad35.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad35.stan:1:20
   1 │  data { row_vector[T~normal(0,1)] x;}
     │                     ^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc type-size-bad36.stan
+/* $ stanc type-size-bad36.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad36.stan:1:19
   1 │  data { row_vector[while] x;}
     │                    ^^^^^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc type-size-bad37.stan
+/* $ stanc type-size-bad37.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad37.stan:1:20
   1 │  data { simplex[0.0 while] x;}
     │                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad38.stan
+/* $ stanc type-size-bad38.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad38.stan:1:18
   1 │  data { simplex[T ~ normal(0,1)] x;}
     │                   ^ here.
     = Expected "[" expression "]" for size of simplex.
-[exit 1]
-  $ stanc type-size-bad39.stan
+/* $ stanc type-size-bad39.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad39.stan:1:16
   1 │  data { simplex[while] x;}
     │                 ^^^^^ here.
     = Expected "[" expression "]" for size of simplex.
-[exit 1]
-  $ stanc type-size-bad4.stan
+/* $ stanc type-size-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad4.stan:1:30
   1 │  data { cholesky_factor_cov[T,while]x;
     │                               ^^^^^ here.
   2 │  }
     = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
-[exit 1]
-  $ stanc type-size-bad40.stan
+/* $ stanc type-size-bad40.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad40.stan:1:25
   1 │  data { unit_vector[ 0.0 while] x;}
     │                          ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad41.stan
+/* $ stanc type-size-bad41.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad41.stan:1:22
   1 │  data { unit_vector[ T~normal(0,1)] x;}
     │                       ^ here.
     = Expected "[" expression "]" for size of unit_vector.
-[exit 1]
-  $ stanc type-size-bad42.stan
+/* $ stanc type-size-bad42.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad42.stan:1:21
   1 │  data { unit_vector[ while] x;}
     │                      ^^^^^ here.
     = Expected "[" expression "]" for size of unit_vector.
-[exit 1]
-  $ stanc type-size-bad43.stan
+/* $ stanc type-size-bad43.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad43.stan:1:20
   1 │  data { unit_vector while;}
     │                     ^^^^^ here.
     = Expected "[" expression "]" for size of unit_vector.
-[exit 1]
-  $ stanc type-size-bad44.stan
+/* $ stanc type-size-bad44.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad44.stan:1:31
   1 │  data { vector<multiplier = y> while;}
     │                                ^^^^^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad45.stan
+/* $ stanc type-size-bad45.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad45.stan:1:16
   1 │  data { vector[T~normal(0,1)] x;}
     │                 ^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad46.stan
+/* $ stanc type-size-bad46.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad46.stan:1:15
   1 │  data { vector[while] x;}
     │                ^^^^^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad47.stan
+/* $ stanc type-size-bad47.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad47.stan:1:21
   1 │  model { matrix[1, 1 while] x;}
     │                      ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad48.stan
+/* $ stanc type-size-bad48.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad48.stan:1:20
   1 │  model { matrix[0, T~normal(0,1)] x;}
     │                     ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad49.stan
+/* $ stanc type-size-bad49.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad49.stan:1:19
   1 │  model { matrix[0, while] x;}
     │                    ^^^^^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad5.stan
+/* $ stanc type-size-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad5.stan:1:32
   1 │  data { cholesky_factor_cov[T,T ~]x;
     │                                 ^ here.
   2 │  }
     = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
-[exit 1]
-  $ stanc type-size-bad50.stan
+/* $ stanc type-size-bad50.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad50.stan:1:18
   1 │  model { matrix[1 while,1] x;}
     │                   ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad51.stan
+/* $ stanc type-size-bad51.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad51.stan:1:20
   1 │  model { matrix[T,0 while] x;}
     │                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad52.stan
+/* $ stanc type-size-bad52.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad52.stan:1:22
   1 │  model { matrix[ T, T ~normal(0,1)] x;}
     │                       ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad53.stan
+/* $ stanc type-size-bad53.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad53.stan:1:19
   1 │  model { matrix[T, while] x;}
     │                    ^^^^^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad54.stan
+/* $ stanc type-size-bad54.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad54.stan:1:17
   1 │  model { matrix[T~normal(0,1),1] x;}
     │                  ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad55.stan
+/* $ stanc type-size-bad55.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad55.stan:1:18
   1 │  model { matrix [ while, 1] x;}
     │                   ^^^^^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc type-size-bad56.stan
+/* $ stanc type-size-bad56.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad56.stan:1:24
   1 │  model { row_vector [ 1 while] x;}
     │                         ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad57.stan
+/* $ stanc type-size-bad57.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad57.stan:1:22
   1 │  model { row_vector[ T~normal(0,1)] x;}
     │                       ^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc type-size-bad58.stan
+/* $ stanc type-size-bad58.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad58.stan:1:22
   1 │  model { row_vector [ while] x;}
     │                       ^^^^^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc type-size-bad59.stan
+/* $ stanc type-size-bad59.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad59.stan:1:20
   1 │  model { vector [ 1 while ] x;}
     │                     ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad6.stan
+/* $ stanc type-size-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad6.stan:1:30
   1 │  data { cholesky_factor_cov[T ~]x;
     │                               ^ here.
   2 │  }
     = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
-[exit 1]
-  $ stanc type-size-bad60.stan
+/* $ stanc type-size-bad60.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad60.stan:1:19
   1 │  model { vector [ T~normal(0,1)] x;}
     │                    ^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad61.stan
+/* $ stanc type-size-bad61.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad61.stan:1:17
   1 │  model { vector[ while] x;}
     │                  ^^^^^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad62.stan
+/* $ stanc type-size-bad62.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad62.stan:3:1
   3 │  }
     │  ^ here.
     = Expected "[" expression "]" for vector size.
-[exit 1]
-  $ stanc type-size-bad63.stan
+/* $ stanc type-size-bad63.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad63.stan:1:33
   1 │  data { sum_to_zero_matrix [ foo ~
     │                                  ^ here.
   2 │  
     = Expected "[" expression "," expression "]" for size of sum_to_zero_matrix.
-[exit 1]
-  $ stanc type-size-bad64.stan
+/* $ stanc type-size-bad64.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad64.stan:1:29
   1 │  data { sum_to_zero_vector [ while
     │                              ^^^^^ here.
   2 │  
     = Expected "[" expression "]" for size of sum_to_zero_vector.
-[exit 1]
-  $ stanc type-size-bad65.stan
+/* $ stanc type-size-bad65.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad65.stan:1:46
   1 │   data { column_stochastic_matrix [ foo , foo ~
     │                                               ^ here.
   2 │  
     = Expected "[" expression "," expression "]" for size of column_stochastic_matrix.
-[exit 1]
-  $ stanc type-size-bad66.stan
+/* $ stanc type-size-bad66.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad66.stan:1:43
   1 │   data { row_stochastic_matrix [ foo , foo ~
     │                                            ^ here.
   2 │  
     = Expected "[" expression "," expression "]" for size of row_stochastic_matrix.
-[exit 1]
-  $ stanc type-size-bad7.stan
+/* $ stanc type-size-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad7.stan:1:28
   1 │  data { cholesky_factor_cov x;
     │                             ^ here.
   2 │  }
     = Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
-[exit 1]
-  $ stanc type-size-bad8.stan
+/* $ stanc type-size-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ type-size-bad8.stan:1:24
   1 │  data { corr_matrix[0.0 while] x;
@@ -3290,99 +2868,85 @@ error: Syntax error: Ill-formed expression.
   2 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc type-size-bad9.stan
+/* $ stanc type-size-bad9.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ type-size-bad9.stan:1:22
   1 │  data { corr_matrix[T ~ normal(0,1)] x;
     │                       ^ here.
   2 │  }
     = Expected "[" expression "]" for size of corr_matrix.
-[exit 1]
-  $ stanc variable-decl-bad1.stan
+/* $ stanc variable-decl-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ variable-decl-bad1.stan:1:11
   1 │  data { int;
     │            ^ here.
   2 │  }
     = Expected "<" constraint ">" or identifier next as part of top-level variable declaration.
-[exit 1]
-  $ stanc variable-decl-bad2.stan
+/* $ stanc variable-decl-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ variable-decl-bad2.stan:1:28
   1 │  data { matrix<multiplier=5>;
     │                             ^ here.
   2 │  }
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc variable-decl-bad4.stan
+/* $ stanc variable-decl-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ variable-decl-bad4.stan:1:33
   1 │  data { row_vector<multiplier=x> print(0);}
     │                                  ^^^^^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc variable-decl-bad5.stan
+/* $ stanc variable-decl-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ variable-decl-bad5.stan:1:19
   1 │  data { row_vector while;}
     │                    ^^^^^ here.
     = Expected "[" expression "]" for row_vector size.
-[exit 1]
-  $ stanc variable-decl-bad6.stan
+/* $ stanc variable-decl-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ variable-decl-bad6.stan:1:16
   1 │  data { simplex while;}
     │                 ^^^^^ here.
     = Expected "[" expression "]" for size of simplex.
-[exit 1]
-  $ stanc variable-decl-bad7.stan
+/* $ stanc variable-decl-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ variable-decl-bad7.stan:1:29
   1 │  transformed data { vector[1]^
     │                              ^ here.
     = Expected an identifier and optional assignment after type in variable declaration.
-[exit 1]
-  $ stanc while-bad1.stan
+/* $ stanc while-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ while-bad1.stan:1:32
   1 │  transformed data { while (1.0) void
     │                                 ^^^^ here.
     = Expected a statement after ")" for the body of the "while" loop.
-[exit 1]
-  $ stanc while-bad2.stan
+/* $ stanc while-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ while-bad2.stan:1:31
   1 │  transformed data { while (1.0 while
     │                                ^^^^^ here.
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc while-bad3.stan
+/* $ stanc while-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ while-bad3.stan:1:30
   1 │  transformed data { while (T) void
     │                               ^^^^ here.
     = Expected a statement after ")" for the body of the "while" loop.
-[exit 1]
-  $ stanc while-bad4.stan
+/* $ stanc while-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ while-bad4.stan:1:28
   1 │  transformed data { while (T~
     │                             ^ here.
     = Expected an expression after "(" for the test of a "while" loop.
-[exit 1]
-  $ stanc while-bad5.stan
+/* $ stanc while-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ while-bad5.stan:1:27
   1 │  transformed data { while (while
     │                            ^^^^^ here.
     = Expected an expression after "(" for the test of a "while" loop.
-[exit 1]
-  $ stanc while-bad6.stan
+/* $ stanc while-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ while-bad6.stan:1:26
   1 │  transformed data { while while
     │                           ^^^^^ here.
     = Expected "(" expression ")" statement after "while".
-[exit 1]

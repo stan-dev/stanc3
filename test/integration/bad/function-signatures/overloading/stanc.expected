@@ -1,4 +1,4 @@
-  $ stanc invalid_lpmf.stan
+/* $ stanc invalid_lpmf.stan : [exit 1] */
 error: Probability mass functions require int variates (first argument). Instead found type real.
     ┌─ invalid_lpmf.stan:8:4
   7 │    
@@ -7,8 +7,7 @@ error: Probability mass functions require int variates (first argument). Instead
  10 │ │     }
     │ ╰─────^ Probability mass functions require int variates (first argument). Instead found type real.
  11 │    }
-[exit 1]
-  $ stanc no_minimum_dae.stan
+/* $ stanc no_minimum_dae.stan : [exit 1] */
 error: No unique minimum promotion found for function "chem_dae".
     ┌─ no_minimum_dae.stan:38:13
   1 │  functions {
@@ -33,8 +32,7 @@ error: No unique minimum promotion found for function "chem_dae".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_promotion.stan
+/* $ stanc no_minimum_promotion.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo".
     ┌─ no_minimum_promotion.stan:12:10
   1 │  functions {
@@ -58,8 +56,7 @@ error: No unique minimum promotion found for function "foo".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_promotion2.stan
+/* $ stanc no_minimum_promotion2.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo".
     ┌─ no_minimum_promotion2.stan:12:10
   1 │  functions {
@@ -83,8 +80,7 @@ error: No unique minimum promotion found for function "foo".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_promotion3.stan
+/* $ stanc no_minimum_promotion3.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo3".
     ┌─ no_minimum_promotion3.stan:21:10
   1 │  functions {
@@ -114,8 +110,7 @@ error: No unique minimum promotion found for function "foo3".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_reduce_sum.stan
+/* $ stanc no_minimum_reduce_sum.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo".
     ┌─ no_minimum_reduce_sum.stan:11:12
   1 │  functions {
@@ -140,8 +135,7 @@ error: No unique minimum promotion found for function "foo".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_tilde.stan
+/* $ stanc no_minimum_tilde.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo".
     ┌─ no_minimum_tilde.stan:12:4
   1 │  functions {
@@ -165,8 +159,7 @@ error: No unique minimum promotion found for function "foo".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_tilde2.stan
+/* $ stanc no_minimum_tilde2.stan : [exit 1] */
 error: No unique minimum promotion found for function "foo".
     ┌─ no_minimum_tilde2.stan:12:4
   1 │  functions {
@@ -190,8 +183,7 @@ error: No unique minimum promotion found for function "foo".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc no_minimum_variadic.stan
+/* $ stanc no_minimum_variadic.stan : [exit 1] */
 error: No unique minimum promotion found for function "simple_SIR".
     ┌─ no_minimum_variadic.stan:82:38
  21 │    
@@ -218,16 +210,14 @@ error: No unique minimum promotion found for function "simple_SIR".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc overload_reduce_sum.stan
+/* $ stanc overload_reduce_sum.stan : [exit 1] */
 error: Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
     ┌─ overload_reduce_sum.stan:2:8
   1 │  functions {
   2 │    real reduce_sum(real x){
     │         ^^^^^^^^^^ Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
   3 │      return x;
-[exit 1]
-  $ stanc redefine-ccdf-same.stan
+/* $ stanc redefine-ccdf-same.stan : [exit 1] */
 error: Function "poisson_lccdf" is already declared in the Stan Math library with signature (int, real) => real
     ┌─ redefine-ccdf-same.stan:2:3
   1 │    functions {
@@ -236,8 +226,7 @@ error: Function "poisson_lccdf" is already declared in the Stan Math library wit
   4 │ │    }
     │ ╰────^ Function "poisson_lccdf" is already declared in the Stan Math library with signature (int, real) => real
   5 │    }
-[exit 1]
-  $ stanc redefine-ccdf-same2.stan
+/* $ stanc redefine-ccdf-same2.stan : [exit 1] */
 error: Function "poisson_lccdf" is already declared in the Stan Math library with signature (int, real) => real
     ┌─ redefine-ccdf-same2.stan:2:3
   1 │    functions {
@@ -246,8 +235,7 @@ error: Function "poisson_lccdf" is already declared in the Stan Math library wit
   4 │ │    }
     │ ╰────^ Function "poisson_lccdf" is already declared in the Stan Math library with signature (int, real) => real
   5 │    }
-[exit 1]
-  $ stanc redefine-cdf-same.stan
+/* $ stanc redefine-cdf-same.stan : [exit 1] */
 error: Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
     ┌─ redefine-cdf-same.stan:2:3
   1 │    functions {
@@ -256,8 +244,7 @@ error: Function "poisson_lcdf" is already declared in the Stan Math library with
   4 │ │    }
     │ ╰────^ Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
   5 │    }
-[exit 1]
-  $ stanc redefine-cdf-same2.stan
+/* $ stanc redefine-cdf-same2.stan : [exit 1] */
 error: Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
     ┌─ redefine-cdf-same2.stan:2:3
   1 │    functions {
@@ -266,8 +253,7 @@ error: Function "poisson_lcdf" is already declared in the Stan Math library with
   4 │ │    }
     │ ╰────^ Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
   5 │    }
-[exit 1]
-  $ stanc redefine-prob-same.stan
+/* $ stanc redefine-prob-same.stan : [exit 1] */
 error: Function "poisson_lpmf" is already declared in the Stan Math library with signature (int, real) => real
     ┌─ redefine-prob-same.stan:2:3
   1 │    functions {
@@ -276,8 +262,7 @@ error: Function "poisson_lpmf" is already declared in the Stan Math library with
   4 │ │    }
     │ ╰────^ Function "poisson_lpmf" is already declared in the Stan Math library with signature (int, real) => real
   5 │    }
-[exit 1]
-  $ stanc redefinition.stan
+/* $ stanc redefinition.stan : [exit 1] */
 error: Function "foo" has already been declared for signature (real) => int
     ┌─ redefinition.stan:6:4
   1 │    functions {
@@ -291,8 +276,7 @@ error: Function "foo" has already been declared for signature (real) => int
   8 │ │     }
     │ ╰─────^ Function "foo" has already been declared for signature (real) => int
   9 │    }
-[exit 1]
-  $ stanc returntype_issues.stan
+/* $ stanc returntype_issues.stan : [exit 1] */
 error: Function "foo" cannot be overloaded by return type only.
     ┌─ returntype_issues.stan:6:4
   1 │    functions {
@@ -307,4 +291,3 @@ error: Function "foo" cannot be overloaded by return type only.
     │ ╰─────^ Function "foo" cannot be overloaded by return type only.
   9 │    }
     = Previously used return type real.
-[exit 1]

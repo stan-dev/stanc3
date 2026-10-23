@@ -1,4 +1,4 @@
-  $ stanc profile-bad1.stan
+/* $ stanc profile-bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad1.stan:2:13
   1 │  transformed data {
@@ -6,8 +6,7 @@ error: Syntax error: Ill-formed statement.
     │              ^ here.
   3 │  
     = Expected profile name as string in parenthesis
-[exit 1]
-  $ stanc profile-bad2.stan
+/* $ stanc profile-bad2.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad2.stan:2:13
   1 │  transformed data {
@@ -15,8 +14,7 @@ error: Syntax error: Ill-formed statement.
     │              ^ here.
   3 │  
     = Expected profile name as string in parenthesis
-[exit 1]
-  $ stanc profile-bad3.stan
+/* $ stanc profile-bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad3.stan:2:14
   1 │  transformed data {
@@ -24,8 +22,7 @@ error: Syntax error: Ill-formed statement.
     │               ^^^^^ here.
   3 │  
     = Expected profile name as string in parenthesis
-[exit 1]
-  $ stanc profile-bad4.stan
+/* $ stanc profile-bad4.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad4.stan:2:14
   1 │  transformed data {
@@ -33,8 +30,7 @@ error: Syntax error: Ill-formed statement.
     │               ^^^^^ here.
   3 │  
     = Expected profile name as string in parenthesis
-[exit 1]
-  $ stanc profile-bad5.stan
+/* $ stanc profile-bad5.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ profile-bad5.stan:2:10
   1 │  transformed data {
@@ -42,8 +38,7 @@ error: Syntax error: Ill-formed identifier.
     │           ^^^^^^^ here.
   3 │  }
     = Expected a new identifier but found reserved keyword "profile".
-[exit 1]
-  $ stanc profile-bad6.stan
+/* $ stanc profile-bad6.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ profile-bad6.stan:2:10
   1 │  functions {
@@ -51,8 +46,7 @@ error: Syntax error: Ill-formed identifier.
     │           ^^^^^^^ here.
   3 │          return i + 1.0;
     = Expected a new identifier but found reserved keyword "profile".
-[exit 1]
-  $ stanc profile-bad7.stan
+/* $ stanc profile-bad7.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad7.stan:2:18
   1 │  transformed data {
@@ -60,8 +54,7 @@ error: Syntax error: Ill-formed statement.
     │                   ^^^^^ here.
   3 │  }
     = Expected "{" to begin profile block.
-[exit 1]
-  $ stanc profile-bad8.stan
+/* $ stanc profile-bad8.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ profile-bad8.stan:2:17
   1 │  transformed data {
@@ -69,4 +62,3 @@ error: Syntax error: Ill-formed statement.
     │                  ^ here.
   3 │          
     = Expected ")" after profile name.
-[exit 1]

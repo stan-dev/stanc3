@@ -1,12 +1,9 @@
-  $ stanc --name=foo  8start_with_number.stan
-[exit 0]
-  $ stanc --name=foo  bad.stan
+/* $ stanc --name=foo  8start_with_number.stan : [exit 0] */
+/* $ stanc --name=foo  bad.stan : [exit 1] */
 error: Identifier "foo" clashes with model name.
     ┌─ bad.stan:3:7
   2 │    // declare matching model name should fail
   3 │    int foo;  
     │        ^^^ Identifier "foo" clashes with model name.
   4 │  }
-[exit 1]
-  $ stanc --name=foo  good.stan
-[exit 0]
+/* $ stanc --name=foo  good.stan : [exit 0] */

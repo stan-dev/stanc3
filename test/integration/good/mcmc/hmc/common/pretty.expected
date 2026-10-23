@@ -1,4 +1,4 @@
-  $ stanc --auto-format gauss.stan
+/* $ stanc --auto-format gauss.stan : [exit 0] */
 parameters {
   real x;
 }
@@ -6,8 +6,7 @@ model {
   x ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format gauss3D.stan
+/* $ stanc --auto-format gauss3D.stan : [exit 0] */
 parameters {
   array[3] real x;
 }
@@ -15,4 +14,3 @@ model {
   x ~ normal(0, 1);
 }
 
-[exit 0]

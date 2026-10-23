@@ -1,4 +1,4 @@
-  $ stanc --auto-format prophet.stan
+/* $ stanc --auto-format prophet.stan : [exit 0] */
 // Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
 functions {
   array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
@@ -153,4 +153,3 @@ model {
   y ~ normal(Y, sigma_obs);
 }
 
-[exit 0]

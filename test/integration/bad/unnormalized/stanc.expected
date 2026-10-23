@@ -1,12 +1,11 @@
-  $ stanc lupdf_ident.stan
+/* $ stanc lupdf_ident.stan : [exit 1] */
 error: Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
     ┌─ lupdf_ident.stan:2:10
   1 │  parameters {
   2 │      real y_lupdf;
     │           ^^^^^^^ Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
   3 │  }
-[exit 1]
-  $ stanc lupdf_in_functions.stan
+/* $ stanc lupdf_in_functions.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_functions.stan:3:16
   2 │      real test(real y) {
@@ -17,8 +16,7 @@ error: Invalid call to unnormalized probability function.
     │                                     ending in _lpdf or _lpmf.
     │                                     Did you mean "normal_lpdf"?
   4 │      }
-[exit 1]
-  $ stanc lupdf_in_gq.stan
+/* $ stanc lupdf_in_gq.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_gq.stan:8:14
   7 │  generated quantities {
@@ -29,8 +27,7 @@ error: Invalid call to unnormalized probability function.
     │                                     ending in _lpdf or _lpmf.
     │                                     Did you mean "normal_lpdf"?
   9 │  }
-[exit 1]
-  $ stanc lupdf_in_gq_rs.stan
+/* $ stanc lupdf_in_gq_rs.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_gq_rs.stan:14:25
  13 │  generated quantities {
@@ -40,8 +37,7 @@ error: Invalid call to unnormalized probability function.
     │                                    ending in _lpdf or _lpmf.
     │                                    Did you mean "foo_lpdf"?
  15 │  }
-[exit 1]
-  $ stanc lupdf_in_lp.stan
+/* $ stanc lupdf_in_lp.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_lp.stan:3:19
   2 │      void foo_lp(real y1, real y2) {
@@ -52,8 +48,7 @@ error: Invalid call to unnormalized probability function.
     │                                             ending in _lpdf or _lpmf.
     │                                             Did you mean "normal_lpdf"?
   4 │      }
-[exit 1]
-  $ stanc lupdf_in_trans_data.stan
+/* $ stanc lupdf_in_trans_data.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_trans_data.stan:3:14
   2 │      real p;
@@ -64,8 +59,7 @@ error: Invalid call to unnormalized probability function.
     │                                     ending in _lpdf or _lpmf.
     │                                     Did you mean "normal_lpdf"?
   4 │  }
-[exit 1]
-  $ stanc lupdf_in_trans_params.stan
+/* $ stanc lupdf_in_trans_params.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_trans_params.stan:3:14
   2 │      real p;
@@ -76,8 +70,7 @@ error: Invalid call to unnormalized probability function.
     │                                     ending in _lpdf or _lpmf.
     │                                     Did you mean "normal_lpdf"?
   4 │  }
-[exit 1]
-  $ stanc lupdf_in_trans_params_rs.stan
+/* $ stanc lupdf_in_trans_params_rs.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupdf_in_trans_params_rs.stan:9:25
   8 │      array[5] real ya;
@@ -87,8 +80,7 @@ error: Invalid call to unnormalized probability function.
     │                                    ending in _lpdf or _lpmf.
     │                                    Did you mean "foo_lpdf"?
  10 │  }
-[exit 1]
-  $ stanc lupmf_in_gq.stan
+/* $ stanc lupmf_in_gq.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupmf_in_gq.stan:11:14
  10 │  generated quantities {
@@ -98,8 +90,7 @@ error: Invalid call to unnormalized probability function.
     │                                    ending in _lpdf or _lpmf.
     │                                    Did you mean "poisson_lpmf"?
  12 │  }
-[exit 1]
-  $ stanc lupmf_in_lp.stan
+/* $ stanc lupmf_in_lp.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupmf_in_lp.stan:3:19
   2 │      void foo_lp(int i1, real r1) {
@@ -110,8 +101,7 @@ error: Invalid call to unnormalized probability function.
     │                                          ending in _lpdf or _lpmf.
     │                                          Did you mean "poisson_lpmf"?
   4 │      }
-[exit 1]
-  $ stanc lupmf_in_trans_data.stan
+/* $ stanc lupmf_in_trans_data.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupmf_in_trans_data.stan:7:14
   6 │      real y;
@@ -121,8 +111,7 @@ error: Invalid call to unnormalized probability function.
     │                                    ending in _lpdf or _lpmf.
     │                                    Did you mean "poisson_lpmf"?
   8 │  }
-[exit 1]
-  $ stanc lupmf_in_trans_params.stan
+/* $ stanc lupmf_in_trans_params.stan : [exit 1] */
 error: Invalid call to unnormalized probability function.
     ┌─ lupmf_in_trans_params.stan:6:14
   5 │      real y;
@@ -132,16 +121,14 @@ error: Invalid call to unnormalized probability function.
     │                                    ending in _lpdf or _lpmf.
     │                                    Did you mean "poisson_lpmf"?
   7 │  }
-[exit 1]
-  $ stanc not_in_scope.stan
+/* $ stanc not_in_scope.stan : [exit 1] */
 error: Identifier "foo_lupdf" not in scope.
     ┌─ not_in_scope.stan:2:23
   1 │  generated quantities {
   2 │    real x = reduce_sum(foo_lupdf, blah, blah);
     │                        ^^^^^^^^^ Identifier "foo_lupdf" not in scope.
   3 │  }
-[exit 1]
-  $ stanc udf_lupdf.stan
+/* $ stanc udf_lupdf.stan : [exit 1] */
 error: Invalid user-defined function name.
     ┌─ udf_lupdf.stan:2:10
   1 │  functions {
@@ -151,8 +138,7 @@ error: Invalid user-defined function name.
     │                     be defined as normalized.
   3 │          return 1.0;
     = Function names should end with _lpdf/_lpmf not _lupdf/_lupmf.
-[exit 1]
-  $ stanc udf_lupmf.stan
+/* $ stanc udf_lupmf.stan : [exit 1] */
 error: Invalid user-defined function name.
     ┌─ udf_lupmf.stan:2:10
   1 │  functions {
@@ -162,4 +148,3 @@ error: Invalid user-defined function name.
     │                     be defined as normalized.
   3 │          return 1.0;
     = Function names should end with _lpdf/_lpmf not _lupdf/_lupmf.
-[exit 1]

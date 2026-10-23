@@ -5,15 +5,23 @@ let string_of_status = function
   | WSIGNALED i -> Printf.sprintf "[signal %n]" i
   | WSTOPPED i -> Printf.sprintf "[stopped %n]" i
 
+let print_run short_cmd (out, err, status) =
+  let lines =
+    Printf.sprintf "/* $ %s : %s */" short_cmd (string_of_status status)
+    ::
+    (match (out, err) with
+    | [], err -> err
+    | out, [] -> out
+    | out, err -> out @ ["/*"] @ err @ ["*/"]) in
+  Printf.printf "%s\n" (String.concat ~sep:"\n" lines)
+
 let run_capturing_output cmd =
   let noflags = Array.make 0 "" in
   let stdout, stdin, stderr = Unix.open_process_full cmd noflags in
-  let chns = [stdout; stderr] in
-  let out = List.map ~f:In_channel.input_lines chns |> List.concat in
-  let status =
-    string_of_status (Unix.close_process_full (stdout, stdin, stderr)) in
-  let out = out @ [status] in
-  String.concat ~sep:"\n" out
+  let out = In_channel.input_lines stdout in
+  let err = In_channel.input_lines stderr in
+  let status = Unix.close_process_full (stdout, stdin, stderr) in
+  (out, err, status)
 
 let () =
   let args = Sys.argv in
@@ -34,4 +42,4 @@ let () =
           match rest with "" -> binary | rest -> binary ^ " " ^ rest in
         let binary = String.replace_first binary ~sub:".exe" ~by:"" in
         binary ^ " " ^ arg in
-      Printf.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))
+      print_run short_cmd (run_capturing_output cmd))

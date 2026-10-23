@@ -1,90 +1,49 @@
-(rule
- (targets cpp.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --print-cpp"
-    %{stanfiles}))))
+(include cpp.dune)
 
-(rule
- (alias runtest)
- (action
-  (diff cpp.expected cpp.output)))
+(subdir
+ dunes
+ (rule
+  (deps
+   (:stanfiles ../mother.stan))
+  (action
+   (with-stdout-to
+    lir.inc
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     lir
+     "--debug-lir"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles ../mother.stan))
+  (action
+   (with-stdout-to
+    mir.inc
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     mir
+     "--debug-mir"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles ../mother.stan))
+  (action
+   (with-stdout-to
+    txmir.inc
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     mir
+     "--debug-transformed-mir"
+     %{stanfiles})))))
 
-(rule
- (targets lir.output)
- (deps
-  (package stanc)
-  (:stanfiles mother.stan))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --debug-lir"
-    %{stanfiles}))))
+(subdir
+ expected_lir
+ (dynamic_include ../dunes/lir.inc))
 
-(rule
- (alias runtest)
- (action
-  (diff lir.expected lir.output)))
+(subdir
+ expected_mir
+ (dynamic_include ../dunes/mir.inc))
 
-(rule
- (targets mir.output)
- (deps
-  (package stanc)
-  (:stanfiles mother.stan))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --debug-mir"
-    %{stanfiles}))))
-
-(rule
- (alias runtest)
- (action
-  (diff mir.expected mir.output)))
-
-(rule
- (targets transformed_mir.output)
- (deps
-  (package stanc)
-  (:stanfiles mother.stan))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --debug-transformed-mir"
-    %{stanfiles}))))
-
-(rule
- (alias runtest)
- (action
-  (diff transformed_mir.expected transformed_mir.output)))
-
-(rule
- (targets cl.output)
- (deps
-  (package stanc)
-  (:stanfiles optimize_glm.stan))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --print-cpp --use-opencl"
-    %{stanfiles}))))
-
-(rule
- (alias runtest)
- (action
-  (diff cl.expected cl.output)))
+(subdir
+ expected_transformed_mir
+ (dynamic_include ../dunes/txmir.inc))

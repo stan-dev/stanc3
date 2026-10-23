@@ -1,4 +1,4 @@
-  $ stanc bad_abs_tol.stan
+/* $ stanc bad_abs_tol.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_abs_tol.stan:28:53
   1 │  functions {
@@ -18,8 +18,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The 7th argument must be real but got array[] real
-[exit 1]
-  $ stanc bad_initial_derivative.stan
+/* $ stanc bad_initial_derivative.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_initial_derivative.stan:27:34
   1 │  functions {
@@ -38,8 +37,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The third argument must be vector but got real
-[exit 1]
-  $ stanc bad_initial_state.stan
+/* $ stanc bad_initial_state.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_initial_state.stan:27:29
   1 │  functions {
@@ -58,8 +56,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The second argument must be vector but got real
-[exit 1]
-  $ stanc bad_initial_time.stan
+/* $ stanc bad_initial_time.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_initial_time.stan:27:39
   1 │  functions {
@@ -79,8 +76,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The fourth argument must be real but got vector
-[exit 1]
-  $ stanc bad_max_num_steps.stan
+/* $ stanc bad_max_num_steps.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_max_num_steps.stan:28:60
   1 │  functions {
@@ -100,8 +96,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The 8th argument must be int but got array[] real
-[exit 1]
-  $ stanc bad_no_args.stan
+/* $ stanc bad_no_args.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_no_args.stan:27:19
   1 │  functions {
@@ -129,8 +124,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
            array[] real
           but the other is
            vector
-[exit 1]
-  $ stanc bad_non_function_arg.stan
+/* $ stanc bad_non_function_arg.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae".
     ┌─ bad_non_function_arg.stan:21:15
   7 │    array[4] vector[3] y;
@@ -148,8 +142,7 @@ error: Ill-typed arguments supplied to function "dae".
       (<F1>, vector, vector, data real, data array[] real) => vector
       where F1 = (real, vector, vector) => vector
         The first argument must be <F1> but got real
-[exit 1]
-  $ stanc bad_non_matching_args.stan
+/* $ stanc bad_non_matching_args.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_non_matching_args.stan:27:72
   1 │  functions {
@@ -169,8 +162,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real, real) => vector
         The 10th argument must be real but got array[] real
-[exit 1]
-  $ stanc bad_non_var_arg.stan
+/* $ stanc bad_non_var_arg.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae".
     ┌─ bad_non_var_arg.stan:20:15
  19 │    array[4] vector[3] y_hat;
@@ -183,8 +175,7 @@ error: Ill-typed arguments supplied to function "dae".
       (<F1>, vector, vector, data real, data array[] real) => vector
       where F1 = (real, vector, vector) => vector
         The first argument must be <F1> but got real
-[exit 1]
-  $ stanc bad_rel_tol.stan
+/* $ stanc bad_rel_tol.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_rel_tol.stan:28:68
   1 │  functions {
@@ -204,8 +195,7 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         Expected 9 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_time0.stan
+/* $ stanc bad_time0.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae".
     ┌─ bad_time0.stan:13:40
   1 │  functions {
@@ -225,8 +215,7 @@ error: Ill-typed arguments supplied to function "dae".
         The fourth argument must be data-only.
         (Local variables are assumed to depend on parameters; same goes for
         function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_times_param.stan
+/* $ stanc bad_times_param.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae".
     ┌─ bad_times_param.stan:13:45
   1 │  functions {
@@ -246,8 +235,7 @@ error: Ill-typed arguments supplied to function "dae".
         The 5th argument must be data-only.
         (Local variables are assumed to depend on parameters; same goes for
         function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_times_tol.stan
+/* $ stanc bad_times_tol.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "dae_tol".
     ┌─ bad_times_tol.stan:27:43
   1 │  functions {
@@ -267,4 +255,3 @@ error: Ill-typed arguments supplied to function "dae_tol".
       (<F1>, vector, vector, data real, data array[] real, data real,
        data real, data int, array[] real) => vector
         The 5th argument must be array[] real but got array[] vector
-[exit 1]

@@ -1,4 +1,4 @@
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined bernoulli.stan
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined bernoulli.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -964,6 +964,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/bernoulli_likelihoods.stan:16:5
   9 │    vector linkinv_bern(vector eta, int link) {
@@ -1019,8 +1020,8 @@ function names are always in scope regardless of definition order.
   7 │    #include </functions/bernoulli_likelihoods.stan>
     │    -------- file './/functions/bernoulli_likelihoods.stan' included here
   8 │  }
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined binomial.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined binomial.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -1849,6 +1850,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/binomial_likelihoods.stan:15:5
   8 │    vector linkinv_binom(vector eta, int link) {
@@ -1872,8 +1874,8 @@ warning: Unreachable statement found, is this intended?
   7 │    #include </functions/binomial_likelihoods.stan>
     │    -------- file './/functions/binomial_likelihoods.stan' included here
   8 │  }
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined continuous.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined continuous.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -3441,6 +3443,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/continuous_likelihoods.stan:13:5
   8 │    vector linkinv_gauss(vector eta, int link) {
@@ -3663,8 +3666,8 @@ function names are always in scope regardless of definition order.
   9 │    #include </functions/SSfunctions.stan>
     │    -------- file './/functions/SSfunctions.stan' included here
  10 │    
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined count.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined count.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -4555,6 +4558,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/count_likelihoods.stan:14:5
   9 │    vector linkinv_count(vector eta, int link) {
@@ -4574,8 +4578,8 @@ warning: Unreachable statement found, is this intended?
   7 │    #include </functions/count_likelihoods.stan>
     │    -------- file './/functions/count_likelihoods.stan' included here
   8 │  }
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined jm.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined jm.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -7685,6 +7689,7 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/bernoulli_likelihoods.stan:16:5
   9 │    vector linkinv_bern(vector eta, int link) {
@@ -7885,8 +7890,8 @@ function names are always in scope regardless of definition order.
   8 │  #include /functions/bernoulli_likelihoods.stan
     │  -------- file './/functions/bernoulli_likelihoods.stan' included here
   9 │  #include /functions/binomial_likelihoods.stan
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined lm.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined lm.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -8031,8 +8036,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined mvmer.stan
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined mvmer.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -10002,6 +10006,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ .//functions/bernoulli_likelihoods.stan:16:5
   9 │    vector linkinv_bern(vector eta, int link) {
@@ -10202,8 +10207,8 @@ function names are always in scope regardless of definition order.
   8 │  #include /functions/bernoulli_likelihoods.stan
     │  -------- file './/functions/bernoulli_likelihoods.stan' included here
   9 │  #include /functions/binomial_likelihoods.stan
-[exit 0]
-  $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined polr.stan
+*/
+/* $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined polr.stan : [exit 0] */
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
@@ -10593,6 +10598,7 @@ generated quantities {
   }
 }
 
+/*
 warning: Unreachable statement found, is this intended?
     ┌─ polr.stan:28:5
  16 │      if (link == 1)
@@ -10616,4 +10622,4 @@ warning: Unreachable statement found, is this intended?
  28 │      return x; // never reached
     │      ^ Never reached
  29 │    }
-[exit 0]
+*/
