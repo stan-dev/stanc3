@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad11.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../functions-bad11.stan:3:5
+  2 │    void badlp(real x) {
+  3 │      x ~ normal(0,1);
+    │      ^^^^^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+  4 │      return;

@@ -1,0 +1,129 @@
+/* $ stanc ../integrate_ode_bdf.stan : [exit 0] */
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:25:11
+ 24 │    array[T, 2] real y_hat;
+ 25 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:26:11
+ 25 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:27:11
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 28 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:28:11
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 28 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 29 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:30:11
+ 29 │    
+ 30 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 31 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:32:11
+ 31 │                              1e-10, 1e8);
+ 32 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 33 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:34:11
+ 33 │                              1e-10, 1e8);
+ 34 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 35 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:36:11
+ 35 │                              1e-10, 1e8);
+ 36 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 37 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:41:11
+ 40 │    array[T, 2] real y_hat;
+ 41 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:42:11
+ 41 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:43:11
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 44 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:44:11
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 44 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 45 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:46:11
+ 45 │    
+ 46 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 47 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:48:11
+ 47 │                              1e-10, 1e8);
+ 48 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 49 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:50:11
+ 49 │                              1e-10, 1e8);
+ 50 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 51 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ../integrate_ode_bdf.stan:52:11
+ 51 │                              1e-10, 1e8);
+ 52 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 53 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html

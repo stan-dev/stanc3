@@ -1,0 +1,9 @@
+/* $ stanc ../ill-formed-expression22.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../ill-formed-expression22.stan:2:15
+  1 │  model {
+  2 │    if (2) then {print (0);}
+    │                ^ here.
+  3 │  }
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

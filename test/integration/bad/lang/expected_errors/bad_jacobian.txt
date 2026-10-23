@@ -1,0 +1,8 @@
+/* $ stanc ../bad_jacobian.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../bad_jacobian.stan:2:17
+  1 │  transformed parameters {
+  2 │      jacobian += while;
+    │                  ^^^^^ here.
+  3 │  }
+    = Expected an expression followed by ";" after "jacobian +=".

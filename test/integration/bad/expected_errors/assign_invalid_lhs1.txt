@@ -1,0 +1,8 @@
+/* $ stanc ../assign_invalid_lhs1.stan : [exit 1] */
+error: Syntax error: Ill-formed assignment.
+    ┌─ ../assign_invalid_lhs1.stan:2:3
+  1 │  model {
+  2 │    foo() = 1;
+    │    ^^^^^ here.
+  3 │  }
+    = Expected an assignable value but found a general expression.

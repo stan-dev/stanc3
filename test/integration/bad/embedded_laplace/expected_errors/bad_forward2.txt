@@ -1,0 +1,16 @@
+/* $ stanc ../bad_forward2.stan : [exit 1] */
+error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
+    ┌─ ../bad_forward2.stan:37:43
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, (eta, y, log_ye),
+    │                                            ^^^^^^^^^^^^^^^^ Cannot call "ll_function"
+    │                                                             with arguments forwarded from
+    │                                                             call to "laplace_marginal"
+ 38 │                                   1, K_function, (x, n_obs, alpha, rho));
+    = The second argument (excluding the latent gaussian vector argument) must be
+      vector but got array[] int.

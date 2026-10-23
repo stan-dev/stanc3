@@ -1,0 +1,21 @@
+/* $ stanc ../rising_factorial.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "rising_factorial".
+    ┌─ ../rising_factorial.stan:7:29
+  6 │    real transformed_param_real;
+  7 │    transformed_param_real =  rising_factorial(d_real, r_real);
+    │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+  8 │  }
+    = Supplied arguments:
+      (real, real)
+    = Available signatures:
+      (real, int) => real
+        The second argument must be int but got real
+      (real, array[] int) => array[] real
+        The second argument must be array[] int but got real
+      (real, array[,] int) => array[,] real
+        The second argument must be array[,] int but got real
+      (real, array[,,] int) => array[,,] real
+        The second argument must be array[,,] int but got real
+      (real, array[,,,] int) => array[,,,] real
+        The second argument must be array[,,,] int but got real
+      (Additional signatures omitted)

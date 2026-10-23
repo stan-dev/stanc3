@@ -1,0 +1,8 @@
+/* $ stanc ../get_lp_target.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
+    ┌─ ../get_lp_target.stan:6:22
+  5 │    print("target = ", target());
+  6 │    print("get_lp = ", get_lp());
+    │                       ^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                "get_lp" was supplied.
+  7 │  }

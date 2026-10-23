@@ -1,0 +1,7 @@
+/* $ stanc ../bad_fundef_returntypes3.stan : [exit 1] */
+error: Invalid return statement.
+    ┌─ ../bad_fundef_returntypes3.stan:5:5
+  4 │        return 24;
+  5 │      return {24};
+    │      ^^^^^^^^^^^^ Function is declared to return real, but this statement returns array[] int instead.
+  6 │    }

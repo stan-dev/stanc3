@@ -1,0 +1,9 @@
+/* $ stanc ../typo.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "to_vetor" was supplied.
+    ┌─ ../typo.stan:2:18
+  1 │  transformed data {
+  2 │     vector[3] x = to_vetor({1,2,3});
+    │                   ^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                     "to_vetor" was supplied.
+  3 │  }
+    = Did you mean "to_vector"?

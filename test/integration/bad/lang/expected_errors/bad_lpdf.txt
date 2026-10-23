@@ -1,0 +1,9 @@
+/* $ stanc ../bad_lpdf.stan : [exit 1] */
+error: Probability density functions require real variates (first argument).
+    ┌─ ../bad_lpdf.stan:2:3
+  1 │    functions {
+  2 │ ╭    real my_dist_lpdf(){
+  3 │ │      return 1.0;
+  4 │ │    }
+    │ ╰────^ Probability density functions require real variates (first argument).
+  5 │    }

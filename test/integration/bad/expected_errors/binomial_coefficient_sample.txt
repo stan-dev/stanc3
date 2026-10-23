@@ -1,0 +1,8 @@
+/* $ stanc ../binomial_coefficient_sample.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../binomial_coefficient_sample.stan:5:7
+  4 │  model {
+  5 │    y ~ binomial_coefficient(5);
+    │        ^^^^^^^^^^^^^^^^^^^^ No function "binomial_coefficient_lpdf" was found when looking for distribution 
+    │                             "binomial_coefficient".
+  6 │  }

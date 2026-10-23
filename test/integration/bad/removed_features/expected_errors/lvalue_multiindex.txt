@@ -1,0 +1,7 @@
+/* $ stanc ../lvalue_multiindex.stan : [exit 1] */
+error: Left hand side of an assignment cannot have nested multi-indexing.
+    ┌─ ../lvalue_multiindex.stan:6:4
+  5 │     matrix[5,5] y;
+  6 │     y[:][:] = x[1][:][:];
+    │     ^^^^^^^ Left hand side of an assignment cannot have nested multi-indexing.
+  7 │     y[:][1] = x[1][:][2];

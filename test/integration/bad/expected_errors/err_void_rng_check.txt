@@ -1,0 +1,9 @@
+/* $ stanc ../err_void_rng_check.stan : [exit 1] */
+error: Invalid call to random number generator.
+    ┌─ ../err_void_rng_check.stan:8:5
+  7 │  model {
+  8 │      foo_rng(1.0);
+    │      ^^^^^^^^^^^^^ Random number generators are only allowed in transformed
+    │                    data block, generated quantities block or user-defined
+    │                    functions with names ending in _rng.
+  9 │  }

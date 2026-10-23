@@ -1,75 +1,66 @@
-(rule
- (targets canonical.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan*)))
- (action
-  (with-outputs-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --print-canonical"
-    %{stanfiles}))))
+(subdir
+ dunes
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan*)))
+  (action
+   (with-stdout-to
+    canonical.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     preserve
+     "--print-canonical"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan*)))
+  (action
+   (with-stdout-to
+    deprecations.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     preserve
+     "--auto-format --canonicalize deprecations"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan*)))
+  (action
+   (with-stdout-to
+    everything-but.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     preserve
+     "--auto-format --canonicalize braces,parentheses"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (:stanfiles
+    (glob_files ../*.stan*)))
+  (action
+   (with-stdout-to
+    stripped.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     preserve
+     "--auto-format --canonicalize strip-comments,braces,parentheses,deprecations"
+     %{stanfiles})))))
 
-(rule
- (targets deprecations-only.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan*)))
- (action
-  (with-outputs-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --auto-format --canonicalize deprecations"
-    %{stanfiles}))))
+(subdir
+ expected_canonical
+ (dynamic_include ../dunes/canonical.dune))
 
-(rule
- (targets everything-but.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan*)))
- (action
-  (with-outputs-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
-    %{stanfiles}))))
+(subdir
+ expected_deprecations
+ (dynamic_include ../dunes/deprecations.dune))
 
-(rule
- (targets strip-comments.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan*)))
- (action
-  (with-outputs-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --auto-format --canonicalize strip-comments,braces,parentheses,deprecations"
-    %{stanfiles}))))
+(subdir
+ expected_everything_but
+ (dynamic_include ../dunes/everything-but.dune))
 
-(rule
- (alias runtest)
- (action
-  (diff canonical.expected canonical.output)))
-
-(rule
- (alias runtest)
- (action
-  (diff deprecations-only.expected deprecations-only.output)))
-
-(rule
- (alias runtest)
- (action
-  (diff everything-but.expected everything-but.output)))
-
-(rule
- (alias runtest)
- (action
-  (diff strip-comments.expected strip-comments.output)))
+(subdir
+ expected_stripped
+ (dynamic_include ../dunes/stripped.dune))

@@ -1,0 +1,7 @@
+/* $ stanc ../bad_function2.stan : [exit 1] */
+error: A non-returning function was expected but an undeclared identifier "y" was supplied.
+    ┌─ ../bad_function2.stan:3:4
+  2 │     real x;
+  3 │     y();
+    │     ^^^^ A non-returning function was expected but an undeclared identifier "y" was supplied.
+  4 │  }

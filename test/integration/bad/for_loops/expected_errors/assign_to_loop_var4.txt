@@ -1,0 +1,9 @@
+/* $ stanc ../assign_to_loop_var4.stan : [exit 1] */
+error: Cannot assign to read-only variable.
+    ┌─ ../assign_to_loop_var4.stan:5:7
+  3 │      vector[2] vs;
+  4 │      for (v in vs) {
+    │           - Previous declaration here.
+  5 │        v = 0;
+    │        ^ "v" was previously used as a function argument or loop identifier.
+  6 │      }

@@ -1,0 +1,7 @@
+/* $ stanc ../ill-formed-expression32.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../ill-formed-expression32.stan:1:25
+  1 │  transformed data { {T[] while
+    │                          ^^^^^ here.
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?

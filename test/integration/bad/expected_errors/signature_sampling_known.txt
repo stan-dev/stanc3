@@ -1,0 +1,21 @@
+/* $ stanc ../signature_sampling_known.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "bernoulli_logit".
+    ┌─ ../signature_sampling_known.stan:8:3
+  7 │  model {
+  8 │    x ~ bernoulli_logit(theta);
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+  9 │  }
+    = Supplied arguments:
+      (vector, vector)
+    = Available signatures:
+      (array[] int, row_vector) => real
+        The first argument must be array[] int but got vector
+      (array[] int, vector) => real
+        The first argument must be array[] int but got vector
+      (array[] int, array[] real) => real
+        The first argument must be array[] int but got vector
+      (array[] int, real) => real
+        The first argument must be array[] int but got vector
+      (int, row_vector) => real
+        The first argument must be int but got vector
+      (Additional signatures omitted)

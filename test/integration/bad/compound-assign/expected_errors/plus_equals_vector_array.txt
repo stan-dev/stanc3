@@ -1,0 +1,10 @@
+/* $ stanc ../plus_equals_vector_array.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_vector_array.stan:5:8
+  4 │    x[1] += y[1];
+  5 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] vector.
+  6 │  }
+    = There are no valid right hand side types for the given left hand side.

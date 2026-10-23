@@ -1,0 +1,8 @@
+/* $ stanc ../empty_tuple_type.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../empty_tuple_type.stan:2:9
+  1 │  model {
+  2 │    tuple() y = ();
+    │          ^ here.
+  3 │  }
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.

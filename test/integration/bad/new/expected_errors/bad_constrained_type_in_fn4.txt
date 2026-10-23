@@ -1,0 +1,8 @@
+/* $ stanc ../bad_constrained_type_in_fn4.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_constrained_type_in_fn4.stan:3:15
+  2 │    // TODO: would be nice to specialize for this mistake
+  3 │    void foo(int<lower=0> x){
+    │                ^ here.
+  4 │      print(x);
+    = Did not expect "<". Functions do not support type constraints.

@@ -1,0 +1,7 @@
+/* $ stanc ../blocks-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../blocks-bad2.stan:1:14
+  1 │  functions {} cov_matrix
+    │               ^^^^^^^^^^ here.
+    = Expected "data {", "transformed data {", "parameters {",
+      "transformed parameters {", "model {", "generated quantities {", or end-of-file.

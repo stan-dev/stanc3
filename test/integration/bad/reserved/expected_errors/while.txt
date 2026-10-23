@@ -1,0 +1,8 @@
+/* $ stanc ../while.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../while.stan:2:8
+  1 │  data {
+  2 │    real while;
+    │         ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "while".

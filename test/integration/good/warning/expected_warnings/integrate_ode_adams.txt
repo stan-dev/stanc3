@@ -1,0 +1,113 @@
+/* $ stanc ../integrate_ode_adams.stan : [exit 0] */
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:25:11
+ 24 │    array[T, 2] real y_hat;
+ 25 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:26:11
+ 25 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 27 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:27:11
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 27 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 28 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:29:11
+ 28 │    
+ 29 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 30 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:31:11
+ 30 │                                1e-10, 1e8);
+ 31 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 32 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:33:11
+ 32 │                                1e-10, 1e8);
+ 33 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 34 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:38:11
+ 37 │    array[T, 2] real y_hat;
+ 38 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:39:11
+ 38 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:40:11
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 41 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:41:11
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 41 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 42 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:43:11
+ 42 │    
+ 43 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 44 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:45:11
+ 44 │                                1e-10, 1e8);
+ 45 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 46 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:47:11
+ 46 │                                1e-10, 1e8);
+ 47 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 48 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ../integrate_ode_adams.stan:49:11
+ 48 │                                1e-10, 1e8);
+ 49 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 50 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html

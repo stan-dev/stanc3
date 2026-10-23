@@ -1,0 +1,8 @@
+/* $ stanc ../bad_decl4.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../bad_decl4.stan:2:11
+  1 │  data {
+  2 │    real x, reject;
+    │            ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "reject".

@@ -1,0 +1,8 @@
+/* $ stanc ../row_stochastic_matrix.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../row_stochastic_matrix.stan:2:7
+  1 │  generated quantities {
+  2 │    int row_stochastic_matrix;
+    │        ^^^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "row_stochastic_matrix".

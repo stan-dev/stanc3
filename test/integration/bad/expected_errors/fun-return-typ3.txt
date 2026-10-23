@@ -1,0 +1,8 @@
+/* $ stanc ../fun-return-typ3.stan : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../fun-return-typ3.stan:2:14
+  1 │  functions {
+  2 │    real foo() reject("");
+    │               ^^^^^^ here.
+  3 │  }
+    = Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.

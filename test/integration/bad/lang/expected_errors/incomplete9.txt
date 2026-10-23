@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete9.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../incomplete9.stan:3:29
+  2 │    vector[2] foo;
+  3 │    row_vector[2] bar = -foo' while
+    │                              ^^^^^ here.
+  4 │  }
+    = Found an expression. Expected an infix or postfix operator or "["

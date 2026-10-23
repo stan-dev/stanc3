@@ -1,0 +1,8 @@
+/* $ stanc ../get-lp-deprecate.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
+    ┌─ ../get-lp-deprecate.stan:5:20
+  4 │  model {
+  5 │    print("target=", get_lp());
+    │                     ^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                              "get_lp" was supplied.
+  6 │    y ~ normal(0, 1);

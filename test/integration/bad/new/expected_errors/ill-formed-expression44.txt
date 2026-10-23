@@ -1,0 +1,7 @@
+/* $ stanc ../ill-formed-expression44.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression44.stan:1:26
+  1 │  transformed data { 1 .*  while
+    │                           ^^^^^ here.
+    = Found an incomplete binary expression.
+      Are you missing the right hand side?

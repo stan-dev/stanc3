@@ -1,0 +1,7 @@
+/* $ stanc ../err-double-dims.stan : [exit 1] */
+error: Array sizes must be of type int. Instead found type real.
+    ┌─ ../err-double-dims.stan:2:9
+  1 │  transformed data {
+  2 │    array[2.3] real y;
+    │          ^^^ Array sizes must be of type int. Instead found type real.
+  3 │  }

@@ -1,0 +1,9 @@
+/* $ stanc ../err-decl-no-expression.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../err-decl-no-expression.stan:2:14
+  1 │  data {
+  2 │    real<lower=> y;
+    │               ^ here.
+  3 │  }
+    = Expected an expression (not containing binary logical operators)
+      after "lower =".

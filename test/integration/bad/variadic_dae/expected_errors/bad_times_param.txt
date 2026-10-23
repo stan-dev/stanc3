@@ -1,0 +1,20 @@
+/* $ stanc ../bad_times_param.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "dae".
+    ┌─ ../bad_times_param.stan:13:45
+  1 │  functions {
+  2 │    vector residual(real time, vector state, vector deriv) {
+    │           -------- Callback defined here.
+  3 │      return [1,2,3]';
+    ⋯  
+ 12 │    array[2] vector[3] S;
+ 13 │    S = dae(residual, [1, 1]', [1, -1]', 0.0, {1*p, 2*p, 3*p});
+    │                                              ^^^^^^^^^^^^^^^ Function called here.
+ 14 │  
+    = Supplied arguments:
+      (<F1>, vector, vector, real, array[] real)
+      where F1 = (real, vector, vector) => vector
+    = Available signatures:
+      (<F1>, vector, vector, data real, data array[] real) => vector
+        The 5th argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)

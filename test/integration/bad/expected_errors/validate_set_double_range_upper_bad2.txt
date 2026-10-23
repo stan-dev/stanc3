@@ -1,0 +1,8 @@
+/* $ stanc ../validate_set_double_range_upper_bad2.stan : [exit 1] */
+error: Upper bound must be a scalar. Instead found type vector.
+    ┌─ ../validate_set_double_range_upper_bad2.stan:3:24
+  2 │    vector[3] v;
+  3 │    real<lower=2.9,upper=v> a;
+    │                         ^ Upper bound must be a scalar.
+    │                           Instead found type vector.
+  4 │  }

@@ -1,0 +1,6 @@
+/* $ stanc ../fundef-bad9.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../fundef-bad9.stan:1:24
+  1 │  generated quantities { void foo(); }
+    │                         ^^^^ here.
+    = Expected top-level variable declaration, statement, or "}".

@@ -1,0 +1,9 @@
+/* $ stanc ../bad_slice_type.stan : [exit 1] */
+error: The inner type in reduce_sum array must be real, int, matrix, vector, or row_vector. Instead found type complex.
+    ┌─ ../bad_slice_type.stan:12:33
+ 11 │  model {
+ 12 │    target += reduce_sum(my_func, a, 1, 0.0, 1.0);
+    │                                  ^ The inner type in reduce_sum array must be real,
+    │                                    int, matrix, vector, or row_vector.
+    │                                    Instead found type complex.
+ 13 │  }

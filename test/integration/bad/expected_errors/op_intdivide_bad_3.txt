@@ -1,0 +1,10 @@
+/* $ stanc ../op_intdivide_bad_3.stan : [exit 1] */
+error: Ill-typed arguments supplied to infix operator %/%.
+    ┌─ ../op_intdivide_bad_3.stan:6:12
+  5 │  transformed data {
+  6 │    real c = a %/% b;
+    │             ^^^^^^^ Operator used here.
+  7 │    real c = a %/% b;
+    = Available signatures for %/%:
+        (int, int) => int
+      Instead supplied arguments of incompatible type: real, int.

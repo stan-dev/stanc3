@@ -1,0 +1,7 @@
+/* $ stanc ../transformations-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../transformations-bad5.stan:1:25
+  1 │  data { vector<lower=T,  while> x;}
+    │                          ^^^^^ here.
+    = Expected "upper =" expression (not containing binary logical operators) ">"
+      after "<lower =" expression "," in top-level variable declaration.

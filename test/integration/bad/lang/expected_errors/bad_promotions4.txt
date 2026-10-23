@@ -1,0 +1,17 @@
+/* $ stanc ../bad_promotions4.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "printer".
+    ┌─ ../bad_promotions4.stan:9:3
+  1 │  functions {
+  2 │     void printer(array[] int x){
+    │          ------- Function defined here.
+  3 │       print(x);
+    ⋯  
+  8 │    array[3] real d = {1,2.2,3};
+  9 │    printer(d);
+    │    ^^^^^^^^^^^ Function called here.
+ 10 │  }
+    = Supplied arguments:
+      (array[] real)
+    = Available signatures:
+      (array[] int) => void
+        The first argument must be array[] int but got array[] real

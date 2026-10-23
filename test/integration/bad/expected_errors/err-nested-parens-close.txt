@@ -1,0 +1,8 @@
+/* $ stanc ../err-nested-parens-close.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../err-nested-parens-close.stan:3:13
+  2 │    real x;
+  3 │    x = (2 + 3;
+    │              ^ here.
+  4 │  }
+    = Found "(" followed by expression. Expected a "[", "," or ")" or an infix or postfix operator.

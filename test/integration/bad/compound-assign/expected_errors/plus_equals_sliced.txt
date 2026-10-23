@@ -1,0 +1,12 @@
+/* $ stanc ../plus_equals_sliced.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_sliced.stan:6:16
+  5 │      matrix[3, 4] bb;
+  6 │      aa[J,1] += bb[1:2,1:2];
+    │      -------    ^^^^^^^^^^^ Ill-typed assignment operator +=.
+    │      │
+    │      Left hand side has type vector.
+  7 │    }
+    = For the given left hand side, expected the right hand side to have type
+      int, real, or vector.
+      Instead found type matrix.

@@ -1,0 +1,7 @@
+/* $ stanc ../bad-index5.stan : [exit 1] */
+error: Too many indices. Expression only has 0 dimensions, but received 1 indices.
+    ┌─ ../bad-index5.stan:3:12
+  2 │    tuple(real, real) pair = (3.14, 34.2);
+  3 │    real x = pair[1];
+    │             ^^^^^^^ Too many indices. Expression only has 0 dimensions, but received 1 indices.
+  4 │  }

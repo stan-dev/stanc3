@@ -1,0 +1,7 @@
+/* $ stanc ../fuzz-tuple-idx2.stan : [exit 1] */
+error: Syntax error: Ill-formed index.
+    ┌─ ../fuzz-tuple-idx2.stan:1:64
+  1 │  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
+    │                                                                 ^^^^^^^^^^^^^^^^^^^^ here.
+    = Failed to parse integer from string "10000000000000000000" in tuple index.
+      The index is likely too large.

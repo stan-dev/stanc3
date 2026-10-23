@@ -1,0 +1,11 @@
+/* $ stanc ../lupmf_in_lp.stan : [exit 1] */
+error: Invalid call to unnormalized probability function.
+    ┌─ ../lupmf_in_lp.stan:3:19
+  2 │      void foo_lp(int i1, real r1) {
+  3 │          target += poisson_lupmf(i1| r1);
+    │                    ^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                          "poisson_lupmf" can
+    │                                          only be used in the model block or in user-defined functions with names
+    │                                          ending in _lpdf or _lpmf.
+    │                                          Did you mean "poisson_lpmf"?
+  4 │      }

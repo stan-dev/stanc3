@@ -1,0 +1,12 @@
+/* $ stanc ../functions-bad4.stan : [exit 1] */
+error: A non-returning function was expected but a returning function "bar" was supplied.
+    ┌─ ../functions-bad4.stan:10:3
+  1 │  functions {
+  2 │    real bar(real x) {
+    │         --- Function defined here.
+  3 │      return 2 * x;
+    ⋯  
+  9 │  model {
+ 10 │    bar(y);  // illegal use of non-void function as statement
+    │    ^^^^^^^ A non-returning function was expected but a returning function "bar" was supplied.
+ 11 │    y ~ normal(0,1);

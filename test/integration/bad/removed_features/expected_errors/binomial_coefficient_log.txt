@@ -1,0 +1,8 @@
+/* $ stanc ../binomial_coefficient_log.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "binomial_coefficient_log" was supplied.
+    ┌─ ../binomial_coefficient_log.stan:12:27
+ 11 │  
+ 12 │    transformed_data_real = binomial_coefficient_log(d_real, r_real);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                                     "binomial_coefficient_log" was supplied.
+ 13 │    transformed_data_real = binomial_coefficient_log(d_int, r_real);

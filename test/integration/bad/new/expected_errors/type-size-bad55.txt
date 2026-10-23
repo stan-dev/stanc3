@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad55.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad55.stan:1:18
+  1 │  model { matrix [ while, 1] x;}
+    │                   ^^^^^ here.
+    = Expected "[" expression "," expression "]" for matrix sizes.

@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete11.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../incomplete11.stan:2:7
+  1 │  model {
+  2 │    real; foo;
+    │        ^ here.
+  3 │  }
+    = Expected an identifier after type in local (or model block) variable declaration.

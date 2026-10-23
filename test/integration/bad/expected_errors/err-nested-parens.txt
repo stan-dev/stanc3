@@ -1,0 +1,8 @@
+/* $ stanc ../err-nested-parens.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../err-nested-parens.stan:3:13
+  2 │    real x;
+  3 │    x = 2 + (());
+    │              ^ here.
+  4 │  }
+    = Expected an expression or comma separated list of expressions followed by ")" after "(".

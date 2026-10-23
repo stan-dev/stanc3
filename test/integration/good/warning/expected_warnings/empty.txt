@@ -1,0 +1,2 @@
+/* $ stanc ../empty.stan : [exit 0] */
+../empty.stan:1:1: warning: Empty model detected; this is a valid Stan model but likely unintended!

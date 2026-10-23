@@ -1,0 +1,8 @@
+/* $ stanc ../bad_while.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_while.stan:3:25
+  2 │    real x;
+  3 │    cholesky_factor_corr[x~normal(0,1)] y;
+    │                          ^ here.
+  4 │    }
+    = Expected "[" expression "]" for size of cholesky_factor_corr.

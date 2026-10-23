@@ -1,0 +1,30 @@
+/* $ stanc ../bad_x_int_type_bdf.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "integrate_ode_bdf".
+    ┌─ ../bad_x_int_type_bdf.stan:26:11
+  1 │    functions {
+  2 │      array[] real harm_osc_ode(real t,
+    │                   ------------ Callback defined here.
+  3 │                          array[] real y,         // state
+    ⋯    
+ 25 │      array[10,2] real y_hat;
+ 26 │      y_hat = integrate_ode_bdf(harm_osc_ode,  // system
+    │ ╭────────────^
+ 27 │ │                       y0,            // initial state
+    ⋯ │  
+ 31 │ │                       x,             // data
+ 32 │ │                       x_int);        // integer data
+    │ ╰────────────────────────────^ Function called here.
+ 33 │    
+    = Supplied arguments:
+      (<F1>, array[] real, real, array[] real, array[] real, array[] real,
+       array[,] int)
+      where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+    = Available signatures:
+      (<F2>, array[] real, real, array[] real, array[] real,
+       data array[] real, data array[] int) => array[,] real
+      where F2 = (real, array[] real, array[] real, data array[] real,
+                  data array[] int) => array[] real
+        The 7th argument must be array[] int but got array[,] int
+      (<F2>, array[] real, real, array[] real, array[] real,
+       data array[] real, data array[] int, data real, data real, data real) => array[,] real
+        Expected 10 arguments but found 7 arguments.

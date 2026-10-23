@@ -1,0 +1,25 @@
+/* $ stanc ../no_minimum_reduce_sum.stan : [exit 1] */
+error: No unique minimum promotion found for function "foo".
+    ┌─ ../no_minimum_reduce_sum.stan:11:12
+  1 │  functions {
+  2 │    real foo(array[] real x, int s, int end, real z, int k) {
+    │         --- Function defined here.
+  3 │      return 0.0;
+  4 │    }
+  5 │  
+  6 │    real foo(array[] real x, int s, int end, int z, real k) {
+    │         --- Function defined here.
+  7 │      return 0.0;
+    ⋯  
+ 10 │  transformed data {
+ 11 │    real x = reduce_sum(foo, {1, 2, 3, 4, 5, 6}, 1, 2, 3);
+    │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ No unique minimum promotion found for function 
+    │                                                          "foo".
+ 12 │  }
+    = Overloaded functions must not have multiple equally valid promotion paths.
+      This function has several:
+      (array[] real, int, int, int, real) => real
+      (array[] real, int, int, real, int) => real
+    = Consider defining a new signature for the exact types needed or
+      re-thinking
+      existing definitions.

@@ -1,0 +1,8 @@
+/* $ stanc ../decl.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../decl.stan:2:8
+  1 │  data {
+  2 │     int array[5]; // this is terrible
+    │         ^^^^^ here.
+  3 │     array[5] int array2;
+    = Expected a new identifier but found reserved keyword "array".

@@ -1,0 +1,7 @@
+/* $ stanc ../until.stan : [exit 1] */
+error: Identifier "until" clashes with reserved keyword.
+    ┌─ ../until.stan:2:8
+  1 │  data {
+  2 │    real until;
+    │         ^^^^^ Identifier "until" clashes with reserved keyword.
+  3 │  }

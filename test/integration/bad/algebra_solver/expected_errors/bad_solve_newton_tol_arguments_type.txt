@@ -1,0 +1,27 @@
+/* $ stanc ../bad_solve_newton_tol_arguments_type.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ ../bad_solve_newton_tol_arguments_type.stan:34:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 33 │    vector[2] y_s_p;
+ 34 │    y_s_p = solve_newton(algebra_system, y, scaling_step, fun_tol,
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 35 │                         max_steps, theta_p, x_i, x_i);
+    = Supplied arguments:
+      (<F1>, vector, real, real, int, real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector

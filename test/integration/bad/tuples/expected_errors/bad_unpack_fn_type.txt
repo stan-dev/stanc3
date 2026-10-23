@@ -1,0 +1,8 @@
+/* $ stanc ../bad_unpack_fn_type.stan : [exit 1] */
+error: Cannot assign a function to a variable.
+    ┌─ ../bad_unpack_fn_type.stan:4:5
+  3 │      int x;
+  4 │      (foo, x) = (foo, 1);
+    │      ^^^^^^^^^^^^^^^^^^^^ Function type (() => int) cannot be assigned to variable 
+    │                           "foo".
+  5 │      return x;

@@ -1,0 +1,7 @@
+/* $ stanc ../fundef-bad6.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../fundef-bad6.stan:1:38
+  1 │  functions { void T ( array [] vector while);}
+    │                                       ^^^^^ here.
+  2 │  
+    = Expected a new identifier but found reserved keyword "while".

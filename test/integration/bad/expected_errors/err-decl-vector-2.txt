@@ -1,0 +1,8 @@
+/* $ stanc ../err-decl-vector-2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../err-decl-vector-2.stan:2:11
+  1 │  data {
+  2 │    vector[3,4] y;
+    │            ^ here.
+  3 │  }
+    = Expected "[" expression "]" for vector size.

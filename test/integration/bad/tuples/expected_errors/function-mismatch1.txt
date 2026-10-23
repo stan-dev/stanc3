@@ -1,0 +1,20 @@
+/* $ stanc ../function-mismatch1.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "foo".
+    ┌─ ../function-mismatch1.stan:8:3
+  1 │  functions {
+  2 │    void foo(tuple(real, real) x) {
+    │         --- Function defined here.
+  3 │      print(x.1);
+    ⋯  
+  7 │  model {
+  8 │    foo((1, 2, 3));
+    │    ^^^^^^^^^^^^^^^ Function called here.
+  9 │  }
+    = Supplied arguments:
+      (tuple(int, int, int))
+    = Available signatures:
+      (tuple(real, real)) => void
+        The first argument must be
+         tuple(real, real)
+        but got
+         tuple(int, int, int)

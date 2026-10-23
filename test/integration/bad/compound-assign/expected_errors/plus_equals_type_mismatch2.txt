@@ -1,0 +1,12 @@
+/* $ stanc ../plus_equals_type_mismatch2.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_type_mismatch2.stan:4:8
+  3 │    vector[2] y = [1.0, 2.0]';
+  4 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type real.
+  5 │  }
+    = For the given left hand side, expected the right hand side to have type
+      int or real.
+      Instead found type vector.

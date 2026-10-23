@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete1.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../incomplete1.stan:2:31
+  1 │  data {
+  2 │    tuple( array [ foo ] real , while
+    │                                ^^^^^ here.
+  3 │  
+    = Incomplete type specification, expected further types followed by ")" to complete tuple.

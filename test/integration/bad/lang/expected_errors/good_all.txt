@@ -1,0 +1,12 @@
+/* $ stanc ../good_all.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../good_all.stan:25:3
+  6 │  data {
+  7 │    matrix[2,3] m;
+    │                - Variable was declared in data block here.
+  8 │    row_vector[2] rv;
+    ⋯  
+ 24 │  model {
+ 25 │    m = m;
+    │    ^ "m" was declared in a previous block and cannot be assigned to.
+ 26 │    rv = m[1];

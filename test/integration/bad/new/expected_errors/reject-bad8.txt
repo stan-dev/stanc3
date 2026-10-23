@@ -1,0 +1,7 @@
+/* $ stanc ../reject-bad8.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../reject-bad8.stan:1:44
+  1 │   transformed data { reject ( "hello world" while
+    │                                             ^^^^^ here.
+  2 │  
+    = Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.

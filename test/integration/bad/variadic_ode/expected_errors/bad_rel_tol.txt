@@ -1,0 +1,28 @@
+/* $ stanc ../bad_rel_tol.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "ode_bdf_tol".
+    ┌─ ../bad_rel_tol.stan:30:17
+  1 │  functions {
+  2 │    array[] real dz_dt(real t,       // time
+    │                 ----- Callback defined here.
+  3 │                 array[] real z,     // system state {prey, predator}
+    ⋯  
+ 29 │    array[N, 2] real z
+ 30 │    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
+    │                  ^^^^^ Function called here.
+ 31 │              1e-5, a, 500,
+    = Supplied arguments:
+      (<F1>, array[] real, real, array[] real, real, array[] real, int, real,
+       real)
+      where F1 = (real, array[] real, real, real) => array[] real
+    = Available signatures:
+      (<F2>, vector, real, array[] real, data real, data real, data int) => vector
+      where F2 = (real, vector) => vector
+        The first argument must be
+         (real, vector) => vector
+        but got
+         (real, array[] real, real, real) => array[] real
+        These are not compatible because:
+          The types for the second argument are incompatible: one is
+           array[] real
+          but the other is
+           vector

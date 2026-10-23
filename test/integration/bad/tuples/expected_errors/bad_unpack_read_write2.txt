@@ -1,0 +1,9 @@
+/* $ stanc ../bad_unpack_read_write2.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../bad_unpack_read_write2.stan:4:10
+  3 │    vector[2] y = [1, 1]';
+  4 │    (x2, y[x2.1]) = ((1,1), 2);
+    │     --    ^^ The variable "x2" cannot be read from at the same time as it is being assigned to.
+    │     │
+    │     Assigning to "x2" here.
+  5 │  }

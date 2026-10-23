@@ -1,0 +1,8 @@
+/* $ stanc ../column_stochastic_matrix.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../column_stochastic_matrix.stan:2:8
+  1 │  data {
+  2 │    real column_stochastic_matrix;
+    │         ^^^^^^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "column_stochastic_matrix".

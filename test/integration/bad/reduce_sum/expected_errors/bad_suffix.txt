@@ -1,0 +1,19 @@
+/* $ stanc ../bad_suffix.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum".
+    ┌─ ../bad_suffix.stan:27:24
+  1 │  functions {
+  2 │    real partial_sum_lp(array[] int slice_n_redcards,
+    │         -------------- Callback defined here.
+  3 │                          int start, int end,
+    ⋯  
+ 26 │  
+ 27 │    target += reduce_sum(partial_sum_lp, n_redcards, grainsize,
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 28 │                         n_games, rating, beta);
+    = Supplied arguments:
+      (<F1>, array[] int, int, array[] int, vector, vector)
+      where F1 = (array[] int, int, int, array[] int, vector, vector) => real
+    = Available signatures:
+      (<F2>, array[] int, int) => real
+      where F2 = (array[] int, data int, data int) => real
+        The first argument must be a pure function but got an _lp function. These function types are not compatible.

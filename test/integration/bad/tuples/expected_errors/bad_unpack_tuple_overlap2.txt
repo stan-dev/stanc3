@@ -1,0 +1,9 @@
+/* $ stanc ../bad_unpack_tuple_overlap2.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../bad_unpack_tuple_overlap2.stan:3:9
+  2 │    array[1] tuple(int, int) tup;
+  3 │    (tup, tup[1].1) = ({(1, 2)}, 3);
+    │     ---  ^^^^^^^^ Cannot make multiple assignments to "tup[...].1" in one assignment statement.
+    │     │
+    │     Previous assignment to "tup[...].1" here.
+  4 │  }

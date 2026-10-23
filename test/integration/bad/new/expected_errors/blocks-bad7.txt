@@ -1,0 +1,7 @@
+/* $ stanc ../blocks-bad7.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../blocks-bad7.stan:1:22
+  1 │  transformed data { } .*=
+    │                       ^^^ here.
+    = Expected "parameters {", "transformed parameters {",
+      "model {", "generated quantities {", or end-of-file.

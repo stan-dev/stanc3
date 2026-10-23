@@ -1,0 +1,10 @@
+/* $ stanc ../reused_name.stan : [exit 1] */
+error: Identifier "e" is already in use.
+    ┌─ ../reused_name.stan:4:15
+  1 │  generated quantities {
+  2 │      vector[3] e;
+    │                - Previous declaration here.
+  3 │      // e is selected because it is also a Stan-math function 'e()'
+  4 │      vector[3] e;
+    │                ^ Identifier "e" is already in use.
+  5 │  }

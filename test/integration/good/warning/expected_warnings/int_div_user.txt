@@ -1,0 +1,10 @@
+/* $ stanc ../int_div_user.stan : [exit 0] */
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ ../int_div_user.stan:7:7
+  6 │    int c;
+  7 │    c = a[1] / b[2];
+    │        ^^^^^^^^^^^ If rounding is not desired you can write the division as
+    │                    a[1] * 1.0 / b[2]
+  8 │  }
+    = If rounding is intended please use the integer division operator
+      %%/%%.

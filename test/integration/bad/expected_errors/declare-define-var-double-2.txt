@@ -1,0 +1,10 @@
+/* $ stanc ../declare-define-var-double-2.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../declare-define-var-double-2.stan:5:21
+  4 │  transformed data {
+  5 │    vector[2] td_a1 = a1;   // vector = array - bad
+    │              -----   ^^ Expected the right hand side to have a type matching the destination.
+    │              │          Instead found type array[] real.
+    │              │
+    │              Left hand side has type vector.
+  6 │  }

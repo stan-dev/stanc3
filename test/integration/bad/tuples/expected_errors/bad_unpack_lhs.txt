@@ -1,0 +1,8 @@
+/* $ stanc ../bad_unpack_lhs.stan : [exit 1] */
+error: Syntax error: Ill-formed assignment.
+    ┌─ ../bad_unpack_lhs.stan:4:3
+  3 │    real y = 4.0;
+  4 │    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
+    │    ^^^^^^^^ here.
+  5 │  }
+    = Expected an assignable value but found a general expression.

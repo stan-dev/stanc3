@@ -1,0 +1,6 @@
+/* $ stanc ../tilde-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed truncation.
+    ┌─ ../tilde-bad2.stan:1:44
+  1 │  transformed data { 1.0 ~ normal(0,1) T [,35,
+    │                                             ^ here.
+    = Expected "T[" optional expression "," optional expression "];".

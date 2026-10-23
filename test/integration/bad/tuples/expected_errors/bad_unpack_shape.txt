@@ -1,0 +1,10 @@
+/* $ stanc ../bad_unpack_shape.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../bad_unpack_shape.stan:4:12
+  3 │    int y = 4;
+  4 │    (x, y) = (y, x, x);
+    │    ------   ^^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │    │                  Instead found type tuple(int, int, int).
+    │    │
+    │    Left hand side has type tuple(int, int).
+  5 │  }

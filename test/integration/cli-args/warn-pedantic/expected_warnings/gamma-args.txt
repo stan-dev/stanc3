@@ -1,0 +1,22 @@
+/* $ stanc --warn-pedantic ../gamma-args.stan : [exit 0] */
+../gamma-args.stan:2:3: warning: The parameter a has 4 priors.
+../gamma-args.stan:3:3: warning: The parameter b has 2 priors.
+../gamma-args.stan:8:3: warning: The parameter a is on the left-hand side of more than one tilde statement.
+../gamma-args.stan:8:13: warning: There is a gamma or inverse-gamma distribution with parameters that are equal
+  to each other and set to values less than 1. This is mathematically
+  acceptable and can make sense in some problems, but typically we see this
+  model used as an attempt to assign a noninformative prior distribution. In
+  fact, priors such as inverse-gamma(.001,.001) can be very strong, as
+  explained by Gelman (2006). Instead we recommend something like a normal(0,1)
+  or student_t(4,0,1), with parameter constrained to be positive.
+../gamma-args.stan:9:18: warning: A gamma distribution is given parameter b as an inverse scale parameter
+  (argument 2), but b was not constrained to be strictly positive.
+../gamma-args.stan:10:17: warning: There is a gamma or inverse-gamma distribution with parameters that are equal
+  to each other and set to values less than 1. This is mathematically
+  acceptable and can make sense in some problems, but typically we see this
+  model used as an attempt to assign a noninformative prior distribution. In
+  fact, priors such as inverse-gamma(.001,.001) can be very strong, as
+  explained by Gelman (2006). Instead we recommend something like a normal(0,1)
+  or student_t(4,0,1), with parameter constrained to be positive.
+../gamma-args.stan:11:22: warning: A inv_gamma distribution is given parameter b as a scale parameter (argument
+  2), but b was not constrained to be strictly positive.

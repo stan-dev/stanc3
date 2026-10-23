@@ -1,0 +1,8 @@
+/* $ stanc ../err-expected-generated.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../err-expected-generated.stan:3:1
+  2 │  }
+  3 │  generated {
+    │  ^^^^^^^^^ here.
+  4 │  }
+    = Expected "generated quantities {" or end of file after end of model block.

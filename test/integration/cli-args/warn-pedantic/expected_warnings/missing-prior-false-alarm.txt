@@ -1,0 +1,4 @@
+/* $ stanc --warn-pedantic ../missing-prior-false-alarm.stan : [exit 0] */
+../missing-prior-false-alarm.stan:9:3: warning: The parameter theta has no priors. This means either no prior is provided, or
+  the prior(s) depend on data variables. In the later case, this may be a false
+  positive.

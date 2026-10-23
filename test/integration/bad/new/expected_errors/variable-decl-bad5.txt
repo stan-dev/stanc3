@@ -1,0 +1,6 @@
+/* $ stanc ../variable-decl-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../variable-decl-bad5.stan:1:19
+  1 │  data { row_vector while;}
+    │                    ^^^^^ here.
+    = Expected "[" expression "]" for row_vector size.

@@ -1,0 +1,7 @@
+/* $ stanc ../bad_userdefined_reduce_sum.stan : [exit 1] */
+error: Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
+    ┌─ ../bad_userdefined_reduce_sum.stan:2:8
+  1 │  functions {
+  2 │    real reduce_sum(real a){
+    │         ^^^^^^^^^^ Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
+  3 │        return a;

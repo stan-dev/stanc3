@@ -1,0 +1,5 @@
+/* $ stanc --warn-pedantic ../unused-param.stan : [exit 0] */
+../unused-param.stan:3:3: warning: The parameter b has 2 priors.
+../unused-param.stan:4:3: warning: The parameter c was declared but was not used in the density calculation.
+../unused-param.stan:5:3: warning: The parameter d was declared but was not used in the density calculation.
+../unused-param.stan:6:3: warning: The parameter e was declared but was not used in the density calculation.

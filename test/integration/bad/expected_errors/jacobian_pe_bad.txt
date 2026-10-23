@@ -1,0 +1,8 @@
+/* $ stanc ../jacobian_pe_bad.stan : [exit 1] */
+error: A (container of) real or int was expected. Instead found type () => real.
+    ┌─ ../jacobian_pe_bad.stan:8:3
+  7 │  transformed parameters {
+  8 │    jacobian += foo;
+    │    ^^^^^^^^^^^^^^^^ A (container of) real or int was expected.
+    │                     Instead found type () => real.
+  9 │  }

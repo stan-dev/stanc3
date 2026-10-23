@@ -1,0 +1,10 @@
+/* $ stanc ../row_vector_expr_bad1.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../row_vector_expr_bad1.stan:4:21
+  3 │    row_vector[3] B;
+  4 │    row_vector[2] X = [ A, B ];
+    │                  -   ^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │                  │            Instead found type matrix.
+    │                  │
+    │                  Left hand side has type row_vector.
+  5 │  }

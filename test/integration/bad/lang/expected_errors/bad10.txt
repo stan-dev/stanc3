@@ -1,0 +1,7 @@
+/* $ stanc ../bad10.stan : [exit 1] */
+error: Identifier "y__" clashes with reserved keyword.
+    ┌─ ../bad10.stan:2:9
+  1 │  data {
+  2 │     real y__;
+    │          ^^^ Identifier "y__" clashes with reserved keyword.
+  3 │  }

@@ -1,0 +1,12 @@
+/* $ stanc ../non_data_index8.stan : [exit 1] */
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ ../non_data_index8.stan:6:25
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    positive_ordered[size(y)] z;
+    │                          ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }

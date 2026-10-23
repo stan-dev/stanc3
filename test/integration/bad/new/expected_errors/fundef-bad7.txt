@@ -1,0 +1,9 @@
+/* $ stanc ../fundef-bad7.stan : [exit 1] */
+error: Syntax error: Ill-formed function argument.
+    ┌─ ../fundef-bad7.stan:1:22
+  1 │  functions { void T ( while x);}
+    │                       ^^^^^ here.
+    = Expected an argument declaration (unsized and unconstrained type followed by identifier).
+        For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+        See the complete table of types at:
+        https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section

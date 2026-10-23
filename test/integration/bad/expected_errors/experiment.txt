@@ -1,0 +1,12 @@
+/* $ stanc ../experiment.stan : [exit 1] */
+error: A non-returning function was expected but a returning function "foo" was supplied.
+    ┌─ ../experiment.stan:12:5
+  1 │  functions {
+  2 │    real foo(int x){return 3;}
+    │         --- Function defined here.
+  3 │  }
+    ⋯  
+ 11 │    for (i in 1:4) {
+ 12 │      foo(3);
+    │      ^^^^^^^ A non-returning function was expected but a returning function "foo" was supplied.
+ 13 │    }

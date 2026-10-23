@@ -1,0 +1,23 @@
+/* $ stanc ../deprecated_syntax.stan : [exit 0] */
+warning: Found chained comparison.
+    ┌─ ../deprecated_syntax.stan:2:7
+  1 │  model {
+  2 │    if (1 < 2 < 3 < 4) {
+    │        ^^^^^^^^^ This is interpreted as (1 < 2) < 3.
+    │                  Consider if the intended meaning was (1 < 2) && (2 < 3) instead.
+  3 │      // multiple comparisons
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
+warning: Found chained comparison.
+    ┌─ ../deprecated_syntax.stan:2:7
+  1 │  model {
+  2 │    if (1 < 2 < 3 < 4) {
+    │        ^^^^^^^^^^^^^ This is interpreted as (1 < 2 < 3) < 4.
+    │                      Consider if the intended meaning was (1 < 2 < 3) && (3 < 4) instead.
+  3 │      // multiple comparisons
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.

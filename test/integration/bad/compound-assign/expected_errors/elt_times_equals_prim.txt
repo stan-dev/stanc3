@@ -1,0 +1,10 @@
+/* $ stanc ../elt_times_equals_prim.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../elt_times_equals_prim.stan:4:9
+  3 │    real y;
+  4 │    x .*= y;
+    │    -     ^ Ill-typed assignment operator .*=.
+    │    │
+    │    Left hand side has type real.
+  5 │  }
+    = There are no valid right hand side types for the given left hand side.

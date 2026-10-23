@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad42.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad42.stan:1:21
+  1 │  data { unit_vector[ while] x;}
+    │                      ^^^^^ here.
+    = Expected "[" expression "]" for size of unit_vector.

@@ -1,0 +1,7 @@
+/* $ stanc ../get-lp-target-data.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../get-lp-target-data.stan:2:20
+  1 │  transformed data {
+  2 │    print("target=", target());
+    │                     ^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+  3 │  }

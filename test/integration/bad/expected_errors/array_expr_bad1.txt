@@ -1,0 +1,10 @@
+/* $ stanc ../array_expr_bad1.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../array_expr_bad1.stan:2:30
+  1 │  transformed data {
+  2 │    array[3,2] real td_arr32 = { 1, 3 };
+    │                    --------   ^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │                    │                   Instead found type array[] int.
+    │                    │
+    │                    Left hand side has type array[,] real.
+  3 │  }

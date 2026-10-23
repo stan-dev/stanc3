@@ -1,0 +1,13 @@
+/* $ stanc ../matrix_pow_warning.stan : [exit 0] */
+warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exponentiation. If this is intended, you can silence this warning by using elementwise operator .^
+    ┌─ ../matrix_pow_warning.stan:8:24
+  7 │  transformed data {
+  8 │     matrix[N,N] A_pow = A ^ power;
+    │                         ^^^^^^^^^ If you intended matrix exponentiation, use matrix_power(A, power) instead.
+  9 │     matrix[N,N] A_pow_r = A ^ 3.5;
+warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exponentiation. If this is intended, you can silence this warning by using elementwise operator .^
+    ┌─ ../matrix_pow_warning.stan:9:26
+  8 │     matrix[N,N] A_pow = A ^ power;
+  9 │     matrix[N,N] A_pow_r = A ^ 3.5;
+    │                           ^^^^^^^ If you intended matrix exponentiation, use matrix_power(A, 3.5) instead.
+ 10 │  

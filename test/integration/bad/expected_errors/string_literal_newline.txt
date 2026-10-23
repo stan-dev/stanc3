@@ -1,0 +1,8 @@
+/* $ stanc ../string_literal_newline.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../string_literal_newline.stan:3:3
+  2 │    print(
+  3 │    "print
+    │    ^ here.
+  4 │    lines");

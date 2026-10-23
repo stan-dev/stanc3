@@ -1,0 +1,8 @@
+/* $ stanc ../truncation-bad-type5.stan : [exit 1] */
+error: Truncation bound must be of type int or real. Instead found type array[] int.
+    ┌─ ../truncation-bad-type5.stan:5:26
+  4 │  model {
+  5 │    1 ~ normal(0.2, 0.1) T[T, ];
+    │                           ^ Truncation bound must be of type int or real.
+    │                             Instead found type array[] int.
+  6 │  }

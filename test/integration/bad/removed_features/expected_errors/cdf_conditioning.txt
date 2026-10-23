@@ -1,0 +1,10 @@
+/* $ stanc ../cdf_conditioning.stan : [exit 1] */
+error: Conditioning required for function.
+    ┌─ ../cdf_conditioning.stan:7:13
+  6 │  model {
+  7 │    target += foo_cdf(1, 2, 3);
+    │              ^^^^^^^^^^^^^^^^ Probability functions with suffixes _lpdf,
+    │                               _lupdf, _lpmf, _lupmf, _cdf, _lcdf, and _lccdf,
+    │                               require a vertical bar ("|") between the first
+    │                               two arguments.
+  8 │  }

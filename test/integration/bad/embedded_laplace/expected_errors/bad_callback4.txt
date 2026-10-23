@@ -1,0 +1,16 @@
+/* $ stanc ../bad_callback4.stan : [exit 1] */
+error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
+    ┌─ ../bad_callback4.stan:37:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(data vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
+    │                               ^^^^^^^^^^^ Function "ll_function" does not have a valid signature for use in 
+    │                                           "laplace_marginal"
+ 38 │                                    K_function, (x, n_obs, alpha, rho));
+    = The first argument is marked data-only.
+      (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)

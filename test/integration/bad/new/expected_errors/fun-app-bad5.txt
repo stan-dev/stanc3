@@ -1,0 +1,6 @@
+/* $ stanc ../fun-app-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed conditional distribution evaluation.
+    ┌─ ../fun-app-bad5.stan:1:27
+  1 │  transformed data { T (T| T]
+    │                            ^ here.
+    = Expected a comma separated list of expressions followed by ")" after "|".

@@ -1,0 +1,10 @@
+/* $ stanc ../lupdf_in_gq_rs.stan : [exit 1] */
+error: Invalid call to unnormalized probability function.
+    ┌─ ../lupdf_in_gq_rs.stan:14:25
+ 13 │  generated quantities {
+ 14 │      real x = reduce_sum(foo_lupdf,ya,1);
+    │                          ^^^^^^^^^ Unnormalized probability functions such as "foo_lupdf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "foo_lpdf"?
+ 15 │  }

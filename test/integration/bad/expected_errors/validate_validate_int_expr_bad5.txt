@@ -1,0 +1,7 @@
+/* $ stanc ../validate_validate_int_expr_bad5.stan : [exit 1] */
+error: Vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad5.stan:5:15
+  4 │    matrix[3,3] c;
+  5 │    unit_vector[3.2] d;
+    │                ^^^ Vector sizes must be of type int. Instead found type real.
+  6 │    simplex[3] e;

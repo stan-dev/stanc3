@@ -1,0 +1,7 @@
+/* $ stanc ../bad_bounds3.stan : [exit 1] */
+error: Complex types do not support transformations.
+    ┌─ ../bad_bounds3.stan:2:2
+  1 │  data {
+  2 │   complex<offset=1> x;
+    │   ^^^^^^^^^^^^^^^^^^^^ Complex types do not support transformations.
+  3 │  }

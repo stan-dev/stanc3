@@ -1,0 +1,8 @@
+/* $ stanc ../removed_suffix.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "binomial_logit_ccdf_log" was supplied.
+    ┌─ ../removed_suffix.stan:4:15
+  3 │  model {
+  4 │      target += binomial_logit_ccdf_log(1, 0,1);
+    │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                "binomial_logit_ccdf_log" was supplied.
+  5 │  }

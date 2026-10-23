@@ -1,0 +1,6 @@
+/* $ stanc ../fundef-bad4.stan : [exit 1] */
+error: Syntax error: Ill-formed function argument.
+    ┌─ ../fundef-bad4.stan:1:25
+  1 │  functions { void T(data while); }
+    │                          ^^^^^ here.
+    = Expected a type after the "data" specifier.

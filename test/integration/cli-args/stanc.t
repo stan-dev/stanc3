@@ -264,6 +264,12 @@ Error when unreadable file is passed
   [1]
   $ rm unreadable.stan
 
+Error when nonexistent file is passed
+  $ stanc notfound.stan
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
+  %%NAME%%: MODEL_FILE argument: no 'notfound.stan' file
+  [124]
+
 Can read from stdin
   $ echo 'parameters {real y;}' | stanc - --auto-format
   parameters {

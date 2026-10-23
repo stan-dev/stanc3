@@ -1,0 +1,7 @@
+/* $ stanc ../fundef-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../fundef-bad2.stan:1:24
+  1 │  functions { vector foo }
+    │                         ^ here.
+  2 │  
+    = Expected "(" after function name.

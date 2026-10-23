@@ -1,0 +1,6 @@
+/* $ stanc ../type-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../type-bad1.stan:1:17
+  1 │  data { vector[1]^
+    │                  ^ here.
+    = Expected identifier after type in variable declaration.

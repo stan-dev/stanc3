@@ -1,0 +1,7 @@
+/* $ stanc ../var-decl-bad-2.stan : [exit 1] */
+error: Random number generators are not allowed in top level size declarations.
+    ┌─ ../var-decl-bad-2.stan:3:9
+  2 │    array[3] real x;
+  3 │    array[poisson_rng(3)] real y;
+    │          ^^^^^^^^^^^^^^ Random number generators are not allowed in top level size declarations.
+  4 │  }

@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression34.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression34.stan:1:25
+  1 │  transformed data { [ T, while
+    │                          ^^^^^ here.
+    = Expected a comma separated list of expressions.

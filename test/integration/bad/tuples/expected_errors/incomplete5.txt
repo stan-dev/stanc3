@@ -1,0 +1,7 @@
+/* $ stanc ../incomplete5.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../incomplete5.stan:1:15
+  1 │  data { tuple( while
+    │                ^^^^^ here.
+  2 │  
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.

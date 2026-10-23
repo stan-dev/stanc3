@@ -1,0 +1,7 @@
+/* $ stanc ../lp-error.stan : [exit 1] */
+error: Identifier "lp__" clashes with reserved keyword.
+    ┌─ ../lp-error.stan:5:3
+  4 │  model {
+  5 │    lp__ = lp__ - y^2 / 2;
+    │    ^^^^ Identifier "lp__" clashes with reserved keyword.
+  6 │  }

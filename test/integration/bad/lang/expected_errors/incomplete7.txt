@@ -1,0 +1,7 @@
+/* $ stanc ../incomplete7.stan : [exit 1] */
+error: Syntax error: Ill-formed compound assignment statement.
+    ┌─ ../incomplete7.stan:1:31
+  1 │  transformed data { foo += foo ~
+    │                                ^ here.
+  2 │  
+    = Expected a ";" after the value being assigned.

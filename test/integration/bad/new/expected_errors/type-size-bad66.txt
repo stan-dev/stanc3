@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad66.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad66.stan:1:43
+  1 │   data { row_stochastic_matrix [ foo , foo ~
+    │                                            ^ here.
+  2 │  
+    = Expected "[" expression "," expression "]" for size of row_stochastic_matrix.

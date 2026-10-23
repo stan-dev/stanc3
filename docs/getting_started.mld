@@ -49,8 +49,10 @@ failures. If you are knowingly changing the output, and the differences highligh
 [dune runtest] look correct, you can run [dune promote] to change the expected output to match
 your current tests.
 
-Integration tests that generate C++ or MIR keep one expected file per model in
-[expected_<kind>/] folders next to the [.stan] files.
+Many of our tests are so-called 'golden' style tests that invoke the compiler on
+a [.stan] file and save their output for inspection. These outputs live in
+[expected_<kind>/] folders next to the [.stan] files, where [kind] might be
+something like [cpp] for showing the C++ output.
 
 {4 Test coverage}
 

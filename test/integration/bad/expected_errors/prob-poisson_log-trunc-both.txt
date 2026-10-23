@@ -1,0 +1,10 @@
+/* $ stanc ../prob-poisson_log-trunc-both.stan : [exit 1] */
+error: Unable to truncate distribution with given arguments.
+    ┌─ ../prob-poisson_log-trunc-both.stan:11:3
+ 10 │  model {
+ 11 │    n ~ poisson_log(alpha) T[L, U];
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Unable to truncate distribution with given arguments.
+ 12 │  }
+    = Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+      No matching signature for arguments: 
+      (data int, real)

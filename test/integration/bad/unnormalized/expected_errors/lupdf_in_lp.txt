@@ -1,0 +1,11 @@
+/* $ stanc ../lupdf_in_lp.stan : [exit 1] */
+error: Invalid call to unnormalized probability function.
+    ┌─ ../lupdf_in_lp.stan:3:19
+  2 │      void foo_lp(real y1, real y2) {
+  3 │          target += normal_lupdf(y1| y2, y2);
+    │                    ^^^^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                             "normal_lupdf" can
+    │                                             only be used in the model block or in user-defined functions with names
+    │                                             ending in _lpdf or _lpmf.
+    │                                             Did you mean "normal_lpdf"?
+  4 │      }

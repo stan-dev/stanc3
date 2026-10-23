@@ -7,7 +7,7 @@
     (glob_files ../*.stanfunctions)))
   (action
    (with-stdout-to
-    standalone_cpp.inc
+    standalone_cpp.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -20,7 +20,7 @@
     (glob_files ../*.stanfunctions)))
   (action
    (with-stdout-to
-    cpp.inc
+    cpp.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -29,8 +29,8 @@
 
 (subdir
  expected_cpp
- (dynamic_include ../dunes/cpp.inc))
+ (dynamic_include ../dunes/cpp.dune))
 
 (subdir
  expected_standalone_cpp
- (dynamic_include ../dunes/standalone_cpp.inc))
+ (dynamic_include ../dunes/standalone_cpp.dune))

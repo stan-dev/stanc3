@@ -1,0 +1,12 @@
+/* $ stanc ../bad_unpack_global.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../bad_unpack_global.stan:8:4
+  1 │  data {
+  2 │    int x;
+    │        - Variable was declared in data block here.
+  3 │  }
+    ⋯  
+  7 │  
+  8 │    (x,y) = (1,2);
+    │     ^ "x" was declared in a previous block and cannot be assigned to.
+  9 │  

@@ -1,0 +1,11 @@
+/* $ stanc ../noninfinite_loop_return2.stan : [exit 1] */
+error: Function bodies must contain a return statement of correct type in every branch.
+    ┌─ ../noninfinite_loop_return2.stan:2:3
+  1 │    functions {
+  2 │ ╭    int bin_search(real x, int min_val, int max_val) {
+  3 │ │      if (min_val > x || max_val < x)
+    ⋯ │  
+ 14 │ │      }
+ 15 │ │    }
+    │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
+ 16 │    }

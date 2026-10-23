@@ -1,0 +1,9 @@
+/* $ stanc ../matrix_expr_bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../matrix_expr_bad3.stan:2:41
+  1 │  transformed data {
+  2 │    matrix[3,2] td_mat32 = [ [ [ 1 ] ] ], [ [ 2 ] ] ];
+    │                                          ^ here.
+  3 │  }
+    = Expected a new identifier after comma in declaration.
+      All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.

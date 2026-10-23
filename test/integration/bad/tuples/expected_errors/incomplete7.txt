@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete7.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../incomplete7.stan:2:21
+  1 │  functions {
+  2 │     tuple(real, int, ) foo()
+    │                      ^ here.
+  3 │  }
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.

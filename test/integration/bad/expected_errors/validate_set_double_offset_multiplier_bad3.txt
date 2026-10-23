@@ -1,0 +1,9 @@
+/* $ stanc ../validate_set_double_offset_multiplier_bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../validate_set_double_offset_multiplier_bad3.stan:2:16
+  1 │  parameters {
+  2 │    real<lower=1,multiplier=-31> a;
+    │                 ^^^^^^^^^^ here.
+  3 │    real y;
+    = Expected "upper =" expression (not containing binary logical operators) ">"
+      after "<lower =" expression "," in top-level variable declaration.

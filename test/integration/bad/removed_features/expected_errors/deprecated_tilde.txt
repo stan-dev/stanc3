@@ -1,0 +1,8 @@
+/* $ stanc ../deprecated_tilde.stan : [exit 1] */
+error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+    ┌─ ../deprecated_tilde.stan:12:7
+ 11 │  model {
+ 12 │    1 ~ test_log_lpmf(2.5);
+    │        ^^^^^^^^^^^^^ ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+ 13 │    1.2 ~ test_log_lpdf(2.5);
+    = For example, "y ~ normal_lpdf(0, 1)" should become "y ~ normal(0, 1)".

@@ -1,0 +1,7 @@
+/* $ stanc ../err-jacobian-plusequals-scope3.stan : [exit 1] */
+error: The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+    ┌─ ../err-jacobian-plusequals-scope3.stan:14:12
+ 13 │  model {
+ 14 │    real b = my_upper_bound_jacobian(b_raw, ub);
+    │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+ 15 │  }

@@ -1,0 +1,16 @@
+/* $ stanc --warn-pedantic ../non-one-priors2.stan : [exit 0] */
+../non-one-priors2.stan:6:3: warning: The parameter a has 3 priors.
+../non-one-priors2.stan:7:3: warning: The parameter b has 2 priors.
+../non-one-priors2.stan:8:3: warning: The parameter c has no priors. This means either no prior is provided, or the
+  prior(s) depend on data variables. In the later case, this may be a false
+  positive.
+../non-one-priors2.stan:9:3: warning: The parameter d has no priors. This means either no prior is provided, or the
+  prior(s) depend on data variables. In the later case, this may be a false
+  positive.
+../non-one-priors2.stan:10:3: warning: The parameter e has no priors. This means either no prior is provided, or the
+  prior(s) depend on data variables. In the later case, this may be a false
+  positive.
+../non-one-priors2.stan:11:3: warning: The parameter f has no priors. This means either no prior is provided, or the
+  prior(s) depend on data variables. In the later case, this may be a false
+  positive.
+../non-one-priors2.stan:21:3: warning: The parameter f is on the left-hand side of more than one tilde statement.

@@ -1,0 +1,6 @@
+/* $ stanc ../bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../bad1.stan:1:9
+  1 │  model { 
+    │          ^ here.
+    = Expected unconstrained variable declaration, statement, or "}".

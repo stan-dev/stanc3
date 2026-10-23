@@ -1,0 +1,7 @@
+/* $ stanc ../bad_prob_fun_suffix.stan : [exit 1] */
+error: Ill-typed "~"-statement.
+    ┌─ ../bad_prob_fun_suffix.stan:10:11
+  9 │  model {
+ 10 │    theta ~ foo(1.4);
+    │            ^^^ No function "foo_lpdf" was found when looking for distribution "foo".
+ 11 │  }

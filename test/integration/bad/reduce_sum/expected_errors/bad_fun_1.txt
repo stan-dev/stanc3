@@ -1,0 +1,24 @@
+/* $ stanc ../bad_fun_1.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum".
+    ┌─ ../bad_fun_1.stan:12:24
+  1 │  functions {
+  2 │    real my_func_0(array[] real y_slice, int end) {
+    │         --------- Callback defined here.
+  3 │      return 5;
+    ⋯  
+ 11 │  model {
+ 12 │    target += reduce_sum(my_func_0, a, 1);
+    │                         ^^^^^^^^^ Function called here.
+ 13 │  }
+    = Supplied arguments:
+      (<F1>, array[] real, int)
+      where F1 = (array[] real, int) => real
+    = Available signatures:
+      (<F2>, array[] real, int) => real
+      where F2 = (array[] real, data int, data int) => real
+        The first argument must be
+         (array[] real, data int, data int) => real
+        but got
+         (array[] real, int) => real
+        These are not compatible because:
+          One takes 2 arguments but the other takes 3 arguments.

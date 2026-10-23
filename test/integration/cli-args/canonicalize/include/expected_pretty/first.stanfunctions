@@ -1,0 +1,2 @@
+/* $ stanc --auto-format --include-paths=.. ../first.stanfunctions : [exit 0] */
+#include second.stanfunctions

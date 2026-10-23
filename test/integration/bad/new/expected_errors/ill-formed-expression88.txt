@@ -1,0 +1,9 @@
+/* $ stanc ../ill-formed-expression88.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../ill-formed-expression88.stan:1:31
+  1 │  transformed data { T ? 1.0 :  while
+    │                                ^^^^^ here.
+    = Found an incomplete ternary expression, should be "(condition) ? (true branch) : (false branch)".
+      Did you forget to add a colon or a false branch?
+      For example, this returns 3.0:
+        1 ? 3.0 : 0.0

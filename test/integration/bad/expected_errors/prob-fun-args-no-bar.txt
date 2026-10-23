@@ -1,0 +1,10 @@
+/* $ stanc ../prob-fun-args-no-bar.stan : [exit 1] */
+error: Conditioning required for function.
+    ┌─ ../prob-fun-args-no-bar.stan:5:13
+  4 │  model {
+  5 │    target += normal_lpdf(y, 0, 1);
+    │              ^^^^^^^^^^^^^^^^^^^^ Probability functions with suffixes _lpdf,
+    │                                   _lupdf, _lpmf, _lupmf, _cdf, _lcdf,
+    │                                   and _lccdf, require a vertical bar
+    │                                   ("|") between the first two arguments.
+  6 │  }

@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-statement15.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../ill-formed-statement15.stan:1:35
+  1 │  transformed data { for ( T in T ) void }
+    │                                    ^^^^ here.
+    = Expected a statement after ")" for the loop body of the "for" loop.

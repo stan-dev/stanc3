@@ -1,0 +1,7 @@
+/* $ stanc ../immediate_error.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../immediate_error.stan:1:1
+  1 │  while
+    │  ^^^^^ here.
+    = Expected "functions {", "data {", "transformed data {", "parameters {",
+      "transformed parameters {", "model {", or "generated quantities {".

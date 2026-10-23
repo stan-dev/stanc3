@@ -1,0 +1,8 @@
+/* $ stanc ../real-bools.stan : [exit 1] */
+error: Condition in while-loop must be of type int. Instead found type real.
+    ┌─ ../real-bools.stan:6:10
+  5 │  
+  6 │    while (z) {
+    │           ^ Condition in while-loop must be of type int.
+    │             Instead found type real.
+  7 │      // real as boolean value

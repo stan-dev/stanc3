@@ -1,0 +1,11 @@
+/* $ stanc ../functions-bad1.stan : [exit 1] */
+error: Function "flib" has already been declared for signature (real) => real
+    ┌─ ../functions-bad1.stan:6:3
+  2 │    real flib(real x);
+  3 │    real flib(real x) {
+    │         ---- Previous declaration here.
+  4 │      return x;
+  5 │    }
+  6 │    real flib(real x); // error redeclaring function
+    │    ^^^^^^^^^^^^^^^^^^ Function "flib" has already been declared for signature (real) => real
+  7 │  }

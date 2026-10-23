@@ -1,0 +1,9 @@
+/* $ stanc ../functions-bad17-void.stan : [exit 1] */
+error: real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf. Instead found a void function.
+    ┌─ ../functions-bad17-void.stan:2:3
+  1 │    functions {
+  2 │ ╭    void bizbuz_lpdf(vector x) {
+  3 │ │     print(x);
+  4 │ │    }
+    │ ╰────^ real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf. Instead found a void function.
+  5 │    }

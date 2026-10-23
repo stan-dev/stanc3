@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad27.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../functions-bad27.stan:10:3
+  9 │  generated quantities {
+ 10 │    unit_normal_lp(y);
+    │    ^^^^^^^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+ 11 │  }

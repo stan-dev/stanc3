@@ -1,0 +1,6 @@
+/* $ stanc ../lexing_error.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../lexing_error.stan:1:8
+  1 │  model {½ }
+    │         ^ here.

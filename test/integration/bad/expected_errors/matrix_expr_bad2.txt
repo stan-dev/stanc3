@@ -1,0 +1,8 @@
+/* $ stanc ../matrix_expr_bad2.stan : [exit 1] */
+error: Matrix expression must have all row_vector or complex_row_vector entries. Instead found type int.
+    ┌─ ../matrix_expr_bad2.stan:2:35
+  1 │  transformed data {
+  2 │    matrix[3,2] td_mat32 = [ [ 1 ], 3 ];
+    │                                    ^ Matrix expression must have all row_vector or complex_row_vector entries.
+    │                                      Instead found type int.
+  3 │  }

@@ -1,0 +1,8 @@
+/* $ stanc ../assigment-to-function-stanmath.stan : [exit 1] */
+error: Cannot assign a function to a variable.
+    ┌─ ../assigment-to-function-stanmath.stan:8:6
+  7 │       // NB: putting this in later blocks produce an error due to assigning to a global variable
+  8 │       foo = pow;
+    │       ^^^^^^^^^^ Function type (<Stan Math function>) cannot be assigned to variable 
+    │                  "foo".
+  9 │     }

@@ -1,0 +1,30 @@
+/* $ stanc ../no_minimum_promotion3.stan : [exit 1] */
+error: No unique minimum promotion found for function "foo3".
+    ┌─ ../no_minimum_promotion3.stan:21:10
+  1 │  functions {
+  2 │     real foo3(int x, real y, int z){
+    │          ---- Function defined here.
+  3 │       return y;
+  4 │     }
+  5 │  
+  6 │     real foo3(real x, int y, int z){
+    │          ---- Function defined here.
+  7 │       return x;
+  8 │     }
+  9 │  
+ 10 │     real foo3(int x, int y, real z){
+    │          ---- Function defined here.
+ 11 │       return z;
+    ⋯  
+ 20 │  model {
+ 21 │     print(foo3(1,2,3));
+    │           ^^^^^^^^^^^ No unique minimum promotion found for function "foo3".
+ 22 │  }
+    = Overloaded functions must not have multiple equally valid promotion paths.
+      For args (int, int, int), this function has several:
+      (int, int, real) => real
+      (real, int, int) => real
+      (int, real, int) => real
+    = Consider defining a new signature for the exact types needed or
+      re-thinking
+      existing definitions.

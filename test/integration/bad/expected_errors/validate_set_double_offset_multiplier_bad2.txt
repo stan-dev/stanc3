@@ -1,0 +1,7 @@
+/* $ stanc ../validate_set_double_offset_multiplier_bad2.stan : [exit 1] */
+error: Multiplier must be a scalar. Instead found type vector.
+    ┌─ ../validate_set_double_offset_multiplier_bad2.stan:3:19
+  2 │    vector[3] vvv;
+  3 │    real<multiplier=vvv> a;
+    │                    ^^^ Multiplier must be a scalar. Instead found type vector.
+  4 │    real y;

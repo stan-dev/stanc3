@@ -1,0 +1,8 @@
+/* $ stanc --auto-format --include-paths=.. ../b.stanfunctions : [exit 0] */
+#include a.stanfunctions //include other functions
+// line comment b
+/*weird block b*/
+void bar(real y) {
+  return;
+}
+// another line comment b

@@ -1,0 +1,6 @@
+/* $ stanc --warn-pedantic ../jacobian_false_alarm.stan : [exit 0] */
+../jacobian_false_alarm.stan:6:3: warning: The parameter v has 8 priors.
+../jacobian_false_alarm.stan:7:3: warning: The parameter a has 2 priors.
+../jacobian_false_alarm.stan:8:3: warning: The parameter m has 12 priors.
+../jacobian_false_alarm.stan:9:3: warning: The parameter y has 9 priors.
+../jacobian_false_alarm.stan:10:3: warning: The parameter z has 7 priors.

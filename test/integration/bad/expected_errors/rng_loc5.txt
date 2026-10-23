@@ -1,0 +1,9 @@
+/* $ stanc ../rng_loc5.stan : [exit 1] */
+error: Invalid call to random number generator.
+    ┌─ ../rng_loc5.stan:6:7
+  5 │    real z;
+  6 │    z = normal_rng(0, 1);
+    │        ^^^^^^^^^^^^^^^^ Random number generators are only allowed in
+    │                         transformed data block, generated quantities block or
+    │                         user-defined functions with names ending in _rng.
+  7 │  }

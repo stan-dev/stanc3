@@ -1,0 +1,9 @@
+/* $ stanc ../functions-bad13.stan : [exit 1] */
+error: Cannot assign to read-only variable.
+    ┌─ ../functions-bad13.stan:3:5
+  1 │  functions {
+  2 │    real badassign(real x) {
+    │                        - Previous declaration here.
+  3 │      x = 5;
+    │      ^ "x" was previously used as a function argument or loop identifier.
+  4 │      return x;

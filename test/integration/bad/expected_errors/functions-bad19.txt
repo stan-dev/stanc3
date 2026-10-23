@@ -1,0 +1,12 @@
+/* $ stanc ../functions-bad19.stan : [exit 1] */
+error: Function "my_fun3" has already been declared for signature (real) => real
+    ┌─ ../functions-bad19.stan:4:3
+  1 │    functions {
+  2 │      real my_fun3(data real x);
+    │           ------- Previous declaration here.
+  3 │    
+  4 │ ╭    real my_fun3(real x) {
+  5 │ │      return 2 * x;
+  6 │ │    }
+    │ ╰────^ Function "my_fun3" has already been declared for signature (real) => real
+  7 │      

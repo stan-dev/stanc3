@@ -1,0 +1,9 @@
+/* $ stanc ../array_literal_mismatch.stan : [exit 1] */
+error: Inconsistent types in array expression.
+    ┌─ ../array_literal_mismatch.stan:2:44
+  1 │  transformed data {
+  2 │    array[2] tuple(real, real) x = {(1, 2) , (3, 4, 5)};
+    │                                             ^^^^^^^^^ Array expression must have entries of consistent type.
+    │                                                       Expected tuple(int, int) but found 
+    │                                                       tuple(int, int, int).
+  3 │  }

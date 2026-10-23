@@ -1,0 +1,8 @@
+/* $ stanc ../bad_periods_tparams.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../bad_periods_tparams.stan:2:9
+  1 │  transformed parameters {
+  2 │    real x.;
+    │          ^ here.
+  3 │    x. = 1.0;

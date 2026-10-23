@@ -1,0 +1,6 @@
+/* $ stanc ../location-scale-bad4.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../location-scale-bad4.stan:1:39
+  1 │  data { vector<offset = T, multiplier  while> x;}
+    │                                        ^^^^^ here.
+    = Expected "multiplier = " expression (not containing binary logical operators).

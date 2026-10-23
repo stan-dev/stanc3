@@ -1,0 +1,13 @@
+/* $ stanc ../print-void.stan : [exit 1] */
+error: A returning function was expected but a non-returning function "foo" was supplied.
+    ┌─ ../print-void.stan:8:9
+  1 │  functions {
+  2 │    void foo(int n) {
+    │         --- Function defined here.
+  3 │    }
+    ⋯  
+  7 │    z = 2;
+  8 │    print(foo(z));
+    │          ^^^^^^ A returning function was expected but a non-returning function 
+    │                 "foo" was supplied.
+  9 │  }

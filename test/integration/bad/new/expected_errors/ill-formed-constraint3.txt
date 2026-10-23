@@ -1,0 +1,8 @@
+/* $ stanc ../ill-formed-constraint3.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../ill-formed-constraint3.stan:1:43
+  1 │  data { vector < multiplier = foo , offset while
+    │                                            ^^^^^ here.
+  2 │  
+    = Expected "=" expression
+      (not containing binary logical operators) after "offset".

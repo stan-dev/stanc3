@@ -1,0 +1,7 @@
+/* $ stanc ../export.stan : [exit 1] */
+error: Identifier "export" clashes with reserved keyword.
+    ┌─ ../export.stan:2:8
+  1 │  data {
+  2 │    real export;
+    │         ^^^^^^ Identifier "export" clashes with reserved keyword.
+  3 │  }

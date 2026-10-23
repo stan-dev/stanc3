@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad40.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../type-size-bad40.stan:1:25
+  1 │  data { unit_vector[ 0.0 while] x;}
+    │                          ^^^^^ here.
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

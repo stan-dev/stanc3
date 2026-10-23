@@ -1,0 +1,7 @@
+/* $ stanc ../tparam_tuple_int.stan : [exit 1] */
+error: Transformed parameters cannot be integers.
+    ┌─ ../tparam_tuple_int.stan:2:3
+  1 │  transformed parameters {
+  2 │    tuple(real, int) x;
+    │    ^^^^^^^^^^^^^^^^^^^ Transformed parameters cannot be integers.
+  3 │  }

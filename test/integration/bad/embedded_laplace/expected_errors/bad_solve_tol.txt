@@ -1,0 +1,10 @@
+/* $ stanc ../bad_solve_tol.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_latent_solve_tol".
+    ┌─ ../bad_solve_tol.stan:38:9
+ 37 │      tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+ 38 │          = laplace_latent_solve_tol(ll_function, (eta, log_ye, y), 1, K_function,
+    │ ╭──────────^
+ 39 │ │                                   (x, n_obs, alpha, rho));
+    │ ╰─────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
+    │                                                             Expected a tuple of 6 arguments for the control parameters.
+ 40 │    }

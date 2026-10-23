@@ -1,0 +1,9 @@
+/* $ stanc ../incomplete2.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../incomplete2.stan:2:16
+  1 │  transformed data {
+  2 │    1.0 .^ foo[] while
+    │                 ^^^^^ here.
+  3 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

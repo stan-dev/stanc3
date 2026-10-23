@@ -1,0 +1,29 @@
+/* $ stanc --warn-pedantic ../hard-constraint.stan : [exit 0] */
+../hard-constraint.stan:2:3: warning: The parameter a was declared but was not used in the density calculation.
+../hard-constraint.stan:3:3: warning: The parameter b was declared but was not used in the density calculation.
+../hard-constraint.stan:4:3: warning: The parameter c was declared but was not used in the density calculation.
+../hard-constraint.stan:4:3: warning: Your Stan program has a parameter c with a lower and upper bound in its
+  declaration. These hard constraints are not recommended, for two reasons: (a)
+  Except when there are logical or physical constraints, it is very unusual for
+  you to be sure that a parameter will fall inside a specified range, and (b)
+  The infinite gradient induced by a hard constraint can cause difficulties for
+  Stan's sampling algorithm. As a consequence, we recommend soft constraints
+  rather than hard constraints; for example, instead of constraining an
+  elasticity parameter to fall between 0, and 1, leave it unconstrained and
+  give it a normal(0.5,0.5) prior distribution.
+../hard-constraint.stan:5:3: warning: The parameter d was declared but was not used in the density calculation.
+../hard-constraint.stan:5:3: warning: Your Stan program has a parameter d with a lower and upper bound in its
+  declaration. These hard constraints are not recommended, for two reasons: (a)
+  Except when there are logical or physical constraints, it is very unusual for
+  you to be sure that a parameter will fall inside a specified range, and (b)
+  The infinite gradient induced by a hard constraint can cause difficulties for
+  Stan's sampling algorithm. As a consequence, we recommend soft constraints
+  rather than hard constraints; for example, instead of constraining an
+  elasticity parameter to fall between 0, and 1, leave it unconstrained and
+  give it a normal(0.5,0.5) prior distribution.
+../hard-constraint.stan:6:3: warning: Parameter e has constraints that don't make sense. The lower bound should be
+  strictly less than the upper bound.
+../hard-constraint.stan:6:3: warning: The parameter e was declared but was not used in the density calculation.
+../hard-constraint.stan:7:3: warning: Parameter f has constraints that don't make sense. The lower bound should be
+  strictly less than the upper bound.
+../hard-constraint.stan:7:3: warning: The parameter f was declared but was not used in the density calculation.

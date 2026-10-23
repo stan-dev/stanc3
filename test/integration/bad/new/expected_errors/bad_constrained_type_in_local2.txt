@@ -1,0 +1,9 @@
+/* $ stanc ../bad_constrained_type_in_local2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_constrained_type_in_local2.stan:4:5
+  3 │    {
+  4 │      cholesky_factor_corr[2] y = x;
+    │      ^^^^^^^^^^^^^^^^^^^^ here.
+  5 │      print(y);
+    = Constrained types are not supported in local (or model block) variable declarations.
+        Use "matrix" instead.

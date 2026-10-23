@@ -1,0 +1,6 @@
+/* $ stanc ../tilde-bad19.stan : [exit 1] */
+error: Syntax error: Ill-formed "~"-statement.
+    ┌─ ../tilde-bad19.stan:1:22
+  1 │  transformed data { T~while
+    │                       ^^^^^ here.
+    = Expected an distribution name after "~".

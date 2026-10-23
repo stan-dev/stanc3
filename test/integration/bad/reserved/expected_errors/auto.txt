@@ -1,0 +1,7 @@
+/* $ stanc ../auto.stan : [exit 1] */
+error: Identifier "auto" clashes with reserved keyword.
+    ┌─ ../auto.stan:2:8
+  1 │  data {
+  2 │    real auto;
+    │         ^^^^ Identifier "auto" clashes with reserved keyword.
+  3 │  }

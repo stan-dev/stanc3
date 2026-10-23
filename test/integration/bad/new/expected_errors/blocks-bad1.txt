@@ -1,0 +1,6 @@
+/* $ stanc ../blocks-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../blocks-bad1.stan:1:6
+  1 │  data while
+    │       ^^^^^ here.
+    = Expected "{" followed by a list of top-level variable declarations after "data".

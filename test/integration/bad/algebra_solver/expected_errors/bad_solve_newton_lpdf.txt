@@ -1,0 +1,19 @@
+/* $ stanc ../bad_solve_newton_lpdf.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ ../bad_solve_newton_lpdf.stan:28:26
+  2 │  
+  3 │    real algebra_system_lpdf(vector x, vector y, array[] real dat,
+    │         ------------------- Callback defined here.
+  4 │                          array[] int dat_int) {
+    ⋯  
+ 27 │  
+ 28 │    theta_p = solve_newton(algebra_system_lpdf, x, y, dat, dat_int);
+    │                           ^^^^^^^^^^^^^^^^^^^ Function called here.
+ 29 │  
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (vector, vector, array[] real, array[] int) => real
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be a pure function but got a probability density function. These function types are not compatible.

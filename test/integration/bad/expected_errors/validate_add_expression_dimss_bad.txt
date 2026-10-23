@@ -1,0 +1,7 @@
+/* $ stanc ../validate_add_expression_dimss_bad.stan : [exit 1] */
+error: Tried to index a scalar type. Expression has type real.
+    ┌─ ../validate_add_expression_dimss_bad.stan:4:7
+  3 │    vector[3] v;
+  4 │    x = v[1][2];
+    │        ^^^^^^^ Tried to index a scalar type. Expression has type real.
+  5 │  }

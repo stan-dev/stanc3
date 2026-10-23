@@ -1,0 +1,8 @@
+/* $ stanc ../validate_array_expr_bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../validate_array_expr_bad3.stan:6:15
+  5 │    array[3] int int_1_a;
+  6 │    int_1_a = { };  // cannot be empty
+    │                ^ here.
+  7 │    y ~ normal(0,1);
+    = Expected an expression after "{" in array expression.

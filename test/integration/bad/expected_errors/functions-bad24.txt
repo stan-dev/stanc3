@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad24.stan : [exit 1] */
+error: Expression return statements may only be used inside non-void definitions.
+    ┌─ ../functions-bad24.stan:3:5
+  2 │    void bar(real x) {
+  3 │      return x;
+    │      ^^^^^^^^^ Expression return statements may only be used inside non-void definitions.
+  4 │    }

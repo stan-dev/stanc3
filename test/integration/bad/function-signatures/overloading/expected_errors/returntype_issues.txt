@@ -1,0 +1,15 @@
+/* $ stanc ../returntype_issues.stan : [exit 1] */
+error: Function "foo" cannot be overloaded by return type only.
+    ┌─ ../returntype_issues.stan:6:4
+  1 │    functions {
+  2 │       real foo(int x){
+    │            --- Previous declaration here.
+  3 │         return 1.0;
+  4 │       }
+  5 │    
+  6 │ ╭     int foo(int x){
+  7 │ │       return 1;
+  8 │ │     }
+    │ ╰─────^ Function "foo" cannot be overloaded by return type only.
+  9 │    }
+    = Previously used return type real.

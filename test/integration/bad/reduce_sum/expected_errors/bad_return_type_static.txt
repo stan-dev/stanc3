@@ -1,0 +1,23 @@
+/* $ stanc ../bad_return_type_static.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum_static".
+    ┌─ ../bad_return_type_static.stan:12:31
+  1 │  functions {
+  2 │    int my_func_0(array[] real y_slice, int start, int end) {
+    │        --------- Callback defined here.
+  3 │      return 5;
+    ⋯  
+ 11 │  model {
+ 12 │    target += reduce_sum_static(my_func_0, a, 1);
+    │                                ^^^^^^^^^ Function called here.
+ 13 │  }
+    = Supplied arguments:
+      (<F1>, array[] real, int)
+      where F1 = (array[] real, int, int) => int
+    = Available signatures:
+      (<F2>, array[] real, int) => real
+      where F2 = (array[] real, data int, data int) => real
+        The first argument must be
+         (array[] real, data int, data int) => real
+        but got
+         (array[] real, int, int) => int
+        The return types are not compatible.

@@ -1,0 +1,7 @@
+/* $ stanc ../fn-assign.stan : [exit 1] */
+error: Cannot assign a function to a variable.
+    ┌─ ../fn-assign.stan:4:5
+  3 │      tuple(real, int) x;
+  4 │      x = (foo, 1);
+    │      ^^^^^^^^^^^^^ Function type (() => int) cannot be assigned to variable "x".
+  5 │      return x.2;

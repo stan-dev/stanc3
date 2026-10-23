@@ -1,0 +1,9 @@
+/* $ stanc ../bad_constrained_type_in_local.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_constrained_type_in_local.stan:4:14
+  3 │    {
+  4 │      array[3] simplex[2] y = x;
+    │               ^^^^^^^ here.
+  5 │      print(y);
+    = Constrained types are not supported in local (or model block) variable declarations.
+        Use "vector" instead.

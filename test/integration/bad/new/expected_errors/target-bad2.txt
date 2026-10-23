@@ -1,0 +1,6 @@
+/* $ stanc ../target-bad2.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../target-bad2.stan:1:28
+  1 │  transformed data { target  while
+    │                             ^^^^^ here.
+    = Expected either "+=" expression or "()" after "target".

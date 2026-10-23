@@ -1,0 +1,8 @@
+/* $ stanc ../signature_function_unknown.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "foo_whatev_lpdf" was supplied.
+    ┌─ ../signature_function_unknown.stan:8:13
+  7 │  model {
+  8 │    target += foo_whatev_lpdf(x, theta);
+    │              ^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                        "foo_whatev_lpdf" was supplied.
+  9 │  }

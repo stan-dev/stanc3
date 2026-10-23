@@ -1,0 +1,19 @@
+/* $ stanc ../err-jacobian-plusequals-functor.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "ode_rk45".
+    ┌─ ../err-jacobian-plusequals-functor.stan:16:26
+  2 │    // nonsense for testing
+  3 │    vector sho_jacobian(real t, // time
+    │           ------------ Callback defined here.
+  4 │                        vector y, // state
+    ⋯  
+ 15 │                        data real theta) {
+ 16 │      jacobian += ode_rk45(sho_jacobian, y0, t0, ts, theta);
+    │                           ^^^^^^^^^^^^ Function called here.
+ 17 │    }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, real)
+      where F1 = (real, vector, real) => vector
+    = Available signatures:
+      (<F2>, vector, real, array[] real) => vector
+      where F2 = (real, vector) => vector
+        The first argument must be a pure function but got a _jacobian function. These function types are not compatible.

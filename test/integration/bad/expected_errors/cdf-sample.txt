@@ -1,0 +1,8 @@
+/* $ stanc ../cdf-sample.stan : [exit 1] */
+error: CDF and CCDF functions may not be used with distribution notation (~).
+    ┌─ ../cdf-sample.stan:5:3
+  4 │  model {
+  5 │    y ~ normal_cdf(1, 1);
+    │    ^^^^^^^^^^^^^^^^^^^^^ CDF and CCDF functions may not be used with distribution notation (~).
+  6 │  }
+    = Use target += normal_lcdf(...) instead.

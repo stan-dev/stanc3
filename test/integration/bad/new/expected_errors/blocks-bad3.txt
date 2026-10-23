@@ -1,0 +1,6 @@
+/* $ stanc ../blocks-bad3.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../blocks-bad3.stan:1:7
+  1 │  model while
+    │        ^^^^^ here.
+    = Expected "{" after "model".

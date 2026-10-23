@@ -1,0 +1,5 @@
+/* $ stanc --warn-pedantic ../non-one-priors.stan : [exit 0] */
+../non-one-priors.stan:14:17: warning: A normal distribution is given parameter b as a scale parameter (argument 2),
+  but b was not constrained to be strictly positive.
+../non-one-priors.stan:16:17: warning: A normal distribution is given parameter d as a scale parameter (argument 2),
+  but d was not constrained to be strictly positive.

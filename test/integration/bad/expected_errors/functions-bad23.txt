@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad23.stan : [exit 1] */
+error: Empty return statements may only be used inside void function definitions.
+    ┌─ ../functions-bad23.stan:3:5
+  2 │    real bar(real x) {
+  3 │      return;
+    │      ^^^^^^^ Empty return statements may only be used inside void function definitions.
+  4 │    }

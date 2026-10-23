@@ -1,0 +1,9 @@
+/* $ stanc ../bad_constrained_type_in_fn3.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_constrained_type_in_fn3.stan:2:3
+  1 │  functions{
+  2 │    simplex foo(){
+    │    ^^^^^^^ here.
+  3 │    }
+    = Functions do not enforce type constraints.
+        Use "vector" instead.

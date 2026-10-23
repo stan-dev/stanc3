@@ -1,0 +1,6 @@
+/* $ stanc ../variable-decl-bad4.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../variable-decl-bad4.stan:1:33
+  1 │  data { row_vector<multiplier=x> print(0);}
+    │                                  ^^^^^ here.
+    = Expected "[" expression "]" for row_vector size.

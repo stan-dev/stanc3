@@ -1,0 +1,8 @@
+/* $ stanc ../bad_decl2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_decl2.stan:2:14
+  1 │  data {
+  2 │    array[3,3] x;
+    │               ^ here.
+  3 │  }
+    = Expected a non-array type after "array" declaration.

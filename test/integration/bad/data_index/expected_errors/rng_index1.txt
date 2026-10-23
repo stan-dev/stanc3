@@ -1,0 +1,7 @@
+/* $ stanc ../rng_index1.stan : [exit 1] */
+error: Random number generators are not allowed in top level size declarations.
+    ┌─ ../rng_index1.stan:6:9
+  5 │  transformed parameters {
+  6 │    array[poisson_rng(10)] real z;
+    │          ^^^^^^^^^^^^^^^ Random number generators are not allowed in top level size declarations.
+  7 │  }

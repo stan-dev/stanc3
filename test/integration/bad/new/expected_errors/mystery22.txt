@@ -1,0 +1,6 @@
+/* $ stanc ../mystery22.stan : [exit 1] */
+error: Syntax error: Ill-formed index.
+    ┌─ ../mystery22.stan:1:33
+  1 │  transformed data { 1.0 [ 1.0 : T~
+    │                                  ^ here.
+    = Expected an expression or "]" or "," after ":".

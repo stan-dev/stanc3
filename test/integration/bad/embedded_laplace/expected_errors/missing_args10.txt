@@ -1,0 +1,13 @@
+/* $ stanc ../missing_args10.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ ../missing_args10.stan:40:71
+ 39 │  
+ 40 │  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y));
+    │                                                                        ^ The valid signature of this function is
+    │                                                                         laplace_latent_rng((vector, T_l...) => real,
+    │                                                                           tuple(T_l...),
+    │                                                                           data int,
+    │                                                                           (T_k...) => matrix,
+    │                                                                           tuple(T_k...))@]
+ 41 │  
+    = Missing the hessian block size (data-only int) and remaining arguments.

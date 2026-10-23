@@ -1,0 +1,16 @@
+/* $ stanc --warn-pedantic ../unbounded-sigma.stan : [exit 0] */
+../unbounded-sigma.stan:2:3: warning: The parameter x has 6 priors.
+../unbounded-sigma.stan:7:3: warning: Your Stan program has a parameter sigma_e with a lower and upper bound in its
+  declaration. These hard constraints are not recommended, for two reasons: (a)
+  Except when there are logical or physical constraints, it is very unusual for
+  you to be sure that a parameter will fall inside a specified range, and (b)
+  The infinite gradient induced by a hard constraint can cause difficulties for
+  Stan's sampling algorithm. As a consequence, we recommend soft constraints
+  rather than hard constraints; for example, instead of constraining an
+  elasticity parameter to fall between 0, and 1, leave it unconstrained and
+  give it a normal(0.5,0.5) prior distribution.
+../unbounded-sigma.stan:10:3: warning: The parameter x is on the left-hand side of more than one tilde statement.
+../unbounded-sigma.stan:10:18: warning: A normal distribution is given parameter sigma_a as a scale parameter
+  (argument 2), but sigma_a was not constrained to be strictly positive.
+../unbounded-sigma.stan:12:18: warning: A normal distribution is given parameter sigma_c as a scale parameter
+  (argument 2), but sigma_c was not constrained to be strictly positive.

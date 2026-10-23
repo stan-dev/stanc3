@@ -1,0 +1,8 @@
+/* $ stanc ../identifiers.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../identifiers.stan:2:7
+  1 │  data {
+  2 │    int upper;
+    │        ^^^^^ here.
+  3 │    int lower;
+    = Expected a new identifier but found reserved keyword "upper".

@@ -1,0 +1,9 @@
+/* $ stanc ../declare-define-param-block.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../declare-define-param-block.stan:6:10
+  5 │    real y;
+  6 │    real z = d_r;
+    │           ^ here.
+  7 │  }
+    = Cannot assign to variables in the "data" or "parameters" blocks.
+      Expected ";" after variable declaration.

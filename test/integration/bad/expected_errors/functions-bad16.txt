@@ -1,0 +1,9 @@
+/* $ stanc ../functions-bad16.stan : [exit 1] */
+error: Function "square" is already declared in the Stan Math library with signature (real) => real
+    ┌─ ../functions-bad16.stan:2:3
+  1 │    functions {
+  2 │ ╭    real square(real x) {
+  3 │ │      return x * x;
+  4 │ │    }
+    │ ╰────^ Function "square" is already declared in the Stan Math library with signature (real) => real
+  5 │    }

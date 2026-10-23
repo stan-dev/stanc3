@@ -1,0 +1,9 @@
+/* $ stanc ../mystery45.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../mystery45.stan:1:28
+  1 │  transformed data { 1.0 ? T ~
+    │                             ^ here.
+    = Found an incomplete ternary expression, should be "(condition) ? (true branch) : (false branch)".
+      Did you forget to add a colon or a false branch?
+      For example, this returns 3.0:
+        1 ? 3.0 : 0.0

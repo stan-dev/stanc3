@@ -1,0 +1,7 @@
+/* $ stanc ../break8.stan : [exit 1] */
+error: Break statements may only be used in loops.
+    ┌─ ../break8.stan:12:5
+ 11 │    else
+ 12 │      break;
+    │      ^^^^^^ Break statements may only be used in loops.
+ 13 │  }

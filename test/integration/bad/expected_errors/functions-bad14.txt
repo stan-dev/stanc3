@@ -1,0 +1,14 @@
+/* $ stanc ../functions-bad14.stan : [exit 1] */
+error: Function "abc" cannot be overloaded by return type only.
+    ┌─ ../functions-bad14.stan:5:3
+  1 │    functions {
+  2 │      real abc(real x) {
+    │           --- Previous declaration here.
+  3 │        return x;
+  4 │      }
+  5 │ ╭    int abc(real x) {  // illegal redeclaration with same args
+  6 │ │      return 1;
+  7 │ │    }
+    │ ╰────^ Function "abc" cannot be overloaded by return type only.
+  8 │    }
+    = Previously used return type real.

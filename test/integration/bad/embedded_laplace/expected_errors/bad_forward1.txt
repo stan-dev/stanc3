@@ -1,0 +1,8 @@
+/* $ stanc ../bad_forward1.stan : [exit 1] */
+error: Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple. Instead found type array[] real.
+    ┌─ ../bad_forward1.stan:37:43
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, {2.0},
+    │                                            ^^^^^ Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple.
+    │                                                  Instead found type array[] real.
+ 38 │                                   1, K_function, (x, n_obs, alpha, rho));

@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad64.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad64.stan:1:29
+  1 │  data { sum_to_zero_vector [ while
+    │                              ^^^^^ here.
+  2 │  
+    = Expected "[" expression "]" for size of sum_to_zero_vector.

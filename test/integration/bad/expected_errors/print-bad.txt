@@ -1,0 +1,7 @@
+/* $ stanc ../print-bad.stan : [exit 1] */
+error: Functions cannot be printed.
+    ┌─ ../print-bad.stan:8:9
+  7 │  model {
+  8 │    print(foo);
+    │          ^^^ Functions cannot be printed.
+  9 │  }

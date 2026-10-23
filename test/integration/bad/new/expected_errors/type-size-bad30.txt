@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad30.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad30.stan:1:25
+  1 │  data { positive_ordered x;}
+    │                          ^ here.
+    = Expected "[" expression "]" for size of positive_ordered.

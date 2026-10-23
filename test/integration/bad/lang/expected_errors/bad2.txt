@@ -1,0 +1,8 @@
+/* $ stanc ../bad2.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../bad2.stan:1:35
+  1 │  data { array[3] real a; } model { a = 2.0; }
+    │                       -            ^ "a" was declared in a previous block and cannot be assigned to.
+    │                       │
+    │                       Variable was declared in data block here.
+  2 │  

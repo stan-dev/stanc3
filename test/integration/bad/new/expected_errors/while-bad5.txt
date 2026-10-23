@@ -1,0 +1,6 @@
+/* $ stanc ../while-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../while-bad5.stan:1:27
+  1 │  transformed data { while (while
+    │                            ^^^^^ here.
+    = Expected an expression after "(" for the test of a "while" loop.

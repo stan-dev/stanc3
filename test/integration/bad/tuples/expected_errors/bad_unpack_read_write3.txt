@@ -1,0 +1,9 @@
+/* $ stanc ../bad_unpack_read_write3.stan : [exit 1] */
+error: Ill-typed assignment statement.
+    ┌─ ../bad_unpack_read_write3.stan:6:12
+  5 │    // but it is both an edge case and very complicated to do so
+  6 │    (x2.1, y[x2.2]) = (2, 2);
+    │     --      ^^ The variable "x2" cannot be read from at the same time as it is being assigned to.
+    │     │
+    │     Assigning to "x2" here.
+  7 │  }

@@ -1,0 +1,7 @@
+/* $ stanc ../assignment-to-function.stan : [exit 1] */
+error: Cannot assign a function to a variable.
+    ┌─ ../assignment-to-function.stan:12:6
+ 11 │       // NB: putting this in later blocks produce an error due to assigning to a global variable
+ 12 │       foo = bar;
+    │       ^^^^^^^^^^ Function type ((int) => real) cannot be assigned to variable "foo".
+ 13 │     }

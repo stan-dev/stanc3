@@ -1,0 +1,6 @@
+/* $ stanc ../mystery26.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../mystery26.stan:1:24
+  1 │  transformed data { x[T ~
+    │                         ^ here.
+    = Expected a comma separated list of expressions, followed by "]".

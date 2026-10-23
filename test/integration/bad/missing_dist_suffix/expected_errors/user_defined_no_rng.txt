@@ -1,0 +1,8 @@
+/* $ stanc ../user_defined_no_rng.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "bar_rng" was supplied.
+    ┌─ ../user_defined_no_rng.stan:7:13
+  6 │  generated quantities {
+  7 │     real x = bar_rng(10);
+    │              ^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                          "bar_rng" was supplied.
+  8 │  }

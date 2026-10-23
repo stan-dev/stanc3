@@ -1,0 +1,7 @@
+/* $ stanc ../err-target-plusequals-scope.stan : [exit 1] */
+error: Target can only be accessed in the model block or in functions ending with _lp.
+    ┌─ ../err-target-plusequals-scope.stan:4:3
+  3 │    x = 2.0;
+  4 │    target += x;
+    │    ^^^^^^^^^^^^ Target can only be accessed in the model block or in functions ending with _lp.
+  5 │  }

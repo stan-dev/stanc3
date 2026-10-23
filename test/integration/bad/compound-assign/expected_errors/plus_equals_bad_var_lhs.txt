@@ -1,0 +1,10 @@
+/* $ stanc ../plus_equals_bad_var_lhs.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../plus_equals_bad_var_lhs.stan:3:12
+  2 │    real foo(real a1) {
+  3 │      foo += a1;
+    │      ---    ^^ Ill-typed assignment operator +=.
+    │      │
+    │      Left hand side has type (real) => real.
+  4 │      return foo;
+    = There are no valid right hand side types for the given left hand side.

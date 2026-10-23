@@ -1,0 +1,7 @@
+/* $ stanc ../bad1.stanfunctions : [exit 1] */
+error: Syntax error: Ill-formed function.
+    ┌─ ../bad1.stanfunctions:1:6
+  1 │  int x;
+    │       ^ here.
+  2 │  
+    = Expected "(" after function name.

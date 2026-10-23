@@ -6,7 +6,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    cpp.inc
+    cpp.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
@@ -18,7 +18,7 @@
     (glob_files ../*.stan)))
   (action
    (with-stdout-to
-    mir.inc
+    mir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      mir
@@ -27,8 +27,8 @@
 
 (subdir
  expected_cpp
- (dynamic_include ../dunes/cpp.inc))
+ (dynamic_include ../dunes/cpp.dune))
 
 (subdir
  expected_optimized_mir
- (dynamic_include ../dunes/mir.inc))
+ (dynamic_include ../dunes/mir.dune))

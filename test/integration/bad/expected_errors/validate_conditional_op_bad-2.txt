@@ -1,0 +1,8 @@
+/* $ stanc ../validate_conditional_op_bad-2.stan : [exit 1] */
+error: Type mismatch in ternary expression.
+    ┌─ ../validate_conditional_op_bad-2.stan:5:8
+  4 │    array[2,2] row_vector[6] twa2;
+  5 │    tx = 0 ? ty : twa2;   // BAD
+    │         ^^^^^^^^^^^^^ Expression when true is: real; Expression when false is:
+    │                         array[,] row_vector
+  6 │  }

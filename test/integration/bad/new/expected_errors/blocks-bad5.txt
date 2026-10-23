@@ -1,0 +1,6 @@
+/* $ stanc ../blocks-bad5.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../blocks-bad5.stan:1:12
+  1 │  parameters while
+    │             ^^^^^ here.
+    = Expected "{" after "parameters".

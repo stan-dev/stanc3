@@ -1,0 +1,8 @@
+/* $ stanc ../bad_bounds1.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../bad_bounds1.stan:2:16
+  1 │  data {
+  2 │    real<lower=1 && 2> x;
+    │                 ^^ here.
+  3 │  }
+    = Expected an expression (not containing binary logical operators).

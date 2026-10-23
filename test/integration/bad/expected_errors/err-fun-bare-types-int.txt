@@ -1,0 +1,8 @@
+/* $ stanc ../err-fun-bare-types-int.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../err-fun-bare-types-int.stan:2:9
+  1 │  functions {
+  2 │    array[3] real foo() {
+    │          ^ here.
+  3 │      array[3] real a;
+    = Expected "[" (list of commas) "]" in an unsized type in a function signature.

@@ -1,0 +1,7 @@
+/* $ stanc ../bad_bounds1.stan : [exit 1] */
+error: Complex types do not support transformations.
+    ┌─ ../bad_bounds1.stan:5:3
+  4 │  parameters {
+  5 │    complex_matrix<lower=0>[N,N] Z;
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Complex types do not support transformations.
+  6 │  }

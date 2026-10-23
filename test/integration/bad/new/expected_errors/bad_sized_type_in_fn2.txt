@@ -1,0 +1,12 @@
+/* $ stanc ../bad_sized_type_in_fn2.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_sized_type_in_fn2.stan:2:18
+  1 │  functions{
+  2 │    void foo(vector[3] x){
+    │                   ^ here.
+  3 │      print(x);
+    = Expected an unsized type in function signature.
+        For example, this means a type like "matrix", not "matrix[3,4]".
+        If you are trying to use the old array syntax, you will need to use
+        the new syntax, see:
+        https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section

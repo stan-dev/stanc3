@@ -1,0 +1,7 @@
+/* $ stanc ../expect_statement_seq_close_brace_2.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../expect_statement_seq_close_brace_2.stan:17:1
+ 16 │  
+ 17 │  
+    │  ^ here.
+    = Expected unconstrained variable declaration, statement, or "}".

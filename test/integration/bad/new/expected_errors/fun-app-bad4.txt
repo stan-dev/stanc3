@@ -1,0 +1,6 @@
+/* $ stanc ../fun-app-bad4.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../fun-app-bad4.stan:1:25
+  1 │  transformed data { T () while
+    │                          ^^^^^ here.
+    = Found a well-formed function application. Expected either a ";" or a valid continuation of the expression.

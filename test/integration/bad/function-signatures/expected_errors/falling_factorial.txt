@@ -1,0 +1,21 @@
+/* $ stanc ../falling_factorial.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "falling_factorial".
+    ┌─ ../falling_factorial.stan:7:27
+  6 │    real transformed_data_real;
+  7 │    transformed_data_real = falling_factorial(d_real, r_real);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+  8 │  }
+    = Supplied arguments:
+      (real, real)
+    = Available signatures:
+      (real, int) => real
+        The second argument must be int but got real
+      (real, array[] int) => array[] real
+        The second argument must be array[] int but got real
+      (real, array[,] int) => array[,] real
+        The second argument must be array[,] int but got real
+      (real, array[,,] int) => array[,,] real
+        The second argument must be array[,,] int but got real
+      (real, array[,,,] int) => array[,,,] real
+        The second argument must be array[,,,] int but got real
+      (Additional signatures omitted)

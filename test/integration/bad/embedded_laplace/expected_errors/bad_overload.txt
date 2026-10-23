@@ -1,0 +1,7 @@
+/* $ stanc ../bad_overload.stan : [exit 1] */
+error: Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
+    ┌─ ../bad_overload.stan:2:8
+  1 │  functions {
+  2 │    real laplace_marginal_tol_neg_binomial_2_log_lpmf(int y) {
+    │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
+  3 │      return 1.0;

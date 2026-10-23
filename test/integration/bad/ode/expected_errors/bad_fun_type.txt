@@ -1,0 +1,37 @@
+/* $ stanc ../bad_fun_type.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "integrate_ode".
+    ┌─ ../bad_fun_type.stan:27:11
+  1 │    functions {
+  2 │      array[] real harm_osc_ode(array[] real t,
+    │                   ------------ Callback defined here.
+  3 │                          array[] real y,         // state
+    ⋯    
+ 26 │      array[10,2] real y_hat;
+ 27 │      y_hat = integrate_ode(harm_osc_ode,  // system
+    │ ╭────────────^
+ 28 │ │                       y0,            // initial state
+    ⋯ │  
+ 32 │ │                       x,             // data
+ 33 │ │                       x_int);        // integer data
+    │ ╰────────────────────────────^ Function called here.
+ 34 │    
+    = Supplied arguments:
+      (<F1>, array[] real, real, array[] real, array[] real, array[] real,
+       array[] int)
+      where F1 = (array[] real, array[] real, array[] real, array[] real,
+                  array[] int) => array[] real
+    = Available signatures:
+      (<F2>, array[] real, real, array[] real, array[] real,
+       data array[] real, data array[] int) => array[,] real
+      where F2 = (real, array[] real, array[] real, data array[] real,
+                  data array[] int) => array[] real
+        The first argument must be
+         (real, array[] real, array[] real, data array[] real,
+          data array[] int) => array[] real
+        but got
+         (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           real

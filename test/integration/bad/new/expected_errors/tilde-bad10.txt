@@ -1,0 +1,6 @@
+/* $ stanc ../tilde-bad10.stan : [exit 1] */
+error: Syntax error: Ill-formed "~"-statement.
+    ┌─ ../tilde-bad10.stan:1:34
+  1 │  transformed data { 1.0 ~ normal(x]
+    │                                   ^ here.
+    = Expected a comma separated list of expressions for arguments to the distribution, followed by ")".

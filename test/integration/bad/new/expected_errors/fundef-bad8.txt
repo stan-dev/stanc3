@@ -1,0 +1,6 @@
+/* $ stanc ../fundef-bad8.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../fundef-bad8.stan:1:18
+  1 │  functions { void while();}
+    │                   ^^^^^ here.
+    = Expected a new identifier but found reserved keyword "while".

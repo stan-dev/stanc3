@@ -1,0 +1,14 @@
+/* $ stanc ../wrong_type_eta.stan : [exit 1] */
+error: Ill-typed arguments supplied to "laplace_marginal_neg_binomial_2_log_lpmf".
+    ┌─ ../wrong_type_eta.stan:18:61
+ 17 │    // the overdispersion must be a scalar, not a vector
+ 18 │    target += laplace_marginal_neg_binomial_2_log_lpmf(y | y, eta,
+    │                                                              ^^^ Ill-typed arguments supplied to function 
+    │                                                                  "laplace_marginal_neg_binomial_2_log_lpmf"
+    │                                                                  for the likelihood
+ 19 │                rep_vector(0.0, n_obs), 1, K_function, (x, n_obs, alpha, rho));
+    = Expected the arguments to start with:
+      (The third argument must be real but got vector.) array[] int,
+      array[] int,
+      real,
+      vector

@@ -1,0 +1,8 @@
+/* $ stanc ../validate_validate_int_expr_bad2.stan : [exit 1] */
+error: Row vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad2.stan:3:14
+  2 │    vector[3] a;
+  3 │    row_vector[3.7] b;
+    │               ^^^ Row vector sizes must be of type int.
+    │                   Instead found type real.
+  4 │    matrix[3,3] c;

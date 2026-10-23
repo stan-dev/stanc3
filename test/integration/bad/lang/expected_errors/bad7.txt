@@ -1,0 +1,12 @@
+/* $ stanc ../bad7.stan : [exit 1] */
+error: Cannot assign to global variable.
+    ┌─ ../bad7.stan:7:3
+  1 │  data {
+  2 │    real y;
+    │         - Variable was declared in data block here.
+  3 │  }
+    ⋯  
+  6 │  
+  7 │    y = 10.0;
+    │    ^ "y" was declared in a previous block and cannot be assigned to.
+  8 │  }

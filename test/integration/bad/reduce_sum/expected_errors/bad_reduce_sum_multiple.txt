@@ -1,0 +1,18 @@
+/* $ stanc ../bad_reduce_sum_multiple.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "reduce_sum".
+    ┌─ ../bad_reduce_sum_multiple.stan:27:47
+  5 │  
+  6 │    real fun(array[] real y_slice, int start, int end) {
+    │         --- Callback defined here.
+  7 │      return sum(y_slice);
+    ⋯  
+ 26 │     print(y, " - ", p_sum_1);
+ 27 │     real p_sum_2 = reduce_sum(fun, param_y, 1, y, y);
+    │                                                ^ Function called here.
+ 28 │     print(y, " -- ", p_sum_2);
+    = Supplied arguments:
+      (<F1>, array[] real, int, real, real)
+      where F1 = (array[] real, int, int) => real
+    = Available signatures:
+      (<F1>, array[] real, int) => real
+        Expected 3 arguments but found 5 arguments.

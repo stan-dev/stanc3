@@ -1,0 +1,7 @@
+/* $ stanc ../tilde-bad15.stan : [exit 1] */
+error: Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
+
+    ┌─ ../tilde-bad15.stan:1:26
+  1 │  transformed data { T~T() while
+    │                           ^^^^^ here.
+    = Ill-formed "~"-statement. Expected either ";" or a truncation with the format "T[" optional expression "," optional expression "];".

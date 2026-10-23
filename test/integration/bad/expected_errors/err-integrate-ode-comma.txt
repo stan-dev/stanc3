@@ -1,0 +1,9 @@
+/* $ stanc ../err-integrate-ode-comma.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../err-integrate-ode-comma.stan:9:47
+  8 │    array[4] int x_int;
+  9 │    y = integrate_ode_rk45(foo,y0,t0,ts,theta,x x_int);
+    │                                                ^^^^^ here.
+ 10 │  }
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

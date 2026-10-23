@@ -1,0 +1,8 @@
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations ../funs.stanfunctions : [exit 0] */
+void test(int x, int y) {
+  print(x, y);
+}
+
+real return_lp() {
+  return target();
+}

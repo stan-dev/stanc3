@@ -1,0 +1,8 @@
+/* $ stanc ../err-transformed-params.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../err-transformed-params.stan:4:1
+  3 │  }
+  4 │  transformed {
+    │  ^^^^^^^^^^^ here.
+  5 │  }
+    = Expected "transformed parameters {", "model {" or "generated quantities {" after end of parameters block.

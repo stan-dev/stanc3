@@ -1,0 +1,9 @@
+/* $ stanc ../declare-define-var-double-4.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../declare-define-var-double-4.stan:6:11
+  5 │    real y;
+  6 │    real a2 = 1.0; // cannot assign in parameters block
+    │            ^ here.
+  7 │  }
+    = Cannot assign to variables in the "data" or "parameters" blocks.
+      Expected ";" after variable declaration.

@@ -1,0 +1,8 @@
+/* $ stanc ../real_idx.stan : [exit 1] */
+error: Index must be of type int or array[] int or must be a range (int:int). Instead found type real.
+    ┌─ ../real_idx.stan:3:5
+  2 │    array[10] real a;
+  3 │    a[1.0] = 5;
+    │      ^^^ Index must be of type int or array[] int or must be a range (int:int).
+    │          Instead found type real.
+  4 │  }

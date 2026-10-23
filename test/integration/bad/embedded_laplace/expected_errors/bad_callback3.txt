@@ -1,0 +1,10 @@
+/* $ stanc ../bad_callback3.stan : [exit 1] */
+error: A returning function was expected but a non-function value "ll_function" was supplied.
+    ┌─ ../bad_callback3.stan:28:30
+ 26 │  model {
+ 27 │    real ll_function;
+    │         ----------- Variable was declared here.
+ 28 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1, 
+    │                               ^^^^^^^^^^^ A returning function was expected but a non-function value 
+    │                                           "ll_function" was supplied.
+ 29 │                                    K_function, (x, n_obs, alpha, rho));

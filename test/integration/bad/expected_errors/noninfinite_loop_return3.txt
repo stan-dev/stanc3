@@ -1,0 +1,14 @@
+/* $ stanc ../noninfinite_loop_return3.stan : [exit 1] */
+error: Function bodies must contain a return statement of correct type in every branch.
+    ┌─ ../noninfinite_loop_return3.stan:2:3
+  1 │    functions {
+  2 │ ╭    real not_endless() {
+  3 │ │      while (1) {
+  4 │ │        if (0) return 1.0;
+  5 │ │        if (1) break;
+    │ │               ------ The loop may end here
+  6 │ │        return 2.0;
+  7 │ │      }
+  8 │ │    }
+    │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
+  9 │    }

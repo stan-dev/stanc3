@@ -1,0 +1,30 @@
+/* $ stanc ../bad_theta_type.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ ../bad_theta_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.

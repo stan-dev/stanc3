@@ -1,0 +1,8 @@
+/* $ stanc ../completely_undefined1.stan : [exit 1] */
+error: A returning function was expected but an undeclared identifier "foo_lpdf" was supplied.
+    ┌─ ../completely_undefined1.stan:2:13
+  1 │  model {
+  2 │    target += foo_lpdf(1);
+    │              ^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                          "foo_lpdf" was supplied.
+  3 │  }

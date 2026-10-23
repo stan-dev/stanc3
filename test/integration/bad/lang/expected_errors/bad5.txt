@@ -1,0 +1,7 @@
+/* $ stanc ../bad5.stan : [exit 1] */
+error: Identifier "lp__" clashes with reserved keyword.
+    ┌─ ../bad5.stan:3:7
+  2 │    real y;
+  3 │    y = lp__;
+    │        ^^^^ Identifier "lp__" clashes with reserved keyword.
+  4 │  }

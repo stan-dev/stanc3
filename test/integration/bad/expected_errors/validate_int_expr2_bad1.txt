@@ -1,0 +1,8 @@
+/* $ stanc ../validate_int_expr2_bad1.stan : [exit 1] */
+error: Lower bound of for-loop must be of type int. Instead found type real.
+    ┌─ ../validate_int_expr2_bad1.stan:5:13
+  4 │  model {
+  5 │    for (n in 1.7:N)
+    │              ^^^ Lower bound of for-loop must be of type int.
+    │                  Instead found type real.
+  6 │      y ~ normal(0,1);

@@ -1,0 +1,17 @@
+/* $ stanc ../bad_promotions2.stan : [exit 1] */
+error: Ill-typed arguments supplied to function "nested".
+    ┌─ ../bad_promotions2.stan:9:9
+  1 │  functions {
+  2 │     real nested(array[,] complex zs){
+    │          ------ Function defined here.
+  3 │       return num_elements(zs);
+    ⋯  
+  8 │    array[3] int d = {1,2,3};
+  9 │    print(nested(d));
+    │          ^^^^^^^^^ Function called here.
+ 10 │  }
+    = Supplied arguments:
+      (array[] int)
+    = Available signatures:
+      (array[,] complex) => real
+        The first argument must be array[,] complex but got array[] int

@@ -1,0 +1,4 @@
+/* $ stanc --warn-pedantic ../multi-tilde.stan : [exit 0] */
+../multi-tilde.stan:2:3: warning: The parameter x has 2 priors.
+../multi-tilde.stan:3:3: warning: The parameter y has 2 priors.
+../multi-tilde.stan:6:3: warning: The parameter x is on the left-hand side of more than one tilde statement.

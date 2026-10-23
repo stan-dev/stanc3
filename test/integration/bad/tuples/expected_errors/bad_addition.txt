@@ -1,0 +1,10 @@
+/* $ stanc ../bad_addition.stan : [exit 1] */
+error: Ill-typed compound assignment statement.
+    ┌─ ../bad_addition.stan:3:8
+  2 │    tuple(real, real) z;
+  3 │    z += 1;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type tuple(real, real).
+  4 │  }
+    = There are no valid right hand side types for the given left hand side.

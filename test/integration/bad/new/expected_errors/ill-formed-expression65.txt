@@ -1,0 +1,6 @@
+/* $ stanc ../ill-formed-expression65.stan : [exit 1] */
+error: Syntax error: Ill-formed function application.
+    ┌─ ../ill-formed-expression65.stan:1:32
+  1 │  transformed data { return T(T,x]
+    │                                 ^ here.
+    = Expected a comma separated list of expressions followed by ")" after "(".

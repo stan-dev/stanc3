@@ -1,0 +1,8 @@
+/* $ stanc ../ccdf-sample.stan : [exit 1] */
+error: CDF and CCDF functions may not be used with distribution notation (~).
+    ┌─ ../ccdf-sample.stan:5:3
+  4 │  model {
+  5 │    y ~ weibull_ccdf(1,1);
+    │    ^^^^^^^^^^^^^^^^^^^^^^ CDF and CCDF functions may not be used with distribution notation (~).
+  6 │  }
+    = Use target += weibull_lccdf(...) instead.

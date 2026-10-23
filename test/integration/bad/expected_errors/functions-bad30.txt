@@ -1,0 +1,7 @@
+/* $ stanc ../functions-bad30.stan : [exit 1] */
+error: Identifier "generated" clashes with reserved keyword.
+    ┌─ ../functions-bad30.stan:2:8
+  1 │  functions {
+  2 │    real generated(real bar) {
+    │         ^^^^^^^^^ Identifier "generated" clashes with reserved keyword.
+  3 │      return bar;

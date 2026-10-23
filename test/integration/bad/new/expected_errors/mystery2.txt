@@ -1,0 +1,6 @@
+/* $ stanc ../mystery2.stan : [exit 1] */
+error: Syntax error: Ill-formed phrase.
+    ┌─ ../mystery2.stan:1:24
+  1 │  transformed data { ( T ~
+    │                         ^ here.
+    = Found "(" followed by expression. Expected a "[", "," or ")" or an infix or postfix operator.

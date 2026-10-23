@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad15.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad15.stan:1:19
+  1 │  data { cov_matrix x;
+    │                    ^ here.
+  2 │  }
+    = Expected "[" expression "]" for size of cov_matrix.

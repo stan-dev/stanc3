@@ -1,0 +1,8 @@
+/* $ stanc ../err-close-function-args.stan : [exit 1] */
+error: Syntax error: Ill-formed function argument.
+    ┌─ ../err-close-function-args.stan:2:19
+  1 │  functions {
+  2 │    real foo(real x {
+    │                    ^ here.
+  3 │      return 1.0;
+    = Expected "," or ")" after function argument declaration.

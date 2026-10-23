@@ -1,0 +1,6 @@
+/* $ stanc ../blocks-bad11.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../blocks-bad11.stan:1:26
+  1 │  transformed parameters { void
+    │                           ^^^^ here.
+    = Expected top-level variable declaration, statement, or "}".

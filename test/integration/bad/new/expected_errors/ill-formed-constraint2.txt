@@ -1,0 +1,7 @@
+/* $ stanc ../ill-formed-constraint2.stan : [exit 1] */
+error: Syntax error: Ill-formed constraint.
+    ┌─ ../ill-formed-constraint2.stan:1:43
+  1 │  data { vector < upper = foo , lower = foo ,
+    │                                            ^ here.
+  2 │  
+    = Expected ">" after "lower = " expression.

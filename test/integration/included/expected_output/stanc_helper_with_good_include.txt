@@ -1,0 +1,1 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_good_include.stan : [exit 0] */

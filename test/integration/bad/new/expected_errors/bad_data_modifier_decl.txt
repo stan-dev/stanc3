@@ -1,0 +1,8 @@
+/* $ stanc ../bad_data_modifier_decl.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_data_modifier_decl.stan:2:3
+  1 │  generated quantities {
+  2 │    data real x = 1;
+    │    ^^^^ here.
+  3 │  }
+    = The "data" specifier is only valid in function arguments, not declarations.

@@ -1,0 +1,9 @@
+/* $ stanc ../assign_to_loop_var3.stan : [exit 1] */
+error: Cannot assign to read-only variable.
+    ┌─ ../assign_to_loop_var3.stan:6:7
+  4 │      array[2, 3] int vs;
+  5 │      for (v in vs) {
+    │           - Previous declaration here.
+  6 │        v[1] = 0;
+    │        ^ "v" was previously used as a function argument or loop identifier.
+  7 │        break;

@@ -1,0 +1,6 @@
+/* $ stanc ../oneline-error.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../oneline-error.stan:1:21
+  1 │  parameters { vector y[10]; } model { }
+    │                      ^ here.
+    = Expected "[" expression "]" for vector size.

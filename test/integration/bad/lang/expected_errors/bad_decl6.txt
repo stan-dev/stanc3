@@ -1,0 +1,8 @@
+/* $ stanc ../bad_decl6.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_decl6.stan:2:9
+  1 │  model {
+  2 │    array real x;
+    │          ^^^^ here.
+  3 │  }
+    = Expected "[" array sizes "]" followed by type after "array".

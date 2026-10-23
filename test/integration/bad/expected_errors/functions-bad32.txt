@@ -1,0 +1,9 @@
+/* $ stanc ../functions-bad32.stan : [exit 1] */
+error: A returning function was expected but a non-function value "gen" was supplied.
+    ┌─ ../functions-bad32.stan:9:9
+  7 │  generated quantities {
+  8 │    real gen;
+    │         --- Variable was declared here.
+  9 │    gen = gen(1);
+    │          ^^^^^^ A returning function was expected but a non-function value "gen" was supplied.
+ 10 │  }

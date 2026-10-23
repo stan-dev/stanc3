@@ -1,0 +1,7 @@
+/* $ stanc ../fatal_error-bad1.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../fatal_error-bad1.stan:1:49
+  1 │   transformed data { fatal_error ( "hello world" while
+    │                                                  ^^^^^ here.
+  2 │  
+    = Expected a comma separated list of either expressions or strings followed by ");" after "fatal_error(".

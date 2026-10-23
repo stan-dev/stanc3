@@ -1,0 +1,10 @@
+/* $ stanc ../op_logical_negation_bad.stan : [exit 1] */
+error: Ill-typed arguments supplied to prefix operator !.
+    ┌─ ../op_logical_negation_bad.stan:7:7
+  6 │    matrix[3,3] c;
+  7 │    c = !b;
+    │        ^^ Operator used here.
+  8 │  }
+    = Available signatures for !:
+        (int) => int
+      Instead supplied argument of incompatible type: array[] int.

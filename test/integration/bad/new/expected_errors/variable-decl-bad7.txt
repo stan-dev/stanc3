@@ -1,0 +1,6 @@
+/* $ stanc ../variable-decl-bad7.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../variable-decl-bad7.stan:1:29
+  1 │  transformed data { vector[1]^
+    │                              ^ here.
+    = Expected an identifier and optional assignment after type in variable declaration.

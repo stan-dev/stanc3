@@ -1,0 +1,7 @@
+/* $ stanc ../type-size-bad32.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad32.stan:1:14
+  1 │  data { array[] real T;}
+    │               ^ here.
+  2 │  
+    = Expected expressions for size of array.

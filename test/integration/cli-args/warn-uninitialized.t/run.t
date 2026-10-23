@@ -1,0 +1,7 @@
+  $ stanc simple.stan --warn-uninitialized
+  simple.stan:18:12: warning: The variable q may not have been assigned a value before its first use.
+  simple.stan:24:15: warning: The variable p may not have been assigned a value before its first use.
+  simple.stan:32:3: warning: The variable theta may not have been assigned a value before its first use.
+  simple.stan:32:18: warning: The variable zero may not have been assigned a value before its first use.
+  simple.stan:42:25: warning: The variable g may not have been assigned a value before its first use.
+  simple.stan:42:29: warning: The variable h may not have been assigned a value before its first use.

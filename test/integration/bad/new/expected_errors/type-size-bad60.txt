@@ -1,0 +1,6 @@
+/* $ stanc ../type-size-bad60.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../type-size-bad60.stan:1:19
+  1 │  model { vector [ T~normal(0,1)] x;}
+    │                    ^ here.
+    = Expected "[" expression "]" for vector size.

@@ -1,0 +1,7 @@
+/* $ stanc ../err-decl-matrix-2.stan : [exit 1] */
+error: Tried to index a scalar type. Expression has type int.
+    ┌─ ../err-decl-matrix-2.stan:2:14
+  1 │  data {
+  2 │    real<lower=3[3]> y;
+    │               ^^^^ Tried to index a scalar type. Expression has type int.
+  3 │  }

@@ -1,0 +1,8 @@
+/* $ stanc ../bad_sized_type_in_fn.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../bad_sized_type_in_fn.stan:2:18
+  1 │  functions{
+  2 │    void foo(array[3] real x){
+    │                   ^ here.
+  3 │      print(x);
+    = Expected "[" (list of commas) "]" in an unsized type in a function signature.

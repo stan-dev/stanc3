@@ -1,0 +1,15 @@
+/* $ stanc --auto-format --include-paths=.. --canonicalize=includes ../b.stanfunctions : [exit 0] */
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
+
+//include other functions
+// line comment b
+/*weird block b*/
+void bar(real y) {
+  return;
+}
+// another line comment b

@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete10.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../incomplete10.stan:2:21
+  1 │  transformed data {
+  2 │    vector[2] foo = [ ;
+    │                      ^ here.
+  3 │  }
+    = Expected a comma separated list of expressions followed by "]" after "[".

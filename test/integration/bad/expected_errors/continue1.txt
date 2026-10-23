@@ -1,0 +1,7 @@
+/* $ stanc ../continue1.stan : [exit 1] */
+error: Continue statements may only be used in loops.
+    ┌─ ../continue1.stan:4:3
+  3 │    int n;
+  4 │    continue;
+    │    ^^^^^^^^^ Continue statements may only be used in loops.
+  5 │  }

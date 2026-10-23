@@ -1,0 +1,6 @@
+/* $ stanc ../tilde-bad14.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../tilde-bad14.stan:1:31
+  1 │  transformed data { T~T() T[,] multiplier
+    │                                ^^^^^^^^^^ here.
+    = Expected ";" after truncated "~"-statement.

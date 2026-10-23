@@ -1,0 +1,6 @@
+/* $ stanc ../blocks-bad10.stan : [exit 1] */
+error: Syntax error: Ill-formed statement.
+    ┌─ ../blocks-bad10.stan:1:19
+  1 │  transformed data  while
+    │                    ^^^^^ here.
+    = Expected "{" after "transformed data".

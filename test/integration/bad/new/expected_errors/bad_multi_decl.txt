@@ -1,0 +1,9 @@
+/* $ stanc ../bad_multi_decl.stan : [exit 1] */
+error: Syntax error: Ill-formed expression.
+    ┌─ ../bad_multi_decl.stan:2:22
+  1 │  // TODO: would be nice to specialize for this mistake
+  2 │  model { real foo = 1 bar = 3; }
+    │                       ^^^ here.
+  3 │  
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

@@ -1,0 +1,7 @@
+/* $ stanc ../err-open-block.stan : [exit 1] */
+error: Syntax error: Ill-formed block.
+    ┌─ ../err-open-block.stan:1:11
+  1 │  functions foo {
+    │            ^^^ here.
+  2 │  }
+    = Expected "{" after "functions".

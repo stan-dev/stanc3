@@ -1,0 +1,9 @@
+/* $ stanc ../integrate_ode_deprecation.stan : [exit 0] */
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ../integrate_ode_deprecation.stan:26:11
+ 25 │    array[T, 2] real y_hat;
+ 26 │    y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
+    │            ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 27 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html

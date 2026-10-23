@@ -1,0 +1,8 @@
+/* $ stanc ../no_rng_suffix.stan : [exit 1] */
+error: Function "multi_gp_cholesky_rng" is not implemented for distribution "multi_gp_cholesky".
+    ┌─ ../no_rng_suffix.stan:2:13
+  1 │  generated quantities {
+  2 │     real x = multi_gp_cholesky_rng([[0,0],[0,0]], [1,0]);
+    │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function "multi_gp_cholesky_rng" is not implemented for distribution 
+    │                                                          "multi_gp_cholesky".
+  3 │  }

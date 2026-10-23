@@ -1,0 +1,8 @@
+/* $ stanc ../local_var_constraint3.stan : [exit 1] */
+error: Syntax error: Ill-formed type.
+    ┌─ ../local_var_constraint3.stan:5:9
+  4 │  model {
+  5 │    matrix<lower=0,upper=1>[3,4] a[5];
+    │          ^ here.
+  6 │    y ~ normal(0, 1);
+    = Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.

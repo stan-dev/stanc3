@@ -1,0 +1,26 @@
+/* $ stanc --warn-pedantic ../uniform.stan : [exit 0] */
+../uniform.stan:2:3: warning: The parameter a has 2 priors.
+../uniform.stan:8:3: warning: Parameter a is given a uniform distribution. The uniform distribution is not
+  recommended, for two reasons: (a) Except when there are logical or physical
+  constraints, it is very unusual for you to be sure that a parameter will fall
+  inside a specified range, and (b) The infinite gradient induced by a uniform
+  density can cause difficulties for Stan's sampling algorithm. As a
+  consequence, we recommend soft constraints rather than hard constraints; for
+  example, instead of giving an elasticity parameter a uniform(0,1)
+  distribution, try normal(0.5,0.5).
+../uniform.stan:11:3: warning: Parameter c is given a uniform distribution. The uniform distribution is not
+  recommended, for two reasons: (a) Except when there are logical or physical
+  constraints, it is very unusual for you to be sure that a parameter will fall
+  inside a specified range, and (b) The infinite gradient induced by a uniform
+  density can cause difficulties for Stan's sampling algorithm. As a
+  consequence, we recommend soft constraints rather than hard constraints; for
+  example, instead of giving an elasticity parameter a uniform(0,1)
+  distribution, try normal(0.5,0.5).
+../uniform.stan:12:3: warning: Parameter d is given a uniform distribution. The uniform distribution is not
+  recommended, for two reasons: (a) Except when there are logical or physical
+  constraints, it is very unusual for you to be sure that a parameter will fall
+  inside a specified range, and (b) The infinite gradient induced by a uniform
+  density can cause difficulties for Stan's sampling algorithm. As a
+  consequence, we recommend soft constraints rather than hard constraints; for
+  example, instead of giving an elasticity parameter a uniform(0,1)
+  distribution, try normal(0.5,0.5).

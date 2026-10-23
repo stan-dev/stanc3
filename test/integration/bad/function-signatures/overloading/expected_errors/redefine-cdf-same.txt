@@ -1,0 +1,9 @@
+/* $ stanc ../redefine-cdf-same.stan : [exit 1] */
+error: Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
+    ┌─ ../redefine-cdf-same.stan:2:3
+  1 │    functions {
+  2 │ ╭    real poisson_lcdf(int n, real x) {
+  3 │ │      return -x^2;
+  4 │ │    }
+    │ ╰────^ Function "poisson_lcdf" is already declared in the Stan Math library with signature (int, real) => real
+  5 │    }

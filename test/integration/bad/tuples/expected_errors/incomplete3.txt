@@ -1,0 +1,8 @@
+/* $ stanc ../incomplete3.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../incomplete3.stan:2:1
+  1 │  model { tuple( complex , complex ) foo,
+  2 │  
+    │  ^ here.
+    = Expected a new identifier after comma in declaration.
+      All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.

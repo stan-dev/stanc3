@@ -1,0 +1,8 @@
+/* $ stanc ../return.stan : [exit 1] */
+error: Syntax error: Ill-formed identifier.
+    ┌─ ../return.stan:2:8
+  1 │  data {
+  2 │    real return;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "return".

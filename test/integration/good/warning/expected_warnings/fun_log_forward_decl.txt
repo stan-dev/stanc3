@@ -1,0 +1,8 @@
+/* $ stanc ../fun_log_forward_decl.stan : [exit 0] */
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ ../fun_log_forward_decl.stan:6:8
+  5 │  functions {
+  6 │    real n_lpdf(real y);
+    │         ^^^^^^ Forward declaration.
+  7 │  

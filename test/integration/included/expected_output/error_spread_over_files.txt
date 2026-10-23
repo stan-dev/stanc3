@@ -1,0 +1,8 @@
+/* $ stanc --include-paths=../../included  ../error_spread_over_files.stan : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../error_spread_over_files.stan:1:3
+  1 │    w;
+    │    ^ here.
+  2 │  
+    = Expected "functions {", "data {", "transformed data {", "parameters {",
+      "transformed parameters {", "model {", or "generated quantities {".

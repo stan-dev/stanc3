@@ -1,0 +1,8 @@
+/* $ stanc ../validate_validate_int_expr_bad8.stan : [exit 1] */
+error: Vector sizes must be of type int. Instead found type real.
+    ┌─ ../validate_validate_int_expr_bad8.stan:8:20
+  7 │    ordered[3] f;
+  8 │    positive_ordered[3.2] g;
+    │                     ^^^ Vector sizes must be of type int.
+    │                         Instead found type real.
+  9 │    cholesky_factor_cov[4,5] h;

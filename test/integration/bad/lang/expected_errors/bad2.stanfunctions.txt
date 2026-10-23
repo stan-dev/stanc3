@@ -1,0 +1,6 @@
+/* $ stanc ../bad2.stanfunctions : [exit 1] */
+error: Syntax error: Ill-formed program.
+    ┌─ ../bad2.stanfunctions:5:1
+  5 │  }
+    │  ^ here.
+    = Only function definitions/declarations are expected in '.stanfunctions' files.
