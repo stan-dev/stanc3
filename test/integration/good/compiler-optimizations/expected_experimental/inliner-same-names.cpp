@@ -40,12 +40,12 @@ foo(const T0__& oR_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm_sym1__;
+    int lcm1__;
     {
       int ot = std::numeric_limits<int>::min();
-      lcm_sym1__ = stan::math::num_elements(oR);
+      lcm1__ = stan::math::num_elements(oR);
       current_statement__ = 4;
-      stan::math::validate_non_negative_index("R", "ot", lcm_sym1__);
+      stan::math::validate_non_negative_index("R", "ot", lcm1__);
       Eigen::Matrix<local_scalar_t__,-1,1> R;
       current_statement__ = 5;
       stan::model::assign(R, oR, "assigning variable R");
@@ -125,20 +125,20 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym6__;
+      int lcm6__;
       Eigen::Matrix<double,-1,1> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym9__;
+      Eigen::Matrix<double,-1,1> inline_foo_return9__;
       {
-        int inline_foo_ot_sym10__ = std::numeric_limits<int>::min();
-        lcm_sym6__ = stan::math::num_elements(R);
+        int inline_foo_ot10__ = std::numeric_limits<int>::min();
+        lcm6__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot", lcm_sym6__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym11__ =
+        stan::math::validate_non_negative_index("R", "ot", lcm6__);
+        Eigen::Matrix<double,-1,1> inline_foo_R11__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -173,20 +173,20 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym5__;
+      int lcm5__;
       Eigen::Matrix<double,-1,1> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym5__;
+      Eigen::Matrix<double,-1,1> inline_foo_return5__;
       {
-        int inline_foo_ot_sym6__ = std::numeric_limits<int>::min();
-        lcm_sym5__ = stan::math::num_elements(R);
+        int inline_foo_ot6__ = std::numeric_limits<int>::min();
+        lcm5__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot", lcm_sym5__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym7__ =
+        stan::math::validate_non_negative_index("R", "ot", lcm5__);
+        Eigen::Matrix<double,-1,1> inline_foo_R7__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -232,9 +232,9 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
-      int lcm_sym2__;
+      int lcm4__;
+      int lcm3__;
+      int lcm2__;
       Eigen::Matrix<double,-1,1> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
@@ -246,13 +246,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym1__;
+      Eigen::Matrix<double,-1,1> inline_foo_return1__;
       {
-        int inline_foo_ot_sym2__ = std::numeric_limits<int>::min();
-        lcm_sym2__ = stan::math::num_elements(R);
+        int inline_foo_ot2__ = std::numeric_limits<int>::min();
+        lcm2__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot", lcm_sym2__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym3__ =
+        stan::math::validate_non_negative_index("R", "ot", lcm2__);
+        Eigen::Matrix<double,-1,1> inline_foo_R3__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -328,13 +328,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -344,13 +344,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

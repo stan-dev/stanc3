@@ -119,15 +119,15 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, M, DUMMY_VAR__);
         {
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack_sym1__;
+            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack1__;
           current_statement__ = 8;
-          stan::model::assign(unpack_sym1__, stan::math::qr_thin(A),
-            "assigning variable unpack_sym1__");
+          stan::model::assign(unpack1__, stan::math::qr_thin(A),
+            "assigning variable unpack1__");
           current_statement__ = 9;
-          stan::model::assign(Q, std::get<0>(unpack_sym1__),
+          stan::model::assign(Q, std::get<0>(unpack1__),
             "assigning variable Q");
           current_statement__ = 9;
-          stan::model::assign(R, std::get<1>(unpack_sym1__),
+          stan::model::assign(R, std::get<1>(unpack1__),
             "assigning variable R");
         }
         current_statement__ = 10;
@@ -182,15 +182,15 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, M, DUMMY_VAR__);
         {
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack_sym1__;
+            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack1__;
           current_statement__ = 8;
-          stan::model::assign(unpack_sym1__, stan::math::qr_thin(A),
-            "assigning variable unpack_sym1__");
+          stan::model::assign(unpack1__, stan::math::qr_thin(A),
+            "assigning variable unpack1__");
           current_statement__ = 9;
-          stan::model::assign(Q, std::get<0>(unpack_sym1__),
+          stan::model::assign(Q, std::get<0>(unpack1__),
             "assigning variable Q");
           current_statement__ = 9;
-          stan::model::assign(R, std::get<1>(unpack_sym1__),
+          stan::model::assign(R, std::get<1>(unpack1__),
             "assigning variable R");
         }
         current_statement__ = 10;
@@ -330,10 +330,10 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= M; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= M; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -343,10 +343,10 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= M; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= M; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}

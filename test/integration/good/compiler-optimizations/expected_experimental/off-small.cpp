@@ -179,15 +179,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym23__;
-      double lcm_sym22__;
-      double lcm_sym21__;
-      double lcm_sym20__;
-      double lcm_sym19__;
-      double lcm_sym18__;
-      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym17__;
-      Eigen::Matrix<double,-1,1> lcm_sym16__;
-      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym15__;
+      double lcm23__;
+      double lcm22__;
+      double lcm21__;
+      double lcm20__;
+      double lcm19__;
+      double lcm18__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm17__;
+      Eigen::Matrix<double,-1,1> lcm16__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm15__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -216,22 +216,21 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      stan::model::assign(lcm_sym17__,
+      stan::model::assign(lcm17__,
         stan::math::fma(static_cast<double>(10), mu_a1,
-          stan::math::multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym17__");
-      stan::model::assign(a1, lcm_sym17__, "assigning variable a1");
-      stan::model::assign(lcm_sym15__,
+          stan::math::multiply(sigma_a1, eta1)), "assigning variable lcm17__");
+      stan::model::assign(a1, lcm17__, "assigning variable a1");
+      stan::model::assign(lcm15__,
         stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym15__");
-      stan::model::assign(a2, lcm_sym15__, "assigning variable a2");
+        "assigning variable lcm15__");
+      stan::model::assign(a2, lcm15__, "assigning variable a2");
       current_statement__ = 12;
       stan::model::assign(y_hat,
         stan::math::fma(
-          stan::model::rvalue(lcm_sym15__, "lcm_sym15__",
+          stan::model::rvalue(lcm15__, "lcm15__",
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
-            stan::model::rvalue(lcm_sym17__, "lcm_sym17__",
+            stan::model::rvalue(lcm17__, "lcm17__",
               stan::model::index_multi(person)))), "assigning variable y_hat");
       {
         current_statement__ = 13;
@@ -282,15 +281,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym8__;
-      Eigen::Matrix<double,-1,1> lcm_sym7__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym6__;
+      double lcm14__;
+      double lcm13__;
+      double lcm12__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm8__;
+      Eigen::Matrix<double,-1,1> lcm7__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm6__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -329,22 +328,21 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      stan::model::assign(lcm_sym8__,
+      stan::model::assign(lcm8__,
         stan::math::fma(static_cast<double>(10), mu_a1,
-          stan::math::multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym8__");
-      stan::model::assign(a1, lcm_sym8__, "assigning variable a1");
-      stan::model::assign(lcm_sym6__,
+          stan::math::multiply(sigma_a1, eta1)), "assigning variable lcm8__");
+      stan::model::assign(a1, lcm8__, "assigning variable a1");
+      stan::model::assign(lcm6__,
         stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym6__");
-      stan::model::assign(a2, lcm_sym6__, "assigning variable a2");
+        "assigning variable lcm6__");
+      stan::model::assign(a2, lcm6__, "assigning variable a2");
       current_statement__ = 12;
       stan::model::assign(y_hat,
         stan::math::fma(
-          stan::model::rvalue(lcm_sym6__, "lcm_sym6__",
+          stan::model::rvalue(lcm6__, "lcm6__",
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
-            stan::model::rvalue(lcm_sym8__, "lcm_sym8__",
+            stan::model::rvalue(lcm8__, "lcm8__",
               stan::model::index_multi(person)))), "assigning variable y_hat");
       {
         current_statement__ = 13;
@@ -406,11 +404,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym5__;
-      int lcm_sym4__;
-      Eigen::Matrix<double,-1,1> lcm_sym3__;
-      Eigen::Matrix<double,-1,1> lcm_sym2__;
-      Eigen::Matrix<double,-1,1> lcm_sym1__;
+      int lcm5__;
+      int lcm4__;
+      Eigen::Matrix<double,-1,1> lcm3__;
+      Eigen::Matrix<double,-1,1> lcm2__;
+      Eigen::Matrix<double,-1,1> lcm1__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -455,26 +453,25 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      stan::model::assign(lcm_sym3__,
+      stan::model::assign(lcm3__,
         stan::math::fma(static_cast<double>(10), mu_a1,
-          stan::math::multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym3__");
-      stan::model::assign(a1, lcm_sym3__, "assigning variable a1");
-      stan::model::assign(lcm_sym1__,
+          stan::math::multiply(sigma_a1, eta1)), "assigning variable lcm3__");
+      stan::model::assign(a1, lcm3__, "assigning variable a1");
+      stan::model::assign(lcm1__,
         stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym1__");
-      stan::model::assign(a2, lcm_sym1__, "assigning variable a2");
+        "assigning variable lcm1__");
+      stan::model::assign(a2, lcm1__, "assigning variable a2");
       current_statement__ = 12;
       stan::model::assign(y_hat,
         stan::math::fma(
-          stan::model::rvalue(lcm_sym1__, "lcm_sym1__",
+          stan::model::rvalue(lcm1__, "lcm1__",
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
-            stan::model::rvalue(lcm_sym3__, "lcm_sym3__",
+            stan::model::rvalue(lcm3__, "lcm3__",
               stan::model::index_multi(person)))), "assigning variable y_hat");
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym3__);
-        out__.write(lcm_sym1__);
+        out__.write(lcm3__);
+        out__.write(lcm1__);
         out__.write(y_hat);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
@@ -655,13 +652,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "beta");
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta2" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "mu_a1");
     param_names__.emplace_back(std::string() + "mu_a2");
@@ -669,17 +666,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     param_names__.emplace_back(std::string() + "sigma_a2");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "a1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -689,13 +686,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "beta");
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "eta2" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "mu_a1");
     param_names__.emplace_back(std::string() + "mu_a2");
@@ -703,17 +700,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     param_names__.emplace_back(std::string() + "sigma_a2");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "a1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

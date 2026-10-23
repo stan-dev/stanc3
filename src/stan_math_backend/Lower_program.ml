@@ -930,11 +930,11 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "foo" + '.' +
-          std::to_string(idx_sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "foo" + '.' +
-          std::to_string(idx_sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       |}]
 
@@ -949,9 +949,9 @@ module Testing = struct
     [%expect
       {|
       param_names__.emplace_back(std::string() + "tuple" + ':' + std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= nested; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= nested; ++idx1__) {
         param_names__.emplace_back(std::string() + "tuple" + ':' +
-          std::to_string(2) + '.' + std::to_string(idx_sym1__));
+          std::to_string(2) + '.' + std::to_string(idx1__));
       }
       |}]
 
@@ -967,13 +967,13 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
-          std::to_string(idx_sym1__) + ':' + std::to_string(1));
-        for (int idx_sym2__ = 1; idx_sym2__ <= nested; ++idx_sym2__) {
+          std::to_string(idx1__) + ':' + std::to_string(1));
+        for (int idx2__ = 1; idx2__ <= nested; ++idx2__) {
           param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
-            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(idx_sym2__));
+            std::to_string(idx1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx2__));
         }
       }
       |}]

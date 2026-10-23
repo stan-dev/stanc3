@@ -39,7 +39,7 @@ inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym1__;
+    local_scalar_t__ lcm1__;
     {
       current_statement__ = 4;
       return stan::math::sum(phi);
@@ -63,7 +63,7 @@ outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym2__;
+    local_scalar_t__ lcm2__;
     {
       current_statement__ = 6;
       return inner_lpdf<false>(phi, pstream__);
@@ -144,18 +144,18 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
+      double lcm6__;
       {
         double ret = std::numeric_limits<double>::quiet_NaN();
-        double inline_outer_lpdf_return_sym12__;
+        double inline_outer_lpdf_return12__;
         {
-          double inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym13__;
+          double inline_outer_lpdf_inline_inner_lpdf_return5__13__;
           {
-            lcm_sym6__ = stan::math::sum(phi);
+            lcm6__ = stan::math::sum(phi);
           }
         }
         current_statement__ = 2;
-        lp_accum__.add(lcm_sym6__);
+        lp_accum__.add(lcm6__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -187,18 +187,18 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
+      double lcm5__;
       {
         double ret = std::numeric_limits<double>::quiet_NaN();
-        double inline_outer_lpdf_return_sym9__;
+        double inline_outer_lpdf_return9__;
         {
-          double inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym10__;
+          double inline_outer_lpdf_inline_inner_lpdf_return5__10__;
           {
-            lcm_sym5__ = stan::math::sum(phi);
+            lcm5__ = stan::math::sum(phi);
           }
         }
         current_statement__ = 2;
-        lp_accum__.add(lcm_sym5__);
+        lp_accum__.add(lcm5__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -241,8 +241,8 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
+      int lcm4__;
+      int lcm3__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

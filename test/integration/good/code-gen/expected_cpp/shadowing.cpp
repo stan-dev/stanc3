@@ -662,9 +662,9 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       if (emit_transformed_parameters__) {
         out__.write(mu);
         current_statement__ = 36;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
-            out__.write(called[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
+            out__.write(called[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         out__.write(result);
@@ -1188,9 +1188,9 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "read");
     param_names__.emplace_back(std::string() + "validate_non_negative_index");
     param_names__.emplace_back(std::string() + "length");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
       param_names__.emplace_back(std::string() + "validate_positive_index" +
-        '.' + std::to_string(idx_sym1__));
+        '.' + std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "profile_map");
     param_names__.emplace_back(std::string() + "assign");
@@ -1200,23 +1200,23 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "index_uni");
     param_names__.emplace_back(std::string() + "bernoulli_logit_glm_lpmf");
     param_names__.emplace_back(std::string() + "reduce_sum");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
       param_names__.emplace_back(std::string() + "segment" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "ode_bdf");
     param_names__.emplace_back(std::string() + "ode_bdf_tol");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "mu");
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
           param_names__.emplace_back(std::string() + "called" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= result_1dim__; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= result_1dim__; ++idx1__) {
         param_names__.emplace_back(std::string() + "result" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -1247,9 +1247,9 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "read");
     param_names__.emplace_back(std::string() + "validate_non_negative_index");
     param_names__.emplace_back(std::string() + "length");
-    for (int idx_sym1__ = 1; idx_sym1__ <= (5 - 1); ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= (5 - 1); ++idx1__) {
       param_names__.emplace_back(std::string() + "validate_positive_index" +
-        '.' + std::to_string(idx_sym1__));
+        '.' + std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "profile_map");
     param_names__.emplace_back(std::string() + "assign");
@@ -1259,23 +1259,23 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "index_uni");
     param_names__.emplace_back(std::string() + "bernoulli_logit_glm_lpmf");
     param_names__.emplace_back(std::string() + "reduce_sum");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
       param_names__.emplace_back(std::string() + "segment" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "ode_bdf");
     param_names__.emplace_back(std::string() + "ode_bdf_tol");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "mu");
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
           param_names__.emplace_back(std::string() + "called" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= result_1dim__; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= result_1dim__; ++idx1__) {
         param_names__.emplace_back(std::string() + "result" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

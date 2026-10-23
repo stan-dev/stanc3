@@ -51,7 +51,7 @@ bernoulli_lpmf(const T0__& y, const T1__& theta, const T2__& alpha,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym1__;
+    local_scalar_t__ lcm1__;
     {
       current_statement__ = 7;
       return stan::math::log(theta);
@@ -78,7 +78,7 @@ bar_lp(const T0__& y, const T1__& t_arg__, T_lp__& lp__, T_lp_accum__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym2__;
+    local_scalar_t__ lcm2__;
     {
       current_statement__ = 2;
       lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, t));
@@ -161,7 +161,7 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
+      double lcm6__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -200,7 +200,7 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
+      double lcm5__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -251,8 +251,8 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
+      int lcm4__;
+      int lcm3__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -343,9 +343,9 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -354,9 +354,9 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

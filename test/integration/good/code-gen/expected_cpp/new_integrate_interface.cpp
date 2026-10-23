@@ -5000,9 +5000,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           v), "assigning variable z");
       if (emit_transformed_parameters__) {
         current_statement__ = 4;
-        for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
-            out__.write(z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
+            out__.write(z[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -5812,9 +5812,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         stan::math::ode_bdf(f_variadic2_functor__(), v, r, ra, pstream__, r,
           v), "assigning variable zg");
       current_statement__ = 5;
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
-          out__.write(zg[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
+          out__.write(zg[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
@@ -5943,27 +5943,27 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "r");
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "ra" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "v" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
     if (emit_generated_quantities__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "zg" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -5973,27 +5973,27 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "r");
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "ra" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
       param_names__.emplace_back(std::string() + "v" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
     if (emit_generated_quantities__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "zg" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

@@ -89,12 +89,12 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym20__;
-      Eigen::Matrix<double,-1,-1> lcm_sym19__;
-      Eigen::Matrix<double,-1,-1> lcm_sym18__;
-      Eigen::Matrix<double,-1,-1> lcm_sym17__;
-      Eigen::Matrix<double,-1,-1> lcm_sym16__;
-      Eigen::Matrix<double,-1,-1> lcm_sym15__;
+      Eigen::Matrix<double,-1,-1> lcm20__;
+      Eigen::Matrix<double,-1,-1> lcm19__;
+      Eigen::Matrix<double,-1,-1> lcm18__;
+      Eigen::Matrix<double,-1,-1> lcm17__;
+      Eigen::Matrix<double,-1,-1> lcm16__;
+      Eigen::Matrix<double,-1,-1> lcm15__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -104,36 +104,36 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       Eigen::Matrix<double,-1,-1> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym15__, stan::math::exp(X_d),
-        "assigning variable lcm_sym15__");
-      stan::model::assign(X_tp2, lcm_sym15__, "assigning variable X_tp2");
+      stan::model::assign(lcm15__, stan::math::exp(X_d),
+        "assigning variable lcm15__");
+      stan::model::assign(X_tp2, lcm15__, "assigning variable X_tp2");
       Eigen::Matrix<double,-1,-1> X_tp3 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym16__, stan::math::exp(lcm_sym15__),
-        "assigning variable lcm_sym16__");
-      stan::model::assign(X_tp3, lcm_sym16__, "assigning variable X_tp3");
+      stan::model::assign(lcm16__, stan::math::exp(lcm15__),
+        "assigning variable lcm16__");
+      stan::model::assign(X_tp3, lcm16__, "assigning variable X_tp3");
       Eigen::Matrix<double,-1,-1> X_tp4 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym17__, stan::math::exp(lcm_sym16__),
-        "assigning variable lcm_sym17__");
-      stan::model::assign(X_tp4, lcm_sym17__, "assigning variable X_tp4");
+      stan::model::assign(lcm17__, stan::math::exp(lcm16__),
+        "assigning variable lcm17__");
+      stan::model::assign(X_tp4, lcm17__, "assigning variable X_tp4");
       Eigen::Matrix<double,-1,-1> X_tp5 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym18__, stan::math::exp(lcm_sym17__),
-        "assigning variable lcm_sym18__");
-      stan::model::assign(X_tp5, lcm_sym18__, "assigning variable X_tp5");
+      stan::model::assign(lcm18__, stan::math::exp(lcm17__),
+        "assigning variable lcm18__");
+      stan::model::assign(X_tp5, lcm18__, "assigning variable X_tp5");
       Eigen::Matrix<double,-1,-1> X_tp6 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym19__, stan::math::exp(lcm_sym18__),
-        "assigning variable lcm_sym19__");
-      stan::model::assign(X_tp6, lcm_sym19__, "assigning variable X_tp6");
+      stan::model::assign(lcm19__, stan::math::exp(lcm18__),
+        "assigning variable lcm19__");
+      stan::model::assign(X_tp6, lcm19__, "assigning variable X_tp6");
       Eigen::Matrix<double,-1,-1> X_tp7;
       current_statement__ = 8;
-      stan::model::assign(X_tp7, stan::math::exp(lcm_sym19__),
+      stan::model::assign(X_tp7, stan::math::exp(lcm19__),
         "assigning variable X_tp7");
       current_statement__ = 9;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
@@ -167,12 +167,12 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym14__;
-      Eigen::Matrix<double,-1,-1> lcm_sym13__;
-      Eigen::Matrix<double,-1,-1> lcm_sym12__;
-      Eigen::Matrix<double,-1,-1> lcm_sym11__;
-      Eigen::Matrix<double,-1,-1> lcm_sym10__;
-      Eigen::Matrix<double,-1,-1> lcm_sym9__;
+      Eigen::Matrix<double,-1,-1> lcm14__;
+      Eigen::Matrix<double,-1,-1> lcm13__;
+      Eigen::Matrix<double,-1,-1> lcm12__;
+      Eigen::Matrix<double,-1,-1> lcm11__;
+      Eigen::Matrix<double,-1,-1> lcm10__;
+      Eigen::Matrix<double,-1,-1> lcm9__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -183,36 +183,36 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       Eigen::Matrix<double,-1,-1> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym9__, stan::math::exp(X_d),
-        "assigning variable lcm_sym9__");
-      stan::model::assign(X_tp2, lcm_sym9__, "assigning variable X_tp2");
+      stan::model::assign(lcm9__, stan::math::exp(X_d),
+        "assigning variable lcm9__");
+      stan::model::assign(X_tp2, lcm9__, "assigning variable X_tp2");
       Eigen::Matrix<double,-1,-1> X_tp3 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym10__, stan::math::exp(lcm_sym9__),
-        "assigning variable lcm_sym10__");
-      stan::model::assign(X_tp3, lcm_sym10__, "assigning variable X_tp3");
+      stan::model::assign(lcm10__, stan::math::exp(lcm9__),
+        "assigning variable lcm10__");
+      stan::model::assign(X_tp3, lcm10__, "assigning variable X_tp3");
       Eigen::Matrix<double,-1,-1> X_tp4 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym11__, stan::math::exp(lcm_sym10__),
-        "assigning variable lcm_sym11__");
-      stan::model::assign(X_tp4, lcm_sym11__, "assigning variable X_tp4");
+      stan::model::assign(lcm11__, stan::math::exp(lcm10__),
+        "assigning variable lcm11__");
+      stan::model::assign(X_tp4, lcm11__, "assigning variable X_tp4");
       Eigen::Matrix<double,-1,-1> X_tp5 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym12__, stan::math::exp(lcm_sym11__),
-        "assigning variable lcm_sym12__");
-      stan::model::assign(X_tp5, lcm_sym12__, "assigning variable X_tp5");
+      stan::model::assign(lcm12__, stan::math::exp(lcm11__),
+        "assigning variable lcm12__");
+      stan::model::assign(X_tp5, lcm12__, "assigning variable X_tp5");
       Eigen::Matrix<double,-1,-1> X_tp6 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      stan::model::assign(lcm_sym13__, stan::math::exp(lcm_sym12__),
-        "assigning variable lcm_sym13__");
-      stan::model::assign(X_tp6, lcm_sym13__, "assigning variable X_tp6");
+      stan::model::assign(lcm13__, stan::math::exp(lcm12__),
+        "assigning variable lcm13__");
+      stan::model::assign(X_tp6, lcm13__, "assigning variable X_tp6");
       Eigen::Matrix<double,-1,-1> X_tp7;
       current_statement__ = 8;
-      stan::model::assign(X_tp7, stan::math::exp(lcm_sym13__),
+      stan::model::assign(X_tp7, stan::math::exp(lcm13__),
         "assigning variable X_tp7");
       current_statement__ = 9;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
@@ -257,14 +257,14 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym8__;
-      int lcm_sym7__;
-      Eigen::Matrix<double,-1,-1> lcm_sym6__;
-      Eigen::Matrix<double,-1,-1> lcm_sym5__;
-      Eigen::Matrix<double,-1,-1> lcm_sym4__;
-      Eigen::Matrix<double,-1,-1> lcm_sym3__;
-      Eigen::Matrix<double,-1,-1> lcm_sym2__;
-      Eigen::Matrix<double,-1,-1> lcm_sym1__;
+      int lcm8__;
+      int lcm7__;
+      Eigen::Matrix<double,-1,-1> lcm6__;
+      Eigen::Matrix<double,-1,-1> lcm5__;
+      Eigen::Matrix<double,-1,-1> lcm4__;
+      Eigen::Matrix<double,-1,-1> lcm3__;
+      Eigen::Matrix<double,-1,-1> lcm2__;
+      Eigen::Matrix<double,-1,-1> lcm1__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -297,34 +297,34 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       }
       current_statement__ = 2;
       stan::model::assign(X_tp1, X_d, "assigning variable X_tp1");
-      stan::model::assign(lcm_sym1__, stan::math::exp(X_d),
-        "assigning variable lcm_sym1__");
-      stan::model::assign(X_tp2, lcm_sym1__, "assigning variable X_tp2");
-      stan::model::assign(lcm_sym2__, stan::math::exp(lcm_sym1__),
-        "assigning variable lcm_sym2__");
-      stan::model::assign(X_tp3, lcm_sym2__, "assigning variable X_tp3");
-      stan::model::assign(lcm_sym3__, stan::math::exp(lcm_sym2__),
-        "assigning variable lcm_sym3__");
-      stan::model::assign(X_tp4, lcm_sym3__, "assigning variable X_tp4");
-      stan::model::assign(lcm_sym4__, stan::math::exp(lcm_sym3__),
-        "assigning variable lcm_sym4__");
-      stan::model::assign(X_tp5, lcm_sym4__, "assigning variable X_tp5");
-      stan::model::assign(lcm_sym5__, stan::math::exp(lcm_sym4__),
-        "assigning variable lcm_sym5__");
-      stan::model::assign(X_tp6, lcm_sym5__, "assigning variable X_tp6");
-      stan::model::assign(lcm_sym6__, stan::math::exp(lcm_sym5__),
-        "assigning variable lcm_sym6__");
-      stan::model::assign(X_tp7, lcm_sym6__, "assigning variable X_tp7");
+      stan::model::assign(lcm1__, stan::math::exp(X_d),
+        "assigning variable lcm1__");
+      stan::model::assign(X_tp2, lcm1__, "assigning variable X_tp2");
+      stan::model::assign(lcm2__, stan::math::exp(lcm1__),
+        "assigning variable lcm2__");
+      stan::model::assign(X_tp3, lcm2__, "assigning variable X_tp3");
+      stan::model::assign(lcm3__, stan::math::exp(lcm2__),
+        "assigning variable lcm3__");
+      stan::model::assign(X_tp4, lcm3__, "assigning variable X_tp4");
+      stan::model::assign(lcm4__, stan::math::exp(lcm3__),
+        "assigning variable lcm4__");
+      stan::model::assign(X_tp5, lcm4__, "assigning variable X_tp5");
+      stan::model::assign(lcm5__, stan::math::exp(lcm4__),
+        "assigning variable lcm5__");
+      stan::model::assign(X_tp6, lcm5__, "assigning variable X_tp6");
+      stan::model::assign(lcm6__, stan::math::exp(lcm5__),
+        "assigning variable lcm6__");
+      stan::model::assign(X_tp7, lcm6__, "assigning variable X_tp7");
       current_statement__ = 9;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
       if (emit_transformed_parameters__) {
         out__.write(X_p);
-        out__.write(lcm_sym1__);
-        out__.write(lcm_sym2__);
-        out__.write(lcm_sym3__);
-        out__.write(lcm_sym4__);
-        out__.write(lcm_sym5__);
-        out__.write(lcm_sym6__);
+        out__.write(lcm1__);
+        out__.write(lcm2__);
+        out__.write(lcm3__);
+        out__.write(lcm4__);
+        out__.write(lcm5__);
+        out__.write(lcm6__);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -432,53 +432,53 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -488,53 +488,53 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

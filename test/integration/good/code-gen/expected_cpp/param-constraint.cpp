@@ -194,13 +194,13 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                         stan::model::index_uni(1), stan::model::index_uni(1),
                         stan::model::index_uni(2)), lp__, NS);
       current_statement__ = 1;
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= nt; ++idx3__) {
             out__.write(stan::model::rvalue(L_Omega, "L_Omega",
-                          stan::model::index_uni(idx_sym3__),
-                          stan::model::index_uni(idx_sym2__),
-                          stan::model::index_uni(idx_sym1__)));
+                          stan::model::index_uni(idx3__),
+                          stan::model::index_uni(idx2__),
+                          stan::model::index_uni(idx1__)));
           }
         }
       }
@@ -237,15 +237,13 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(nt,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__));
       current_statement__ = 1;
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= nt; ++idx3__) {
             current_statement__ = 1;
             stan::model::assign(L_Omega, in__.read<local_scalar_t__>(),
-              "assigning variable L_Omega",
-              stan::model::index_uni(idx_sym3__),
-              stan::model::index_uni(idx_sym2__),
-              stan::model::index_uni(idx_sym1__));
+              "assigning variable L_Omega", stan::model::index_uni(idx3__),
+              stan::model::index_uni(idx2__), stan::model::index_uni(idx1__));
           }
         }
       }
@@ -330,18 +328,18 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= nt; ++idx3__) {
           param_names__.emplace_back(std::string() + "L_Omega" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= NS; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= NS; ++idx1__) {
       param_names__.emplace_back(std::string() + "z1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -350,15 +348,15 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= ((2 * (2 - 1)) / 2); ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= nt; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= ((2 * (2 - 1)) / 2); ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= nt; ++idx2__) {
         param_names__.emplace_back(std::string() + "L_Omega" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= NS; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= NS; ++idx1__) {
       param_names__.emplace_back(std::string() + "z1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

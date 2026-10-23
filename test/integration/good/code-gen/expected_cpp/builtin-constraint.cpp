@@ -353,21 +353,20 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= beta_raw_1dim__; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= beta_raw_1dim__; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta_raw" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= K; ++idx1__) {
         param_names__.emplace_back(std::string() + "beta" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <=
-           beta_recovered_1dim__; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= beta_recovered_1dim__; ++idx1__) {
         param_names__.emplace_back(std::string() + "beta_recovered" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
   }
@@ -375,21 +374,20 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= beta_raw_1dim__; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= beta_raw_1dim__; ++idx1__) {
       param_names__.emplace_back(std::string() + "beta_raw" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= (K - 1); ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= (K - 1); ++idx1__) {
         param_names__.emplace_back(std::string() + "beta" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <=
-           beta_recovered_1dim__; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= beta_recovered_1dim__; ++idx1__) {
         param_names__.emplace_back(std::string() + "beta_recovered" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
   }

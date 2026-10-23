@@ -48,9 +48,9 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym4__;
-    int lcm_sym3__;
-    int lcm_sym1__;
+    local_scalar_t__ lcm4__;
+    int lcm3__;
+    int lcm1__;
     {
       local_scalar_t__ sum;
       sum = static_cast<double>(0);
@@ -58,9 +58,9 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
         current_statement__ = 2;
         int _i_lower = stan::math::poisson_rng(10, base_rng__);
         if (stan::math::logical_gte(40, _i_lower)) {
-          lcm_sym1__ = (_i_lower + 1);
+          lcm1__ = (_i_lower + 1);
           sum = (0 + stan::math::std_normal_rng(base_rng__));
-          for (int i = lcm_sym1__; i <= 40; ++i) {
+          for (int i = lcm1__; i <= 40; ++i) {
             current_statement__ = 3;
             sum = (sum + stan::math::std_normal_rng(base_rng__));
           }
@@ -91,7 +91,7 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym6__;
+    local_scalar_t__ lcm6__;
     {
       local_scalar_t__ sum;
       sum = static_cast<double>(0);
@@ -229,8 +229,8 @@ class rng_for_loop_bound_model final : public model_base_crtp<rng_for_loop_bound
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym8__;
-      int lcm_sym7__;
+      int lcm8__;
+      int lcm7__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

@@ -99,18 +99,17 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym5__ =
+        decltype(auto) inline_foo_i_arg5__ =
           stan::math::to_ref(stan::math::add(p, p));
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return_sym4__;
+        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return4__;
         {
           current_statement__ = 2;
-          stan::model::assign(inline_foo_return_sym4__,
-            stan::math::multiply(inline_foo_i_arg_sym5__,
-              inline_foo_i_arg_sym5__),
-            "assigning variable inline_foo_return_sym4__");
+          stan::model::assign(inline_foo_return4__,
+            stan::math::multiply(inline_foo_i_arg5__, inline_foo_i_arg5__),
+            "assigning variable inline_foo_return4__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
-                         stan::math::to_vector(inline_foo_return_sym4__)));
+                         stan::math::to_vector(inline_foo_return4__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -147,19 +146,18 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym2__ =
+        decltype(auto) inline_foo_i_arg2__ =
           stan::math::to_ref(stan::math::add(p, p));
         stan::math::var_value<Eigen::Matrix<double,-1,-1>>
-          inline_foo_return_sym1__;
+          inline_foo_return1__;
         {
           current_statement__ = 2;
-          stan::model::assign(inline_foo_return_sym1__,
-            stan::math::multiply(inline_foo_i_arg_sym2__,
-              inline_foo_i_arg_sym2__),
-            "assigning variable inline_foo_return_sym1__");
+          stan::model::assign(inline_foo_return1__,
+            stan::math::multiply(inline_foo_i_arg2__, inline_foo_i_arg2__),
+            "assigning variable inline_foo_return1__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
-                         stan::math::to_vector(inline_foo_return_sym1__)));
+                         stan::math::to_vector(inline_foo_return1__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -293,10 +291,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -306,10 +304,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}

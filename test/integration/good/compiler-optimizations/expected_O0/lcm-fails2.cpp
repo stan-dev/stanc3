@@ -807,22 +807,22 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occ_minus_1; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occ_minus_1; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occasions; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -835,22 +835,22 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occ_minus_1; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occ_minus_1; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= n_occasions; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= nind; ++idx2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

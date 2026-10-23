@@ -454,49 +454,48 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(idx_sym2__) + '.' +
-            std::to_string(idx_sym1__));
+            '.' + std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() +
-            "inner_empty_user_func_aos" + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            "inner_empty_user_func_aos" + '.' + std::to_string(idx2__) + '.'
+            + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            + std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -506,49 +505,48 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(idx_sym2__) + '.' +
-            std::to_string(idx_sym1__));
+            '.' + std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() +
-            "inner_empty_user_func_aos" + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            "inner_empty_user_func_aos" + '.' + std::to_string(idx2__) + '.'
+            + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            + std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

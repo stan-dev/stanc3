@@ -91,7 +91,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym4__;
+      double lcm4__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -129,7 +129,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym3__;
+      double lcm3__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -178,8 +178,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       out__.write(theta);
@@ -266,9 +266,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -277,9 +277,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

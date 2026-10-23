@@ -599,36 +599,35 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
           nested), "assigning variable nested3");
       if (emit_transformed_parameters__) {
         current_statement__ = 1;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-          out__.write(std::get<0>(d2)[(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+          out__.write(std::get<0>(d2)[(idx1__ - 1)]);
         }
         current_statement__ = 1;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-          out__.write(std::get<1>(d2)[(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+          out__.write(std::get<1>(d2)[(idx1__ - 1)]);
         }
         out__.write(std::get<0>(V3));
         out__.write(std::get<1>(V3));
         current_statement__ = 3;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-          out__.write(std::get<0>(arrs2[(idx_sym1__ - 1)]));
+        for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+          out__.write(std::get<0>(arrs2[(idx1__ - 1)]));
           current_statement__ = 3;
-          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
-            out__.write(std::get<1>(arrs2[(idx_sym1__ - 1)])[(idx_sym2__ -
-              1)]);
+          for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+            out__.write(std::get<1>(arrs2[(idx1__ - 1)])[(idx2__ - 1)]);
           }
         }
         out__.write(std::get<0>(std::get<0>(nested2)));
         current_statement__ = 4;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-          out__.write(std::get<1>(std::get<0>(nested2))[(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+          out__.write(std::get<1>(std::get<0>(nested2))[(idx1__ - 1)]);
         }
         out__.write(std::get<1>(nested2));
         out__.write(std::get<0>(std::get<2>(nested2)));
         out__.write(std::get<1>(std::get<2>(nested2)));
         out__.write(std::get<0>(std::get<0>(nested3)));
         current_statement__ = 5;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-          out__.write(std::get<1>(std::get<0>(nested3))[(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+          out__.write(std::get<1>(std::get<0>(nested3))[(idx1__ - 1)]);
         }
         out__.write(std::get<1>(nested3));
         out__.write(std::get<0>(std::get<2>(nested3)));
@@ -773,75 +772,71 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__) + '.' +
-          "real");
+          std::to_string(1) + '.' + std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__) + '.' +
-          "imag");
+          std::to_string(1) + '.' + std::to_string(idx1__) + '.' + "imag");
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(2) + '.' + std::to_string(idx_sym1__) + '.' +
-          "real");
+          std::to_string(2) + '.' + std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(2) + '.' + std::to_string(idx_sym1__) + '.' +
-          "imag");
+          std::to_string(2) + '.' + std::to_string(idx1__) + '.' + "imag");
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "V3" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__));
+          std::to_string(1) + '.' + std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "V3" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
         param_names__.emplace_back(std::string() + "arrs2" + '.' +
-          std::to_string(idx_sym1__) + ':' + std::to_string(1));
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          std::to_string(idx1__) + ':' + std::to_string(1));
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "arrs2" + '.' +
-            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(idx_sym2__) + '.' + "real");
+            std::to_string(idx1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx2__) + '.' + "real");
           param_names__.emplace_back(std::string() + "arrs2" + '.' +
-            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(idx_sym2__) + '.' + "imag");
+            std::to_string(idx1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx2__) + '.' + "imag");
         }
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(1) + ':' + std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(3) + ':' + std::to_string(1) + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(3) + ':' + std::to_string(2));
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(1) + ':' + std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(3) + ':' + std::to_string(1) + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(3) + ':' + std::to_string(2));
@@ -871,75 +866,71 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__) + '.' +
-          "real");
+          std::to_string(1) + '.' + std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__) + '.' +
-          "imag");
+          std::to_string(1) + '.' + std::to_string(idx1__) + '.' + "imag");
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(2) + '.' + std::to_string(idx_sym1__) + '.' +
-          "real");
+          std::to_string(2) + '.' + std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "d2" + ':' +
-          std::to_string(2) + '.' + std::to_string(idx_sym1__) + '.' +
-          "imag");
+          std::to_string(2) + '.' + std::to_string(idx1__) + '.' + "imag");
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "V3" + ':' +
-          std::to_string(1) + '.' + std::to_string(idx_sym1__));
+          std::to_string(1) + '.' + std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "V3" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
         param_names__.emplace_back(std::string() + "arrs2" + '.' +
-          std::to_string(idx_sym1__) + ':' + std::to_string(1));
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          std::to_string(idx1__) + ':' + std::to_string(1));
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "arrs2" + '.' +
-            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(idx_sym2__) + '.' + "real");
+            std::to_string(idx1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx2__) + '.' + "real");
           param_names__.emplace_back(std::string() + "arrs2" + '.' +
-            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(idx_sym2__) + '.' + "imag");
+            std::to_string(idx1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx2__) + '.' + "imag");
         }
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(1) + ':' + std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested2" + ':' +
           std::to_string(3) + ':' + std::to_string(1) + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "nested2" + ':' +
         std::to_string(3) + ':' + std::to_string(2));
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(1) + ':' + std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "real");
+          std::to_string(idx1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(1) + ':' + std::to_string(2) + '.' +
-          std::to_string(idx_sym1__) + '.' + "imag");
+          std::to_string(idx1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(2));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "nested3" + ':' +
           std::to_string(3) + ':' + std::to_string(1) + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
       param_names__.emplace_back(std::string() + "nested3" + ':' +
         std::to_string(3) + ':' + std::to_string(2));

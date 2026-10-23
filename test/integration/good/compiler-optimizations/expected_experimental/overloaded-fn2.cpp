@@ -44,7 +44,7 @@ foo(const T0__& x_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym1__;
+    local_scalar_t__ lcm1__;
     {
       current_statement__ = 3;
       return stan::math::sum(x);
@@ -64,7 +64,7 @@ bar_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym2__;
+    double lcm2__;
     {
       current_statement__ = 1;
       lp_accum__.add(stan::model::rvalue(foo(1.0, pstream__), "foo(1.0)",
@@ -91,7 +91,7 @@ foo(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym3__;
+    Eigen::Matrix<local_scalar_t__,-1,1> lcm3__;
     {
       current_statement__ = 6;
       return (Eigen::Matrix<local_scalar_t__,-1,1>(1) << x).finished();
@@ -155,7 +155,7 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym7__;
+      double lcm7__;
       {
         current_statement__ = 1;
         lp_accum__.add(stan::model::rvalue(foo(1.0, pstream__), "foo(1.0)",
@@ -191,7 +191,7 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
+      double lcm6__;
       {
         current_statement__ = 1;
         lp_accum__.add(stan::model::rvalue(foo(1.0, pstream__), "foo(1.0)",
@@ -238,8 +238,8 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym5__;
-      int lcm_sym4__;
+      int lcm5__;
+      int lcm4__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

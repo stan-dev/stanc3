@@ -258,101 +258,96 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym31__;
+        double inline_nrfun_lp_x_arg31__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return_sym32__;
-        int inline_rfun_early_ret_check_sym33__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym34__ = 1; inline_rfun_iterator_sym34__
-             <= 1; ++inline_rfun_iterator_sym34__) {
+        int inline_rfun_return32__;
+        int inline_rfun_early_ret_check33__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator34__ = 1; inline_rfun_iterator34__ <=
+             1; ++inline_rfun_iterator34__) {
           {
-            inline_rfun_return_sym32__ = 27;
+            inline_rfun_return32__ = 27;
             break;
           }
-          inline_rfun_return_sym32__ = 5;
+          inline_rfun_return32__ = 5;
           break;
         }
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return_sym32__);
+          stan::math::stan_print(pstream__, inline_rfun_return32__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return_sym35__;
-        int inline_rfun_early_ret_check_sym36__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym37__ = 1; inline_rfun_iterator_sym37__
-             <= 1; ++inline_rfun_iterator_sym37__) {
+        int inline_rfun_return35__;
+        int inline_rfun_early_ret_check36__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator37__ = 1; inline_rfun_iterator37__ <=
+             1; ++inline_rfun_iterator37__) {
           {
-            inline_rfun_return_sym35__ = 28;
+            inline_rfun_return35__ = 28;
             break;
           }
-          inline_rfun_return_sym35__ = 6;
+          inline_rfun_return35__ = 6;
           break;
         }
-        if (inline_rfun_return_sym35__) {
+        if (inline_rfun_return35__) {
           current_statement__ = 10;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
-        int inline_rfun_return_sym38__;
-        int inline_rfun_return_sym41__;
-        int inline_rfun_early_ret_check_sym39__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym40__ = 1; inline_rfun_iterator_sym40__
-             <= 1; ++inline_rfun_iterator_sym40__) {
+        int inline_rfun_return38__;
+        int inline_rfun_return41__;
+        int inline_rfun_early_ret_check39__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator40__ = 1; inline_rfun_iterator40__ <=
+             1; ++inline_rfun_iterator40__) {
           {
-            inline_rfun_return_sym38__ = 31;
+            inline_rfun_return38__ = 31;
             break;
           }
-          inline_rfun_return_sym38__ = 9;
+          inline_rfun_return38__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym42__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
-             <= 1; ++inline_rfun_iterator_sym43__) {
+        int inline_rfun_early_ret_check42__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
+             1; ++inline_rfun_iterator43__) {
           {
-            inline_rfun_return_sym41__ = 29;
+            inline_rfun_return41__ = 29;
             break;
           }
-          inline_rfun_return_sym41__ = 7;
+          inline_rfun_return41__ = 7;
           break;
         }
-        for (int i = inline_rfun_return_sym38__; i <=
-             inline_rfun_return_sym41__; ++i) {
+        for (int i = inline_rfun_return38__; i <= inline_rfun_return41__; ++i) {
           {
-            int inline_rfun_return_sym44__;
-            int inline_rfun_early_ret_check_sym45__ =
+            int inline_rfun_return44__;
+            int inline_rfun_early_ret_check45__ =
               std::numeric_limits<int>::min();
-            for (int inline_rfun_iterator_sym46__ = 1; inline_rfun_iterator_sym46__
-                 <= 1; ++inline_rfun_iterator_sym46__) {
+            for (int inline_rfun_iterator46__ = 1; inline_rfun_iterator46__
+                 <= 1; ++inline_rfun_iterator46__) {
               {
-                inline_rfun_return_sym44__ = 32;
+                inline_rfun_return44__ = 32;
                 break;
               }
-              inline_rfun_return_sym44__ = 10;
+              inline_rfun_return44__ = 10;
               break;
             }
-            lp_accum__.add(inline_rfun_return_sym44__);
-            double inline_nrfun_lp_x_arg_sym48__;
+            lp_accum__.add(inline_rfun_return44__);
+            double inline_nrfun_lp_x_arg48__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym42__ =
+          int inline_rfun_early_ret_check42__ =
             std::numeric_limits<int>::min();
-          for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
-               <= 1; ++inline_rfun_iterator_sym43__) {
+          for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
+               1; ++inline_rfun_iterator43__) {
             {
-              inline_rfun_return_sym41__ = 29;
+              inline_rfun_return41__ = 29;
               break;
             }
-            inline_rfun_return_sym41__ = 7;
+            inline_rfun_return41__ = 7;
             break;
           }
         }
@@ -451,7 +446,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 58;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return_sym49__;
+        int inline_rfun_lp_return49__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -460,7 +455,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         while (576) {
           break;
         }
-        int inline_rfun_lp_return_sym51__;
+        int inline_rfun_lp_return51__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -482,7 +477,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym53__;
+        int inline_rfun_lp_return53__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -490,7 +485,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           continue;
         }
-        int inline_rfun_lp_return_sym55__;
+        int inline_rfun_lp_return55__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -498,7 +493,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym57__;
+        int inline_rfun_lp_return57__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -591,101 +586,96 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym2__;
+        double inline_nrfun_lp_x_arg2__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return_sym3__;
-        int inline_rfun_early_ret_check_sym4__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym5__ = 1; inline_rfun_iterator_sym5__
-             <= 1; ++inline_rfun_iterator_sym5__) {
+        int inline_rfun_return3__;
+        int inline_rfun_early_ret_check4__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator5__ = 1; inline_rfun_iterator5__ <=
+             1; ++inline_rfun_iterator5__) {
           {
-            inline_rfun_return_sym3__ = 27;
+            inline_rfun_return3__ = 27;
             break;
           }
-          inline_rfun_return_sym3__ = 5;
+          inline_rfun_return3__ = 5;
           break;
         }
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return_sym3__);
+          stan::math::stan_print(pstream__, inline_rfun_return3__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return_sym6__;
-        int inline_rfun_early_ret_check_sym7__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym8__ = 1; inline_rfun_iterator_sym8__
-             <= 1; ++inline_rfun_iterator_sym8__) {
+        int inline_rfun_return6__;
+        int inline_rfun_early_ret_check7__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator8__ = 1; inline_rfun_iterator8__ <=
+             1; ++inline_rfun_iterator8__) {
           {
-            inline_rfun_return_sym6__ = 28;
+            inline_rfun_return6__ = 28;
             break;
           }
-          inline_rfun_return_sym6__ = 6;
+          inline_rfun_return6__ = 6;
           break;
         }
-        if (inline_rfun_return_sym6__) {
+        if (inline_rfun_return6__) {
           current_statement__ = 10;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
-        int inline_rfun_return_sym9__;
-        int inline_rfun_return_sym12__;
-        int inline_rfun_early_ret_check_sym10__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym11__ = 1; inline_rfun_iterator_sym11__
-             <= 1; ++inline_rfun_iterator_sym11__) {
+        int inline_rfun_return9__;
+        int inline_rfun_return12__;
+        int inline_rfun_early_ret_check10__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator11__ = 1; inline_rfun_iterator11__ <=
+             1; ++inline_rfun_iterator11__) {
           {
-            inline_rfun_return_sym9__ = 31;
+            inline_rfun_return9__ = 31;
             break;
           }
-          inline_rfun_return_sym9__ = 9;
+          inline_rfun_return9__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym13__ =
-          std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym14__ = 1; inline_rfun_iterator_sym14__
-             <= 1; ++inline_rfun_iterator_sym14__) {
+        int inline_rfun_early_ret_check13__ = std::numeric_limits<int>::min();
+        for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
+             1; ++inline_rfun_iterator14__) {
           {
-            inline_rfun_return_sym12__ = 29;
+            inline_rfun_return12__ = 29;
             break;
           }
-          inline_rfun_return_sym12__ = 7;
+          inline_rfun_return12__ = 7;
           break;
         }
-        for (int i = inline_rfun_return_sym9__; i <=
-             inline_rfun_return_sym12__; ++i) {
+        for (int i = inline_rfun_return9__; i <= inline_rfun_return12__; ++i) {
           {
-            int inline_rfun_return_sym15__;
-            int inline_rfun_early_ret_check_sym16__ =
+            int inline_rfun_return15__;
+            int inline_rfun_early_ret_check16__ =
               std::numeric_limits<int>::min();
-            for (int inline_rfun_iterator_sym17__ = 1; inline_rfun_iterator_sym17__
-                 <= 1; ++inline_rfun_iterator_sym17__) {
+            for (int inline_rfun_iterator17__ = 1; inline_rfun_iterator17__
+                 <= 1; ++inline_rfun_iterator17__) {
               {
-                inline_rfun_return_sym15__ = 32;
+                inline_rfun_return15__ = 32;
                 break;
               }
-              inline_rfun_return_sym15__ = 10;
+              inline_rfun_return15__ = 10;
               break;
             }
-            lp_accum__.add(inline_rfun_return_sym15__);
-            double inline_nrfun_lp_x_arg_sym19__;
+            lp_accum__.add(inline_rfun_return15__);
+            double inline_nrfun_lp_x_arg19__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym13__ =
+          int inline_rfun_early_ret_check13__ =
             std::numeric_limits<int>::min();
-          for (int inline_rfun_iterator_sym14__ = 1; inline_rfun_iterator_sym14__
-               <= 1; ++inline_rfun_iterator_sym14__) {
+          for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
+               1; ++inline_rfun_iterator14__) {
             {
-              inline_rfun_return_sym12__ = 29;
+              inline_rfun_return12__ = 29;
               break;
             }
-            inline_rfun_return_sym12__ = 7;
+            inline_rfun_return12__ = 7;
             break;
           }
         }
@@ -784,7 +774,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 58;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return_sym20__;
+        int inline_rfun_lp_return20__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -793,7 +783,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         while (576) {
           break;
         }
-        int inline_rfun_lp_return_sym22__;
+        int inline_rfun_lp_return22__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -815,7 +805,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym24__;
+        int inline_rfun_lp_return24__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -823,7 +813,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           continue;
         }
-        int inline_rfun_lp_return_sym26__;
+        int inline_rfun_lp_return26__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -831,7 +821,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym28__;
+        int inline_rfun_lp_return28__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -1079,20 +1069,20 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
         param_names__.emplace_back(std::string() + "x_cov" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -1104,19 +1094,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
       param_names__.emplace_back(std::string() + "x_cov" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

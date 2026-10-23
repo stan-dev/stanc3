@@ -384,14 +384,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "tau");
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta_tilde" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -402,14 +402,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "tau");
-    for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
       param_names__.emplace_back(std::string() + "theta_tilde" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= J; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= J; ++idx1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

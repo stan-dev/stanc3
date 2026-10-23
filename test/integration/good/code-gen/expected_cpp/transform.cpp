@@ -1560,61 +1560,58 @@ class transform_model final : public model_base_crtp<transform_model> {
       out__.write(p_7);
       out__.write(p_8);
       current_statement__ = 9;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          out__.write(p_9[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          out__.write(p_9[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
       current_statement__ = 10;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-            out__.write(p_10[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__
-              - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+            out__.write(p_10[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
       out__.write(pv_1);
       current_statement__ = 12;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          out__.write(pv_2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          out__.write(pv_2[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
       current_statement__ = 13;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-            out__.write(pv_3[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__
-              - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+            out__.write(pv_3[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
       out__.write(pr_1);
       current_statement__ = 15;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          out__.write(pr_2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          out__.write(pr_2[(idx2__ - 1)][(idx1__ - 1)]);
         }
       }
       current_statement__ = 16;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-            out__.write(pr_3[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__
-              - 1)]);
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+            out__.write(pr_3[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
       out__.write(pm_1);
       current_statement__ = 18;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             out__.write(stan::model::rvalue(pm_2, "pm_2",
-                          stan::model::index_uni(idx_sym3__),
-                          stan::model::index_uni(idx_sym2__),
-                          stan::model::index_uni(idx_sym1__)));
+                          stan::model::index_uni(idx3__),
+                          stan::model::index_uni(idx2__),
+                          stan::model::index_uni(idx1__)));
           }
         }
       }
@@ -1819,61 +1816,58 @@ class transform_model final : public model_base_crtp<transform_model> {
         out__.write(tp_7);
         out__.write(tp_8);
         current_statement__ = 27;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            out__.write(tp_9[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            out__.write(tp_9[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 28;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-              out__.write(tp_10[(idx_sym3__ - 1)][(idx_sym2__ -
-                1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+              out__.write(tp_10[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
             }
           }
         }
         out__.write(tpv_1);
         current_statement__ = 30;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            out__.write(tpv_2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            out__.write(tpv_2[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 31;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-              out__.write(tpv_3[(idx_sym3__ - 1)][(idx_sym2__ -
-                1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+              out__.write(tpv_3[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
             }
           }
         }
         out__.write(tpr_1);
         current_statement__ = 33;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            out__.write(tpr_2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            out__.write(tpr_2[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 34;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
-              out__.write(tpr_3[(idx_sym3__ - 1)][(idx_sym2__ -
-                1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
+              out__.write(tpr_3[(idx3__ - 1)][(idx2__ - 1)][(idx1__ - 1)]);
             }
           }
         }
         out__.write(tpm_1);
         current_statement__ = 36;
-        for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-            for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+        for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+            for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
               out__.write(stan::model::rvalue(tpm_2, "tpm_2",
-                            stan::model::index_uni(idx_sym3__),
-                            stan::model::index_uni(idx_sym2__),
-                            stan::model::index_uni(idx_sym1__)));
+                            stan::model::index_uni(idx3__),
+                            stan::model::index_uni(idx2__),
+                            stan::model::index_uni(idx1__)));
             }
           }
         }
@@ -1974,11 +1968,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         std::vector<std::vector<local_scalar_t__>>(m,
           std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       current_statement__ = 9;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           current_statement__ = 9;
-          p_9[(idx_sym2__ - 1)][(idx_sym1__ -
-            1)] = in__.read<local_scalar_t__>();
+          p_9[(idx2__ - 1)][(idx1__ - 1)] = in__.read<local_scalar_t__>();
         }
       }
       out__.write_free_lub(stan::model::rvalue(ds, "ds",
@@ -1988,11 +1981,11 @@ class transform_model final : public model_base_crtp<transform_model> {
           std::vector<std::vector<local_scalar_t__>>(m,
             std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       current_statement__ = 10;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             current_statement__ = 10;
-            p_10[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+            p_10[(idx3__ - 1)][(idx2__ - 1)][(idx1__ -
               1)] = in__.read<local_scalar_t__>();
           }
         }
@@ -2013,12 +2006,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(m,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__));
       current_statement__ = 12;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           current_statement__ = 12;
           stan::model::assign(pv_2, in__.read<local_scalar_t__>(),
-            "assigning variable pv_2", stan::model::index_uni(idx_sym2__),
-            stan::model::index_uni(idx_sym1__));
+            "assigning variable pv_2", stan::model::index_uni(idx2__),
+            stan::model::index_uni(idx1__));
         }
       }
       out__.write_free_lb(stan::model::rvalue(dv, "dv",
@@ -2028,14 +2021,13 @@ class transform_model final : public model_base_crtp<transform_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(m,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__)));
       current_statement__ = 13;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             current_statement__ = 13;
             stan::model::assign(pv_3, in__.read<local_scalar_t__>(),
-              "assigning variable pv_3", stan::model::index_uni(idx_sym3__),
-              stan::model::index_uni(idx_sym2__),
-              stan::model::index_uni(idx_sym1__));
+              "assigning variable pv_3", stan::model::index_uni(idx3__),
+              stan::model::index_uni(idx2__), stan::model::index_uni(idx1__));
           }
         }
       }
@@ -2055,12 +2047,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(m,
           Eigen::Matrix<local_scalar_t__,1,-1>::Constant(k, DUMMY_VAR__));
       current_statement__ = 15;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           current_statement__ = 15;
           stan::model::assign(pr_2, in__.read<local_scalar_t__>(),
-            "assigning variable pr_2", stan::model::index_uni(idx_sym2__),
-            stan::model::index_uni(idx_sym1__));
+            "assigning variable pr_2", stan::model::index_uni(idx2__),
+            stan::model::index_uni(idx1__));
         }
       }
       out__.write_free_lb(stan::model::rvalue(dr, "dr",
@@ -2070,14 +2062,13 @@ class transform_model final : public model_base_crtp<transform_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(m,
             Eigen::Matrix<local_scalar_t__,1,-1>::Constant(k, DUMMY_VAR__)));
       current_statement__ = 16;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             current_statement__ = 16;
             stan::model::assign(pr_3, in__.read<local_scalar_t__>(),
-              "assigning variable pr_3", stan::model::index_uni(idx_sym3__),
-              stan::model::index_uni(idx_sym2__),
-              stan::model::index_uni(idx_sym1__));
+              "assigning variable pr_3", stan::model::index_uni(idx3__),
+              stan::model::index_uni(idx2__), stan::model::index_uni(idx1__));
           }
         }
       }
@@ -2094,14 +2085,13 @@ class transform_model final : public model_base_crtp<transform_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(n,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(m, k, DUMMY_VAR__));
       current_statement__ = 18;
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             current_statement__ = 18;
             stan::model::assign(pm_2, in__.read<local_scalar_t__>(),
-              "assigning variable pm_2", stan::model::index_uni(idx_sym3__),
-              stan::model::index_uni(idx_sym2__),
-              stan::model::index_uni(idx_sym1__));
+              "assigning variable pm_2", stan::model::index_uni(idx3__),
+              stan::model::index_uni(idx2__), stan::model::index_uni(idx1__));
           }
         }
       }
@@ -2405,204 +2395,204 @@ class transform_model final : public model_base_crtp<transform_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_2" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_3" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_4" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_5" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_6" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_7" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_8" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_9" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "p_10" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "pv_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pv_2" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pv_3" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "pr_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pr_2" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pr_3" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pm_1" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pm_2" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_2" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_3" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_4" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_5" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_6" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_7" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_8" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_9" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tp_10" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tpv_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpv_2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpv_3" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tpr_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpr_2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpr_3" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpm_1" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpm_2" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
@@ -2613,204 +2603,204 @@ class transform_model final : public model_base_crtp<transform_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_2" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_3" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_4" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_5" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_6" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_7" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_8" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_9" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "p_10" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "pv_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pv_2" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pv_3" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
       param_names__.emplace_back(std::string() + "pr_1" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pr_2" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pr_3" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
         param_names__.emplace_back(std::string() + "pm_1" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-        for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+        for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
           param_names__.emplace_back(std::string() + "pm_2" + '.' +
-            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-            '.' + std::to_string(idx_sym1__));
+            std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_2" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_3" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_4" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_5" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_6" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_7" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tp_8" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tp_9" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tp_10" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tpv_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpv_2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpv_3" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
         param_names__.emplace_back(std::string() + "tpr_1" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpr_2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpr_3" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
           param_names__.emplace_back(std::string() + "tpm_1" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= k; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= m; ++idx_sym2__) {
-          for (int idx_sym3__ = 1; idx_sym3__ <= n; ++idx_sym3__) {
+      for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= m; ++idx2__) {
+          for (int idx3__ = 1; idx3__ <= n; ++idx3__) {
             param_names__.emplace_back(std::string() + "tpm_2" + '.' +
-              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
-              '.' + std::to_string(idx_sym1__));
+              std::to_string(idx3__) + '.' + std::to_string(idx2__) + '.' +
+              std::to_string(idx1__));
           }
         }
       }

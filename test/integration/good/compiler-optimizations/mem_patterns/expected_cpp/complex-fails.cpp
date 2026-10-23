@@ -266,21 +266,21 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "A_p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
-            '.' + "real");
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
+            "real");
           param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
-            '.' + "imag");
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
+            "imag");
         }
       }
     }
@@ -290,21 +290,21 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
         param_names__.emplace_back(std::string() + "A_p" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
-            '.' + "real");
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
+            "real");
           param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
-            '.' + "imag");
+            std::to_string(idx2__) + '.' + std::to_string(idx1__) + '.' +
+            "imag");
         }
       }
     }

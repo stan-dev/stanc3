@@ -10769,23 +10769,23 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "p_real");
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_real_array" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= d_int; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= d_int; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_matrix" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_row_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
@@ -10798,23 +10798,23 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "p_real");
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_real_array" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= d_int; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= d_int; ++idx2__) {
         param_names__.emplace_back(std::string() + "p_matrix" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= d_int; ++idx1__) {
       param_names__.emplace_back(std::string() + "p_row_vector" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {

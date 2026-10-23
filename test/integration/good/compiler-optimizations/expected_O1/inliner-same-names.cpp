@@ -127,16 +127,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1> out =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_return_sym9__;
+      Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_return9__;
       {
-        int inline_foo_ot_sym10__;
+        int inline_foo_ot10__;
         current_statement__ = 3;
-        inline_foo_ot_sym10__ = stan::math::num_elements(R);
+        inline_foo_ot10__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym10__);
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym11__ =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym10__,
+        stan::math::validate_non_negative_index("R", "ot", inline_foo_ot10__);
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R11__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot10__,
             DUMMY_VAR__);
       }
       stan::model::assign(out, R, "assigning variable out");
@@ -178,18 +177,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_foo_return_sym5__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> inline_foo_return5__;
       {
-        int inline_foo_ot_sym6__;
+        int inline_foo_ot6__;
         current_statement__ = 3;
-        inline_foo_ot_sym6__ = stan::math::num_elements(R);
+        inline_foo_ot6__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym6__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>
-          inline_foo_R_sym7__ =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(inline_foo_ot_sym6__,
+        stan::math::validate_non_negative_index("R", "ot", inline_foo_ot6__);
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> inline_foo_R7__ =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(inline_foo_ot6__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
       }
@@ -246,16 +242,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym1__;
+      Eigen::Matrix<double,-1,1> inline_foo_return1__;
       {
-        int inline_foo_ot_sym2__;
+        int inline_foo_ot2__;
         current_statement__ = 3;
-        inline_foo_ot_sym2__ = stan::math::num_elements(R);
+        inline_foo_ot2__ = stan::math::num_elements(R);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym2__);
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym3__ =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym2__,
+        stan::math::validate_non_negative_index("R", "ot", inline_foo_ot2__);
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R3__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot2__,
             DUMMY_VAR__);
       }
       stan::model::assign(out, R, "assigning variable out");
@@ -330,13 +325,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -346,13 +341,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}

@@ -66,7 +66,7 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
+      double lcm6__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x;
       current_statement__ = 2;
       std::get<0>(x) = 0.4;
@@ -106,7 +106,7 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
+      double lcm5__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x;
       current_statement__ = 2;
       std::get<0>(x) = 0.4;
@@ -157,10 +157,10 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym4__;
-      double lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
+      Eigen::Matrix<double,-1,-1> lcm4__;
+      double lcm3__;
+      int lcm2__;
+      int lcm1__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x =
         std::tuple<double, Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
                                                           ),
@@ -247,11 +247,11 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "x" + ':' +
-            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
-            std::to_string(idx_sym1__));
+            std::to_string(2) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }
@@ -264,11 +264,11 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(1));
-      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
           param_names__.emplace_back(std::string() + "x" + ':' +
-            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
-            std::to_string(idx_sym1__));
+            std::to_string(2) + '.' + std::to_string(idx2__) + '.' +
+            std::to_string(idx1__));
         }
       }
     }

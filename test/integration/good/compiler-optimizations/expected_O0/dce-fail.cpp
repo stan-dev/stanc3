@@ -1028,27 +1028,27 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_age; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_age; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_region; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_region; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= n_age; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n_age; ++idx2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_state; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_state; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -1068,27 +1068,27 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_age; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_age; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_region; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_region; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= n_age; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= n_edu; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= n_age; ++idx2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= n_state; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= n_state; ++idx1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

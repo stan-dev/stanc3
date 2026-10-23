@@ -228,9 +228,9 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       }
       if (emit_transformed_parameters__) {
         current_statement__ = 2;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
-            out__.write(local[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
+            out__.write(local[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -321,10 +321,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -336,10 +336,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

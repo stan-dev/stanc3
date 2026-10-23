@@ -193,14 +193,14 @@ class cpp_overload_stdlib_model final : public model_base_crtp<cpp_overload_stdl
       current_statement__ = 3;
       m3 = _stan_max(1., 2., pstream__);
       {
-        std::tuple<double, double> unpack_sym1__;
+        std::tuple<double, double> unpack1__;
         current_statement__ = 4;
-        stan::model::assign(unpack_sym1__, _stan_minmax(1., 2., pstream__),
-          "assigning variable unpack_sym1__");
+        stan::model::assign(unpack1__, _stan_minmax(1., 2., pstream__),
+          "assigning variable unpack1__");
         current_statement__ = 5;
-        m2 = std::get<0>(unpack_sym1__);
+        m2 = std::get<0>(unpack1__);
         current_statement__ = 5;
-        m3 = std::get<1>(unpack_sym1__);
+        m3 = std::get<1>(unpack1__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

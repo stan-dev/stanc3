@@ -750,15 +750,15 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
       if (emit_transformed_parameters__) {
         current_statement__ = 5;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
-            out__.write(y[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
+            out__.write(y[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 6;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
-            out__.write(y2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
+            out__.write(y2[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -889,16 +889,16 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
           param_names__.emplace_back(std::string() + "y2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -913,16 +913,16 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N_t; ++idx2__) {
           param_names__.emplace_back(std::string() + "y2" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

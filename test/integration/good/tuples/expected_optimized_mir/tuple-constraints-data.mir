@@ -218,7 +218,7 @@
           (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (For (loopvar idx_sym1__)
+     (For (loopvar idx1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
@@ -227,7 +227,7 @@
        ((pattern
          (Block
           (((pattern
-             (For (loopvar idx_sym2__)
+             (For (loopvar idx2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -247,7 +247,7 @@
                              (Lower
                               ((pattern (Lit Int 0))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-                            (var_name "z[idx_sym2__, idx_sym1__].1")
+                            (var_name "z[idx2__, idx1__].1")
                             (var
                              ((pattern
                                (TupleProjection
@@ -259,11 +259,11 @@
                                       (loc <opaque>)
                                       (adlevel (TupleAD (DataOnly DataOnly))))))
                                    ((Single
-                                     ((pattern (Var idx_sym2__))
+                                     ((pattern (Var idx2__))
                                       (meta
                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                     (Single
-                                     ((pattern (Var idx_sym1__))
+                                     ((pattern (Var idx1__))
                                       (meta
                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                  (meta
@@ -277,8 +277,7 @@
                        ((pattern
                          (NRFunApp
                           (CompilerInternal
-                           (FnCheck (trans Simplex)
-                            (var_name "z[idx_sym2__, idx_sym1__].2")
+                           (FnCheck (trans Simplex) (var_name "z[idx2__, idx1__].2")
                             (var
                              ((pattern
                                (TupleProjection
@@ -290,11 +289,11 @@
                                       (loc <opaque>)
                                       (adlevel (TupleAD (DataOnly DataOnly))))))
                                    ((Single
-                                     ((pattern (Var idx_sym2__))
+                                     ((pattern (Var idx2__))
                                       (meta
                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                     (Single
-                                     ((pattern (Var idx_sym1__))
+                                     ((pattern (Var idx1__))
                                       (meta
                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                  (meta

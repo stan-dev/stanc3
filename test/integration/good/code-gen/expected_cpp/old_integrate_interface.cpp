@@ -528,9 +528,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       if (emit_transformed_parameters__) {
         current_statement__ = 7;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
-            out__.write(z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
+            out__.write(z[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -690,19 +690,19 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "gamma");
     param_names__.emplace_back(std::string() + "delta");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "z_init" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "sigma" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -716,19 +716,19 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     param_names__.emplace_back(std::string() + "beta");
     param_names__.emplace_back(std::string() + "gamma");
     param_names__.emplace_back(std::string() + "delta");
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "z_init" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
       param_names__.emplace_back(std::string() + "sigma" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= N; ++idx2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

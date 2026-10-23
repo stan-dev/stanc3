@@ -35,7 +35,7 @@ stan::return_type_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym1__;
+    local_scalar_t__ lcm1__;
     {
       current_statement__ = 2;
       return (x + 0.5);
@@ -58,7 +58,7 @@ double dumb(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym2__;
+    double lcm2__;
     {
       current_statement__ = 4;
       return (x - 0.5);
@@ -122,7 +122,7 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
+      double lcm6__;
       {
         current_statement__ = 1;
         lp_accum__.add(dumb(1.0, pstream__));
@@ -157,7 +157,7 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym5__;
+      double lcm5__;
       {
         current_statement__ = 1;
         lp_accum__.add(dumb(1.0, pstream__));
@@ -203,8 +203,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym4__;
-      int lcm_sym3__;
+      int lcm4__;
+      int lcm3__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

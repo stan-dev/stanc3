@@ -16,7 +16,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in '../unenforce-initialize-should-fail.stan', line 2, column 2 to column 60)"};
 class unenforce_initialize_should_fail_model final : public model_base_crtp<unenforce_initialize_should_fail_model> {
  private:
-  std::vector<Eigen::Matrix<double,-1,1>> lcm_sym24__;
+  std::vector<Eigen::Matrix<double,-1,1>> lcm24__;
   std::vector<Eigen::Matrix<double,-1,1>> inputs;
  public:
   ~unenforce_initialize_should_fail_model() {}
@@ -85,27 +85,27 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym23__;
-      double lcm_sym22__;
-      double lcm_sym21__;
-      double lcm_sym20__;
-      double lcm_sym19__;
-      std::vector<Eigen::Matrix<double,-1,1>> lcm_sym18__;
+      double lcm23__;
+      double lcm22__;
+      double lcm21__;
+      double lcm20__;
+      double lcm19__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm18__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
-      stan::model::assign(lcm_sym18__,
+      stan::model::assign(lcm18__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
-        "assigning variable lcm_sym18__");
-      stan::model::assign(local, lcm_sym18__, "assigning variable local");
+        "assigning variable lcm18__");
+      stan::model::assign(local, lcm18__, "assigning variable local");
       {
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm_sym18__, "lcm_sym18__",
+            (stan::model::rvalue(lcm18__, "lcm18__",
                stan::model::index_uni(1), stan::model::index_uni(1)) + 1),
             "assigning variable local", stan::model::index_uni(1),
             stan::model::index_uni(1));
@@ -208,27 +208,27 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym17__;
-      double lcm_sym16__;
-      double lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      std::vector<Eigen::Matrix<double,-1,1>> lcm_sym12__;
+      double lcm17__;
+      double lcm16__;
+      double lcm15__;
+      double lcm14__;
+      double lcm13__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm12__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
-      stan::model::assign(lcm_sym12__,
+      stan::model::assign(lcm12__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
-        "assigning variable lcm_sym12__");
-      stan::model::assign(local, lcm_sym12__, "assigning variable local");
+        "assigning variable lcm12__");
+      stan::model::assign(local, lcm12__, "assigning variable local");
       {
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm_sym12__, "lcm_sym12__",
+            (stan::model::rvalue(lcm12__, "lcm12__",
                stan::model::index_uni(1), stan::model::index_uni(1)) + 1),
             "assigning variable local", stan::model::index_uni(1),
             stan::model::index_uni(1));
@@ -342,17 +342,17 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
-      int lcm_sym7__;
-      int lcm_sym6__;
-      double lcm_sym5__;
-      double lcm_sym4__;
-      double lcm_sym3__;
-      double lcm_sym2__;
-      std::vector<Eigen::Matrix<double,-1,1>> lcm_sym1__;
+      double lcm11__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
+      int lcm7__;
+      int lcm6__;
+      double lcm5__;
+      double lcm4__;
+      double lcm3__;
+      double lcm2__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm1__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
@@ -365,18 +365,17 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      stan::model::assign(lcm_sym1__,
+      stan::model::assign(lcm1__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
-        "assigning variable lcm_sym1__");
-      stan::model::assign(local, lcm_sym1__, "assigning variable local");
+        "assigning variable lcm1__");
+      stan::model::assign(local, lcm1__, "assigning variable local");
       {
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm_sym1__, "lcm_sym1__",
-               stan::model::index_uni(1), stan::model::index_uni(1)) + 1),
-            "assigning variable local", stan::model::index_uni(1),
-            stan::model::index_uni(1));
+            (stan::model::rvalue(lcm1__, "lcm1__", stan::model::index_uni(1),
+               stan::model::index_uni(1)) + 1), "assigning variable local",
+            stan::model::index_uni(1), stan::model::index_uni(1));
           {
             current_statement__ = 3;
             stan::model::assign(local,
@@ -576,10 +575,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -591,10 +590,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

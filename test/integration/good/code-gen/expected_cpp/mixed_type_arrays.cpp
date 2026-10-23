@@ -269,21 +269,21 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         "assigning variable td_arr33");
       if (emit_transformed_parameters__) {
         current_statement__ = 2;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
-            out__.write(y[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
+            out__.write(y[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 3;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
-            out__.write(w[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
+            out__.write(w[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
         current_statement__ = 4;
-        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-          for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
-            out__.write(td_arr33[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
+        for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+          for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
+            out__.write(td_arr33[(idx2__ - 1)][(idx1__ - 1)]);
           }
         }
       }
@@ -380,27 +380,27 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
       param_names__.emplace_back(std::string() + "xx" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "w" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "td_arr33" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }
@@ -410,27 +410,27 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
       param_names__.emplace_back(std::string() + "xx" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "w" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           param_names__.emplace_back(std::string() + "td_arr33" + '.' +
-            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+            std::to_string(idx2__) + '.' + std::to_string(idx1__));
         }
       }
     }

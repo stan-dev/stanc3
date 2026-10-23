@@ -68,10 +68,10 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym15__;
-      double lcm_sym14__;
-      double lcm_sym13__;
-      double lcm_sym12__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm15__;
+      double lcm14__;
+      double lcm13__;
+      double lcm12__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       current_statement__ = 2;
@@ -80,11 +80,11 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
       Eigen::Matrix<local_scalar_t__,-1,1> x =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
-      stan::model::assign(lcm_sym15__, y, "assigning variable lcm_sym15__");
-      stan::model::assign(x, lcm_sym15__, "assigning variable x");
+      stan::model::assign(lcm15__, y, "assigning variable lcm15__");
+      stan::model::assign(x, lcm15__, "assigning variable x");
       {
         current_statement__ = 4;
-        lp_accum__.add(stan::math::std_normal_lpdf<propto__>(lcm_sym15__));
+        lp_accum__.add(stan::math::std_normal_lpdf<propto__>(lcm15__));
         {
           current_statement__ = 5;
           lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
@@ -134,10 +134,10 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym11__;
-      double lcm_sym10__;
-      double lcm_sym9__;
-      double lcm_sym8__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm11__;
+      double lcm10__;
+      double lcm9__;
+      double lcm8__;
       current_statement__ = 1;
       auto y =
         in__.template read<
@@ -151,11 +151,11 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(3,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      stan::model::assign(lcm_sym11__, y, "assigning variable lcm_sym11__");
-      stan::model::assign(x, lcm_sym11__, "assigning variable x");
+      stan::model::assign(lcm11__, y, "assigning variable lcm11__");
+      stan::model::assign(x, lcm11__, "assigning variable x");
       {
         current_statement__ = 4;
-        lp_accum__.add(stan::math::std_normal_lpdf<propto__>(lcm_sym11__));
+        lp_accum__.add(stan::math::std_normal_lpdf<propto__>(lcm11__));
         {
           current_statement__ = 5;
           lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
@@ -216,13 +216,13 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm_sym7__;
-      double lcm_sym6__;
-      double lcm_sym5__;
-      double lcm_sym4__;
-      double lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
+      Eigen::Matrix<double,-1,1> lcm7__;
+      double lcm6__;
+      double lcm5__;
+      double lcm4__;
+      double lcm3__;
+      int lcm2__;
+      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       current_statement__ = 2;
@@ -296,10 +296,10 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      stan::model::assign(lcm_sym7__, y, "assigning variable lcm_sym7__");
-      stan::model::assign(x, lcm_sym7__, "assigning variable x");
+      stan::model::assign(lcm7__, y, "assigning variable lcm7__");
+      stan::model::assign(x, lcm7__, "assigning variable x");
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym7__);
+        out__.write(lcm7__);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -334,12 +334,12 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
       current_statement__ = 2;
-      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+      for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+        for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
           current_statement__ = 2;
           stan::model::assign(arr_vec, in__.read<local_scalar_t__>(),
-            "assigning variable arr_vec", stan::model::index_uni(idx_sym2__),
-            stan::model::index_uni(idx_sym1__));
+            "assigning variable arr_vec", stan::model::index_uni(idx2__),
+            stan::model::index_uni(idx1__));
         }
       }
       out__.write(arr_vec);
@@ -415,20 +415,20 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -437,20 +437,20 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+    for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(idx_sym1__));
+        std::to_string(idx1__));
     }
-    for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
-      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+    for (int idx1__ = 1; idx1__ <= 4; ++idx1__) {
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
+          std::to_string(idx2__) + '.' + std::to_string(idx1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx1__ = 1; idx1__ <= 3; ++idx1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(idx_sym1__));
+          std::to_string(idx1__));
       }
     }
     if (emit_generated_quantities__) {}
