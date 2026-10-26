@@ -1,4 +1,4 @@
-(lang dune 3.14)
+(lang dune 3.22)
 
 (name stanc)
 
@@ -65,4 +65,5 @@
     PATH "%{env:PATH=''}"
     (run menhirformat --indent-once %{input-file})))))
 
+; can be removed after requring (lang dune 3.24)
 (using directory-targets 0.1)

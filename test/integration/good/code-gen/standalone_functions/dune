@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_cpp/*)
    (:stanfiles
     (glob_files ../*.stan)
     (glob_files ../*.stanfunctions)))
@@ -11,10 +13,13 @@
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
+     cpp
      "--standalone-functions --allow-undefined --print-cpp"
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_pretty/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -22,14 +27,12 @@
     output.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     pretty
      preserve
      "--standalone-functions --allow-undefined --auto-format"
      %{stanfiles})))))
 
 (subdir
- expected_pretty
- (dynamic_include ../dunes/output.dune))
-
-(subdir
- expected_cpp
+ run
+ (dynamic_include ../dunes/output.dune)
  (dynamic_include ../dunes/cpp.dune))

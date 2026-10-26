@@ -6,7 +6,7 @@ homepage: "https://github.com/stan-dev/stanc3"
 doc: "https://mc-stan.org/stanc3/stanc/"
 bug-reports: "https://github.com/stan-dev/stanc3/issues"
 depends: [
-  "dune" {>= "3.14"}
+  "dune" {>= "3.22"}
   "ocaml" {= "5.5.2"}
   "menhir" {= "20260209"}
   "fmt" {= "0.11.0"}
@@ -40,3 +40,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/stan-dev/stanc3.git"
+x-maintenance-intent: ["(latest)"]

@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_errors/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -9,10 +11,11 @@
     output.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     errors
      txt
      ""
      %{stanfiles})))))
 
 (subdir
- expected_errors
+ run
  (dynamic_include ../dunes/output.dune))

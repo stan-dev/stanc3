@@ -1,18 +1,1 @@
-(subdir
- dunes
- (rule
-  (deps
-   (:stanfiles
-    (glob_files ../*.stan)))
-  (action
-   (with-stdout-to
-    output.dune
-    (run
-     %{project_root}/test/integration/gen_expected_rules.exe
-     preserve
-     "--auto-format"
-     %{stanfiles})))))
-
-(subdir
- expected_pretty
- (dynamic_include ../dunes/output.dune))
+(include ../good/dune)

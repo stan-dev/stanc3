@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_pretty/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -17,11 +19,14 @@
     pretty.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     pretty
      preserve
      "--include-paths=.. --auto-format --allow-undefined"
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_inlined/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -37,11 +42,14 @@
     inlined.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     inlined
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=includes"
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_stripped/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -57,11 +65,14 @@
     stripped.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     stripped
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=strip-comments"
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_stripped_inlined/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -77,22 +88,14 @@
     stripped_inlined.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
+     stripped_inlined
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=strip-comments,includes"
      %{stanfiles})))))
 
 (subdir
- expected_pretty
- (dynamic_include ../dunes/pretty.dune))
-
-(subdir
- expected_inlined
- (dynamic_include ../dunes/inlined.dune))
-
-(subdir
- expected_stripped
- (dynamic_include ../dunes/stripped.dune))
-
-(subdir
- expected_stripped_inlined
+ run
+ (dynamic_include ../dunes/pretty.dune)
+ (dynamic_include ../dunes/inlined.dune)
+ (dynamic_include ../dunes/stripped.dune)
  (dynamic_include ../dunes/stripped_inlined.dune))
