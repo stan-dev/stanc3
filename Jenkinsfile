@@ -48,7 +48,7 @@ catchError {
         runCompileTests = params.run_all || filesChanged('test/integration/good/')
         runRemainingStages = runCompileTests || srcChanged || filesChanged('test/stancjs/')
         runCompileTestsAtO1 = params.run_all || runCompileTests && filesChanged('test/integration/good/compiler-optimizations')
-        runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile')
+        runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile', 'scripts/')
         return null
       })
 
