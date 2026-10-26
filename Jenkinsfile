@@ -33,7 +33,7 @@ def cxximage = 'stanorg/ci:v1'
 catchError {
   withEnv([
     'CXX=clang++-7',
-    'MACOS_SWITCH=stanc3-ocaml5.5-nobase',
+    'MACOS_SWITCH=stanc3-ocaml5.5.2',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
     'GIT_COMMITTER_NAME=Stan Jenkins',

@@ -10,7 +10,7 @@ for {!xcomp}, these versions are exactly pinned.
 These are automatically installed through the [scripts/install_ocaml.sh] and
 [scripts/install_build_deps.sh] scripts provided in the stanc3 repository.
 
-- OCaml 5.5.1
+- OCaml 5.5.2
 - Dune 3.5+
 - {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20260209 (a parser generator and parsing library)
 - {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 6.1.1 (a tool for generating boilerplate code)
@@ -21,7 +21,7 @@ These are automatically installed through the [scripts/install_ocaml.sh] and
 
 For the JavaScript interface to stanc3 we also use the following, installed
 via [scripts/install_js_deps.sh]
-- js_of_ocaml 6.4.0
+- js_of_ocaml 6.5.0
 
 The [stancjs] executable can be built with
 
