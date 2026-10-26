@@ -9,8 +9,8 @@ let stan_namespace_qualify f =
   else "stan::math::" ^ f
 
 let fn_renames =
-  [ ("target", "get_lp"); ("lmultiply", "multiply_log")
-  ; ("lchoose", "binomial_coefficient_log"); ("std_normal_qf", "inv_Phi")
+  [ ("target", "get_lp"); ("lchoose", "binomial_coefficient_log")
+  ; ("std_normal_qf", "inv_Phi")
   ; ("integrate_ode", "integrate_ode_rk45")
     (* constraints -- originally internal functions, may be worth renaming
        now *); ("cholesky_factor_corr_jacobian", "cholesky_corr_constrain")
