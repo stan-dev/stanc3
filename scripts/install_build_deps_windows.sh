@@ -11,7 +11,7 @@ opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git
 opam update
 
 # Install the compiler
-opam pin add -y ocaml-windows 5.5.1
+opam pin add -y ocaml-windows 5.5.2
 
 # Install dependencies
 opam install -y menhir.20260209 menhir-windows.20260209 fmt.0.11.0 fmt-windows.0.11.0 grace.0.4.1\

@@ -33,7 +33,7 @@ def cxximage = 'stanorg/ci:v1'
 catchError {
   withEnv([
     'CXX=clang++-7',
-    'MACOS_SWITCH=stanc3-ocaml5.5-nobase',
+    'MACOS_SWITCH=stanc3-ocaml5.5.2',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
     'GIT_COMMITTER_NAME=Stan Jenkins',
@@ -48,7 +48,7 @@ catchError {
         runCompileTests = params.run_all || filesChanged('test/integration/good/')
         runRemainingStages = runCompileTests || srcChanged || filesChanged('test/stancjs/')
         runCompileTestsAtO1 = params.run_all || runCompileTests && filesChanged('test/integration/good/compiler-optimizations')
-        runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile')
+        runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile', 'scripts/')
         return null
       })
 
