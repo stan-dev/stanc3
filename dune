@@ -13,4 +13,4 @@
    (:standard -O3)))
  (dev
   (flags
-   (:standard -g))))
+   (:standard -g -warn-error -71))))
