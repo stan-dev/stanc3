@@ -13,7 +13,6 @@
     pretty.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     pretty
      preserve
      "--auto-format --include-paths=.."
      %{stanfiles}))))
@@ -28,7 +27,6 @@
     inlined.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     inlined
      preserve
      "--auto-format --include-paths=.. --canonicalize=includes"
      %{stanfiles})))))

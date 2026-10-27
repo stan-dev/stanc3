@@ -19,7 +19,6 @@
     pretty.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     pretty
      preserve
      "--include-paths=.. --auto-format --allow-undefined"
      %{stanfiles}))))
@@ -42,7 +41,6 @@
     inlined.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     inlined
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=includes"
      %{stanfiles}))))
@@ -65,7 +63,6 @@
     stripped.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     stripped
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=strip-comments"
      %{stanfiles}))))
@@ -88,7 +85,6 @@
     stripped_inlined.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     stripped_inlined
      preserve
      "--include-paths=.. --auto-format --allow-undefined --canonicalize=strip-comments,includes"
      %{stanfiles})))))

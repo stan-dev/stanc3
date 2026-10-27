@@ -13,7 +13,6 @@
     filename_error.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     errors
      txt
      "--filename-in-msg=foo.stan --include-paths=.."
      %{stanfiles}))))
@@ -27,7 +26,6 @@
     cpp.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     cpp
      cpp
      "--filename-in-msg=foo.stan --include-paths=.. --print-cpp "
      %{stanfiles})))))

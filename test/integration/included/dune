@@ -11,7 +11,6 @@
     output.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     output
      txt
      "--include-paths=../../included "
      %{stanfiles})))))

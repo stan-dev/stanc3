@@ -11,7 +11,6 @@
     canonical.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     canonical
      preserve
      "--print-canonical"
      %{stanfiles}))))
@@ -26,7 +25,6 @@
     deprecations.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     deprecations
      preserve
      "--auto-format --canonicalize deprecations"
      %{stanfiles}))))
@@ -41,7 +39,6 @@
     everything-but.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     everything_but
      preserve
      "--auto-format --canonicalize braces,parentheses"
      %{stanfiles}))))
@@ -56,7 +53,6 @@
     stripped.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     stripped
      preserve
      "--auto-format --canonicalize strip-comments,braces,parentheses,deprecations"
      %{stanfiles})))))

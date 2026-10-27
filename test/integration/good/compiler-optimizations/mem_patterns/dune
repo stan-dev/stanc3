@@ -12,7 +12,6 @@
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
-     cpp
      "-fsoa --print-cpp"
      %{stanfiles}))))
  (rule
@@ -26,7 +25,6 @@
     mir.dune
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
-     optimized_mir
      mir
      "-fsoa --debug-optimized-mir --debug-mem-patterns"
      %{stanfiles})))))
