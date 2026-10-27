@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_pretty/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -14,5 +16,5 @@
      %{stanfiles})))))
 
 (subdir
- expected_pretty
+ run
  (dynamic_include ../dunes/pretty.dune))

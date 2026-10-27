@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_pretty/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -22,6 +24,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_inlined/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -42,6 +46,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_stripped/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -62,6 +68,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_stripped_inlined/*)
    (glob_files data/*.stan)
    (glob_files functions/*.stan)
    (glob_files gqs/*.stan)
@@ -82,17 +90,8 @@
      %{stanfiles})))))
 
 (subdir
- expected_pretty
- (dynamic_include ../dunes/pretty.dune))
-
-(subdir
- expected_inlined
- (dynamic_include ../dunes/inlined.dune))
-
-(subdir
- expected_stripped
- (dynamic_include ../dunes/stripped.dune))
-
-(subdir
- expected_stripped_inlined
+ run
+ (dynamic_include ../dunes/pretty.dune)
+ (dynamic_include ../dunes/inlined.dune)
+ (dynamic_include ../dunes/stripped.dune)
  (dynamic_include ../dunes/stripped_inlined.dune))

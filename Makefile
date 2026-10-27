@@ -28,7 +28,6 @@ static:
 
 clean:
 	dune clean
-	test/integration/remove_orphan_expected.sh
 
 doc:
 	dune build @doc

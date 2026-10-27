@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_canonical/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -14,6 +16,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_deprecations/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -26,6 +30,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_everything_but/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -38,6 +44,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_stripped/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -50,17 +58,8 @@
      %{stanfiles})))))
 
 (subdir
- expected_canonical
- (dynamic_include ../dunes/canonical.dune))
-
-(subdir
- expected_deprecations
- (dynamic_include ../dunes/deprecations.dune))
-
-(subdir
- expected_everything_but
- (dynamic_include ../dunes/everything-but.dune))
-
-(subdir
- expected_stripped
+ run
+ (dynamic_include ../dunes/canonical.dune)
+ (dynamic_include ../dunes/deprecations.dune)
+ (dynamic_include ../dunes/everything-but.dune)
  (dynamic_include ../dunes/stripped.dune))

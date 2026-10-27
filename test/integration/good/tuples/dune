@@ -4,6 +4,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_cpp/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -16,6 +18,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_optimized_mir/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -28,9 +32,6 @@
      %{stanfiles})))))
 
 (subdir
- expected_cpp
- (dynamic_include ../dunes/cpp.dune))
-
-(subdir
- expected_optimized_mir
+ run
+ (dynamic_include ../dunes/cpp.dune)
  (dynamic_include ../dunes/mir.dune))

@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_standalone_cpp/*)
    (:stanfiles
     (glob_files ../*.stan)
     (glob_files ../*.stanfunctions)))
@@ -15,6 +17,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_cpp/*)
    (:stanfiles
     (glob_files ../*.stan)
     (glob_files ../*.stanfunctions)))
@@ -28,9 +32,6 @@
      %{stanfiles})))))
 
 (subdir
- expected_cpp
- (dynamic_include ../dunes/cpp.dune))
-
-(subdir
- expected_standalone_cpp
+ run
+ (dynamic_include ../dunes/cpp.dune)
  (dynamic_include ../dunes/standalone_cpp.dune))

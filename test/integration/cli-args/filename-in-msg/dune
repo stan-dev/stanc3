@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_errors/*)
    (:stanfiles
     ../filename_error.stan
     ../filename_syntax_error.stan
@@ -16,6 +18,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_cpp/*)
    (:stanfiles ../filename_good.stan ../empty.stan))
   (action
    (with-stdout-to
@@ -27,9 +31,6 @@
      %{stanfiles})))))
 
 (subdir
- expected_cpp
- (dynamic_include ../dunes/cpp.dune))
-
-(subdir
- expected_errors
+ runs
+ (dynamic_include ../dunes/cpp.dune)
  (dynamic_include ../dunes/filename_error.dune))

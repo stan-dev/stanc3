@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_O0/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -14,6 +16,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_O1/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -26,6 +30,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_experimental/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -38,13 +44,7 @@
      %{stanfiles})))))
 
 (subdir
- expected_O0
- (dynamic_include ../dunes/O0.dune))
-
-(subdir
- expected_O1
- (dynamic_include ../dunes/O1.dune))
-
-(subdir
- expected_experimental
+ run
+ (dynamic_include ../dunes/O0.dune)
+ (dynamic_include ../dunes/O1.dune)
  (dynamic_include ../dunes/Oexperimental.dune))

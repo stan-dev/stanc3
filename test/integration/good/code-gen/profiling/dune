@@ -4,6 +4,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_transformed_mir/*)
    (:stanfiles
     (glob_files ../*.stan)))
   (action
@@ -16,5 +18,5 @@
      %{stanfiles})))))
 
 (subdir
- expected_transformed_mir
+ run
  (dynamic_include ../dunes/mir.dune))

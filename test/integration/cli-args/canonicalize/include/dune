@@ -2,6 +2,8 @@
  dunes
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_pretty/*)
    (:inc
     (glob_files ../*.inc))
    (:stanfiles
@@ -16,6 +18,8 @@
      %{stanfiles}))))
  (rule
   (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_inlined/*)
    (:stanfiles
     (glob_files ../*.stan*)))
   (action
@@ -28,9 +32,6 @@
      %{stanfiles})))))
 
 (subdir
- expected_pretty
- (dynamic_include ../dunes/pretty.dune))
-
-(subdir
- expected_inlined
+ run
+ (dynamic_include ../dunes/pretty.dune)
  (dynamic_include ../dunes/inlined.dune))
