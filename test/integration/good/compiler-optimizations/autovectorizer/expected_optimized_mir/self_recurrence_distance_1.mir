@@ -1,0 +1,49 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../self_recurrence_distance_1.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] u;
+  vector[N] v0; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("u", "N", N);
+  data vector[N] u;
+  FnReadData__(u, context__, "u");
+  FnValidateSize__("v0", "N", N);
+  data vector[N] v0;
+  FnReadData__(v0, context__, "v0"); }
+
+log_prob {
+  {
+    FnValidateSize__("v6", "N", N);
+    vector[N] v6;
+    v6 = v0;
+    for(n in 2:N) {
+      v6[n] = (v6[(n - 1)] + u[n]);
+    }
+    target += sum(v6);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("v6", "N", N);
+    vector[N] v6;
+    v6 = v0;
+    for(n in 2:N) {
+      v6[n] = (v6[(n - 1)] + u[n]);
+    }
+    target += sum(v6);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

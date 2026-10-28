@@ -1,0 +1,39 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../self_recurrence_distance_2_llvm_memdep_f3.stan : [exit 0] */
+input_vars {
+  int N; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1); }
+
+log_prob {
+  {
+    data int a3_1dim__ = (N + 2);
+    FnValidateSize__("a3", "N + 2", a3_1dim__);
+    vector[a3_1dim__] a3;
+    for(n in 1:N) {
+      a3[(n + 2)] = (a3[n] + promote(1, real, data));
+    }
+    target += sum(a3);
+  } }
+
+rev_log_prob {
+  {
+    data int a3_1dim__ = (N + 2);
+    FnValidateSize__("a3", "N + 2", a3_1dim__);
+    vector[a3_1dim__] a3;
+    for(n in 1:N) {
+      a3[(n + 2)] = (a3[n] + promote(1, real, data));
+    }
+    target += sum(a3);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

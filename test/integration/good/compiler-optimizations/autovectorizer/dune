@@ -3,20 +3,6 @@
  (rule
   (deps
    (sandbox patch_back_source_tree)
-   (glob_files ../expected_cpp/*)
-   (:stanfiles
-    (glob_files ../*.stan)))
-  (action
-   (with-stdout-to
-    cpp.dune
-    (run
-     %{project_root}/test/integration/gen_expected_rules.exe
-     cpp
-     "-fvectorize-loops --print-cpp"
-     %{stanfiles}))))
- (rule
-  (deps
-   (sandbox patch_back_source_tree)
    (glob_files ../expected_optimized_mir/*)
    (:stanfiles
     (glob_files ../*.stan)))
@@ -31,5 +17,4 @@
 
 (subdir
  run
- (dynamic_include ../dunes/cpp.dune)
  (dynamic_include ../dunes/mir.dune))

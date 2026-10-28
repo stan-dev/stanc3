@@ -1,0 +1,67 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../distribute_update_then_recurrence_tsvc_s221.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b0;
+  vector[N] c;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  FnReadData__(b0, context__, "b0");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d"); }
+
+log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1 = a0;
+    FnValidateSize__("b1", "N", N);
+    vector[N] b1;
+    b1 = b0;
+    for(n in 2:N) {
+      a1[n] = (a1[n] + (c[n] .* d[n]));
+      b1[n] = ((b1[(n - 1)] + a1[n]) + d[n]);
+    }
+    target += sum(a1);
+    target += sum(b1);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1 = a0;
+    FnValidateSize__("b1", "N", N);
+    vector[N] b1;
+    b1 = b0;
+    for(n in 2:N) {
+      a1[n] = (a1[n] + (c[n] .* d[n]));
+      b1[n] = ((b1[(n - 1)] + a1[n]) + d[n]);
+    }
+    target += sum(a1);
+    target += sum(b1);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

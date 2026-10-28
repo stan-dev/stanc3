@@ -1,0 +1,53 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../true_dep_forward_write_gcc_vect_f1.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    data int ia1_1dim__ = (N + 1);
+    FnValidateSize__("ia1", "N + 1", ia1_1dim__);
+    vector[ia1_1dim__] ia1;
+    data int ib1_1dim__ = (N + 1);
+    FnValidateSize__("ib1", "N + 1", ib1_1dim__);
+    vector[ib1_1dim__] ib1;
+    for(n in 1:N) {
+      ia1[(n + 1)] = x[n];
+      ib1[n] = ia1[n];
+    }
+    target += (sum(ia1) + sum(ib1));
+  } }
+
+rev_log_prob {
+  {
+    data int ia1_1dim__ = (N + 1);
+    FnValidateSize__("ia1", "N + 1", ia1_1dim__);
+    vector[ia1_1dim__] ia1;
+    data int ib1_1dim__ = (N + 1);
+    FnValidateSize__("ib1", "N + 1", ib1_1dim__);
+    vector[ib1_1dim__] ib1;
+    for(n in 1:N) {
+      ia1[(n + 1)] = x[n];
+      ib1[n] = ia1[n];
+    }
+    target += (sum(ia1) + sum(ib1));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

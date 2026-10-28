@@ -1,0 +1,73 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../reused_scalar_temp_tsvc_s261.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b;
+  vector[N] c;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d"); }
+
+log_prob {
+  {
+    FnValidateSize__("a5", "N", N);
+    vector[N] a5;
+    a5 = a0;
+    FnValidateSize__("c5", "N", N);
+    vector[N] c5;
+    c5 = c;
+    real t5;
+    t5 = promote(0, real, var);
+    for(n in 2:N) {
+      t5 = (a5[n] + b[n]);
+      a5[n] = (t5 + c5[(n - 1)]);
+      t5 = (c5[n] * d[n]);
+      c5[n] = t5;
+    }
+    target += (sum(a5) + sum(c5));
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a5", "N", N);
+    vector[N] a5;
+    a5 = a0;
+    FnValidateSize__("c5", "N", N);
+    vector[N] c5;
+    c5 = c;
+    real t5;
+    t5 = promote(0, real, var);
+    for(n in 2:N) {
+      t5 = (a5[n] + b[n]);
+      a5[n] = (t5 + c5[(n - 1)]);
+      t5 = (c5[n] * d[n]);
+      c5[n] = t5;
+    }
+    target += (sum(a5) + sum(c5));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

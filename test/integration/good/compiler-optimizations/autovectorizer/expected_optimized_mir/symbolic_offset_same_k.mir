@@ -1,0 +1,57 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../symbolic_offset_same_k.stan : [exit 0] */
+input_vars {
+  int N;
+  int k;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int k;
+  FnReadData__(k, context__, "k");
+  (FnCheck(trans(Lower 0))(var_name k)(var k))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    data int v12_1dim__ = (N + k);
+    FnValidateSize__("v12", "N + k", v12_1dim__);
+    vector[v12_1dim__] v12;
+    v12 = rep_vector(promote(0, real, data), (N + k));
+    FnValidateSize__("y12", "N", N);
+    vector[N] y12;
+    for(n in 1:N) {
+      v12[(n + k)] = x[n];
+      y12[n] = (v12[(n + k)] * promote(2, real, data));
+    }
+    target += (sum(v12) + sum(y12));
+  } }
+
+rev_log_prob {
+  {
+    data int v12_1dim__ = (N + k);
+    FnValidateSize__("v12", "N + k", v12_1dim__);
+    vector[v12_1dim__] v12;
+    v12 = rep_vector(promote(0, real, data), (N + k));
+    FnValidateSize__("y12", "N", N);
+    vector[N] y12;
+    for(n in 1:N) {
+      v12[(n + k)] = x[n];
+      y12[n] = (v12[(n + k)] * promote(2, real, data));
+    }
+    target += (sum(v12) + sum(y12));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
