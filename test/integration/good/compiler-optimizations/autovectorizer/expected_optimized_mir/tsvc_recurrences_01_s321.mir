@@ -1,0 +1,49 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../tsvc_recurrences_01_s321.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 3))(var_name N)(var N))__(3);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b"); }
+
+log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1 = a0;
+    for(n in 2:N) {
+      a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));
+    }
+    target += sum(a1);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1 = a0;
+    for(n in 2:N) {
+      a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));
+    }
+    target += sum(a1);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

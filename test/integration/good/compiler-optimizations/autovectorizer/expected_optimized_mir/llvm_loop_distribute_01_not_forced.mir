@@ -1,0 +1,43 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../llvm_loop_distribute_01_not_forced.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] b;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d"); }
+
+log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1[1:N] = (b[1:N] .* d[1:N]);
+    target += sum(a1);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a1", "N", N);
+    vector[N] a1;
+    a1[1:N] = (b[1:N] .* d[1:N]);
+    target += sum(a1);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

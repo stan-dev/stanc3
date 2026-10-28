@@ -1,0 +1,43 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../scalar_reductions_10.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("a", "N", N);
+  data vector[N] a;
+  FnReadData__(a, context__, "a"); }
+
+log_prob {
+  {
+    real s10;
+    s10 = promote(1, real, var);
+    for(n in 1:N) {
+      s10 = (s10 + (s10 * a[n]));
+    }
+    target += s10;
+  } }
+
+rev_log_prob {
+  {
+    real s10;
+    s10 = promote(1, real, var);
+    for(n in 1:N) {
+      s10 = (s10 + (s10 * a[n]));
+    }
+    target += s10;
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

@@ -1,0 +1,51 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../gcc_vect_depend_03_f5.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x;
+  vector[N] z; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x");
+  FnValidateSize__("z", "N", N);
+  data vector[N] z;
+  FnReadData__(z, context__, "z"); }
+
+log_prob {
+  {
+    data int ia3_1dim__ = (N + 1);
+    FnValidateSize__("ia3", "N + 1", ia3_1dim__);
+    vector[ia3_1dim__] ia3;
+    for(n in 1:N) {
+      ia3[(n + 1)] = x[n];
+      ia3[n] = z[n];
+    }
+    target += sum(ia3);
+  } }
+
+rev_log_prob {
+  {
+    data int ia3_1dim__ = (N + 1);
+    FnValidateSize__("ia3", "N + 1", ia3_1dim__);
+    vector[ia3_1dim__] ia3;
+    for(n in 1:N) {
+      ia3[(n + 1)] = x[n];
+      ia3[n] = z[n];
+    }
+    target += sum(ia3);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

@@ -1,0 +1,73 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../gcc_ldist_01.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] ia;
+  vector[N] ib;
+  vector[N] oxa;
+  vector[N] oxb; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("ia", "N", N);
+  data vector[N] ia;
+  FnReadData__(ia, context__, "ia");
+  FnValidateSize__("ib", "N", N);
+  data vector[N] ib;
+  FnReadData__(ib, context__, "ib");
+  FnValidateSize__("oxa", "N", N);
+  data vector[N] oxa;
+  FnReadData__(oxa, context__, "oxa");
+  FnValidateSize__("oxb", "N", N);
+  data vector[N] oxb;
+  FnReadData__(oxb, context__, "oxb"); }
+
+log_prob {
+  {
+    FnValidateSize__("mya1", "N", N);
+    vector[N] mya1;
+    FnValidateSize__("myb1", "N", N);
+    vector[N] myb1;
+    FnValidateSize__("oya1", "N", N);
+    vector[N] oya1;
+    FnValidateSize__("oyb1", "N", N);
+    vector[N] oyb1;
+    for(n in 1:N) {
+      mya1[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));
+      myb1[n] = ((-(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));
+      oya1[n] = (mya1[n] / promote(1024, real, data));
+      oyb1[n] = (myb1[n] / promote(1024, real, data));
+    }
+    target += (((sum(mya1) + sum(myb1)) + sum(oya1)) + sum(oyb1));
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("mya1", "N", N);
+    vector[N] mya1;
+    FnValidateSize__("myb1", "N", N);
+    vector[N] myb1;
+    FnValidateSize__("oya1", "N", N);
+    vector[N] oya1;
+    FnValidateSize__("oyb1", "N", N);
+    vector[N] oyb1;
+    for(n in 1:N) {
+      mya1[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));
+      myb1[n] = ((-(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));
+      oya1[n] = (mya1[n] / promote(1024, real, data));
+      oyb1[n] = (myb1[n] / promote(1024, real, data));
+    }
+    target += (((sum(mya1) + sum(myb1)) + sum(oya1)) + sum(oyb1));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

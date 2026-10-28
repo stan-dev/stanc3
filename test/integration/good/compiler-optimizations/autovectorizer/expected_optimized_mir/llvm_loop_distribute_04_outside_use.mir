@@ -1,0 +1,55 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../llvm_loop_distribute_04_outside_use.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] b;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d"); }
+
+log_prob {
+  {
+    data int a4_1dim__ = (N + 1);
+    FnValidateSize__("a4", "N + 1", a4_1dim__);
+    vector[a4_1dim__] a4;
+    real total4;
+    total4 = promote(0, real, var);
+    for(n in 1:N) {
+      a4[(n + 1)] = (a4[n] * b[n]);
+      total4 = (total4 + d[n]);
+    }
+    target += (sum(a4) + total4);
+  } }
+
+rev_log_prob {
+  {
+    data int a4_1dim__ = (N + 1);
+    FnValidateSize__("a4", "N + 1", a4_1dim__);
+    vector[a4_1dim__] a4;
+    real total4;
+    total4 = promote(0, real, var);
+    for(n in 1:N) {
+      a4[(n + 1)] = (a4[n] * b[n]);
+      total4 = (total4 + d[n]);
+    }
+    target += (sum(a4) + total4);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

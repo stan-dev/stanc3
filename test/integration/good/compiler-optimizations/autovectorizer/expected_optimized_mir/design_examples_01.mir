@@ -1,0 +1,117 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../design_examples_01.stan : [exit 0] */
+
+input_vars {
+  int N;
+  int J;
+  array[int, N] county_idx;
+  vector[N] log_uppm;
+  vector[N] floor_measure;
+  vector[N] log_radon; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int J;
+  FnReadData__(J, context__, "J");
+  (FnCheck(trans(Lower 1))(var_name J)(var J))__(1);
+  FnValidateSize__("county_idx", "N", N);
+  data array[int, N] county_idx;
+  FnReadData__(county_idx, context__, "county_idx");
+  (FnCheck(trans(Lower 1))(var_name county_idx)(var county_idx))__(1);
+  (FnCheck(trans(Upper J))(var_name county_idx)(var county_idx))__(J);
+  FnValidateSize__("log_uppm", "N", N);
+  data vector[N] log_uppm;
+  FnReadData__(log_uppm, context__, "log_uppm");
+  FnValidateSize__("floor_measure", "N", N);
+  data vector[N] floor_measure;
+  FnReadData__(floor_measure, context__, "floor_measure");
+  FnValidateSize__("log_radon", "N", N);
+  data vector[N] log_radon;
+  FnReadData__(log_radon, context__, "log_radon");
+  FnValidateSize__("alpha", "J", J); }
+
+log_prob {
+  vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  vector[2]
+    beta = (FnReadParam(constrain Identity)(dims(2))(mem_pattern AoS))__(
+    );
+  real
+    sigma_y = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("mu1", "N", N);
+    vector[N] mu1;
+    FnValidateSize__("muj1", "N", N);
+    vector[N] muj1;
+    for(n in 1:N) {
+      muj1[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));
+      mu1[n] = (muj1[n] + (floor_measure[n] * beta[2]));
+      target += normal_lpdf(log_radon[n], mu1[n], sigma_y);
+    }
+  } }
+
+rev_log_prob {
+  vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  vector[2]
+    beta = (FnReadParam(constrain Identity)(dims(2))(mem_pattern AoS))__(
+    );
+  real
+    sigma_y = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("mu1", "N", N);
+    vector[N] mu1;
+    FnValidateSize__("muj1", "N", N);
+    vector[N] muj1;
+    for(n in 1:N) {
+      muj1[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));
+      mu1[n] = (muj1[n] + (floor_measure[n] * beta[2]));
+      target += normal_lpdf(log_radon[n], mu1[n], sigma_y);
+    }
+  } }
+
+generate_quantities {
+  data vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  data vector[2]
+    beta = (FnReadParam(constrain Identity)(dims(2))(mem_pattern AoS))__(
+    );
+  data real
+    sigma_y = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var alpha))__();
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  (FnWriteParam(unconstrain_opt())(var sigma_y))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[J] alpha;
+  FnReadData__(alpha, context__, "alpha");
+  (FnWriteParam(unconstrain_opt(Identity))(var alpha))__();
+  vector[2] beta;
+  FnReadData__(beta, context__, "beta");
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__();
+  real sigma_y;
+  FnReadData__(sigma_y, context__, "sigma_y");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma_y))__(); }
+
+output_vars {
+  parameters vector[J] alpha; //vector[J]
+  parameters vector[2] beta; //vector[2]
+  parameters real sigma_y; //real
+}

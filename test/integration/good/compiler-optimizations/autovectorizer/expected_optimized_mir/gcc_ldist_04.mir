@@ -1,0 +1,56 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../gcc_ldist_04.stan : [exit 0] */
+input_vars {
+  int N;
+  int J;
+  int k; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  data int J;
+  FnReadData__(J, context__, "J");
+  (FnCheck(trans(Lower 1))(var_name J)(var J))__(1);
+  data int k;
+  FnReadData__(k, context__, "k"); }
+
+log_prob {
+  {
+    FnValidateSize__("a4", "J", J);
+    vector[J] a4;
+    FnValidateSize__("b4", "N", N);
+    FnValidateSize__("b4", "J", J);
+    matrix[N, J] b4;
+    for(i in 1:N) {
+      for(j in 2:J) {
+        a4[j] = promote((k * i), real, var);
+        b4[i, j] = (a4[(j - 1)] + promote(k, real, data));
+      }
+    }
+    target += (sum(a4) + sum(b4));
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a4", "J", J);
+    vector[J] a4;
+    FnValidateSize__("b4", "N", N);
+    FnValidateSize__("b4", "J", J);
+    matrix[N, J] b4;
+    for(i in 1:N) {
+      for(j in 2:J) {
+        a4[j] = promote((k * i), real, var);
+        b4[i, j] = (a4[(j - 1)] + promote(k, real, data));
+      }
+    }
+    target += (sum(a4) + sum(b4));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
