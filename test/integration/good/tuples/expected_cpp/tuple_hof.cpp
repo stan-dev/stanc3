@@ -416,13 +416,12 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     return std::string("[{\"name\":\"param_y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sum2\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"sum1\"";
-    json_stream << ":";
-    json_stream << std::to_string(sum1);
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "sum1");
+    stan::json::write_json_value(json_stream__, sum1);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

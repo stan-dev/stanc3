@@ -325,10 +325,10 @@ class nested_unpacking_model final : public model_base_crtp<nested_unpacking_mod
     return std::string("[]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

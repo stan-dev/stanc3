@@ -956,115 +956,27 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     return std::string("[{\"name\":\"p_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((v -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((v -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"p_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((N -1)) + ",\"cols\":" + std::to_string((p_stzm_2dim__ -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((N -1)) + ",\"cols\":" + std::to_string((p_astzm_4dim__ -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"v\"";
-    json_stream << ":";
-    json_stream << std::to_string(v);
-    json_stream << ",\n";
-    json_stream << "\"N\"";
-    json_stream << ":";
-    json_stream << std::to_string(N);
-    json_stream << ",\n";
-    json_stream << "\"td_stzv\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(td_stzv[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"td_astzv\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream << "[";
-        for (int idx3__ = 1; idx3__ <= 10; ++idx3__) {
-          if (idx3__ > 1) {
-            json_stream << ",";
-          }
-          json_stream <<
-                        std::to_string(td_astzv[(idx1__ - 1)][(idx2__ -
-                          1)][(idx3__ - 1)]);
-        }
-        json_stream << "]";
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"td_stzm\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 4; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream <<
-                      std::to_string(
-                        stan::model::rvalue(td_stzm, "td_stzm",
-                          stan::model::index_uni(idx1__),
-                          stan::model::index_uni(idx2__)));
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"td_astzm\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream << "[";
-        for (int idx3__ = 1; idx3__ <= 5; ++idx3__) {
-          if (idx3__ > 1) {
-            json_stream << ",";
-          }
-          json_stream << "[";
-          for (int idx4__ = 1; idx4__ <= 4; ++idx4__) {
-            if (idx4__ > 1) {
-              json_stream << ",";
-            }
-            json_stream <<
-                          std::to_string(
-                            stan::model::rvalue(td_astzm, "td_astzm",
-                              stan::model::index_uni(idx1__),
-                              stan::model::index_uni(idx2__),
-                              stan::model::index_uni(idx3__),
-                              stan::model::index_uni(idx4__)));
-          }
-          json_stream << "]";
-        }
-        json_stream << "]";
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "v");
+    stan::json::write_json_value(json_stream__, v);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "N");
+    stan::json::write_json_value(json_stream__, N);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_stzv");
+    stan::json::write_json_value(json_stream__, td_stzv);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_astzv");
+    stan::json::write_json_value(json_stream__, td_astzv);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_stzm");
+    stan::json::write_json_value(json_stream__, td_stzm);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_astzm");
+    stan::json::write_json_value(json_stream__, td_astzm);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

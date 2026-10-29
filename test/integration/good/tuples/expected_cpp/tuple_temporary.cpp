@@ -301,10 +301,10 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
     return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"s\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

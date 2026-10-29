@@ -2,9 +2,8 @@
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
-     (Decl
-      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -31,9 +30,8 @@
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl
-      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -60,9 +58,8 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl
-      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -142,18 +139,16 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -204,9 +199,8 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl
-      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal

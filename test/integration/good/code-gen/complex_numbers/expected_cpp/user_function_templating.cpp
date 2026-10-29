@@ -582,13 +582,12 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     return std::string("[]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"N\"";
-    json_stream << ":";
-    json_stream << std::to_string(N);
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "N");
+    stan::json::write_json_value(json_stream__, N);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

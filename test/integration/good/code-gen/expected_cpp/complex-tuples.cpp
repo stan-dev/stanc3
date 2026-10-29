@@ -393,147 +393,30 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
     return std::string("[]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"x\"";
-    json_stream << ":";
-    json_stream << "{";
-    json_stream << "\"1\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<0>(x));
-    json_stream << ",\n";
-    json_stream << "\"2\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<1>(x));
-    json_stream << "}";
-    json_stream << ",\n";
-    json_stream << "\"y\"";
-    json_stream << ":";
-    json_stream << "{";
-    json_stream << "\"1\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(std::get<0>(y)[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"2\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<1>(y));
-    json_stream << "}";
-    json_stream << ",\n";
-    json_stream << "\"y2\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "{";
-      json_stream << "\"1\"";
-      json_stream << ":";
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream << "{";
-        json_stream << "\"1\"";
-        json_stream << ":";
-        json_stream <<
-                      std::to_string(
-                        std::get<0>(std::get<0>(y2[(idx1__ - 1)])[(idx2__ -
-                          1)]));
-        json_stream << ",\n";
-        json_stream << "\"2\"";
-        json_stream << ":";
-        json_stream << "[";
-        for (int idx3__ = 1; idx3__ <= 1; ++idx3__) {
-          if (idx3__ > 1) {
-            json_stream << ",";
-          }
-          json_stream << "[";
-          for (int idx4__ = 1; idx4__ <= 2; ++idx4__) {
-            if (idx4__ > 1) {
-              json_stream << ",";
-            }
-            json_stream << "[";
-            for (int idx5__ = 1; idx5__ <= 3; ++idx5__) {
-              if (idx5__ > 1) {
-                json_stream << ",";
-              }
-              json_stream <<
-                            std::to_string(
-                              std::get<1>(
-                                std::get<0>(y2[(idx1__ - 1)])[(idx2__ - 1)])[(idx3__
-                              - 1)][(idx4__ - 1)][(idx5__ - 1)]);
-            }
-            json_stream << "]";
-          }
-          json_stream << "]";
-        }
-        json_stream << "]";
-        json_stream << "}";
-      }
-      json_stream << "]";
-      json_stream << ",\n";
-      json_stream << "\"2\"";
-      json_stream << ":";
-      json_stream << std::to_string(std::get<1>(y2[(idx1__ - 1)]));
-      json_stream << "}";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"z\"";
-    json_stream << ":";
-    json_stream << std::to_string(z);
-    json_stream << ",\n";
-    json_stream << "\"b\"";
-    json_stream << ":";
-    json_stream << std::to_string(b);
-    json_stream << ",\n";
-    json_stream << "\"c\"";
-    json_stream << ":";
-    json_stream << std::to_string(c);
-    json_stream << ",\n";
-    json_stream << "\"d\"";
-    json_stream << ":";
-    json_stream << "{";
-    json_stream << "\"1\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<0>(d));
-    json_stream << ",\n";
-    json_stream << "\"2\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<1>(d));
-    json_stream << ",\n";
-    json_stream << "\"3\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "{";
-      json_stream << "\"1\"";
-      json_stream << ":";
-      json_stream <<
-                    std::to_string(std::get<0>(std::get<2>(d)[(idx1__ - 1)]));
-      json_stream << ",\n";
-      json_stream << "\"2\"";
-      json_stream << ":";
-      json_stream <<
-                    std::to_string(std::get<1>(std::get<2>(d)[(idx1__ - 1)]));
-      json_stream << "}";
-    }
-    json_stream << "]";
-    json_stream << "}";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "x");
+    stan::json::write_json_value(json_stream__, x);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y");
+    stan::json::write_json_value(json_stream__, y);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y2");
+    stan::json::write_json_value(json_stream__, y2);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "z");
+    stan::json::write_json_value(json_stream__, z);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "b");
+    stan::json::write_json_value(json_stream__, b);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "c");
+    stan::json::write_json_value(json_stream__, c);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "d");
+    stan::json::write_json_value(json_stream__, d);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

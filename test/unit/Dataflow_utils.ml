@@ -187,102 +187,101 @@ let%expect_test "Statement label map example" =
         : (Expr.Typed.t, label) Stmt.Pattern.t LabelMap.t)];
   [%expect
     {|
-    ((1 (Block (2))) (2 (Block (3 4 5)))
-     (3
-      (Decl
-       ((decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
-        (initialize Default))))
-     (4
-      (Assignment ((LVariable i) ()) UInt
-       ((pattern (Lit Int 0))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (5
-      (IfElse
-       ((pattern
-         (FunApp (Operator Less)
-          (((pattern (Var i))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 0))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       6 (8)))
-     (6 (Block (7)))
-     (7
-      (NRFunApp (CompilerInternal FnPrint)
-       (((pattern (Var i))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-     (8 (Block (9)))
-     (9
-      (For (loopvar j)
-       (lower
-        ((pattern (Lit Int 1))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-       (upper
-        ((pattern (Lit Int 10))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-       (body 10)))
-     (10 (Block (11 14 17 22)))
-     (11
-      (IfElse
-       ((pattern
-         (FunApp (Operator Greater)
-          (((pattern (Var j))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 9))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       12 ()))
-     (12 (Block (13))) (13 Break)
-     (14
-      (IfElse
-       ((pattern
-         (EAnd
+      ((1 (Block (2))) (2 (Block (3 4 5)))
+       (3
+        (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
+         (initialize Default)))
+       (4
+        (Assignment ((LVariable i) ()) UInt
+         ((pattern (Lit Int 0))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+       (5
+        (IfElse
+         ((pattern
+           (FunApp (Operator Less)
+            (((pattern (Var i))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         6 (8)))
+       (6 (Block (7)))
+       (7
+        (NRFunApp (CompilerInternal FnPrint)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (8 (Block (9)))
+       (9
+        (For (loopvar j)
+         (lower
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         (upper
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         (body 10)))
+       (10 (Block (11 14 17 22)))
+       (11
+        (IfElse
+         ((pattern
+           (FunApp (Operator Greater)
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 9))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         12 ()))
+       (12 (Block (13))) (13 Break)
+       (14
+        (IfElse
+         ((pattern
+           (EAnd
+            ((pattern
+              (FunApp (Operator Greater)
+               (((pattern (Var j))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 8))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern
+              (FunApp (Operator Less)
+               (((pattern (Var i))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
+                  (FunApp (Operator PMinus)
+                   (((pattern (Lit Int 1))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         15 ()))
+       (15 (Block (16))) (16 Continue)
+       (17
+        (IfElse
+         ((pattern
+           (FunApp (Operator Greater)
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 5))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         18 (20)))
+       (18 (Block (19))) (19 Continue) (20 (Block (21)))
+       (21
+        (NRFunApp (CompilerInternal FnPrint)
+         (((pattern (Lit Str Badger))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (Operator Greater)
-             (((pattern (Var j))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 8))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern
-            (FunApp (Operator Less)
+            (FunApp (Operator Plus)
              (((pattern (Var i))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern
-                (FunApp (Operator PMinus)
-                 (((pattern (Lit Int 1))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              ((pattern (Var j))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       15 ()))
-     (15 (Block (16))) (16 Continue)
-     (17
-      (IfElse
-       ((pattern
-         (FunApp (Operator Greater)
-          (((pattern (Var j))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       18 (20)))
-     (18 (Block (19))) (19 Continue) (20 (Block (21)))
-     (21
-      (NRFunApp (CompilerInternal FnPrint)
-       (((pattern (Lit Str Badger))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-        ((pattern
-          (FunApp (Operator Plus)
-           (((pattern (Var i))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((pattern (Var j))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-     (22
-      (NRFunApp (CompilerInternal FnPrint)
-       (((pattern (Lit Str Fin))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (22
+        (NRFunApp (CompilerInternal FnPrint)
+         (((pattern (Lit Str Fin))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
 
 let%expect_test "Predecessor graph example" =

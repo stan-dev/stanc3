@@ -2211,91 +2211,36 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"k_td\"";
-    json_stream << ":";
-    json_stream << std::to_string(k_td);
-    json_stream << ",\n";
-    json_stream << "\"n_td\"";
-    json_stream << ":";
-    json_stream << std::to_string(n_td);
-    json_stream << ",\n";
-    json_stream << "\"X_d_td\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= k; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= n; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream <<
-                      std::to_string(
-                        stan::model::rvalue(X_d_td, "X_d_td",
-                          stan::model::index_uni(idx1__),
-                          stan::model::index_uni(idx2__)));
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"y_v_d_td\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(y_v_d_td[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"X_rv_d_td\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(X_rv_d_td[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"y_vi_d_td\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(y_vi_d_td[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"y2_vi_d_td\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(y2_vi_d_td[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"y_s_d_td\"";
-    json_stream << ":";
-    json_stream << std::to_string(y_s_d_td);
-    json_stream << ",\n";
-    json_stream << "\"y_r_d_td\"";
-    json_stream << ":";
-    json_stream << std::to_string(y_r_d_td);
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "k_td");
+    stan::json::write_json_value(json_stream__, k_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "n_td");
+    stan::json::write_json_value(json_stream__, n_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "X_d_td");
+    stan::json::write_json_value(json_stream__, X_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y_v_d_td");
+    stan::json::write_json_value(json_stream__, y_v_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "X_rv_d_td");
+    stan::json::write_json_value(json_stream__, X_rv_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y_vi_d_td");
+    stan::json::write_json_value(json_stream__, y_vi_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y2_vi_d_td");
+    stan::json::write_json_value(json_stream__, y2_vi_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y_s_d_td");
+    stan::json::write_json_value(json_stream__, y_s_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y_r_d_td");
+    stan::json::write_json_value(json_stream__, y_r_d_td);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

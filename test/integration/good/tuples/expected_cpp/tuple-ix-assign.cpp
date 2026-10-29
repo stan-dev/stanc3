@@ -216,21 +216,12 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     return std::string("[]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"x\"";
-    json_stream << ":";
-    json_stream << "{";
-    json_stream << "\"1\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<0>(x));
-    json_stream << ",\n";
-    json_stream << "\"2\"";
-    json_stream << ":";
-    json_stream << std::to_string(std::get<1>(x));
-    json_stream << "}";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "x");
+    stan::json::write_json_value(json_stream__, x);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

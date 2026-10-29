@@ -590,24 +590,15 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"K\"";
-    json_stream << ":";
-    json_stream << std::to_string(K);
-    json_stream << ",\n";
-    json_stream << "\"x1x2\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= I; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(x1x2[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "K");
+    stan::json::write_json_value(json_stream__, K);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "x1x2");
+    stan::json::write_json_value(json_stream__, x1x2);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

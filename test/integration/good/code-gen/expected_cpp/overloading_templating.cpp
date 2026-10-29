@@ -767,42 +767,15 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"a\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(a[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"M\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 5; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 5; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream <<
-                      std::to_string(
-                        stan::model::rvalue(M, "M",
-                          stan::model::index_uni(idx1__),
-                          stan::model::index_uni(idx2__)));
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "a");
+    stan::json::write_json_value(json_stream__, a);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "M");
+    stan::json::write_json_value(json_stream__, M);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

@@ -299,9 +299,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
         Expression
           (Exprs.fun_call "stan::math::stan_print" [pstream; lower_expr a])
       in
-      let body =
-        List.map ~f:print args
-        @ [Expression (Deref pstream << [Cpp.Literal "std::endl"])] in
+      let body = List.map ~f:print args @ [Deref pstream <<: Var "std::endl"] in
       [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
       [throw_exn "std::domain_error" args]

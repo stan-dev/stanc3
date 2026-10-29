@@ -240,17 +240,15 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     return std::string("[]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"z\"";
-    json_stream << ":";
-    json_stream << std::to_string(z);
-    json_stream << ",\n";
-    json_stream << "\"y\"";
-    json_stream << ":";
-    json_stream << std::to_string(y);
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "z");
+    stan::json::write_json_value(json_stream__, z);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "y");
+    stan::json::write_json_value(json_stream__, y);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

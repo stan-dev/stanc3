@@ -606,27 +606,12 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     return std::string("[{\"name\":\"param\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"local\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"inputs\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 5; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream << std::to_string(inputs[(idx1__ - 1)][(idx2__ - 1)]);
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "inputs");
+    stan::json::write_json_value(json_stream__, inputs);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

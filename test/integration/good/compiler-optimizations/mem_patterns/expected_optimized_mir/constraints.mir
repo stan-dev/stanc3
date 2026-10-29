@@ -46,17 +46,16 @@ vector[N] means_ordered: SoA
    (sigma_prior_rate <opaque> SReal)))
  (prepare_data
   (((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -77,8 +76,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt)) (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -106,13 +105,12 @@ vector[N] means_ordered: SoA
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id diff_low_mid)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id diff_low_mid)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -131,13 +129,12 @@ vector[N] means_ordered: SoA
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id diff_high_mid)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id diff_high_mid)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -156,13 +153,12 @@ vector[N] means_ordered: SoA
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id mid_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id mid_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -188,14 +184,13 @@ vector[N] means_ordered: SoA
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id X_all)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id X_all)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -206,9 +201,8 @@ vector[N] means_ordered: SoA
         (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -233,9 +227,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -260,9 +253,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -274,9 +266,8 @@ vector[N] means_ordered: SoA
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id mu_prior_sigma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id mu_prior_sigma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -301,9 +292,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id sigma_prior_shape) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_shape) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -328,9 +318,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id sigma_prior_rate) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_rate) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -355,8 +344,8 @@ vector[N] means_ordered: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id Nr) (decl_type (Sized SInt)) (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id Nr) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable Nr) ()) UInt
@@ -569,30 +558,29 @@ vector[N] means_ordered: SoA
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id high_low_est)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var diff_low_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var diff_high_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id high_low_est)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var diff_low_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var diff_high_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -621,230 +609,218 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id b)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id b)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var Nr))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var Nr))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ar)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Lit Int 2))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ar)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Lit Int 1))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mean_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Real 0.0))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Real 0.0))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Upper
-                ((pattern (Var ma))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Upper
+               ((pattern (Var ma))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id lower_upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var upper_test))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var upper_test))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -873,36 +849,35 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
-       (decl_type
-        (Sized
-         (SRowVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var sigma_price))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var upper_test))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
+      (decl_type
+       (Sized
+        (SRowVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var sigma_price))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var upper_test))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -937,30 +912,29 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id offset_mult_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (OffsetMultiplier
-                ((pattern (Var mean_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id offset_mult_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (OffsetMultiplier
+               ((pattern (Var mean_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -989,155 +963,147 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Ordered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Ordered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id unit_vec_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain UnitVector)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain UnitVector)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id pos_ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain PositiveOrdered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain PositiveOrdered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id corr_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Correlation)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Correlation)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id cov_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Covariance)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Covariance)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCov)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCov)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCorr)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCorr)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
@@ -1155,9 +1121,8 @@ vector[N] means_ordered: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -1168,13 +1133,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id prices)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id prices)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
@@ -1187,13 +1151,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id prices_diff)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id prices_diff)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
@@ -1227,13 +1190,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mu)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mu)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
@@ -1251,13 +1213,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id err)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id err)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable err) ()) UVector
@@ -1397,22 +1358,20 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_i_mean)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_i_mean)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_i_sigma)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_i_sigma)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -1527,13 +1486,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_sigma)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_sigma)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
@@ -1569,13 +1527,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id means_ordered)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
@@ -1812,30 +1769,29 @@ vector[N] means_ordered: SoA
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id high_low_est)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var diff_low_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var diff_high_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id high_low_est)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var diff_low_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var diff_high_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -1864,230 +1820,218 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id b)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id b)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var Nr))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var Nr))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ar)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Lit Int 2))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ar)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Lit Int 1))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mean_price)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma_price)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Real 0.0))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Real 0.0))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id upper_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Upper
-                ((pattern (Var ma))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Upper
+               ((pattern (Var ma))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id lower_upper_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var upper_test))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var upper_test))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2116,36 +2060,35 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
-       (decl_type
-        (Sized
-         (SRowVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var sigma_price))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var upper_test))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
+      (decl_type
+       (Sized
+        (SRowVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var sigma_price))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var upper_test))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2180,30 +2123,29 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id offset_mult_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (OffsetMultiplier
-                ((pattern (Var mean_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id offset_mult_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (OffsetMultiplier
+               ((pattern (Var mean_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2232,155 +2174,147 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ordered_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Ordered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ordered_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Ordered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id unit_vec_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain UnitVector)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain UnitVector)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id pos_ordered_test)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain PositiveOrdered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain PositiveOrdered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id corr_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Correlation)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Correlation)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id cov_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Covariance)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Covariance)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
-       (decl_type
-        (Sized
-         (SMatrix SoA
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCov)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
+      (decl_type
+       (Sized
+        (SMatrix SoA
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCov)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
-       (decl_type
-        (Sized
-         (SMatrix SoA
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCorr)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern SoA)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
+      (decl_type
+       (Sized
+        (SMatrix SoA
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCorr)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern SoA)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
@@ -2398,9 +2332,8 @@ vector[N] means_ordered: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -2411,13 +2344,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id prices)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id prices)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
@@ -2430,13 +2362,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id prices_diff)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id prices_diff)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
@@ -2470,13 +2401,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mu)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mu)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
@@ -2494,13 +2424,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id err)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id err)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable err) ()) UVector
@@ -2640,22 +2569,20 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_i_mean)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_i_mean)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_i_sigma)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_i_sigma)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -2770,13 +2697,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h_sigma)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h_sigma)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
@@ -2812,13 +2738,12 @@ vector[N] means_ordered: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id means_ordered)
-       (decl_type
-        (Sized
-         (SVector SoA
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
@@ -3055,30 +2980,29 @@ vector[N] means_ordered: SoA
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id high_low_est)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var diff_low_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var diff_high_mid))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id high_low_est)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var diff_low_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var diff_high_mid))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3107,230 +3031,218 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id b)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id b)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id h)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var Nr))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id h)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var Nr))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id ar)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Lit Int 2))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id ar)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id ma) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id ma) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id phi_beta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Lit Int 1))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id phi_beta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id sigma2) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Int 0))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id sigma2) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id Intercept) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id Intercept) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id mean_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id mean_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id sigma_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Lower
-                ((pattern (Lit Real 0.0))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id sigma_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Lower
+               ((pattern (Lit Real 0.0))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id theta) (decl_type (Sized SReal))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id theta) (decl_type (Sized SReal))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (Upper
-                ((pattern (Var ma))
-                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (Upper
+               ((pattern (Var ma))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id lower_upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var upper_test))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id lower_upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var upper_test))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3359,36 +3271,35 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id row_vec_lower_upper_test)
-       (decl_type
-        (Sized
-         (SRowVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (LowerUpper
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var sigma_price))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern
-                  (FunApp (Operator Transpose)
-                   (((pattern (Var upper_test))
-                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id row_vec_lower_upper_test)
+      (decl_type
+       (Sized
+        (SRowVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (LowerUpper
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var sigma_price))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern
+                 (FunApp (Operator Transpose)
+                  (((pattern (Var upper_test))
+                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3423,30 +3334,29 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id offset_mult_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam
-              (constrain
-               (OffsetMultiplier
-                ((pattern (Var mean_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                ((pattern (Var sigma_price))
-                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id offset_mult_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam
+             (constrain
+              (OffsetMultiplier
+               ((pattern (Var mean_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+               ((pattern (Var sigma_price))
+                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3475,232 +3385,215 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Ordered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Ordered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id unit_vec_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain UnitVector)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id unit_vec_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain UnitVector)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id pos_ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain PositiveOrdered)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id pos_ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain PositiveOrdered)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id corr_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Correlation)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id corr_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Correlation)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id cov_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain Covariance)
-              (dims
-               (((pattern (Var N))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id cov_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Covariance)
+             (dims
+              (((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id chol_fac_cov_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCov)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id chol_fac_cov_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCov)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id chol_fac_corr_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize
-        (Assign
-         ((pattern
-           (FunApp
-            (CompilerInternal
-             (FnReadParam (constrain CholeskyCorr)
-              (dims
-               (((pattern (Var K))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-              (mem_pattern AoS)))
-            ()))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))))
+     (Decl (decl_adtype DataOnly) (decl_id chol_fac_corr_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain CholeskyCorr)
+             (dims
+              (((pattern (Var K))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id phi) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id phi) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id prices)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id prices)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id prices_diff)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id prices_diff)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id mu)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id mu)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id err)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id err)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id h_i_mean)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id h_i_mean)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id h_i_sigma)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id h_i_sigma)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id h_sigma)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id h_sigma)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id means_ordered)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -4445,22 +4338,20 @@ vector[N] means_ordered: SoA
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl
-      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-       (initialize Default))))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id high_low_est)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id high_low_est)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4487,13 +4378,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id b)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id b)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4511,13 +4401,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4535,13 +4424,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ar)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ar)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4560,9 +4448,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4580,9 +4467,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4609,9 +4495,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4635,9 +4520,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4658,13 +4542,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mean_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4685,13 +4568,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4716,9 +4598,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4737,13 +4618,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4768,13 +4648,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id lower_upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4801,13 +4680,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
-       (decl_type
-        (Sized
-         (SRowVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
+      (decl_type
+       (Sized
+        (SRowVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4840,13 +4718,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id offset_mult_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id offset_mult_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4873,13 +4750,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4900,13 +4776,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id unit_vec_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4927,13 +4802,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id pos_ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4954,14 +4828,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id corr_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4982,14 +4855,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id cov_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -5010,14 +4882,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -5038,14 +4909,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -5067,13 +4937,12 @@ vector[N] means_ordered: SoA
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id high_low_est)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id high_low_est)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable high_low_est) ()) UVector
@@ -5098,13 +4967,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id b)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id b)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable b) ()) UVector
@@ -5122,13 +4990,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id h)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id h)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h) ()) UVector
@@ -5146,13 +5013,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ar)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ar)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ar) ()) UVector
@@ -5170,9 +5036,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ma) ()) UReal
@@ -5188,9 +5053,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi_beta) ()) UReal
@@ -5213,9 +5077,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma2) ()) UReal
@@ -5236,9 +5099,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable Intercept) ()) UReal
@@ -5255,13 +5117,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id mean_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mean_price) ()) UVector
@@ -5280,13 +5141,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id sigma_price)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma_price) ()) UVector
@@ -5309,9 +5169,8 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable theta) ()) UReal
@@ -5327,13 +5186,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable upper_test) ()) UVector
@@ -5356,13 +5214,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id lower_upper_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable lower_upper_test) ()) UVector
@@ -5387,13 +5244,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
-       (decl_type
-        (Sized
-         (SRowVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id row_vec_lower_upper_test)
+      (decl_type
+       (Sized
+        (SRowVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable row_vec_lower_upper_test) ()) URowVector
@@ -5424,13 +5280,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id offset_mult_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id offset_mult_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable offset_mult_test) ()) UVector
@@ -5455,13 +5310,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ordered_test) ()) UVector
@@ -5480,13 +5334,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id unit_vec_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable unit_vec_test) ()) UVector
@@ -5505,13 +5358,12 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id pos_ordered_test)
-       (decl_type
-        (Sized
-         (SVector AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos_ordered_test) ()) UVector
@@ -5530,14 +5382,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id corr_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable corr_matrix_test) ()) UMatrix
@@ -5557,14 +5408,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id cov_matrix_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable cov_matrix_test) ()) UMatrix
@@ -5584,14 +5434,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable chol_fac_cov_test) ()) UMatrix
@@ -5611,14 +5460,13 @@ vector[N] means_ordered: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl
-      ((decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
-       (decl_type
-        (Sized
-         (SMatrix AoS
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (initialize Default))))
+     (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable chol_fac_corr_test) ()) UMatrix

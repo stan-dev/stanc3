@@ -398,10 +398,10 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
     return std::string("[{\"name\":\"beta_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_raw_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"beta_recovered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_recovered_1dim__) + "},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

@@ -4036,7 +4036,7 @@
              (Block
               ((Expression
                 (FunCall stan::math::stan_print () ((Var pstream__) (Literal "\"hi\""))))
-               (Expression (StreamInsertion (Deref (Var pstream__)) ((Literal std::endl))))))
+               (Expression (StreamInsertion (Deref (Var pstream__)) ((Var std::endl))))))
              ()))
            ((Const (Ref (TypeLiteral std::exception))) e)
            ((Expression
@@ -15333,1174 +15333,245 @@
            (body
             (((VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
-                (name json_stream) (init Uninitialized)))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"{\""))))
+                (name json_stream__) (init Uninitialized)))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\"{\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_int\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_int\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((FunCall std::to_string () ((Var td_int))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_int))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var td_1d)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_1d\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1dk\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var M)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var td_1dk)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_1d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_a\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_1dk\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((FunCall std::to_string () ((Var td_a))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_1dk))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_b\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_a\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((FunCall std::to_string () ((Var td_b))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_a))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_c\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_b\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((FunCall std::to_string () ((Var td_c))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_b))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_ar_mat\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 4)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 5)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Literal 2)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream)
-                            ((FunCall std::to_string ()
-                              ((FunCall stan::model::rvalue ()
-                                ((Var td_ar_mat) (Literal "\"td_ar_mat\"")
-                                 (FunCall stan::model::index_uni () ((Var idx1__)))
-                                 (FunCall stan::model::index_uni () ((Var idx2__)))
-                                 (FunCall stan::model::index_uni () ((Var idx3__)))
-                                 (FunCall stan::model::index_uni () ((Var idx4__)))))))))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_c\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_simplex\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var td_simplex)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_c))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1d_simplex\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var N)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var td_1d_simplex)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_ar_mat\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_3d_simplex\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var M)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Var K)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Var N)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream)
-                            ((FunCall std::to_string ()
-                              ((Subscript
-                                (Subscript
-                                 (Subscript
-                                  (Subscript (Var td_3d_simplex)
-                                   (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                                  (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                                 (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
-                                (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_ar_mat))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_cfcov_54\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 5)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 5)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((FunCall stan::model::rvalue ()
-                          ((Var td_cfcov_54) (Literal "\"td_cfcov_54\"")
-                           (FunCall stan::model::index_uni () ((Var idx1__)))
-                           (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_simplex\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_cfcov_33\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 3)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 3)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((FunCall stan::model::rvalue ()
-                          ((Var td_cfcov_33) (Literal "\"td_cfcov_33\"")
-                           (FunCall stan::model::index_uni () ((Var idx1__)))
-                           (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"\\\"x\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var x)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"\\\"y\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var y)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"dat\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var dat)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_1d_simplex\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"dat_int\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var dat_int)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_1d_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_r\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 0)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var x_r)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_3d_simplex\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_i\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 0)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var x_i)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_3d_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"arr_mul_ind\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var arr_mul_ind)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_cfcov_54\""))))
               (Expression
-               (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_mul_ind\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var x_mul_ind)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_cfcov_54))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_real\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"td_cfcov_33\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((FunCall std::to_string () ((Var transformed_data_real))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var td_cfcov_33))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_real_array\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var transformed_data_real_array)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_real_array_2d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var transformed_data_real_array_2d)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_real_array_3d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression
-                        (StreamInsertion (Var json_stream)
-                         ((FunCall std::to_string ()
-                           ((Subscript
-                             (Subscript
-                              (Subscript (Var transformed_data_real_array_3d)
-                               (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                              (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                             (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"y\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_matrix\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((FunCall stan::model::rvalue ()
-                          ((Var transformed_data_matrix)
-                           (Literal "\"transformed_data_matrix\"")
-                           (FunCall stan::model::index_uni () ((Var idx1__)))
-                           (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var y))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_matrix_array\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression
-                        (StreamInsertion (Var json_stream)
-                         ((FunCall std::to_string ()
-                           ((FunCall stan::model::rvalue ()
-                             ((Var transformed_data_matrix_array)
-                              (Literal "\"transformed_data_matrix_array\"")
-                              (FunCall stan::model::index_uni () ((Var idx1__)))
-                              (FunCall stan::model::index_uni () ((Var idx2__)))
-                              (FunCall stan::model::index_uni () ((Var idx3__)))))))))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"dat\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_matrix_array_2d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream)
-                            ((FunCall std::to_string ()
-                              ((FunCall stan::model::rvalue ()
-                                ((Var transformed_data_matrix_array_2d)
-                                 (Literal "\"transformed_data_matrix_array_2d\"")
-                                 (FunCall stan::model::index_uni () ((Var idx1__)))
-                                 (FunCall stan::model::index_uni () ((Var idx2__)))
-                                 (FunCall stan::model::index_uni () ((Var idx3__)))
-                                 (FunCall stan::model::index_uni () ((Var idx4__)))))))))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var dat))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_matrix_array_3d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                          (For
-                           ((static false) (constexpr false) (type_ Int) 
-                            (name idx5__) (init (Assignment (Literal 1))))
-                           (BinOp (Var idx5__) LEq (Var d_int)) (Increment (Var idx5__))
-                           (Block
-                            ((IfElse (BinOp (Var idx5__) Gthn (Literal 1))
-                              (Block
-                               ((Expression
-                                 (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                              ())
-                             (Expression
-                              (StreamInsertion (Var json_stream)
-                               ((FunCall std::to_string ()
-                                 ((FunCall stan::model::rvalue ()
-                                   ((Var transformed_data_matrix_array_3d)
-                                    (Literal "\"transformed_data_matrix_array_3d\"")
-                                    (FunCall stan::model::index_uni () ((Var idx1__)))
-                                    (FunCall stan::model::index_uni () ((Var idx2__)))
-                                    (FunCall stan::model::index_uni () ((Var idx3__)))
-                                    (FunCall stan::model::index_uni () ((Var idx4__)))
-                                    (FunCall stan::model::index_uni () ((Var idx5__)))))))))))))
-                          (Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"dat_int\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_vector\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var transformed_data_vector)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var dat_int))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_vector_array\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var transformed_data_vector_array)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x_r\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_vector_array_2d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression
-                        (StreamInsertion (Var json_stream)
-                         ((FunCall std::to_string ()
-                           ((Subscript
-                             (Subscript
-                              (Subscript (Var transformed_data_vector_array_2d)
-                               (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                              (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                             (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x_r))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_vector_array_3d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream)
-                            ((FunCall std::to_string ()
-                              ((Subscript
-                                (Subscript
-                                 (Subscript
-                                  (Subscript (Var transformed_data_vector_array_3d)
-                                   (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                                  (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                                 (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
-                                (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x_i\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_row_vector\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression
-                  (StreamInsertion (Var json_stream)
-                   ((FunCall std::to_string ()
-                     ((Subscript (Var transformed_data_row_vector)
-                       (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x_i))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_row_vector_array\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression
-                     (StreamInsertion (Var json_stream)
-                      ((FunCall std::to_string ()
-                        ((Subscript
-                          (Subscript (Var transformed_data_row_vector_array)
-                           (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                          (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"arr_mul_ind\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_row_vector_array_2d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression
-                        (StreamInsertion (Var json_stream)
-                         ((FunCall std::to_string ()
-                           ((Subscript
-                             (Subscript
-                              (Subscript (Var transformed_data_row_vector_array_2d)
-                               (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                              (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                             (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var arr_mul_ind))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
-               (StreamInsertion (Var json_stream)
-                ((Literal "\"\\\"transformed_data_row_vector_array_3d\\\"\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-              (For
-               ((static false) (constexpr false) (type_ Int) (name idx1__)
-                (init (Assignment (Literal 1))))
-               (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
-               (Block
-                ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
-                  (Block
-                   ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                  ())
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                 (For
-                  ((static false) (constexpr false) (type_ Int) (name idx2__)
-                   (init (Assignment (Literal 1))))
-                  (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
-                  (Block
-                   ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
-                     (Block
-                      ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                     ())
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                    (For
-                     ((static false) (constexpr false) (type_ Int) (name idx3__)
-                      (init (Assignment (Literal 1))))
-                     (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
-                     (Block
-                      ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
-                        (Block
-                         ((Expression
-                           (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                        ())
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
-                       (For
-                        ((static false) (constexpr false) (type_ Int) (name idx4__)
-                         (init (Assignment (Literal 1))))
-                        (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
-                        (Block
-                         ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
-                           (Block
-                            ((Expression
-                              (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
-                           ())
-                          (Expression
-                           (StreamInsertion (Var json_stream)
-                            ((FunCall std::to_string ()
-                              ((Subscript
-                                (Subscript
-                                 (Subscript
-                                  (Subscript (Var transformed_data_row_vector_array_3d)
-                                   (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
-                                  (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
-                                 (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
-                                (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
-                       (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                    (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-                 (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
-              (Expression (StreamInsertion (Var json_stream) ((Literal "\"}\""))))
-              (Return ((MethodCall (Var json_stream) str () ()))))))))
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"x_mul_ind\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var x_mul_ind))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_real\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_real))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_real_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_real_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_real_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_real_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_real_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_real_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_matrix\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_matrix))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_matrix_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_matrix_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_matrix_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_matrix_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_matrix_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_matrix_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_vector_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_row_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_row_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_row_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_row_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((Var json_stream__) (Var transformed_data_row_vector_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\"}\""))))
+              (Return ((MethodCall (Var json_stream__) str () ()))))))))
          (GlobalComment "Begin method overload boilerplate")
          (FunDef
           ((templates_init ((((Typename RNG))) false)) (inline true) (return_type Void)
@@ -18567,7 +17638,7 @@
                       (Expression
                        (FunCall stan::math::stan_print () ((Var pstream__) (Var l_mat))))
                       (Expression
-                       (StreamInsertion (Deref (Var pstream__)) ((Literal std::endl))))))
+                       (StreamInsertion (Deref (Var pstream__)) ((Var std::endl))))))
                     ())))))))
              (Expression (Assign (Var current_statement__) (Literal 347)))
              (Expression

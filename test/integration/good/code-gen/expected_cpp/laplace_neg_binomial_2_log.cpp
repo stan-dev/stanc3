@@ -741,66 +741,36 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"log_ye\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(log_ye[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"theta_0\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(theta_0[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"tolerance\"";
-    json_stream << ":";
-    json_stream << std::to_string(tolerance);
-    json_stream << ",\n";
-    json_stream << "\"max_num_steps\"";
-    json_stream << ":";
-    json_stream << std::to_string(max_num_steps);
-    json_stream << ",\n";
-    json_stream << "\"hessian_block_size\"";
-    json_stream << ":";
-    json_stream << std::to_string(hessian_block_size);
-    json_stream << ",\n";
-    json_stream << "\"solver\"";
-    json_stream << ":";
-    json_stream << std::to_string(solver);
-    json_stream << ",\n";
-    json_stream << "\"max_steps_line_search\"";
-    json_stream << ":";
-    json_stream << std::to_string(max_steps_line_search);
-    json_stream << ",\n";
-    json_stream << "\"allow_fallthrough\"";
-    json_stream << ":";
-    json_stream << std::to_string(allow_fallthrough);
-    json_stream << ",\n";
-    json_stream << "\"prior_mean\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << std::to_string(prior_mean[(idx1__ - 1)]);
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "log_ye");
+    stan::json::write_json_value(json_stream__, log_ye);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "theta_0");
+    stan::json::write_json_value(json_stream__, theta_0);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "tolerance");
+    stan::json::write_json_value(json_stream__, tolerance);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "max_num_steps");
+    stan::json::write_json_value(json_stream__, max_num_steps);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "hessian_block_size");
+    stan::json::write_json_value(json_stream__, hessian_block_size);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "solver");
+    stan::json::write_json_value(json_stream__, solver);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "max_steps_line_search");
+    stan::json::write_json_value(json_stream__, max_steps_line_search);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "allow_fallthrough");
+    stan::json::write_json_value(json_stream__, allow_fallthrough);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "prior_mean");
+    stan::json::write_json_value(json_stream__, prior_mean);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

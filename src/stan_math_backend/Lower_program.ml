@@ -289,74 +289,29 @@ let gen_tdata_json {Program.prepare_data; input_vars; _} =
   let tdata =
     List.filter_map prepare_data ~f:(fun s ->
         match s.Stmt.pattern with
-        | Decl ({decl_id; decl_type= Sized s; _} as decl)
+        | Decl {decl_id; decl_type= Sized s; _}
           when Utils.is_user_ident decl_id && not (String.Set.mem decl_id data)
           ->
-            Some (decl_id, Stmt.Helpers.decl_variable decl, s)
+            Some decl_id
         | _ -> None) in
   let open Cpp.DSL in
-  let stream = "json_stream" in
-  let comma i = if i = 0 then [] else [stream <<: literal_string ",\n"] in
-  let rec write_json_value expr type_ =
-    match type_ with
-    | SizedType.SInt | SReal -> [stream <<: to_string (lower_expr expr)]
-    | SComplex ->
-        [ stream <<: literal_string "["
-        ; stream
-          <<: to_string (fun_call "stan::math::get_real" [lower_expr expr])
-        ; stream <<: literal_string ","
-        ; stream
-          <<: to_string (fun_call "stan::math::get_imag" [lower_expr expr])
-        ; stream <<: literal_string "]" ]
-    | SArray (st, size) -> write_container expr st size
-    | SVector (_, size) | SRowVector (_, size) ->
-        write_container expr SReal size
-    | SMatrix (mem, size1, size2) ->
-        write_container expr (SVector (mem, size1)) size2
-    | SComplexVector size | SComplexRowVector size ->
-        write_container expr SComplex size
-    | SComplexMatrix (size1, size2) ->
-        write_container expr (SComplexVector size1) size2
-    | STuple sts ->
-        let entries =
-          List.mapi
-            ~f:(fun i st ->
-              let i = Stdlib.(i + 1) in
-              (Int.to_string i, Expr.Helpers.add_tuple_index expr i, st))
-            sts in
-        write_object entries
-  and write_container expr inner_type length =
-    let loopvar, exit = Common.Gensym.enter ~prefix:"idx" in
-    let stmts =
-      (stream <<: literal_string "[")
-      :: fori loopvar (Literal "1") (lower_expr length)
-           (block
-              (if_block
-                 (BinOp (Var loopvar, Gthn, Literal "1"))
-                 [stream <<: literal_string ","]
-              :: write_json_value
-                   (Expr.Helpers.add_int_index expr
-                      (Index.Single (Expr.Helpers.variable loopvar)))
-                   inner_type))
-      :: [stream <<: literal_string "]"] in
-    exit ();
-    stmts
-  and write_object entries =
-    let write_data_item i (name, expr, st) =
-      let name_string = literal_string ("\"" ^ name ^ "\"") in
-      comma i
-      @ [stream <<: name_string; stream <<: literal_string ":"]
-      @ write_json_value expr st in
+  let stream_decl =
+    VariableDefn
+      (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
+         ~name:"json_stream__" ()) in
+  let stream = Var "json_stream__" in
+  let write_object entries =
+    let write_data_item i m =
+      (if i > 0 then [stream <<: literal_string ",\n"] else [])
+      @ [ Expression
+            (fun_call "stan::json::write_key" [stream; literal_string m])
+        ; Expression (fun_call "stan::json::write_json_value" [stream; Var m])
+        ] in
     (stream <<: literal_string "{")
     :: List.concat_mapi ~f:write_data_item entries
     @ [stream <<: literal_string "}"] in
-  let stream_decl =
-    VariableDefn
-      (make_variable_defn ~type_:(TypeLiteral "std::stringstream") ~name:stream
-         ()) in
   let body =
-    (stream_decl :: write_object tdata) @ [Return (Some (Var stream).@!("str"))]
-  in
+    (stream_decl :: write_object tdata) @ [Return (Some stream.@!("str"))] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Types.string
        ~name:"get_transformed_data_json" ~body ~cv_qualifiers:[Const] ())
@@ -540,8 +495,9 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
 let emplace_name_stmt name idcs =
   let null_string = Constructor (Types.string, []) in
   let sep = function `Array -> Literal "'.'" | `Tuple -> Literal "':'" in
+  let to_string e =
+    match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
   let open Cpp.DSL in
-  let to_string e = match e with Literal _ -> e | _ -> Exprs.to_string e in
   let param_names__ = Var "param_names__" in
   Expression
     param_names__.@?(( "emplace_back"

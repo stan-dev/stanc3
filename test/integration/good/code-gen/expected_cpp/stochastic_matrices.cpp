@@ -777,99 +777,24 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
     return std::string("[{\"name\":\"p_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((ROWS -1)) + ",\"cols\":" + std::to_string(COLS) + "},\"block\":\"parameters\"},{\"name\":\"p_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream;
-    json_stream << "{";
-    json_stream << "\"ROWS\"";
-    json_stream << ":";
-    json_stream << std::to_string(ROWS);
-    json_stream << ",\n";
-    json_stream << "\"COLS\"";
-    json_stream << ":";
-    json_stream << std::to_string(COLS);
-    json_stream << ",\n";
-    json_stream << "\"td_csm\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream <<
-                      std::to_string(
-                        stan::model::rvalue(td_csm, "td_csm",
-                          stan::model::index_uni(idx1__),
-                          stan::model::index_uni(idx2__)));
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"td_rsm\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 10; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream <<
-                      std::to_string(
-                        stan::model::rvalue(td_rsm, "td_rsm",
-                          stan::model::index_uni(idx1__),
-                          stan::model::index_uni(idx2__)));
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << ",\n";
-    json_stream << "\"td_arsm\"";
-    json_stream << ":";
-    json_stream << "[";
-    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
-      if (idx1__ > 1) {
-        json_stream << ",";
-      }
-      json_stream << "[";
-      for (int idx2__ = 1; idx2__ <= 2; ++idx2__) {
-        if (idx2__ > 1) {
-          json_stream << ",";
-        }
-        json_stream << "[";
-        for (int idx3__ = 1; idx3__ <= 10; ++idx3__) {
-          if (idx3__ > 1) {
-            json_stream << ",";
-          }
-          json_stream << "[";
-          for (int idx4__ = 1; idx4__ <= 10; ++idx4__) {
-            if (idx4__ > 1) {
-              json_stream << ",";
-            }
-            json_stream <<
-                          std::to_string(
-                            stan::model::rvalue(td_arsm, "td_arsm",
-                              stan::model::index_uni(idx1__),
-                              stan::model::index_uni(idx2__),
-                              stan::model::index_uni(idx3__),
-                              stan::model::index_uni(idx4__)));
-          }
-          json_stream << "]";
-        }
-        json_stream << "]";
-      }
-      json_stream << "]";
-    }
-    json_stream << "]";
-    json_stream << "}";
-    return json_stream.str();
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(json_stream__, "ROWS");
+    stan::json::write_json_value(json_stream__, ROWS);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "COLS");
+    stan::json::write_json_value(json_stream__, COLS);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_csm");
+    stan::json::write_json_value(json_stream__, td_csm);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_rsm");
+    stan::json::write_json_value(json_stream__, td_rsm);
+    json_stream__ << ",\n";
+    stan::json::write_key(json_stream__, "td_arsm");
+    stan::json::write_json_value(json_stream__, td_arsm);
+    json_stream__ << "}";
+    return json_stream__.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

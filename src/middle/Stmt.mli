@@ -16,7 +16,11 @@ module Pattern : sig
     | Profile of string * 'b list
     | Block of 'b list
     | SList of 'b list
-    | Decl of 'a decl_info
+    | Decl of
+        { decl_adtype: UnsizedType.autodifftype
+        ; decl_id: string
+        ; decl_type: 'a Type.t
+        ; initialize: 'a decl_init }
   [@@deriving sexp_of, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]
@@ -25,13 +29,6 @@ module Pattern : sig
   [@@deriving sexp_of, map, fold]
 
   and 'a decl_init = Uninit | Default | Assign of 'a
-  [@@deriving sexp_of, map, fold]
-
-  and 'a decl_info =
-    { decl_adtype: UnsizedType.autodifftype
-    ; decl_id: string
-    ; decl_type: 'a Type.t
-    ; initialize: 'a decl_init }
   [@@deriving sexp_of, map, fold]
 
   val fold_map :
@@ -132,7 +129,6 @@ module Helpers : sig
     f:(string -> string) -> 'e Pattern.lvalue -> 'e Pattern.lvalue
 
   val lhs_indices : 'e Pattern.lvalue -> 'e Index.t list
-  val decl_variable : Expr.Typed.t Pattern.decl_info -> Expr.Typed.t
 
   val lhs_variable : 'e Pattern.lvalue -> string
   (** This gets the innermost name of the variable. It differs from
