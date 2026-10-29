@@ -4,14 +4,14 @@ open Std.Sexp_conv
 open Middle
 open Mir_utils
 
-type step = Subscript of Index_form.index Index.t | Field of int
+type step = Subscript of Affine_subscript.t Index.t | Field of int
 type kind = Read | Write | Increment [@@deriving equal]
 type access = {var: string; path: step list; kind: kind}
 
 (** Builds paths from expressions and from left-hand sides of assignments. A
     path here still holds the subscript expressions, as [`Subscript] and
     [`Field] steps, so that the reads inside the subscripts can be collected
-    before {!classify_path} classifies them. *)
+    before {!classify} classifies them. *)
 module Path = struct
   (** The variable and the path that [expr] selects, or [None] if [expr] is not
       a variable with subscripts and fields, or indexes after a slice. *)
@@ -45,14 +45,14 @@ module Path = struct
     @ List.map indices ~f:(fun index -> `Subscript index)
 
   (** The expressions inside the subscripts of [path]. *)
-  let bounds path : Expr.Typed.t list =
+  let subscript_exprs path : Expr.Typed.t list =
     List.concat_map path ~f:(function
       | `Subscript index -> Index.bounds index
       | `Field _ -> [])
 
   (** Classifies each subscript of [path] with [classify]. *)
-  let classify_path ~(classify : Expr.Typed.t -> Index_form.index) path :
-      step list =
+  let classify ~(classify : Expr.Typed.t -> Affine_subscript.t) path : step list
+      =
     List.map path ~f:(function
       | `Subscript index -> Subscript (Index.map classify index)
       | `Field field -> Field field)
@@ -75,16 +75,16 @@ let rec of_expr ~classify (expr : Expr.Typed.t) : access list =
   | Indexed _ | TupleProjection _ -> (
       match Path.of_expr expr with
       | Some (name, path) ->
-          read name (Path.classify_path ~classify path)
-          @ List.concat_map (Path.bounds path) ~f:(of_expr ~classify)
+          read name (Path.classify ~classify path)
+          @ List.concat_map (Path.subscript_exprs path) ~f:(of_expr ~classify)
       | None -> of_children ())
   | FunApp (StanLib (_, FnTarget), []) -> read "target" []
-  | FunApp (fun_kind, _) when increments_target fun_kind ->
+  | FunApp (fun_kind, _) when is_target_increment fun_kind ->
       of_children () @ [increment_target]
   | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
       of_children ()
 
-let of_stmt ~(classify : Expr.Typed.t -> Index_form.index)
+let of_statement ~(classify : Expr.Typed.t -> Affine_subscript.t)
     (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
   (* The accesses of each nested statement are collected separately. The
      statement fold thus visits only the expressions of [stmt] and skips nested
@@ -98,37 +98,36 @@ let of_stmt ~(classify : Expr.Typed.t -> Index_form.index)
   match stmt with
   | Assignment (lhs, _, rhs) ->
       let path = Path.of_lvalue lhs in
-      List.concat_map (Path.bounds path @ [rhs]) ~f:(of_expr ~classify)
-      @ write
-          (Stmt.Helpers.lhs_variable lhs)
-          (Path.classify_path ~classify path)
+      List.concat_map (Path.subscript_exprs path @ [rhs]) ~f:(of_expr ~classify)
+      @ write (Stmt.Helpers.lhs_variable lhs) (Path.classify ~classify path)
   | Decl {decl_id; _} -> of_children () @ write decl_id []
   | TargetPE _ | JacobianPE _ -> of_children () @ [increment_target]
-  | NRFunApp (fun_kind, _) when increments_target fun_kind ->
+  | NRFunApp (fun_kind, _) when is_target_increment fun_kind ->
       of_children () @ [increment_target]
   | NRFunApp _ | Return _ | IfElse _ | While _ | For _ | Profile _ | Block _
    |SList _ | Break | Continue | Skip ->
       of_children ()
 
-let of_var (var : string) (accesses : access list) : access list =
+let filter_var (var : string) (accesses : access list) : access list =
   List.filter accesses ~f:(fun access -> String.equal access.var var)
 
-let read_vars (accesses : access list) : string Set.Poly.t =
+let used_vars (accesses : access list) : string Set.Poly.t =
   Set.Poly.of_list
     (List.filter_map accesses ~f:(fun {var; kind; _} ->
          match kind with Read | Increment -> Some var | Write -> None))
 
-let written_vars (accesses : access list) : string Set.Poly.t =
+let defined_vars (accesses : access list) : string Set.Poly.t =
   Set.Poly.of_list
     (List.filter_map accesses ~f:(fun {var; kind; _} ->
          match kind with Write | Increment -> Some var | Read -> None))
 
 (** Prints one subscript, with braces around a multi-index. *)
-let pp_subscript ~loop_name ppf (index : Index_form.index Index.t) =
+let pp_subscript ~loop_name ppf (index : Affine_subscript.t Index.t) =
   match index with
-  | MultiIndex indices -> Fmt.pf ppf "{%a}" (Index_form.pp ~loop_name) indices
+  | MultiIndex indices ->
+      Fmt.pf ppf "{%a}" (Affine_subscript.pp ~loop_name) indices
   | All | Single _ | Upfrom _ | Between _ ->
-      Index.pp (Index_form.pp ~loop_name) ppf index
+      Index.pp (Affine_subscript.pp ~loop_name) ppf index
 
 (** Prints a path. [pp_subscripts_after] continues an open bracket. Consecutive
     subscripts thus share one pair of brackets. *)

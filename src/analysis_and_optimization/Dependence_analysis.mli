@@ -4,25 +4,25 @@ open Dataflow_types
 
 (** {1 Purpose}
 
-    Dependency analysis finds the earlier statements that each statement depends
+    Dependence analysis finds the earlier statements that each statement depends
     on. A statement can depend on an earlier statement in two ways.
 
-    - A {e data dependency} exists when the earlier statement writes a value
+    - A {e data dependence} exists when the earlier statement writes a value
       that this statement reads.
-    - A {e control dependency} exists when the earlier statement decides whether
+    - A {e control dependence} exists when the earlier statement decides whether
       this statement runs. The earlier statement is an [if] or loop around this
       statement (an {e enclosing} [if] or loop), or a [break], [continue] or
       [return] that can skip this statement (a {e jump}).
 
     The enclosing ifs and loops and the jumps are the {e controls} of a
     statement ({!Dataflow_types.controls}). A statement has a direct control
-    dependency only on the nearest enclosing [if] or loop, and on the jumps. The
-    other enclosing ifs and loops are transitive dependencies (dependencies of a
-    dependency). The direct ones are the {e control parents} of the statement
-    ({!Dataflow_utils.control_parents}).
+    dependence only on the nearest enclosing [if] or loop, and on the jumps. The
+    other enclosing ifs and loops are transitive dependences (dependences of a
+    dependence). The direct control dependencies are the {e control parents} of
+    the statement ({!Dataflow_utils.control_parent_ids}).
 
-    Pedantic mode uses dependencies to warn when a parameter decides an [if] or
-    a loop. The factor graph ({!Factor_graph}) uses them to connect each
+    Pedantic mode uses dependences to warn when a parameter decides an [if] or a
+    loop. The factor graph ({!Factor_graph}) uses them to connect each
     [target +=] term to the parameters and data that the term uses. A planned
     loop optimization will use them to decide which loops the optimization can
     vectorize (see {{!section-distances}Loop distances}). Optimizations do not
@@ -33,7 +33,7 @@ open Dataflow_types
     The analysis runs on one statement, the {e analyzed statement}, and on the
     statements nested in the analyzed statement. The analysis gives each
     statement a {e label}, an integer that identifies the statement. A test in
-    [test/unit/Dependence_analysis.ml] prints the labels and dependencies that
+    [test/unit/Dependence_analysis.ml] prints the labels and dependences that
     this file quotes.
     {@stan[
       data { int N; vector[N] x; }
@@ -72,7 +72,7 @@ open Dataflow_types
     Label [4] is [FnValidateSize__], a size check. The compiler adds this check
     before a sized declaration, such as [matrix[N, 2] theta].
 
-    The table below lists the dependencies of the [if] and of [target += 1].
+    The table below lists the dependences of the [if] and of [target += 1].
     {@text[
       if (theta[n, 2] > 0)  --data-->       matrix[N, 2] theta;
       if (theta[n, 2] > 0)  --data-->       theta[n, 2] = x[n]
@@ -83,12 +83,12 @@ open Dataflow_types
       target += 1           --transitive--> for (n in 1:N)
     ]}
     The table leaves out the data [N] and [x], because the values of [N] and [x]
-    come from outside the model block. Step 3 of {e Finding data dependencies}
-    explains why the declaration of [theta] is a data dependency.
+    come from outside the model block. Step 3 of {e Finding data dependences}
+    explains why the declaration of [theta] is a data dependence.
 
-    {1 Finding data dependencies}
+    {1 Finding data dependences}
 
-    A data dependency connects a read to each write that can supply the value
+    A data dependence connects a read to each write that can supply the value
     read. The analysis finds these writes in three steps.
 
     {ol
@@ -147,7 +147,7 @@ open Dataflow_types
         The analysis rejects the candidate source if the answer to a question is
         no. A rejection means the analysis has proved that the write can never
         supply the value the read uses, so the analysis drops that write from
-        the data dependencies of the read. In the running example, the [if] no
+        the data dependences of the read. In the running example, the [if] no
         longer depends on [theta[n, 1] = a], and therefore not on the parameter
         [a]. The declaration writes the whole of [theta] with no indices. The
         read [theta[n, 2]] has two indices, so question 1 cannot decide.
@@ -169,14 +169,14 @@ open Dataflow_types
     candidate source only when they prove that the source never supplies the
     value. Some cases are too hard for question 1 and question 2, and
     {!Dependence} lists these cases. In these cases the candidate source stays,
-    so the result can contain extra dependencies. But the result never misses a
-    dependency.
+    so the result can contain extra dependences. But the result never misses a
+    dependence.
 
     {1:distances Loop distances}
 
     Question 2 of step 3 needs the execution order of a write and a read in a
     loop. {!Dependence} answers question 2 with a {e distance} for each
-    dependency. The distance is the number of iterations from the write to the
+    dependence. The distance is the number of iterations from the write to the
     read that uses the written value. The words "same iteration" in the step 3
     table mean distance [0]. In the running example, each distance is [0]. Then
     no value passes from one iteration to another. Thus the iterations can run
@@ -186,28 +186,28 @@ open Dataflow_types
 
 (** {1 API reference}
 
-    {!build_dep_info_map} builds a {!dependence_info}. The {e queries}, such as
-    {!node_immediate_dependencies} and {!node_dependencies}, take a
-    {!dependence_info} and a label, and return the labels of the dependencies of
+    {!build_dependence_info} builds a {!dependence_info}. The {e queries}, such
+    as {!direct_dependence_ids} and {!transitive_dependence_ids}, take a
+    {!dependence_info} and a label, and return the labels of the dependences of
     the statement at that label. A statement {e uses} a variable when the
-    statement reads or increments the variable. Some queries take a set of
+    statement reads or increments the variable, and {e defines} a variable when
+    the statement writes or increments the variable. Some queries take a set of
     variables whose definitions the query follows, as [vars] in
-    {!node_immediate_dependencies} or as an argument of
-    {!node_vars_dependencies}. By default, [vars] holds each variable that the
-    statement uses. The factor graph and pedantic mode pass
-    {!node_vars_dependencies} the names in a factor or an expression. Some
-    queries also take [blockers], the names whose definitions the query does not
-    follow. For example, the factor graph passes data and parameter names as
-    [blockers]. By default, [blockers] is empty. *)
+    {!direct_dependence_ids} or as an argument of {!var_dependence_ids}. By
+    default, [vars] holds each variable that the statement uses. The factor
+    graph and pedantic mode pass {!var_dependence_ids} the names in a factor or
+    an expression. Some queries also take [blockers], the names whose
+    definitions the query does not follow. For example, the factor graph passes
+    data and parameter names as [blockers]. By default, [blockers] is empty. *)
 
-(** What a dependency query needs to know about one statement, apart from the
+(** What a dependence query needs to know about one statement, apart from the
     reaching definitions.
 
     The example record below is for the condition (label [10]) of the running
     example.
     {@text[
       pattern:   if (theta[n, 2] > 0) 11
-      controls:  {enclosing = [{id = 6; side = None}]; jumps = {}}
+      controls:  {enclosing = [{id = 6; side = None}]; jump_ids = {}}
       accesses:  R theta[n, 2]
     ]} *)
 type statement =
@@ -219,7 +219,7 @@ type statement =
         (** The enclosing ifs and loops of this statement, outermost first, and
             the jumps that can skip the statement ({!Dataflow_types.controls}).
             A loop statement does not list itself.
-            {!Dataflow_utils.control_parents} and {!Dataflow_utils.loops_around}
+            {!Dataflow_utils.control_parent_ids} and {!Dataflow_utils.loop_ids}
             give the two views that queries use. *)
   ; accesses: Accesses.access list
         (** The reads, writes and increments in the expressions of this
@@ -227,40 +227,47 @@ type statement =
 
 (** The statements of the analyzed statement and the definitions that reach each
     one. Both maps have the same labels. {e Running example} shows the labels
-    and statement patterns that {!log_prob_build_dep_info_map} gives. Label [1]
-    ({!Dataflow_utils.root_statement_label}) is the analyzed statement, the root
-    of the map. The queries return statement labels only, so a definition from
-    outside the analyzed statement, such as data, never appears in a result.
+    and statement patterns that {!build_log_prob_dependence_info} gives. Label
+    [1] ({!Dataflow_utils.root_statement_id}) is the analyzed statement, the
+    root of the map. The queries return statement labels only, so a definition
+    from outside the analyzed statement, such as data, never appears in a
+    result.
 
     In the running example, the definitions of [theta] that reach the condition
     (label [10]) are [("theta", Some 5)], [("theta", Some 8)] and
     [("theta", Some 9)]. The set contains [Some 8] ([theta[n, 1] = a]), because
-    step 2 of {e Finding data dependencies} keeps that write. Step 3 rejects
-    that write later, when a query runs in {!node_immediate_dependencies}. *)
+    step 2 of {e Finding data dependences} keeps that write. Step 3 rejects that
+    write later, when a query runs in {!direct_dependence_ids}. *)
 type dependence_info =
   { statements: statement LabelMap.t
-  ; reaching_definitions: reaching_defn Set.Poly.t LabelMap.t
+  ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t
         (** The definitions that can reach the start of each statement. Each
             definition is a (variable name, label) pair. [Some label] is a
             statement in the map. [None] is a definition from outside the
             analyzed statement, such as data. *) }
 
-val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dependence_info
+val build_dependence_info : Program.Typed.t -> Stmt.Located.t -> dependence_info
 (** Builds the statement records and the reaching definitions for the statement
     (label [1]) and the statements nested in the statement. *)
 
-val log_prob_build_dep_info_map : Program.Typed.t -> dependence_info
-(** Builds the map for the statements of the log density. These statements are
-    in the parameters, transformed parameters and model blocks. *)
+val build_log_prob_dependence_info : Program.Typed.t -> dependence_info
+(** Builds the {!dependence_info} for the statements of the log density. These
+    statements are in the parameters, transformed parameters and model blocks.
+*)
 
-val reaching_defn_lookup :
-  reaching_defn Set.Poly.t -> string -> label option Set.Poly.t
+val definition_ids :
+  reaching_definition Set.Poly.t -> string -> label option Set.Poly.t
 (** Returns the labels in the definitions of the named variable. The lookup
     compares names only and ignores which element each definition writes. *)
 
-val flows_into : Accesses.access -> Accesses.access -> bool
+val is_flow_kind : Accesses.access -> Accesses.access -> bool
 (** Whether the first access (the source) can pass a value to the second (the
     sink) by the rules in step 1, comparing only variable names and kinds. *)
+
+val common_loop_ids : statement LabelMap.t -> label -> label -> label list
+(** Returns the labels of the {e common loops} of two statements, the loops that
+    contain both statements, outermost first. A loop statement counts as inside
+    its own loop. *)
 
 val dependence_between :
      dependence_info
@@ -268,16 +275,18 @@ val dependence_between :
   -> label * Accesses.access
   -> Dependence.t
 (** Compares the elements that the first access (the source) and the second
-    access (the sink) select, over the loops around both statements. Each access
-    comes paired with the label of the statement that makes the access. *)
+    access (the sink) select, over the common loops of both statements. Each
+    access comes paired with the label of the statement that makes the access.
+*)
 
-val may_supply :
+val is_flow_dependence :
   dependence_info -> label * Accesses.access -> label * Accesses.access -> bool
-(** Whether the first access (the source) can supply the value that the second
-    access (the sink) uses: {!flows_into}, then {!Dependence.is_plausible} on
-    {!dependence_between}. *)
+(** Whether a flow dependence can exist from the first access (the source) to
+    the second (the sink), which means that the source can supply the value that
+    the sink uses: {!is_flow_kind}, then
+    {!Dependence.is_lexicographically_positive} on {!dependence_between}. *)
 
-val node_immediate_dependencies :
+val direct_dependence_ids :
      dependence_info
   -> ?blockers:string Set.Poly.t
   -> ?vars:string Set.Poly.t
@@ -286,32 +295,31 @@ val node_immediate_dependencies :
 (** Returns the control parents of the statement at the label, and each
     statement whose write can supply the value of [vars] used there. *)
 
-val node_dependencies : dependence_info -> label -> label Set.Poly.t
-(** Returns the labels of the direct and transitive dependencies of the
-    statement at the label. The result also includes the label. *)
+val transitive_dependence_ids : dependence_info -> label -> label Set.Poly.t
+(** Returns the labels of the direct and transitive dependences of the statement
+    at the label. The result also includes the label. *)
 
-val node_vars_dependencies :
+val var_dependence_ids :
      dependence_info
   -> ?blockers:string Set.Poly.t
   -> string Set.Poly.t
   -> label
   -> label Set.Poly.t
-(** Like {!node_dependencies}, but the first step follows only the control
-    parents and the definitions of the variables in the given set. *)
+(** Like {!transitive_dependence_ids}, but the first step follows only the
+    control parents and the definitions of the variables in the given set, and
+    the result leaves out the label. *)
 
-val all_node_dependencies : dependence_info -> label Set.Poly.t LabelMap.t
-(** Returns the direct and transitive dependencies of each statement. Unlike in
-    {!node_dependencies}, the set of a statement leaves out that label. *)
+val dependence_graph : dependence_info -> label Set.Poly.t LabelMap.t
+(** Returns the direct and transitive dependences of each statement. Unlike in
+    {!transitive_dependence_ids}, the set of a statement leaves out that label.
+*)
 
-val log_prob_dependency_graph : Program.Typed.t -> label Set.Poly.t LabelMap.t
-(** Returns {!all_node_dependencies} for the statements of the log density. *)
-
-val read_variables_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t
+val used_vars_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)
 
 (* TODO: [reaching_definitions_mfp] takes the whole program but needs only the
    names of variables defined before the analyzed statement. *)
 
-(* TODO: Cache the results of [node_immediate_dependencies] and
-   [reaching_defn_lookup] per map. Each query computes them again. *)
+(* TODO: Cache the results of [direct_dependence_ids] and [definition_ids] per
+   map. Each query computes them again. *)

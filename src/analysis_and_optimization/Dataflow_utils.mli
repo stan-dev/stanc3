@@ -3,7 +3,7 @@
     A {e statement map} ({!build_statement_map}) gives each statement in a tree
     of statements an integer {e label}. The map takes each label to the
     statement, with each nested statement replaced by the label of the nested
-    statement. {!build_cf_graphs} computes three items from a statement map.
+    statement. {!build_control_flow} computes three items from a statement map.
     - The {e predecessor graph} maps each label to the labels of the statements
       that can run immediately before that statement.
     - The {e exit set} holds the labels of the statements that can run last.
@@ -18,10 +18,10 @@
     whether the statement runs. These are the nearest enclosing [if] or loop,
     and each jump.
 
-    {!loops_around} counts a loop statement as inside the loop that the
-    statement forms. The loop checks the condition, or the upper bound, again
-    after each iteration, so writes in the body can reach the loop statement.
-    LLVM also puts the loop header inside the loop.
+    {!loop_ids} counts a loop statement as inside the loop that the statement
+    forms. The loop checks the condition, or the upper bound, again after each
+    iteration, so writes in the body can reach the loop statement. LLVM also
+    puts the loop header inside the loop.
 
     A loop is identified by the label of the loop statement. The statement at
     that label holds the loop variable.
@@ -30,17 +30,17 @@
     statement has label [6] and the [if] has label [8]. The controls of [x = 1]
     are [{id = 6; side = None}] for the loop and [{id = 8; side = Some Then}]
     for the [if], and the control parents of [x = 1] hold only [8]. For both
-    [x = 1] and the [for] statement, {!loops_around} gives [[6]]. *)
+    [x = 1] and the [for] statement, {!loop_ids} gives [[6]]. *)
 
 open Std
 open Middle
 open Dataflow_types
 
-val root_statement_label : label
+val root_statement_id : label
 (** The label that {!build_statement_map} gives the statement that the map is
     built from. *)
 
-val build_cf_graphs :
+val build_control_flow :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
   -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
@@ -48,24 +48,14 @@ val build_cf_graphs :
 (** Returns the exit set, the predecessor graph and the controls of each label.
     The first two parts equal the result of {!build_predecessor_graph}. *)
 
-val control_parents : controls -> label Set.Poly.t
-(** Returns the control parents of a statement, given the controls of the
-    statement. *)
+val control_parent_ids : controls -> label Set.Poly.t
+(** Returns the labels of the control parents of a statement, given the controls
+    of the statement. *)
 
-val loops_around :
-  statement_id:label -> ('e, 's) Stmt.Pattern.t -> controls -> label list
-(** Returns the labels of the [for] and [while] loops around a statement,
-    outermost first. For a loop statement at [statement_id], the list ends with
-    [statement_id]. *)
-
-val precedes_in_source : label -> label -> bool
-(** Whether the statement at the first label comes before the statement at the
-    second in the program text. {!build_statement_map} numbers a statement
-    before the statements nested inside, and nested statements in text order. *)
-
-val common_loops : label list -> label list -> label list
-(** Returns the longest start that two outermost-first lists of loop labels
-    share. These are the loops around both statements. *)
+val loop_ids : label -> ('e, 's) Stmt.Pattern.t -> controls -> label list
+(** Returns the labels of the [for] and [while] loops around a statement, given
+    the label, pattern and controls of the statement, outermost first. For a
+    loop statement, the list ends with the label of the statement. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

@@ -138,11 +138,11 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   let dependency_labels, expression_read_names =
     match expr_opt with
-    | None -> (node_dependencies info_map label, Set.Poly.empty)
+    | None -> (transitive_dependence_ids info_map label, Set.Poly.empty)
     | Some expr ->
         let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
-        (node_vars_dependencies info_map expr_names label, expr_names) in
-  let dependency_read_names = read_variables_at info_map dependency_labels in
+        (var_dependence_ids info_map expr_names label, expr_names) in
+  let dependency_read_names = used_vars_at info_map dependency_labels in
   (* The dependency query for these names can leave out the statement where the
      query starts. The union adds the names that [expr] reads, such as [a] in [a
      > 0]. *)
@@ -173,7 +173,7 @@ let list_target_dependant_cf (info_map : dependence_info)
 let list_param_dependant_cf (mir : Program.Typed.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   let params = parameter_names_set mir in
-  let info_map = log_prob_build_dep_info_map mir in
+  let info_map = build_log_prob_dependence_info mir in
   list_target_dependant_cf info_map params
 
 (** Returns [(location, position, name)] for each control-flow statement in the
@@ -183,7 +183,7 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
   Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
-      let info_map = build_dep_info_map mir body in
+      let info_map = build_dependence_info mir body in
       let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
       Set.Poly.union_map cf_deps ~f:(fun (loc, names) ->
           Set.Poly.map names ~f:(fun name ->
@@ -253,7 +253,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
 let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
     (string * Location_span.t * string Set.Poly.t * string * Location_span.t)
     Set.Poly.t =
-  let info_map = log_prob_build_dep_info_map mir in
+  let info_map = build_log_prob_dependence_info mir in
   Set.Poly.union_map (Set.Poly.of_list mir.functions_block) ~f:(fun fun_def ->
       let dependant_args = list_param_dependant_fundef_cf mir info_map fun_def in
       Set.Poly.map dependant_args ~f:(fun (cf_loc, deps, arg_name, arg_loc) ->

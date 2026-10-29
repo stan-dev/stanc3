@@ -14,7 +14,7 @@ and idx_any pred (i : Expr.Typed.t Index.t) =
 
 and accum_any pred b e = b || expr_any pred e
 
-let increments_target (kind : 'e Fun_kind.t) : bool =
+let is_target_increment (kind : 'e Fun_kind.t) : bool =
   match kind with
   | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
   | UserDefined _ | StanLib _ | Operator _ | CompilerInternal _ -> false
@@ -25,7 +25,7 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
-  | FunApp (kind, _) when increments_target kind -> true
+  | FunApp (kind, _) when is_target_increment kind -> true
   | _ -> false
 
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
@@ -284,7 +284,7 @@ and index_var_set ix =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-let expr_var_names_set expr : string Set.Poly.t =
+let expr_names expr : string Set.Poly.t =
   Set.Poly.map ~f:fst (expr_var_set expr)
 
 let stmt_rhs stmt =

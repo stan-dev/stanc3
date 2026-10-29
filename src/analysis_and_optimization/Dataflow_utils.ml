@@ -10,7 +10,7 @@ let merge_set_maps (module M : Map.S) m1 m2 =
   M.union ~f:merge_map_elems m1 m2
 
 (** See interface file *)
-let root_statement_label : label = 1
+let root_statement_id : label = 1
 
 (** See interface file *)
 let build_statement_map extract metadata stmt =
@@ -24,7 +24,7 @@ let build_statement_map extract metadata stmt =
       , LabelMap.add map ~key:this_label ~data:(built, metadata stmt) )
     , this_label ) in
   let (_, map), _ =
-    build_statement_map_rec root_statement_label LabelMap.empty stmt in
+    build_statement_map_rec root_statement_id LabelMap.empty stmt in
   map
 
 (* TODO: this currently does not seem to be labelling inside function bodies.
@@ -75,15 +75,11 @@ let is_ctrl_flow pattern =
   | For _ -> true
   | _ -> false
 
-(** See interface file *)
-let is_loop (pattern : ('e, 's) Stmt.Pattern.t) : bool =
-  match pattern with For _ | While _ -> true | _ -> false
-
 (** Simultaneously builds the controlflow parent graph, the predecessor graph
     and the exit set of a statement. It's advantageous to build them together
     because they both rely on some of the same Break, Continue and Return
     bookkeeping. *)
-let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
+let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   (* Visits the statement at [label] and the statements nested in the statement.
      [enclosing] holds the ifs and loops around the statement, outermost
@@ -96,8 +92,9 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
        children of the statement receive. A loop adds itself here. An if adds
        itself below, with the side that holds each child. *)
     let child_cf =
-      if is_loop stmt then enclosing @ [{id= label; side= None}] else enclosing
-    in
+      match stmt with
+      | Stmt.Pattern.For _ | While _ -> enclosing @ [{id= label; side= None}]
+      | _ -> enclosing in
     (* This node is the parent of substatements, unless this is a Block, which
        is visited after substatements *)
     let substmt_preds =
@@ -202,7 +199,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
           , substmt_state.returns
           , substmt_state.continues
           , Set.Poly.empty ) in
-    let jumps =
+    let jump_ids =
       Set.Poly.union_list [in_state.returns; in_state.continues; extra_cf_deps]
     in
     ( { breaks= breaks_out
@@ -210,7 +207,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       ; returns= returns_out
       ; exits= substmt_state.exits }
     , LabelMap.add substmt_map ~key:label
-        ~data:{controls= {enclosing; jumps}; predecessors} ) in
+        ~data:{controls= {enclosing; jump_ids}; predecessors} ) in
   let state, edges =
     build_cf_graph_rec []
       ( { breaks= Set.Poly.empty
@@ -218,44 +215,33 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
         ; returns= Set.Poly.empty
         ; exits= Set.Poly.empty }
       , LabelMap.empty )
-      root_statement_label in
+      root_statement_id in
   ( state.exits
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
   , LabelMap.map edges ~f:(fun e -> e.controls) )
 
 (** See interface file *)
-let control_parents ({enclosing; jumps} : controls) : label Set.Poly.t =
+let control_parent_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t =
   match List.hd (List.rev enclosing) with
-  | Some {id; _} -> Set.Poly.add id jumps
-  | None -> jumps
+  | Some {id; _} -> Set.Poly.add id jump_ids
+  | None -> jump_ids
 
 (** See interface file *)
-let loops_around ~(statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
+let loop_ids (statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
     (controls : controls) : label list =
   List.filter_map controls.enclosing ~f:(function
     | {id; side= None} -> Some id
     | {side= Some _; _} -> None)
-  @ if is_loop pattern then [statement_id] else []
-
-(** See interface file *)
-let precedes_in_source (first : label) (second : label) : bool = first < second
-
-(* After the first loop that differs, no loop is around both statements. *)
-let rec common_loops (first_loops : label list) (second_loops : label list) :
-    label list =
-  match (first_loops, second_loops) with
-  | first :: first_rest, second :: second_rest when first = second ->
-      first :: common_loops first_rest second_rest
-  | _ -> []
+  @ match pattern with For _ | While _ -> [statement_id] | _ -> []
 
 (** See interface file *)
 let build_cf_graph statement_map =
-  let _, _, controls = build_cf_graphs statement_map in
-  LabelMap.map controls ~f:control_parents
+  let _, _, controls = build_control_flow statement_map in
+  LabelMap.map controls ~f:control_parent_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let exits, pred_graph, _ =
-    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map in
+    build_control_flow ~flatten_loops ~blocks_after_body statement_map in
   (exits, pred_graph)

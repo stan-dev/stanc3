@@ -13,7 +13,7 @@ type label = int [@@deriving sexp_of]
     the statement with label [l] can write [x]. [(x, None)] means that [x] gets
     a value from outside the analyzed statement (the statement that the analysis
     runs on), such as data. *)
-type reaching_defn = string * label option [@@deriving sexp_of]
+type reaching_definition = string * label option [@@deriving sexp_of]
 
 (** The side of an [if] that holds a statement. *)
 type side = Then | Else
@@ -25,12 +25,13 @@ type side = Then | Else
 type enclosing = {id: label; side: side option}
 
 (** The {e controls} of a statement are the other statements that decide
-    whether, or how often, the statement runs. {!Dataflow_utils.build_cf_graphs}
-    finds the controls of each statement. *)
+    whether, or how often, the statement runs.
+    {!Dataflow_utils.build_control_flow} finds the controls of each statement.
+*)
 type controls =
   { enclosing: enclosing list
         (** The ifs and loops around the statement, outermost first. *)
-  ; jumps: label Set.Poly.t
+  ; jump_ids: label Set.Poly.t
         (** The labels of the [break], [continue] and [return] statements that
             can skip the statement. For a loop statement, also each [break] or
             [return] in the loop body that can end the loop. *) }

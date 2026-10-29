@@ -55,8 +55,8 @@ let factor_rhs (term : factor) : string Set.Poly.t =
 let factor_var_dependencies info blockers (label, factor) =
   let term_read_names = factor_rhs factor in
   let dependency_labels =
-    node_vars_dependencies info ~blockers term_read_names label in
-  let dependency_read_names = read_variables_at info dependency_labels in
+    var_dependence_ids info ~blockers term_read_names label in
+  let dependency_read_names = used_vars_at info dependency_labels in
   (* The dependency traversal can leave out the statement where the traversal
      starts. The union adds the names that the factor itself reads, such as [mu]
      in [normal_lpdf(mu | 0, 1)]. *)
@@ -101,8 +101,8 @@ let remove_touching vars fg =
   without_facs
 
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
-  let info = log_prob_build_dep_info_map prog in
-  let factors = extract_factors info.statements root_statement_label in
+  let info = build_log_prob_dependence_info prog in
+  let factors = extract_factors info.statements root_statement_id in
   let data_vars = data_set prog in
   let vars =
     Set.Poly.union data_vars

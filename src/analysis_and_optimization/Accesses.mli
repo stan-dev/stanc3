@@ -9,7 +9,7 @@ open Middle
     variable.
 
     {!Dependence_analysis} finds the earlier statements that each statement
-    {e depends} on. A statement has a {e data dependency} on an earlier write
+    {e depends} on. A statement has a {e data dependence} on an earlier write
     when the write can supply a value that the statement reads. To find these,
     the analysis compares the paths of a write and a read of one variable with
     {!Dependence}. Two accesses whose paths never select the same element, such
@@ -26,7 +26,7 @@ open Middle
     {@stan[
       y[n] = v[n + 1] + v[k];
     ]}
-    {!of_stmt} gives these accesses:
+    {!of_statement} gives these accesses:
     {@text[
       R n, R v[n+1], R n, R v[k], R k, W y[n]
     ]}
@@ -34,8 +34,8 @@ open Middle
     [R] is a read, [W] is a write and [+=] is an increment. Consecutive
     subscripts share one pair of brackets, as in [[i, j]]. A slice prints as
     [[1:k]], a multi-index as [[{idx}]], and a tuple field as [.2]. Each
-    subscript prints in the notation of {!Index_form.pp}, so [n+1] is the loop
-    variable [n] plus the constant [1]. The two reads of [n] come from the
+    subscript prints in the notation of {!Affine_subscript.pp}, so [n+1] is the
+    loop variable [n] plus the constant [1]. The two reads of [n] come from the
     subscripts of [y[n]] and [v[n + 1]]. *)
 
 (** {1 API reference} *)
@@ -43,8 +43,9 @@ open Middle
 (** One position in a path. A step is a subscript or a tuple field. The path of
     [x[i].2[j]] has the three steps [i], [.2] and [j]. *)
 type step =
-  | Subscript of Index_form.index Index.t
-      (** One subscript, such as [n + 1], with the form of each index. *)
+  | Subscript of Affine_subscript.t Index.t
+      (** One subscript, such as [n + 1], with the affine subscript of each
+          index, or [None]. *)
   | Field of int  (** One tuple field, such as [.2] in [t.2]. *)
 
 (** Whether an access reads, writes or increments a variable.
@@ -59,12 +60,12 @@ type kind = Read | Write | Increment [@@deriving equal]
     means the whole variable, as in [sum(v)] or the declaration of [v]. *)
 type access = {var: string; path: step list; kind: kind}
 
-val of_stmt :
-     classify:(Expr.Typed.t -> Index_form.index)
+val of_statement :
+     classify:(Expr.Typed.t -> Affine_subscript.t)
   -> (Expr.Typed.t, 'substatement) Stmt.Pattern.t
   -> access list
 (** Collects the accesses in the expressions of a statement, and gives each
-    subscript the form that [classify] returns. Nested statements are collected
+    subscript the result of [classify]. Nested statements are collected
     separately. The accesses come in this order, which is not the run-time
     order.
     - An assignment gives the reads in the left-hand indices, then the accesses
@@ -76,17 +77,17 @@ val of_stmt :
     - An addition to the log density gives an increment of [target]. [target()]
       gives a read of [target]. *)
 
-val of_var : string -> access list -> access list
+val filter_var : string -> access list -> access list
 (** Keeps the accesses to the named variable, in their original order. In the
     running example, ["v"] gives [R v[n+1], R v[k]]. *)
 
-val read_vars : access list -> string Set.Poly.t
-(** Returns the names of the variables that the accesses read or increment. In
-    the running example, the result is [{"n"; "v"; "k"}]. *)
+val used_vars : access list -> string Set.Poly.t
+(** Returns the names of the variables that the accesses use, which means read
+    or increment. In the running example, the result is [{"n"; "v"; "k"}]. *)
 
-val written_vars : access list -> string Set.Poly.t
-(** Returns the names of the variables that the accesses write or increment. In
-    the running example, the result is [{"y"}]. *)
+val defined_vars : access list -> string Set.Poly.t
+(** Returns the names of the variables that the accesses define, which means
+    write or increment. In the running example, the result is [{"y"}]. *)
 
 val pp_access : loop_name:(Dataflow_types.label -> string) -> access Fmt.t
 (** Prints the kind, the variable and the path in the notation of the running

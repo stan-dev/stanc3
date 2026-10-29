@@ -3,15 +3,15 @@
    {!Analysis_and_optimization.Dependence_analysis} uses the module to drop the
    writes that never supply the value.
 
-   The tests build a map of statements with [log_prob_build_dep_info_map]. A
+   The tests build a map of statements with [build_log_prob_dependence_info]. A
    label is the integer that identifies a statement in this map. The map covers
    the log density, which contains the statements of the parameters, transformed
    parameters and model blocks. An access is one read, write or increment of a
    variable ({!Analysis_and_optimization.Accesses}). The output prints a read as
-   R and a write as W, then the variable and the indices. ? marks an index
-   without a form ({!Analysis_and_optimization.Index_form}), such as an index
-   that reads a variable that the log density writes, or a loop variable in a
-   form other than a sum.
+   R and a write as W, then the variable and the indices. ? marks an index that
+   is not affine ({!Analysis_and_optimization.Affine_subscript}), such as an
+   index that reads a variable that the log density writes, or a loop variable
+   in an expression other than a sum.
 
    A write reaches a read when the program can run the write before the read,
    and no write between them replaces the same element. Each write that reaches
@@ -21,8 +21,8 @@
    A common loop is a loop around both the source and the sink. The distance at
    a common loop is the iteration of the sink minus the iteration of the source.
    In [b[n] = a; c[n] = b[n - 1];] the read of [b[n - 1]] uses the write to
-   [b[n]] from one iteration earlier, so the distance is 1. A dependency with a
-   nonzero distance at some loop is loop-carried. A dependency with distance 0
+   [b[n]] from one iteration earlier, so the distance is 1. A dependence with a
+   nonzero distance at some loop is loop-carried. A dependence with distance 0
    at each loop is loop-independent.
 
    The test names refer to two standard dependence tests. The ZIV test (zero
@@ -57,13 +57,10 @@ module Accesses = Analysis_and_optimization.Accesses
 module Dependence = Analysis_and_optimization.Dependence
 
 let print_verdicts ~var prog =
-  let info = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
+  let info = build_log_prob_dependence_info (Test_utils.mir_of_string prog) in
   let accesses_of statement_id =
-    Accesses.of_var var (LabelMap.find statement_id info.statements).accesses
-  in
-  let loops_of statement_id =
-    let statement = LabelMap.find statement_id info.statements in
-    loops_around ~statement_id statement.pattern statement.controls in
+    Accesses.filter_var var
+      (LabelMap.find statement_id info.statements).accesses in
   let loop_name = Test_utils.loop_name info in
   let pp_access = Test_utils.one_line (Accesses.pp_access ~loop_name) in
   LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
@@ -75,39 +72,39 @@ let print_verdicts ~var prog =
       if not (List.is_empty sinks) then (
         Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt sink_statement.pattern;
         let reaching_ids =
-          reaching_defn_lookup
-            (LabelMap.find sink_id info.reaching_definitions)
-            var in
+          definition_ids (LabelMap.find sink_id info.reaching_definitions) var
+        in
         LabelMap.iter info.statements ~f:(fun ~key:source_id ~data:_ ->
             if Set.Poly.mem (Some source_id) reaching_ids then
               List.iter (accesses_of source_id) ~f:(fun source ->
                   List.iter sinks ~f:(fun sink ->
-                      if flows_into source sink then
+                      if is_flow_kind source sink then
                         let source = (source_id, source) in
                         let sink = (sink_id, sink) in
                         let dependence = dependence_between info source sink in
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
-                          | Distances _ ->
-                              if may_supply info source sink then "  flows"
+                          | Distance_vector _ ->
+                              if is_flow_dependence info source sink then
+                                "  flows"
                               else "  cannot flow" in
-                        let loops =
-                          common_loops (loops_of source_id) (loops_of sink_id)
+                        let common_loop_ids =
+                          common_loop_ids info.statements source_id sink_id
                         in
                         Fmt.pr "  %d %a --> %a: %a%s@." source_id pp_access
                           (snd source) pp_access (snd sink)
-                          (Dependence.pp ~loop_name ~loops)
+                          (Dependence.pp ~loop_name ~common_loop_ids)
                           dependence outcome)))))
 
-(* [must_overwrite] decides whether a later write kills an earlier one. The test
+(* [is_overwritten] decides whether a later write kills an earlier one. The test
    finds each write by the printed access. A write to [m[1]] overwrites [m[1,
    2]], because the row [m[1]] contains the element [m[1, 2]]. A write to [m[n,
    1]] overwrites itself only within one iteration of the loop over [n]. A slice
-   write never overwrites, because a slice has no form. *)
+   write never overwrites, because a slice is not affine. *)
 let%expect_test "Comparing write paths" =
   let info =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
       data { int N; int k; }
@@ -140,27 +137,27 @@ let%expect_test "Comparing write paths" =
                   Some access.path
                 else None))
     |> Option.get in
-  let must ~same_iteration killer killed =
-    Fmt.pr "must_overwrite ~same_iteration:%b %s %s = %b@." same_iteration
+  let print_is_overwritten ~is_same_iteration killer killed =
+    Fmt.pr "is_overwritten ~is_same_iteration:%b %s %s = %b@." is_same_iteration
       killer killed
-      (Dependence.must_overwrite ~same_iteration ~killer:(path_of killer)
-         ~killed:(path_of killed)) in
-  must ~same_iteration:false "W m[1]" "W m[1, 2]";
-  must ~same_iteration:false "W m[1, 2]" "W m[1]";
-  must ~same_iteration:false "W m[k, 1]" "W m[k, 1]";
-  must ~same_iteration:false "W m[n, 1]" "W m[n, 1]";
-  must ~same_iteration:true "W m[n, 1]" "W m[n, 1]";
-  must ~same_iteration:true "W m[n, 1]" "W m[n-1, 1]";
-  must ~same_iteration:true "W m[1:2, 1]" "W m[1:2, 1]";
+      (Dependence.is_overwritten ~is_same_iteration (path_of killer)
+         (path_of killed)) in
+  print_is_overwritten ~is_same_iteration:false "W m[1]" "W m[1, 2]";
+  print_is_overwritten ~is_same_iteration:false "W m[1, 2]" "W m[1]";
+  print_is_overwritten ~is_same_iteration:false "W m[k, 1]" "W m[k, 1]";
+  print_is_overwritten ~is_same_iteration:false "W m[n, 1]" "W m[n, 1]";
+  print_is_overwritten ~is_same_iteration:true "W m[n, 1]" "W m[n, 1]";
+  print_is_overwritten ~is_same_iteration:true "W m[n, 1]" "W m[n-1, 1]";
+  print_is_overwritten ~is_same_iteration:true "W m[1:2, 1]" "W m[1:2, 1]";
   [%expect
     {|
-    must_overwrite ~same_iteration:false W m[1] W m[1, 2] = true
-    must_overwrite ~same_iteration:false W m[1, 2] W m[1] = false
-    must_overwrite ~same_iteration:false W m[k, 1] W m[k, 1] = true
-    must_overwrite ~same_iteration:false W m[n, 1] W m[n, 1] = false
-    must_overwrite ~same_iteration:true W m[n, 1] W m[n, 1] = true
-    must_overwrite ~same_iteration:true W m[n, 1] W m[n-1, 1] = false
-    must_overwrite ~same_iteration:true W m[1:2, 1] W m[1:2, 1] = false
+    is_overwritten ~is_same_iteration:false W m[1] W m[1, 2] = true
+    is_overwritten ~is_same_iteration:false W m[1, 2] W m[1] = false
+    is_overwritten ~is_same_iteration:false W m[k, 1] W m[k, 1] = true
+    is_overwritten ~is_same_iteration:false W m[n, 1] W m[n, 1] = false
+    is_overwritten ~is_same_iteration:true W m[n, 1] W m[n, 1] = true
+    is_overwritten ~is_same_iteration:true W m[n, 1] W m[n-1, 1] = false
+    is_overwritten ~is_same_iteration:true W m[1:2, 1] W m[1:2, 1] = false
     |}]
 
 let%expect_test "Strong SIV: loop-carried and loop-independent" =
@@ -363,7 +360,7 @@ let%expect_test "Indices the test cannot compare" =
         for (n in 1:N) {
           for (m in 1:N) {
             b[n] = a;
-            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] has no form
+            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] is not affine
           }
         }
         b[1:2] = c[1:2];                  // the analysis does not compare slices
@@ -513,7 +510,7 @@ let%expect_test "Two index positions of one pair of accesses" =
         }
         for (n in 2:N) {
           m[n, 1] = a;
-          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] has no form
+          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] is not affine
         }
         for (n in 2:N) {
           m[n, n] = a;

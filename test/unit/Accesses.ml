@@ -3,21 +3,21 @@
    a variable. The dependence analysis uses the accesses to find the earlier
    statements that a statement depends on.
 
-   The tests build a map of statements with [log_prob_build_dep_info_map]. A
+   The tests build a map of statements with [build_log_prob_dependence_info]. A
    label is the integer that identifies a statement in this map. The map covers
    the log density, which contains the statements of the parameters, transformed
    parameters and model blocks.
 
    The tests print [label: statement // accesses]. R marks a read, and W marks a
    write. += marks an increment of target, the log density accumulator. Each
-   access prints the variable and the indices. An index with a form
-   ({!Analysis_and_optimization.Index_form}) is a sum of a loop variable, a
-   symbol and a constant, and prints as that sum, as in [n+k-1]. A symbol is an
-   expression that has the same value in every iteration. An index without a
+   access prints the variable and the indices. An affine index
+   ({!Analysis_and_optimization.Affine_subscript}) is a sum of a loop variable,
+   a symbol and a constant, and prints as that sum, as in [n+k-1]. A symbol is
+   an expression that has the same value in every iteration. An index without a
    loop variable, as in [v[k]] or [v[3]], selects the same element in every
-   iteration. Every other index has no form and prints as ?, such as an index
+   iteration. Every other index is not affine and prints as ?, such as an index
    that reads a variable that a statement in the log density writes, or a loop
-   variable in a form other than a sum.
+   variable in an expression other than a sum.
 
    The path of an access lists the subscripts and tuple fields that select the
    element. Each subscript or tuple field is one step of the path. *)
@@ -38,10 +38,10 @@ let pp_node_accesses ppf (info : dependence_info) =
 
 let print_node_accesses prog =
   Fmt.pr "%a" pp_node_accesses
-    (log_prob_build_dep_info_map (Test_utils.mir_of_string prog))
+    (build_log_prob_dependence_info (Test_utils.mir_of_string prog))
 
-let%expect_test "Single indices: with a loop variable, without one, and no form"
-    =
+let%expect_test
+    "Single indices: with a loop variable, without one, and not affine" =
   print_node_accesses
     {|
       data {
@@ -183,7 +183,7 @@ let accesses_example =
       |}
 
 let%expect_test "Nodes outside a loop and in nested loops" =
-  let map = log_prob_build_dep_info_map accesses_example in
+  let map = build_log_prob_dependence_info accesses_example in
   Fmt.pr "%a" pp_node_accesses map;
   [%expect
     {|

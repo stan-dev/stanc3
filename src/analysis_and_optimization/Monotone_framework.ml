@@ -27,11 +27,12 @@
     an element write overwrites an earlier one.
 
     A caller that knows the elements, such as
-    {!Dependence_analysis.build_dep_info_map}, passes a [kills] callback to kill
-    these definitions too. At label [killer], [kills ~killer ~killed x] kills
-    each definition [(x, Some killed)] for which [kills] is true. The callback
-    must be true only if [killer] overwrites every value that [killed] can leave
-    in [x], on every path to [killer]. The default kills nothing extra. *)
+    {!Dependence_analysis.build_dependence_info}, passes an [is_killed] callback
+    to kill these definitions too. At label [killer],
+    [is_killed ~killer ~killed x] kills each definition [(x, Some killed)] for
+    which [is_killed] is true. The callback must be true only if [killer]
+    overwrites every value that [killed] can leave in [x], on every path to
+    [killer]. The default kills nothing extra. *)
 
 open Std
 open Monotone_framework_sigs
@@ -494,14 +495,14 @@ let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
 (** True if an expression in the statement calls a function that adds to
     [target], for example [x = foo_lp(y)]. *)
-let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+let is_target_incremented_in_exprs (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Stmt.Pattern.fold
-    (fun increments_earlier expr ->
-      increments_earlier
+    (fun is_incremented_earlier expr ->
+      is_incremented_earlier
       || expr_any
            (fun (subexpr : Expr.Typed.t) ->
              match subexpr.pattern with
-             | FunApp (kind, _) -> increments_target kind
+             | FunApp (kind, _) -> is_target_increment kind
              | _ -> false)
            expr)
     Fun.const false s
@@ -514,7 +515,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
         Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
     | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
     | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
-    | NRFunApp (kind, _) when increments_target kind ->
+    | NRFunApp (kind, _) when is_target_increment kind ->
         Set.Poly.singleton "target"
     | For {loopvar= x; _} -> Set.Poly.singleton x
     | Decl {decl_id= _; _}
@@ -524,7 +525,8 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
      |While (_, _)
      |Profile _ | Block _ | SList _ ->
         Set.Poly.empty in
-  if exprs_increment_target s then Set.Poly.add "target" assigned else assigned
+  if is_target_incremented_in_exprs s then Set.Poly.add "target" assigned
+  else assigned
 
 let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
@@ -534,22 +536,22 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 (** Variables the statement assigns or declares. A declaration without a value
     is a reaching definition, but the declaration does not initialize the
     variable. *)
-let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** Transfer function for reaching definitions. The module overview describes
-    the gen and kill sets, and the [kills] callback. *)
+    the gen and kill sets, and the [is_killed] callback. *)
 let reaching_definitions_transfer
-    ?(kills : killer:int -> killed:int -> string -> bool =
+    ?(is_killed : killer:int -> killed:int -> string -> bool =
       fun ~killer:_ ~killed:_ _ -> false)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
     type labels = int
-    type properties = reaching_defn Set.Poly.t
+    type properties = reaching_definition Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let written = assigned_or_declared_vars_stmt mir_node in
+      let written = assigned_or_declared_vars mir_node in
       let gen = Set.Poly.map ~f:(fun x -> (x, Some l)) written in
       let target_defns = Set.Poly.filter p ~f:(fun (y, _) -> y = "target") in
       let killed =
@@ -559,7 +561,7 @@ let reaching_definitions_transfer
          |For {loopvar= x; _} ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ | JacobianPE _ -> target_defns
-        | NRFunApp (kind, _) when increments_target kind -> target_defns
+        | NRFunApp (kind, _) when is_target_increment kind -> target_defns
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
@@ -570,17 +572,17 @@ let reaching_definitions_transfer
         Set.Poly.filter p ~f:(fun (var, definition) ->
             match definition with
             | Some killed ->
-                Set.Poly.mem var written && kills ~killer:l ~killed var
+                Set.Poly.mem var written && is_killed ~killer:l ~killed var
             | None -> false) in
       let kill =
         Set.Poly.union_list
           [ killed; element_killed
-          ; (if exprs_increment_target mir_node then target_defns
+          ; (if is_target_incremented_in_exprs mir_node then target_defns
              else Set.Poly.empty) ] in
       transfer_gen_kill p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = reaching_defn Set.Poly.t)
+     and type properties = reaching_definition Set.Poly.t)
 
 (** Adds each variable that the statement assigns. A write to one element counts
     as an assignment to the whole variable. *)
@@ -734,7 +736,7 @@ let killed_expressions_stmt (p : ExprSet.t)
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here, but it
          would require us to duplicate some code. *)
-      let assigned_vars = assigned_or_declared_vars_stmt s in
+      let assigned_vars = assigned_or_declared_vars s in
       not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)))
 
 (** Calculate the set of subexpressions that needs to be computed at each node
@@ -992,10 +994,10 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Computes reaching definitions, with [kills] as in the module overview. Each
-    input and output variable of the program starts with [(x, None)]. *)
+(** Computes reaching definitions, with [is_killed] as in the module overview.
+    Each input and output variable of the program starts with [(x, None)]. *)
 let reaching_definitions_mfp
-    ?(kills : killer:int -> killed:int -> string -> bool =
+    ?(is_killed : killer:int -> killed:int -> string -> bool =
       fun ~killer:_ ~killed:_ _ -> false) (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -1017,7 +1019,7 @@ let reaching_definitions_mfp
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
   let (module Transfer) =
-    reaching_definitions_transfer ~kills flowgraph_to_mir in
+    reaching_definitions_transfer ~is_killed flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

@@ -33,7 +33,7 @@ val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
 (** Applies {!expr_any} to each expression in an index. *)
 
-val increments_target : 'e Fun_kind.t -> bool
+val is_target_increment : 'e Fun_kind.t -> bool
 (** True if a call to a function of this kind increments the target. The Stan
     Math call [target()] only reads [target] and gives false. *)
 
@@ -156,7 +156,7 @@ val expr_var_set : Expr.Typed.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
 (** Collects [(name, metadata)] for each variable in an expression, including
     variables in indices. For [v[k]], the result has pairs for [v] and [k]. *)
 
-val expr_var_names_set : Expr.Typed.t -> string Set.Poly.t
+val expr_names : Expr.Typed.t -> string Set.Poly.t
 (** The names from {!expr_var_set}. For [v[k] + v[j]], the result is
     [{"v"; "k"; "j"}]. *)
 

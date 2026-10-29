@@ -10,7 +10,7 @@ open Analysis_and_optimization.Dataflow_types
    mode and the factor graph use these statement dependencies.
 
    Each test builds a map from labels to statements with
-   [log_prob_build_dep_info_map]. A label is the integer that identifies a
+   [build_log_prob_dependence_info]. A label is the integer that identifies a
    statement. The map covers the log density, which contains the statements of
    the parameters, transformed parameters and model blocks. The // comments in
    the first program give the labels. Label 1 is the root statement of the map,
@@ -80,7 +80,8 @@ let example1_program =
       |}
 
 let%expect_test "Dependency graph example" =
-  let deps = log_prob_dependency_graph example1_program in
+  let deps =
+    dependence_graph (build_log_prob_dependence_info example1_program) in
   print_s [%sexp (deps : label Set.Poly.t LabelMap.t)];
   [%expect
     {|
@@ -95,8 +96,8 @@ let%expect_test "Dependency graph example" =
 let%expect_test "Reaching definition labels for the loop variable" =
   let deps =
     LabelMap.map
-      (log_prob_build_dep_info_map example1_program).reaching_definitions
-      ~f:(fun definitions -> reaching_defn_lookup definitions "j") in
+      (build_log_prob_dependence_info example1_program).reaching_definitions
+      ~f:(fun definitions -> definition_ids definitions "j") in
   print_s [%sexp (deps : label option Set.Poly.t LabelMap.t)];
   [%expect
     {|
@@ -107,8 +108,8 @@ let%expect_test "Reaching definition labels for the loop variable" =
 
 let%expect_test "Reaching definition records at statement entry" =
   let deps =
-    (log_prob_build_dep_info_map example1_program).reaching_definitions in
-  print_s [%sexp (deps : reaching_defn Set.Poly.t LabelMap.t)];
+    (build_log_prob_dependence_info example1_program).reaching_definitions in
+  print_s [%sexp (deps : reaching_definition Set.Poly.t LabelMap.t)];
   [%expect
     {|
     ((1 ()) (2 ((i (4)) (j (9)))) (3 ()) (4 ((i (3)))) (5 ((i (4))))
@@ -122,8 +123,8 @@ let%expect_test "Reaching definition records at statement entry" =
 
 let%expect_test "Variable dependency example" =
   let deps =
-    node_vars_dependencies
-      (log_prob_build_dep_info_map example1_program)
+    var_dependence_ids
+      (build_log_prob_dependence_info example1_program)
       (Set.Poly.singleton "j") 17 in
   print_s [%sexp (deps : label Set.Poly.t)];
   [%expect {|
@@ -133,15 +134,14 @@ let%expect_test "Variable dependency example" =
 let%expect_test "External definitions are distinct from statement label 1" =
   let definitions =
     Set.Poly.of_list [("x", None); ("x", Some 1); ("y", Some 2)] in
-  print_s
-    [%sexp (reaching_defn_lookup definitions "x" : label option Set.Poly.t)];
+  print_s [%sexp (definition_ids definitions "x" : label option Set.Poly.t)];
   [%expect {| (() (1)) |}]
 
 (* The data [N] reaches the condition as an outside definition, [()], but the
    dependencies of the condition hold statement labels only. *)
 let%expect_test "External inputs reach a statement but are not dependencies" =
   let map =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
            data { int N; }
@@ -154,12 +154,12 @@ let%expect_test "External inputs reach a statement but are not dependencies" =
       | Stmt.Pattern.IfElse _ ->
           print_s
             [%sexp
-              (reaching_defn_lookup
+              (definition_ids
                  (LabelMap.find statement_id map.reaching_definitions)
                  "N"
                 : label option Set.Poly.t)];
           Fmt.pr "dependencies: %a@." Test_utils.pp_labels
-            (node_immediate_dependencies map statement_id)
+            (direct_dependence_ids map statement_id)
       | _ -> ());
   [%expect {|
     (())
@@ -172,15 +172,15 @@ let pp_immediate_dependencies ppf (map : dependence_info) =
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
         statement.pattern Test_utils.pp_labels
-        (node_immediate_dependencies map statement_id))
+        (direct_dependence_ids map statement_id))
 
 let print_immediate_dependencies prog =
   Fmt.pr "%a" pp_immediate_dependencies
-    (log_prob_build_dep_info_map (Test_utils.mir_of_string prog))
+    (build_log_prob_dependence_info (Test_utils.mir_of_string prog))
 
 let%expect_test "Transitive dependencies of an if and of its condition" =
   let map =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
       parameters { real mu; real sigma; }
@@ -200,26 +200,26 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
         | Stmt.Pattern.IfElse _ -> statement_id
         | _ -> found_id) in
   Fmt.pr "%a" pp_immediate_dependencies map;
-  Fmt.pr "node_dependencies %d: %a@." if_id Test_utils.pp_labels
-    (node_dependencies map if_id);
-  Fmt.pr "node_vars_dependencies {b} %d: %a@." if_id Test_utils.pp_labels
-    (node_vars_dependencies map (Set.Poly.singleton "b") if_id);
-  Fmt.pr "node_vars_dependencies ~blockers:{b} {b} %d: %a@." if_id
+  Fmt.pr "transitive_dependence_ids %d: %a@." if_id Test_utils.pp_labels
+    (transitive_dependence_ids map if_id);
+  Fmt.pr "var_dependence_ids {b} %d: %a@." if_id Test_utils.pp_labels
+    (var_dependence_ids map (Set.Poly.singleton "b") if_id);
+  Fmt.pr "var_dependence_ids ~blockers:{b} {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "b")
+    (var_dependence_ids map ~blockers:(Set.Poly.singleton "b")
        (Set.Poly.singleton "b") if_id);
-  Fmt.pr "node_vars_dependencies ~blockers:{a} {b} %d: %a@." if_id
+  Fmt.pr "var_dependence_ids ~blockers:{a} {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "a")
+    (var_dependence_ids map ~blockers:(Set.Poly.singleton "a")
        (Set.Poly.singleton "b") if_id);
-  Fmt.pr "node_vars_dependencies ~blockers:{mu} {b} %d: %a@." if_id
+  Fmt.pr "var_dependence_ids ~blockers:{mu} {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "mu")
+    (var_dependence_ids map ~blockers:(Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_id);
   (* The condition does not read c. Thus a query for c keeps each write of c
      that reaches the condition. *)
-  Fmt.pr "node_vars_dependencies {c} %d: %a@." if_id Test_utils.pp_labels
-    (node_vars_dependencies map (Set.Poly.singleton "c") if_id);
+  Fmt.pr "var_dependence_ids {c} %d: %a@." if_id Test_utils.pp_labels
+    (var_dependence_ids map (Set.Poly.singleton "c") if_id);
   [%expect
     {|
     1: 2 3 4  //
@@ -234,18 +234,18 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     10: c = sigma;  // 3
     11: if((b > 0)) 12  // 8
     12: target += normal_lpdf(c, promote(0, real, data), promote(1, real, data));  // 10 11
-    node_dependencies 11: 2 6 8 11
-    node_vars_dependencies {b} 11: 2 6 8
-    node_vars_dependencies ~blockers:{b} {b} 11:
-    node_vars_dependencies ~blockers:{a} {b} 11: 8
-    node_vars_dependencies ~blockers:{mu} {b} 11: 6 8
-    node_vars_dependencies {c} 11: 3 10
+    transitive_dependence_ids 11: 2 6 8 11
+    var_dependence_ids {b} 11: 2 6 8
+    var_dependence_ids ~blockers:{b} {b} 11:
+    var_dependence_ids ~blockers:{a} {b} 11: 8
+    var_dependence_ids ~blockers:{mu} {b} 11: 6 8
+    var_dependence_ids {c} 11: 3 10
     |}]
 
 let%expect_test
     "Reaching definitions: an _lp call in an assignment defines target" =
   let map =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
            functions { real foo_lp(real y) { target += y; return y; } }
@@ -261,7 +261,7 @@ let%expect_test
       match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
           Fmt.pr "%d: %a@." statement_id Test_utils.pp_labels
-            (node_immediate_dependencies map statement_id)
+            (direct_dependence_ids map statement_id)
       | _ -> ());
   [%expect {| 6: 5 |}]
 
@@ -388,7 +388,7 @@ let%expect_test "Graph: increments of target do not depend on each other" =
 
 let%expect_test "Variables read at a set of labels" =
   let map =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
       data { int N; int k; vector[N] x; }
@@ -403,8 +403,7 @@ let%expect_test "Variables read at a set of labels" =
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a  // %a@." statement_id Test_utils.pp_stmt statement.pattern
         Fmt.(list ~sep:(any " ") string)
-        (Set.Poly.to_list
-           (read_variables_at map (Set.Poly.singleton statement_id))));
+        (Set.Poly.to_list (used_vars_at map (Set.Poly.singleton statement_id))));
   [%expect
     {|
     1: 2 3  //
@@ -434,17 +433,15 @@ let%expect_test "Running example of the Dependence_analysis interface" =
     |}
   in
   print_immediate_dependencies program;
-  let map = log_prob_build_dep_info_map (Test_utils.mir_of_string program) in
-  let dependency_labels = node_dependencies map 10 in
+  let map = build_log_prob_dependence_info (Test_utils.mir_of_string program) in
+  let dependency_labels = transitive_dependence_ids map 10 in
   Fmt.pr "theta definitions reaching 10: %a@.dependencies of 10: %a@.read: %a@."
     Fmt.(list ~sep:(any " ") (option ~none:(any "None") int))
     (Set.Poly.to_list
-       (reaching_defn_lookup
-          (LabelMap.find 10 map.reaching_definitions)
-          "theta"))
+       (definition_ids (LabelMap.find 10 map.reaching_definitions) "theta"))
     Test_utils.pp_labels dependency_labels
     Fmt.(list ~sep:(any " ") string)
-    (Set.Poly.to_list (read_variables_at map dependency_labels));
+    (Set.Poly.to_list (used_vars_at map dependency_labels));
   [%expect
     {|
     1: 2 3  //
@@ -741,11 +738,11 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
 
 (* Each statement prints the controls, then the two views that queries use. The
    controls list the enclosing ifs and loops, outermost first, then the jumps.
-   [control_parents] keeps the nearest enclosing if or loop and the jumps.
-   [loops_around] keeps the loops, and a loop statement adds itself. *)
+   [control_parent_ids] keeps the nearest enclosing if or loop and the jumps.
+   [loop_ids] keeps the loops, and a loop statement adds itself. *)
 let%expect_test "Controls and the two views derived from them" =
   let map =
-    log_prob_build_dep_info_map
+    build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
       data { int N; int c; }
@@ -766,19 +763,19 @@ let%expect_test "Controls and the two views derived from them" =
     | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
     | {id; side= None} ->
         Fmt.pf ppf "loop %d (%s)" id (Test_utils.loop_name map id) in
-  let pp_controls ppf {enclosing; jumps} =
+  let pp_controls ppf {enclosing; jump_ids} =
     Fmt.(list ~sep:(any "; ") string)
       ppf
       (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
-      @ List.map (Set.Poly.to_list jumps) ~f:(Fmt.str "jump %d")) in
+      @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d")) in
   let pp_loop = Fmt.int in
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
         statement_id Test_utils.pp_stmt statement.pattern pp_controls
         statement.controls Test_utils.pp_labels
-        (control_parents statement.controls)
+        (control_parent_ids statement.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
-        (loops_around ~statement_id statement.pattern statement.controls));
+        (loop_ids statement_id statement.pattern statement.controls));
   [%expect
     {|
     1: 2 3

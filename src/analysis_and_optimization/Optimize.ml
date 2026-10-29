@@ -719,7 +719,7 @@ type conflicts =
 
 let loop_init upper =
   { target= false
-  ; reads= expr_var_names_set upper
+  ; reads= expr_names upper
   ; writes= Set.Poly.empty
   ; conflicts= Set.Poly.empty
   ; breaks= false }
@@ -743,12 +743,11 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
   let dont_read = conflict_info.writes in
   let dont_write = Set.Poly.union conflict_info.reads conflict_info.conflicts in
   let can_vectorize_expr e =
-    can_duplicate_expr e && Set.Poly.disjoint dont_read (expr_var_names_set e)
-  in
+    can_duplicate_expr e && Set.Poly.disjoint dont_read (expr_names e) in
   let is_loop_invariant_expr e =
     (* this function is only called in context where we have already checked
        can_vectorize_expr e *)
-    not (Set.Poly.mem loopvar (expr_var_names_set e)) in
+    not (Set.Poly.mem loopvar (expr_names e)) in
   let rec widen (e : Expr.Typed.t) : Expr.Typed.t vector_state =
     match e.meta.type_ with
     | (UInt | UReal | UComplex) when is_loop_invariant_expr e -> Scalar e
@@ -884,7 +883,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
   let swrap pattern = Stmt.{pattern; meta} in
   if
     conflict_info.breaks
-    || not (Set.Poly.disjoint conflict_info.writes (expr_var_names_set upper))
+    || not (Set.Poly.disjoint conflict_info.writes (expr_names upper))
   then For {loopvar; lower; upper; body} |> swrap
   else
     match collect [] body with
@@ -910,7 +909,7 @@ and vectorize_stmt_inner outer_info Stmt.{pattern; meta} :
       (fun c e ->
         { c with
           target= c.target || expr_reads_target e
-        ; reads= Set.Poly.union c.reads (expr_var_names_set e) })
+        ; reads= Set.Poly.union c.reads (expr_names e) })
       vectorize_stmt_inner in
   match pattern with
   | For {loopvar; lower; upper; body}
@@ -1095,7 +1094,7 @@ let rec find_assignment_idx (name : string) Stmt.{pattern; _} =
       let idx_lst = Stmt.Helpers.lhs_indices lval in
       if
         name = assign_name
-        && (not (Set.Poly.mem assign_name (expr_var_names_set rhs)))
+        && (not (Set.Poly.mem assign_name (expr_names rhs)))
         && not
              (rhs.meta.adlevel = UnsizedType.DataOnly
              && UnsizedType.is_array lhs_ut)
