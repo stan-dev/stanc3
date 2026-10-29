@@ -779,18 +779,21 @@ let%expect_test "Controls and the two views derived from them" =
       }
     |})
   in
-  let pp_control ppf = function
-    | Enclosing_if {id; branch= Then} -> Fmt.pf ppf "if %d then" id
-    | Enclosing_if {id; branch= Else} -> Fmt.pf ppf "if %d else" id
-    | Enclosing_loop (For {id; var}) -> Fmt.pf ppf "loop %d (%s)" id var
-    | Enclosing_loop (While id) -> Fmt.pf ppf "loop %d (while)" id
-    | Jump label -> Fmt.pf ppf "jump %d" label in
+  let pp_enclosing ppf = function
+    | If {id; branch= Then} -> Fmt.pf ppf "if %d then" id
+    | If {id; branch= Else} -> Fmt.pf ppf "if %d else" id
+    | Loop (For {id; var}) -> Fmt.pf ppf "loop %d (%s)" id var
+    | Loop (While id) -> Fmt.pf ppf "loop %d (while)" id in
+  let pp_controls ppf {enclosing; jumps} =
+    Fmt.(list ~sep:(any "; ") string)
+      ppf
+      (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
+      @ List.map (Set.Poly.to_list jumps) ~f:(Fmt.str "jump %d")) in
   let pp_loop ppf (loop : loop) = Fmt.int ppf (loop_id loop) in
   LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
-        statement_id Test_utils.pp_stmt pattern
-        Fmt.(list ~sep:(any "; ") pp_control)
-        info.controls Test_utils.pp_labels
+        statement_id Test_utils.pp_stmt pattern pp_controls info.controls
+        Test_utils.pp_labels
         (control_parents info.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
         (loops_around ~statement_id pattern info.controls));

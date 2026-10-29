@@ -33,21 +33,23 @@ let same_loop (left : loop) (right : loop) : bool = loop_id left = loop_id right
 (** The branch of an [if] that holds a statement. *)
 type branch = Then | Else
 
-(** A {e control} of a statement is another statement that decides whether, or
-    how often, the statement runs. {!Dataflow_utils.build_cf_graphs} gives each
-    statement a list of controls. The list first holds the ifs and loops around
-    the statement, outermost first. These are the {e enclosing} ifs and loops.
-    Then the list holds the {e jumps}, which are the [break], [continue] and
-    [return] statements that can skip the statement. *)
-type control =
-  | Enclosing_if of {id: label; branch: branch}
-      (** An [if] around the statement. [id] is the label of the [if], and
-          [branch] is the branch that holds the statement. *)
-  | Enclosing_loop of loop  (** A [for] or [while] around the statement. *)
-  | Jump of label
-      (** A [break], [continue] or [return] that can skip the statement. For a
-          loop statement, a [break] or [return] in the loop body that can end
-          the loop. *)
+(** An [if] or a loop around a statement. *)
+type enclosing =
+  | If of {id: label; branch: branch}
+      (** [id] is the label of the [if], and [branch] is the branch that holds
+          the statement. *)
+  | Loop of loop
+
+(** The {e controls} of a statement are the other statements that decide
+    whether, or how often, the statement runs. {!Dataflow_utils.build_cf_graphs}
+    finds the controls of each statement. *)
+type controls =
+  { enclosing: enclosing list
+        (** The ifs and loops around the statement, outermost first. *)
+  ; jumps: label Set.Poly.t
+        (** The labels of the [break], [continue] and [return] statements that
+            can skip the statement. For a loop statement, also each [break] or
+            [return] in the loop body that can end the loop. *) }
 
 module LabelMap = struct
   include Int.Map

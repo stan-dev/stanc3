@@ -51,10 +51,9 @@ type cf_state =
     where
     - predecessors points to the nodes which could have executed before this
       node
-    - controls lists the ifs and loops around this node, outermost first, and
-      then the jumps ([break], [continue] and [return]) that can skip this node
-      ({!Dataflow_types.control}) *)
-type cf_edges = {predecessors: label Set.Poly.t; controls: control list}
+    - controls holds the ifs and loops around this node, and the jumps that can
+      skip this node ({!Dataflow_types.controls}) *)
+type cf_edges = {predecessors: label Set.Poly.t; controls: controls}
 
 (** Join the state of a controlflow traversal across different branches of
     execution such as over if/else branch. *)
@@ -89,7 +88,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
   (* Visits the statement at [label] and the statements nested in the statement.
      [enclosing] holds the ifs and loops around the statement, outermost
      first. *)
-  let rec build_cf_graph_rec (enclosing : control list)
+  let rec build_cf_graph_rec (enclosing : enclosing list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
@@ -98,7 +97,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
        itself below, with the branch that holds each child. *)
     let child_cf =
       match loop_of_statement label stmt with
-      | Some loop -> enclosing @ [Enclosing_loop loop]
+      | Some loop -> enclosing @ [Loop loop]
       | None -> enclosing in
     (* This node is the parent of substatements, unless this is a Block, which
        is visited after substatements *)
@@ -113,7 +112,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       | IfElse (_, then_s, else_s_opt) ->
           let then_state, after_then_map =
             build_cf_graph_rec
-              (enclosing @ [Enclosing_if {id= label; branch= Then}])
+              (enclosing @ [If {id= label; branch= Then}])
               (child_init, in_map) then_s in
           Option.value_map else_s_opt
             ~default:(join_cf_states then_state child_init, after_then_map)
@@ -124,7 +123,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
                  persistently unioning two maps that share the whole prefix. *)
               let else_state, after_both_map =
                 build_cf_graph_rec
-                  (enclosing @ [Enclosing_if {id= label; branch= Else}])
+                  (enclosing @ [If {id= label; branch= Else}])
                   (child_init, after_then_map)
                   else_s in
               (join_cf_states then_state else_state, after_both_map))
@@ -207,14 +206,12 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     let jumps =
       Set.Poly.union_list [in_state.returns; in_state.continues; extra_cf_deps]
     in
-    let controls =
-      enclosing @ List.map (Set.Poly.to_list jumps) ~f:(fun jump -> Jump jump)
-    in
     ( { breaks= breaks_out
       ; continues= continues_out
       ; returns= returns_out
       ; exits= substmt_state.exits }
-    , LabelMap.add substmt_map ~key:label ~data:{controls; predecessors} ) in
+    , LabelMap.add substmt_map ~key:label
+        ~data:{controls= {enclosing; jumps}; predecessors} ) in
   let state, edges =
     build_cf_graph_rec []
       ( { breaks= Set.Poly.empty
@@ -228,25 +225,18 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
   , LabelMap.map edges ~f:(fun e -> e.controls) )
 
 (** See interface file *)
-let control_parents (controls : control list) : label Set.Poly.t =
-  let nearest_enclosing =
-    List.fold_left controls ~init:None ~f:(fun nearest control ->
-        match control with
-        | Enclosing_if {id= label; _} -> Some label
-        | Enclosing_loop loop -> Some (loop_id loop)
-        | Jump _ -> nearest) in
-  let jumps =
-    List.filter_map controls ~f:(function
-      | Jump label -> Some label
-      | Enclosing_if _ | Enclosing_loop _ -> None) in
-  Set.Poly.of_list (Option.to_list nearest_enclosing @ jumps)
+let control_parents ({enclosing; jumps} : controls) : label Set.Poly.t =
+  match List.hd (List.rev enclosing) with
+  | Some (If {id; _}) -> Set.Poly.add id jumps
+  | Some (Loop loop) -> Set.Poly.add (loop_id loop) jumps
+  | None -> jumps
 
 (** See interface file *)
 let loops_around ~(statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
-    (controls : control list) : loop list =
-  List.filter_map controls ~f:(function
-    | Enclosing_loop loop -> Some loop
-    | Enclosing_if _ | Jump _ -> None)
+    (controls : controls) : loop list =
+  List.filter_map controls.enclosing ~f:(function
+    | Loop loop -> Some loop
+    | If _ -> None)
   @ Option.to_list (loop_of_statement statement_id pattern)
 
 (* After the first loop that differs, no loop is around both statements. *)

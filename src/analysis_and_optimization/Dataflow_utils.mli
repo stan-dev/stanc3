@@ -7,12 +7,12 @@
     - The {e predecessor graph} maps each label to the labels of the statements
       that can run immediately before that statement.
     - The {e exit set} holds the labels of the statements that can run last.
-    - The {e controls} of a statement ({!Dataflow_types.control}) are the
-      statements that decide whether, or how often, the statement runs. The list
-      first holds the ifs and loops around the statement, outermost first. These
-      are the {e enclosing} ifs and loops. A loop statement does not list
-      itself. Then the list holds the {e jumps}, which are the [break],
-      [continue] and [return] statements that can skip the statement.
+    - The {e controls} of a statement ({!Dataflow_types.controls}) are the
+      statements that decide whether, or how often, the statement runs. They are
+      the ifs and loops around the statement, outermost first, called the
+      {e enclosing} ifs and loops, and the {e jumps}, which are the [break],
+      [continue] and [return] statements that can skip the statement. A loop
+      statement does not list itself.
 
     The {e control parents} of a statement are the controls that directly decide
     whether the statement runs. These are the nearest enclosing [if] or loop,
@@ -37,7 +37,7 @@ val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
   -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
-  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * control list LabelMap.t
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * controls LabelMap.t
 (** Returns the exit set, the predecessor graph and the controls of each label.
     The first two parts equal the result of {!build_predecessor_graph}. *)
 
@@ -45,14 +45,14 @@ val loop_of_statement : label -> ('e, 's) Stmt.Pattern.t -> loop option
 (** Returns the loop that the [for] or [while] statement at the label forms, or
     [None] for any other statement. *)
 
-val control_parents : control list -> label Set.Poly.t
+val control_parents : controls -> label Set.Poly.t
 (** Returns the control parents of a statement, given the controls of the
     statement. *)
 
 val loops_around :
-  statement_id:label -> ('e, 's) Stmt.Pattern.t -> control list -> loop list
-(** Returns the [for] and [while] loops in the controls, outermost first. For a
-    loop statement at [statement_id], the list ends with that loop. *)
+  statement_id:label -> ('e, 's) Stmt.Pattern.t -> controls -> loop list
+(** Returns the [for] and [while] loops around a statement, outermost first. For
+    a loop statement at [statement_id], the list ends with that loop. *)
 
 val common_loops : loop list -> loop list -> loop list
 (** Returns the longest start that two outermost-first loop lists share. These

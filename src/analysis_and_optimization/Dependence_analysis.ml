@@ -18,7 +18,7 @@
 
    The controls of a statement are the ifs and loops around the statement, and
    the jumps ([break], [continue] and [return]) that can skip the statement
-   ({!Dataflow_types.control}).
+   ({!Dataflow_types.controls}).
 
    Each reaching definition of a variable that a statement reads is a candidate
    source for the read, and the read is the sink. {!Dependence} rejects a
@@ -44,14 +44,16 @@ let write_path (accesses : Accesses.index Accesses.t) (var : string) :
     A later write [killer] kills the definition at [killed] when [killer] must
     overwrite the element of [killed]. Two rules give this result. *)
 let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
-    ~(controls : control list LabelMap.t) ~(loops : loop list LabelMap.t)
+    ~(controls : controls LabelMap.t) ~(loops : loop list LabelMap.t)
     ~(killer : label) ~(killed : label) (var : string) : bool =
   let killed_controls = LabelMap.find killed controls in
   (* Whether each if, loop and jump that decides if [statement] runs also
      decides if [killed] runs. *)
   let controls_cover (statement : label) : bool =
-    List.for_all (LabelMap.find statement controls) ~f:(fun control ->
-        List.mem control ~set:killed_controls) in
+    let statement_controls = LabelMap.find statement controls in
+    List.for_all statement_controls.enclosing ~f:(fun enclosing ->
+        List.mem enclosing ~set:killed_controls.enclosing)
+    && Set.Poly.subset statement_controls.jumps killed_controls.jumps in
   match
     ( write_path (LabelMap.find killer accesses) var
     , write_path (LabelMap.find killed accesses) var )
@@ -81,7 +83,7 @@ let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
 
 type node_dep_info =
   { predecessors: label Set.Poly.t
-  ; controls: control list
+  ; controls: controls
   ; reaching_definitions: reaching_defn Set.Poly.t entry_exit
   ; accesses: Accesses.index Accesses.t
   ; meta: Location_span.t }

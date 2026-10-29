@@ -15,7 +15,7 @@ open Dataflow_types
       [return] that can skip this statement (a {e jump}).
 
     The enclosing ifs and loops and the jumps are the {e controls} of a
-    statement ({!Dataflow_types.control}). A statement has a direct control
+    statement ({!Dataflow_types.controls}). A statement has a direct control
     dependency only on the nearest enclosing [if] or loop, and on the jumps. The
     other enclosing ifs and loops are transitive dependencies (dependencies of a
     dependency). The direct ones are the {e control parents} of the statement
@@ -212,7 +212,8 @@ open Dataflow_types
     that write later, when a query runs in {!node_immediate_dependencies}.
     {@text[
       predecessors:        {9}         (theta[n, 2] = x[n])
-      controls:            [Enclosing_loop (For {id = 6; var = "n"})]
+      controls:            {enclosing = [Loop (For {id = 6; var = "n"})];
+                            jumps = {}}
       reaching_definitions.entry:
                            {("theta", Some 5), ("theta", Some 8),
                             ("theta", Some 9)}
@@ -222,12 +223,10 @@ type node_dep_info =
   { predecessors: label Set.Poly.t
         (** The labels of the statements that can run immediately before this
             statement. *)
-  ; controls: control list
-        (** The controls of this statement ({!Dataflow_types.control}). The list
-            holds the enclosing ifs and loops, outermost first, and then the
-            jumps. A jump is an earlier [continue] or [return] that can skip
-            this statement, or, for a loop, a [break] or [return] in the loop
-            body that can end the loop. A loop statement does not list itself.
+  ; controls: controls
+        (** The enclosing ifs and loops of this statement, outermost first, and
+            the jumps that can skip the statement ({!Dataflow_types.controls}).
+            A loop statement does not list itself.
             {!Dataflow_utils.control_parents} and {!Dataflow_utils.loops_around}
             give the two views that queries use. *)
   ; reaching_definitions:
