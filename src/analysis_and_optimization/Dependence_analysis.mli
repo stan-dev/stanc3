@@ -221,7 +221,7 @@ type statement =
             A loop statement does not list itself.
             {!Dataflow_utils.control_parents} and {!Dataflow_utils.loops_around}
             give the two views that queries use. *)
-  ; accesses: Accesses.index Accesses.t
+  ; accesses: Accesses.access list
         (** The reads, writes and increments in the expressions of this
             statement. Each nested statement has a separate record. *) }
 
@@ -257,14 +257,14 @@ val reaching_defn_lookup :
 (** Returns the labels in the definitions of the named variable. The lookup
     compares names only and ignores which element each definition writes. *)
 
-val flows_into : 'index Accesses.access -> 'index Accesses.access -> bool
+val flows_into : Accesses.access -> Accesses.access -> bool
 (** Whether the first access (the source) can pass a value to the second (the
     sink) by the rules in step 1, comparing only variable names and kinds. *)
 
 val dependence_between :
      dependence_info
-  -> source:label * Accesses.index Accesses.access
-  -> sink:label * Accesses.index Accesses.access
+  -> source:label * Accesses.access
+  -> sink:label * Accesses.access
   -> Dependence.t
 (** Compares the elements that the [source] access and the [sink] access select,
     over the loops around both statements. Each access comes paired with the
@@ -272,8 +272,8 @@ val dependence_between :
 
 val may_supply :
      dependence_info
-  -> source:label * Accesses.index Accesses.access
-  -> sink:label * Accesses.index Accesses.access
+  -> source:label * Accesses.access
+  -> sink:label * Accesses.access
   -> bool
 (** Whether the [source] access can supply the value that the [sink] access
     uses: {!flows_into}, then {!Dependence.is_plausible} on

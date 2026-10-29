@@ -1,121 +1,95 @@
 open Std
-open Middle
 open Dataflow_types
 open Accesses
 
-type level = {loop: loop; distance: int option}
-type t = Independent | Unknown | Distances of level list
+(** Compares the steps at one position of two paths. Two tuple fields compare
+    like two constant subscripts. *)
+let compare_steps (first : step) (second : step) : Index_form.comparison =
+  match (first, second) with
+  | Field first_field, Field second_field ->
+      if first_field = second_field then Always_same else Never_same
+  | Subscript first, Subscript second ->
+      Index_form.compare_subscripts ~first ~second
+  | Field _, Subscript _ | Subscript _, Field _ -> Cannot_tell
 
-(** The strong SIV test for one position. When [source] and [sink] are
-    [Sequential] with the same loop term and symbol, and a loop in [loops] sets
-    the loop variable, source iteration [i] selects [i + source_term.const] and
-    sink iteration [j] selects [j + sink_term.const]. These match when the
-    distance [j - i] is [source_term.const - sink_term.const]. The sign flips
-    for a [Descending] loop term. The other loops get an unknown distance. Any
-    other pair gives [Unknown]. *)
-let test_strong_siv ~(loops : loop list) (source : index step)
-    (sink : index step) : t =
-  match (source, sink) with
-  | ( Subscript (Single (Sequential source_term))
-    , Subscript (Single (Sequential sink_term)) )
-    when Option.equal equal_loop_term source_term.loop_term sink_term.loop_term
-         && Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol
-    -> (
-      let sets_loopvar loopvar = function
-        | For {var; _} -> String.equal var loopvar
-        | While _ -> false in
-      match source_term.loop_term with
-      | Some {loopvar; direction}
-        when List.exists loops ~f:(sets_loopvar loopvar) ->
-          (* A descending loop term flips the sign of the distance. *)
-          let offset_difference = source_term.const - sink_term.const in
-          let iteration_distance =
-            match direction with
-            | Ascending -> offset_difference
-            | Descending -> -offset_difference in
-          Distances
-            (List.map loops ~f:(fun loop ->
-                 { loop
-                 ; distance=
-                     (if sets_loopvar loopvar loop then Some iteration_distance
-                      else None) }))
-      | Some _ | None -> (* No common loop sets the loop variable. *) Unknown)
-  | Subscript _, _ | Field _, _ -> Unknown
+(** The killer path can be shorter than the killed path, so [m[1]] overwrites
+    [m[1, 2]]. At each position of the killer path, the two steps must select
+    the same element in every iteration, as [[1]] and [[1]] do. Steps that
+    select the same element only within one iteration, as [[n]] and [[n]] do,
+    count only when both writes run in the same iteration. *)
+let rec must_overwrite ~(same_iteration : bool) ~(killer : step list)
+    ~(killed : step list) : bool =
+  match (killer, killed) with
+  | [], _ -> true
+  | _ :: _, [] -> false
+  | killer_step :: killer_rest, killed_step :: killed_rest -> (
+      let rest_overwritten () =
+        must_overwrite ~same_iteration ~killer:killer_rest ~killed:killed_rest
+      in
+      match compare_steps killer_step killed_step with
+      | Always_same -> rest_overwritten ()
+      | Same_at_distance {distance= 0; _} ->
+          same_iteration && rest_overwritten ()
+      | Never_same | Same_at_distance _ | Cannot_tell -> false)
 
-(** Compares the [source] and [sink] steps at one position. The ZIV test gives
-    [Independent] for different constants or fields and [Unknown] for equal
-    ones. Other steps go to {!test_strong_siv}. *)
-let test_subscript ~(loops : loop list) (source : index step)
-    (sink : index step) : t =
-  match compare_steps source sink with
-  (* The ZIV test separates different constants and different fields. *)
-  | Different -> Independent
-  (* Equal constants or equal fields do not constrain the iteration distance. *)
-  | Same_every_iteration -> Unknown
-  | Same_in_one_iteration | May_differ -> test_strong_siv ~loops source sink
+type t = Independent | Distances of int option list
 
-(** Merges two level lists over the same common loops in the same order. The
-    result is [None] when the known distances at one loop differ. *)
-let merge_levels (path_levels : level list) (position_levels : level list) :
-    level list option =
-  let merge_level path_level position_level =
-    match (path_level.distance, position_level.distance) with
-    | Some path_distance, Some position_distance
-      when path_distance <> position_distance ->
-        None
-    | _ ->
-        Some
-          { path_level with
-            distance=
-              Option.first_some path_level.distance position_level.distance }
-  in
-  Option.all (List.map2 path_levels position_levels ~f:merge_level)
+(** Sets the distance at [loop] in [distances], one entry per loop of [loops].
+    The result is [None] when [distances] already holds a different distance at
+    [loop], because the two positions then never select the same element
+    together. *)
+let fix_distance ~(loops : loop list) (distances : int option list)
+    ~(loop : for_loop) ~(distance : int) : int option list option =
+  Option.all
+    (List.map2 loops distances ~f:(fun common_loop known_distance ->
+         match known_distance with
+         | _ when loop_id common_loop <> loop.id -> Some known_distance
+         | Some known when known <> distance -> None
+         | Some _ | None -> Some (Some distance)))
 
-(** Combines the result of the earlier positions with the result of one more
-    position. [Unknown] adds nothing. [Independent] or a conflict gives
-    [Independent]. *)
-let merge_path_constraints (path_constraints : t) (position_constraints : t) : t
-    =
-  match (path_constraints, position_constraints) with
-  | Independent, _ | _, Independent -> Independent
-  | Unknown, constraints | constraints, Unknown -> constraints
-  | Distances path_levels, Distances position_levels -> (
-      match merge_levels path_levels position_levels with
-      | Some agreed_levels -> Distances agreed_levels
-      | None -> Independent)
-
-let compare_paths ~(loops : loop list) (source : index access)
-    (sink : index access) : t =
-  if List.compare_lengths source.path sink.path <> 0 then Unknown
+let compare_paths ~(loops : loop list) (source : access) (sink : access) : t =
+  let all_unknown = Distances (List.map loops ~f:(fun _ -> None)) in
+  if List.compare_lengths source.path sink.path <> 0 then all_unknown
   else
-    List.fold_left2 source.path sink.path ~init:Unknown
-      ~f:(fun path_constraints source_step sink_step ->
-        let position_constraints = test_subscript ~loops source_step sink_step in
-        merge_path_constraints path_constraints position_constraints)
+    List.fold_left2 source.path sink.path ~init:all_unknown
+      ~f:(fun dependence source_step sink_step ->
+        match dependence with
+        | Independent -> Independent
+        | Distances distances -> (
+            match compare_steps source_step sink_step with
+            | Never_same -> Independent
+            | Always_same | Cannot_tell -> dependence
+            | Same_at_distance {loop; distance} -> (
+                match fix_distance ~loops distances ~loop ~distance with
+                | Some fixed -> Distances fixed
+                | None -> Independent)))
 
 let is_plausible ~(source_first_in_text : bool) (dependence : t) : bool =
   let rec source_may_run_first = function
     | [] -> source_first_in_text
-    | {distance= Some distance; _} :: inner ->
+    | Some distance :: inner ->
         if distance > 0 then true
         else if distance < 0 then false
         else source_may_run_first inner
     (* An unknown distance allows an earlier iteration of this loop. *)
-    | {distance= None; _} :: _ -> true in
+    | None :: _ -> true in
   match dependence with
   | Independent -> false
-  | Unknown -> true
-  | Distances levels -> source_may_run_first levels
+  | Distances distances -> source_may_run_first distances
 
-(** Prints one level as [[n:1]], or as [[while:*]] for a [while] loop. *)
-let pp_level ppf {loop; distance} =
+(** Prints the distance at one loop as [[n:1]], or as [[while:*]] for a [while]
+    loop. *)
+let pp_distance ppf ((loop, distance) : loop * int option) =
   Fmt.pf ppf "[%s:%a]"
     (match loop with For {var; _} -> var | While _ -> "while")
     Fmt.(option ~none:(any "*") int)
     distance
 
-let pp ppf = function
+let pp ~(loops : loop list) ppf = function
   | Independent -> Fmt.string ppf "independent"
-  | Unknown -> Fmt.string ppf "unknown"
-  | Distances levels ->
-      Fmt.pf ppf "distances %a" Fmt.(list ~sep:nop pp_level) levels
+  | Distances distances when List.for_all distances ~f:Option.is_none ->
+      Fmt.string ppf "unknown"
+  | Distances distances ->
+      Fmt.pf ppf "distances %a"
+        Fmt.(list ~sep:nop pp_distance)
+        (List.map2 loops distances ~f:(fun loop distance -> (loop, distance)))

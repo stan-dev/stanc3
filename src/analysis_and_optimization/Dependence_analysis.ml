@@ -33,9 +33,9 @@ open Monotone_framework
 
 (** Returns the path of the first write to [var] in [accesses], or [None] if
     [accesses] does not write [var]. *)
-let write_path (accesses : Accesses.index Accesses.t) (var : string) :
-    Accesses.index Accesses.step list option =
-  List.find_map accesses ~f:(fun (access : Accesses.index Accesses.access) ->
+let write_path (accesses : Accesses.access list) (var : string) :
+    Accesses.step list option =
+  List.find_map accesses ~f:(fun (access : Accesses.access) ->
       match access.kind with
       | Write when String.equal access.var var -> Some access.path
       | Write | Read | Increment -> None)
@@ -44,7 +44,7 @@ type statement =
   { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
   ; meta: Location_span.t
   ; controls: controls
-  ; accesses: Accesses.index Accesses.t }
+  ; accesses: Accesses.access list }
 
 type dependence_info =
   { statements: statement LabelMap.t
@@ -77,7 +77,7 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
   | Some killer_path, Some killed_path -> (
       (* Rule A of 2: [killer] writes the element of [killed] in every
          iteration. *)
-      Accesses.must_overwrite ~same_iteration:false ~killer:killer_path
+      Dependence.must_overwrite ~same_iteration:false ~killer:killer_path
         ~killed:killed_path
       ||
       (* Rule B of 2: [killer] writes the element of [killed] in the same
@@ -86,7 +86,7 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
          of the innermost loop, is also a control of [killed]. The loops are
          found last, after the cheaper checks. *)
       precedes_in_source killed killer
-      && Accesses.must_overwrite ~same_iteration:true ~killer:killer_path
+      && Dependence.must_overwrite ~same_iteration:true ~killer:killer_path
            ~killed:killed_path
       &&
       let killed_loops = statement_loops statements killed in
@@ -124,30 +124,39 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{meta; _} -> meta)
       stmt in
   let _, _, control_ids = build_cf_graphs statement_map in
-  let all_stmt_accesses =
-    LabelMap.map statement_map ~f:(fun (pattern, _) -> Accesses.of_stmt pattern)
-  in
-  (* [classify] marks an index variable as invariant (the same in each
-     iteration) only if no statement in [stmt] writes that variable. A written
-     variable can change between iterations. For example, a write [m = n] stops
-     the classification of index [m] as invariant. *)
+  (* A subscript has a form only if no statement in [stmt] writes the variables
+     that the subscript reads, because a written variable can change between
+     iterations. For example, a write [m = n] stops [v[m]] from having a form.
+     The written names do not depend on the forms, so this first pass gives no
+     subscript a form. *)
   let written_vars =
-    LabelMap.fold all_stmt_accesses ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:stmt_accesses running_written_vars ->
+    LabelMap.fold statement_map ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:(pattern, _) running_written_vars ->
         Set.Poly.union running_written_vars
-          (Accesses.written_vars stmt_accesses)) in
+          (Accesses.written_vars
+             (Accesses.of_stmt ~classify:(fun _ -> None) pattern))) in
   let statements =
     LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
         let controls = LabelMap.find statement_id control_ids in
-        let loopvars =
-          Set.Poly.of_list
-            (List.filter_map (loops_around ~statement_id pattern controls)
-               ~f:(function
-              | For {var; _} -> Some var
-              | While _ -> None)) in
+        let loops = loops_around ~statement_id pattern controls in
+        (* A query reaches each enclosing loop, and the bounds of that loop,
+           through the control dependency on the loop. No statement writes a
+           loop variable, so a search for writes to a loop variable finds
+           nothing. The reads of loop variables thus add no information and are
+           dropped. *)
+        let reads_loop_variable (access : Accesses.access) =
+          match access.kind with
+          | Read ->
+              List.exists loops ~f:(function
+                | For {var; _} -> String.equal var access.var
+                | While _ -> false)
+          | Write | Increment -> false in
         let accesses =
-          Accesses.classify ~loopvars ~written_vars
-            (LabelMap.find statement_id all_stmt_accesses) in
+          List.filter
+            (Accesses.of_stmt
+               ~classify:(Index_form.classify ~loops ~written_vars)
+               pattern)
+            ~f:(fun access -> not (reads_loop_variable access)) in
         {pattern; meta; controls; accesses}) in
   (* The kills use the classified accesses, so classification comes first. *)
   let reaching_definitions =
@@ -163,8 +172,7 @@ let reaching_defn_lookup (definitions : reaching_defn Set.Poly.t) (var : string)
          String.equal defined var))
     ~f:snd
 
-let flows_into (source : 'index Accesses.access) (sink : 'index Accesses.access)
-    : bool =
+let flows_into (source : Accesses.access) (sink : Accesses.access) : bool =
   String.equal source.var sink.var
   &&
   match (source.kind, sink.kind) with
@@ -172,18 +180,16 @@ let flows_into (source : 'index Accesses.access) (sink : 'index Accesses.access)
   | Read, _ | Increment, Increment | _, Write -> false
 
 let dependence_between (info : dependence_info)
-    ~source:((source_id, source) : label * Accesses.index Accesses.access)
-    ~sink:((sink_id, sink) : label * Accesses.index Accesses.access) :
-    Dependence.t =
+    ~source:((source_id, source) : label * Accesses.access)
+    ~sink:((sink_id, sink) : label * Accesses.access) : Dependence.t =
   let loops =
     common_loops
       (statement_loops info.statements source_id)
       (statement_loops info.statements sink_id) in
   Dependence.compare_paths ~loops source sink
 
-let may_supply (info : dependence_info)
-    ~(source : label * Accesses.index Accesses.access)
-    ~(sink : label * Accesses.index Accesses.access) : bool =
+let may_supply (info : dependence_info) ~(source : label * Accesses.access)
+    ~(sink : label * Accesses.access) : bool =
   let source_id, source_access = source in
   let sink_id, sink_access = sink in
   flows_into source_access sink_access

@@ -8,9 +8,10 @@
    the log density, which contains the statements of the parameters, transformed
    parameters and model blocks. An access is one read, write or increment of a
    variable ({!Analysis_and_optimization.Accesses}). The output prints a read as
-   R and a write as W, then the variable and the indices. ?written marks an
-   index that reads a variable that the log density writes. ?unhandled marks an
-   index that uses a loop variable in a form that the analysis does not compare.
+   R and a write as W, then the variable and the indices. ? marks an index
+   without a form ({!Analysis_and_optimization.Index_form}), such as an index
+   that reads a variable that the log density writes, or a loop variable in a
+   form other than a sum.
 
    A write reaches a read when the program can run the write before the read,
    and no write between them replaces the same element. Each write that reaches
@@ -39,8 +40,10 @@
    Independent means the two accesses never select the same element. Unknown
    means the accesses can select the same element, but no distance is known. A *
    distance is unknown. The last word is [flows] or [cannot flow]. [flows] means
-   the written value can reach the read. [cannot flow] means the distances put
-   the read before the write. An independent line has no last word.
+   the written value can reach the read. [cannot flow] means the read runs
+   before the write: the first nonzero distance is negative, or every distance
+   is zero and the read comes first in the program. An independent line has no
+   last word.
 
    A definition from outside the log density, such as data, has no access
    record. The test does not print such a definition. Thus a read can show fewer
@@ -58,7 +61,10 @@ let print_verdicts ~var prog =
   let accesses_of statement_id =
     Accesses.of_var var (LabelMap.find statement_id info.statements).accesses
   in
-  let pp_access = Test_utils.one_line (Accesses.pp_access Accesses.pp_index) in
+  let loops_of statement_id =
+    let statement = LabelMap.find statement_id info.statements in
+    loops_around ~statement_id statement.pattern statement.controls in
+  let pp_access = Test_utils.one_line Accesses.pp_access in
   LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
       let sinks =
         List.filter (accesses_of sink_id) ~f:(fun sink ->
@@ -82,12 +88,76 @@ let print_verdicts ~var prog =
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
-                          | Unknown | Distances _ ->
+                          | Distances _ ->
                               if may_supply info ~source ~sink then "  flows"
                               else "  cannot flow" in
+                        let loops =
+                          common_loops (loops_of source_id) (loops_of sink_id)
+                        in
                         Fmt.pr "  %d %a --> %a: %a%s@." source_id pp_access
-                          (snd source) pp_access (snd sink) Dependence.pp
-                          dependence outcome)))))
+                          (snd source) pp_access (snd sink)
+                          (Dependence.pp ~loops) dependence outcome)))))
+
+(* [must_overwrite] decides whether a later write kills an earlier one. The test
+   finds each write by the printed access. A write to [m[1]] overwrites [m[1,
+   2]], because the row [m[1]] contains the element [m[1, 2]]. A write to [m[n,
+   1]] overwrites itself only within one iteration of the loop over [n]. A slice
+   write never overwrites, because a slice has no form. *)
+let%expect_test "Comparing write paths" =
+  let info =
+    log_prob_build_dep_info_map
+      (Test_utils.mir_of_string
+         {|
+      data { int N; int k; }
+      parameters { real a; row_vector[N] r; }
+      model {
+        matrix[N, N] m;
+        for (n in 2:N) {
+          m[1] = r;
+          m[1, 2] = a;
+          m[k, 1] = a;
+          m[n, 1] = a;
+          m[n - 1, 1] = a;
+          m[1:2, 1] = [a, a]';
+        }
+      }
+    |})
+  in
+  let pp_access = Test_utils.one_line Accesses.pp_access in
+  let path_of printed =
+    LabelMap.fold info.statements ~init:None
+      ~f:(fun ~key:_ ~data:statement found ->
+        match found with
+        | Some _ -> found
+        | None ->
+            List.find_map statement.accesses
+              ~f:(fun (access : Accesses.access) ->
+                if String.equal (Fmt.str "%a" pp_access access) printed then
+                  Some access.path
+                else None))
+    |> Option.get in
+  let must ~same_iteration killer killed =
+    Fmt.pr "must_overwrite ~same_iteration:%b %s %s = %b@." same_iteration
+      killer killed
+      (Dependence.must_overwrite ~same_iteration ~killer:(path_of killer)
+         ~killed:(path_of killed)) in
+  must ~same_iteration:false "W m[1]" "W m[1, 2]";
+  must ~same_iteration:false "W m[1, 2]" "W m[1]";
+  must ~same_iteration:false "W m[k, 1]" "W m[k, 1]";
+  must ~same_iteration:false "W m[n, 1]" "W m[n, 1]";
+  must ~same_iteration:true "W m[n, 1]" "W m[n, 1]";
+  must ~same_iteration:true "W m[n, 1]" "W m[n-1, 1]";
+  must ~same_iteration:true "W m[1:2, 1]" "W m[1:2, 1]";
+  [%expect
+    {|
+    must_overwrite ~same_iteration:false W m[1] W m[1, 2] = true
+    must_overwrite ~same_iteration:false W m[1, 2] W m[1] = false
+    must_overwrite ~same_iteration:false W m[k, 1] W m[k, 1] = true
+    must_overwrite ~same_iteration:false W m[n, 1] W m[n, 1] = false
+    must_overwrite ~same_iteration:true W m[n, 1] W m[n, 1] = true
+    must_overwrite ~same_iteration:true W m[n, 1] W m[n-1, 1] = false
+    must_overwrite ~same_iteration:true W m[1:2, 1] W m[1:2, 1] = false
+    |}]
 
 let%expect_test "Strong SIV: loop-carried and loop-independent" =
   print_verdicts ~var:"b"
@@ -289,7 +359,7 @@ let%expect_test "Indices the test cannot compare" =
         for (n in 1:N) {
           for (m in 1:N) {
             b[n] = a;
-            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] is unhandled
+            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] has no form
           }
         }
         b[1:2] = c[1:2];                  // the analysis does not compare slices
@@ -307,13 +377,13 @@ let%expect_test "Indices the test cannot compare" =
       16 W b[n] --> R b[n]: unknown  flows
     25: d[n, m] = (b[m] + b[idx[n]]);
       5 W b --> R b[m]: unknown  flows
-      5 W b --> R b[?unhandled]: unknown  flows
+      5 W b --> R b[?]: unknown  flows
       11 W b[k] --> R b[m]: unknown  flows
-      11 W b[k] --> R b[?unhandled]: unknown  flows
+      11 W b[k] --> R b[?]: unknown  flows
       16 W b[n] --> R b[m]: unknown  flows
-      16 W b[n] --> R b[?unhandled]: unknown  flows
+      16 W b[n] --> R b[?]: unknown  flows
       24 W b[n] --> R b[m]: unknown  flows
-      24 W b[n] --> R b[?unhandled]: unknown  flows
+      24 W b[n] --> R b[?]: unknown  flows
     27: if((b[k] > 0)) 28
       5 W b --> R b[k]: unknown  flows
       11 W b[k] --> R b[k]: unknown  flows
@@ -339,9 +409,9 @@ let%expect_test "Indices that read a variable assigned in the block" =
   [%expect
     {|
     11: v[n] = (v[m] + x[n]);
-      5 W v --> R v[?written]: unknown  flows
-      8 W v[?written] --> R v[?written]: unknown  flows
-      11 W v[n] --> R v[?written]: unknown  flows
+      5 W v --> R v[?]: unknown  flows
+      8 W v[?] --> R v[?]: unknown  flows
+      11 W v[n] --> R v[?]: unknown  flows
     |}]
 
 let%expect_test "A loop that walks down" =
@@ -369,15 +439,15 @@ let%expect_test "A loop that walks down" =
   [%expect
     {|
     16: c[n] = b[(n + 1)];
-      5 W b --> R b[?written]: unknown  flows
-      17 W b[?written] --> R b[?written]: unknown  flows
+      5 W b --> R b[?]: unknown  flows
+      17 W b[?] --> R b[?]: unknown  flows
     20: d[(N - m)] = b[((N - m) + 1)];
       5 W b --> R b[-m+N+1]: unknown  flows
-      17 W b[?written] --> R b[-m+N+1]: unknown  flows
+      17 W b[?] --> R b[-m+N+1]: unknown  flows
       21 W b[-m+N] --> R b[-m+N+1]: distances [m:1]  flows
     24: e[((N - m) + 1)] = b[(N - m)];
       5 W b --> R b[-m+N]: unknown  flows
-      17 W b[?written] --> R b[-m+N]: unknown  flows
+      17 W b[?] --> R b[-m+N]: unknown  flows
       21 W b[-m+N] --> R b[-m+N]: unknown  flows
       25 W b[-m+N+1] --> R b[-m+N]: distances [m:-1]  cannot flow
     |}]
@@ -439,7 +509,7 @@ let%expect_test "Two index positions of one pair of accesses" =
         }
         for (n in 2:N) {
           m[n, 1] = a;
-          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] is unhandled
+          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] has no form
         }
         for (n in 2:N) {
           m[n, n] = a;
@@ -457,9 +527,9 @@ let%expect_test "Two index positions of one pair of accesses" =
       6 W m --> R m[2, n]: unknown  flows
       17 W m[1, n] --> R m[2, n]: independent
     22: e[n] = m[n, idx[n]];
-      6 W m --> R m[n, ?unhandled]: unknown  flows
-      17 W m[1, n] --> R m[n, ?unhandled]: unknown  flows
-      21 W m[n, 1] --> R m[n, ?unhandled]: distances [n:0]  flows
+      6 W m --> R m[n, ?]: unknown  flows
+      17 W m[1, n] --> R m[n, ?]: unknown  flows
+      21 W m[n, 1] --> R m[n, ?]: distances [n:0]  flows
     26: f[n] = m[(n - 1), n];
       6 W m --> R m[n-1, n]: unknown  flows
       17 W m[1, n] --> R m[n-1, n]: unknown  flows

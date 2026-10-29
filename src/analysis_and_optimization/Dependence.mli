@@ -2,22 +2,25 @@ open Dataflow_types
 
 (** {1 Purpose}
 
-    This module decides whether a write can supply the value that a read uses.
-    If so, the read {e depends} on the write. One read, write or increment of a
-    variable is an {e access}, and {!Accesses} records the accesses of each
-    statement.
+    This module compares the paths of two accesses to one variable. One read,
+    write or increment of a variable is an {e access}, and the {e path} of an
+    access lists the subscripts and tuple fields that select an element
+    ({!Accesses}). {!Dependence_analysis} asks two kinds of question about two
+    paths.
 
-    {!Dependence_analysis} first finds the writes that {e reach} each read. A
-    write reaches a read when the program can go from the write to the read with
-    no write between them that replaces the same element. The standard analysis
-    that finds these writes is called {e reaching definitions}. Each write that
-    reaches the read is a {e candidate source}, and the read is the {e sink}.
+    The first kind comes from {e reaching definitions}, the analysis that finds,
+    for each read, the writes that can supply the value the read uses. A write
+    {e reaches} a read when the program can go from the write to the read with
+    no write between them that replaces the same element. So reaching
+    definitions must know when a later write replaces an earlier one, which
+    {!must_overwrite} answers.
 
-    Reaching definitions remove only the writes that a later write overwrites.
-    They do not check whether the write selects the element that the read
-    selects. They also do not check whether the write runs before the read. So a
-    candidate source can still fail to supply the value. This module rejects
-    such source and sink pairs. The module asks two questions.
+    The second kind decides whether a write can supply the value that a read
+    uses. Each write that reaches the read is a {e candidate source}, and the
+    read is the {e sink}. Reaching definitions do not check whether the source
+    selects the element that the sink selects, or whether the source runs before
+    the sink. So a candidate source can still fail to supply the value, and this
+    module rejects such pairs with two questions.
 
     + Question 1 of 2: Can the source and the sink select the same element?
       ({!compare_paths})
@@ -44,136 +47,78 @@ open Dataflow_types
     means that the source runs first. So the module keeps the pair. {!pp} prints
     this result as [distances [n:1]]. The bracket holds the loop variable and
     the distance at that loop. A [while] loop has no loop variable and prints as
-    [[while:*]].
+    [[while:*]], where [*] is an unknown distance.
 
-    {1 Relation to standard dependence testing}
+    {1 Answering the questions}
 
-    A {e common loop} is a loop around both the source and the sink. Loops match
-    by the label of the loop statement, the integer that identifies the
-    statement ({!Dataflow_types.label}). So two loops over [n], one after the
-    other, do not match. A {e path} is the list of subscripts and tuple fields
-    that select an element (see {!Accesses}). The module answers Question 1 with
-    two standard tests. Each test compares the two paths at one position, which
-    {!Accesses} calls a {e step} ({!Accesses.compare_steps}).
+    A {e common loop} is a loop around both the source and the sink
+    ({!Dataflow_utils.common_loops}). {!compare_paths} compares the two paths
+    position by position with the subscript tests of {!Index_form}. Two tuple
+    fields compare like two constant subscripts, as in GCC. A position whose
+    subscripts never select the same element makes the pair [Independent].
+    Another position can fix the distance at one common loop. If two positions
+    fix different distances at one loop, the pair is also [Independent]. For
+    example, [m[n, n]] against [m[n - 1, n]] needs the distances [1] and [0] at
+    the same time.
 
-    Both tests use [Sequential] indices ({!Accesses.sequential}). A [Sequential]
-    index has the form loop variable + symbol + constant. A {e symbol} is an
-    expression that has the same value in every iteration, such as [N]. The
-    index adds the loop variable ([Ascending]) or subtracts the loop variable
-    ([Descending]). {!Accesses} calls this sign the {e direction} of the index.
-
-    - The ZIV test (zero index variables) compares two indices without a loop
-      variable, as in [theta[1]] against [theta[2]]. Different constants never
-      select the same element, so the pair is independent. Equal constants leave
-      the distance unknown. Tuple fields compare like constant subscripts, as in
-      GCC.
-    - The strong SIV test (single index variable) compares two indices with the
-      same loop variable, the same direction and the same symbol. An example is
-      [b[N - n]] against [b[N - n + 1]]. The loop variable must belong to a
-      common loop. Call the constant of the source index [c1] and the constant
-      of the sink index [c2]. In source iteration [i], the source selects
-      [i + c1]. In sink iteration [j], the sink selects [j + c2]. These match
-      when the distance [j - i] is [c1 - c2]. The sign flips when both indices
-      are [Descending], as in [N - n]. The distance at each other common loop is
-      unknown.
-
-    {!compare_paths} combines the results of all positions. If any position
-    shows that the accesses never select the same element, the result is
-    [Independent]. If two positions give different distances at one loop, the
-    result is also [Independent]. For example, [m[n, n]] against [m[n - 1, n]]
-    needs the distances [1] and [0] at the same time. Otherwise, a known
-    distance at a loop replaces an unknown one.
-
-    These tests are a small subset of the tests in Goff, Kennedy and Tseng,
-    "Practical Dependence Testing" (PLDI 1991). Allen and Kennedy, "Optimizing
-    Compilers for Modern Architectures" (2001, chapters 2 and 3), describe the
-    same tests. LLVM's [DependenceAnalysis] implements them. The names in this
-    module map to the standard terms as follows.
-
-    - LLVM calls the source [Src] and the sink [Dst].
-    - A common loop has the same meaning as in LLVM. A {!level} holds the
-      distance at one common loop.
-    - The distance is LLVM's strong SIV formula [d = i' - i = (c1 - c2) / a].
-      [i] and [i'] are the source and sink iterations, and [c1] and [c2] are the
-      two constants. [a] is the factor of the loop variable, which is [1] or
-      [-1] here.
-    - LLVM also records a direction at each loop, which is the sign of the
-      distance. This direction is unrelated to {!Accesses.direction}. LLVM gives
-      an unknown distance the direction [*], which allows any direction. This
-      module also prints an unknown distance as [*].
-    - A {e distance vector} has one distance per common loop. [Distances] holds
-      a distance vector.
-    - [Unknown] means that the pair may depend, but no distance is known. LLVM
-      calls this a confused dependence, and GCC calls this case
-      [chrec_dont_know].
-    - A distance vector is {e lexicographically positive} when the first nonzero
-      entry of the vector is positive. {!is_plausible} applies the standard rule
-      that a distance vector must be lexicographically positive.
-    - [source_first_in_text] is true when the source statement comes before the
-      sink statement in the program. The flag is false when both accesses are in
-      one statement, because an assignment reads the right-hand side before the
-      assignment writes. The flag has the role of LLVM's
-      [PossiblyLoopIndependent], which allows a dependence inside one iteration.
-
-    {!is_plausible} answers Question 2 with this rule. [Independent] gives
-    false, and [Unknown] gives true. For [Distances], the first level that is
-    not zero decides, from the outermost loop inward. A positive distance or a
-    [*] gives true, because the source can run in an earlier iteration. A
-    negative distance gives false, because the source runs in a later iteration.
-    If every distance is zero, the result is [source_first_in_text]. The
-    examples that follow use the notation of {!pp}.
-
+    A {e distance vector} has one distance per common loop, outermost first. A
+    distance vector is {e lexicographically positive} when the first nonzero
+    entry is positive. {!is_plausible} applies the standard rule that a
+    dependence needs a lexicographically positive distance vector: the first
+    distance that is not zero decides, from the outermost loop inward. A
+    positive distance or an unknown one gives true, because the source can run
+    in an earlier iteration. A negative distance gives false. If every distance
+    is zero, the source and the sink run in the same iteration, and the result
+    is [source_first_in_text]. The flag is false when both accesses are in one
+    statement, because an assignment reads the right-hand side before the
+    assignment writes. In the notation of {!pp}:
     - [[m:0][n:-1]] gives false. In the same iteration of [m], the source runs
       one iteration of [n] after the sink.
     - [[m:*][n:-1]] gives true, because the source can run in an earlier
       iteration of [m].
 
-    The cases that follow give [Unknown]. [Unknown] makes {!is_plausible} return
-    true, so the module keeps the pair. Each name in parentheses is a standard
-    test that this module does not implement.
+    These tests are a small subset of the tests in Goff, Kennedy and Tseng,
+    "Practical Dependence Testing" (PLDI 1991). Allen and Kennedy, "Optimizing
+    Compilers for Modern Architectures" (2001, chapters 2 and 3), describe the
+    same tests, and LLVM's [DependenceAnalysis] implements them. LLVM calls the
+    source [Src] and the sink [Dst]. A vector with no known distance is what
+    LLVM calls a confused dependence, and GCC [chrec_dont_know].
+    [source_first_in_text] has the role of LLVM's [PossiblyLoopIndependent].
 
-    - A loop variable in only one index, as in [b[n]] against [b[1]] (the
+    These cases leave every distance unknown, so the module keeps the pair. Each
+    name in parentheses is a standard test that this module does not implement.
+    - A loop variable in only one subscript, as in [b[n]] against [b[1]] (the
       weak-zero SIV test).
-    - One loop variable in opposite directions, as in [b[n]] against [b[N - n]]
+    - One loop variable with opposite signs, as in [b[n]] against [b[N - n]]
       (the weak-crossing SIV test).
     - Other multiples of a loop variable, as in [b[2 * n]].
-    - Indices with more than one loop variable (the MIV tests, for multiple
+    - Subscripts with more than one loop variable (the MIV tests, for multiple
       index variables).
     - Paths of different lengths.
 
     The tests ignore loop bounds. A distance larger than the number of
     iterations still keeps the pair. *)
 
-(** {1 API reference}
+(** {1 API reference} *)
 
-    The functions of this module work together as follows. [source] and [sink]
-    are two accesses to the same variable. [source_loops] and [sink_loops] are
-    the loops around each access, outermost first.
-    {[
-    let loops = Dataflow_utils.common_loops source_loops sink_loops in
-    is_plausible ~source_first_in_text (compare_paths ~loops source sink)
-    ]}
-    A loop statement counts as inside the loop that the statement forms
-    ({!Dataflow_utils.loops_around}). *)
+val must_overwrite :
+     same_iteration:bool
+  -> killer:Accesses.step list
+  -> killed:Accesses.step list
+  -> bool
+(** Whether a write to the [killer] path overwrites each element that a write to
+    the [killed] path wrote. [same_iteration] tells whether both writes run in
+    the same loop iteration. *)
 
-(** The distance at one common loop. [None] means that the distance is unknown,
-    printed [*]. *)
-type level = {loop: loop; distance: int option}
-
-(** The result of a comparison of the elements that two accesses select. *)
+(** The result of {!compare_paths}. *)
 type t =
   | Independent  (** The accesses never select the same element. *)
-  | Unknown
-      (** The accesses may select the same element, but no distance is known. *)
-  | Distances of level list
-      (** The accesses may select the same element, and at least one distance is
-          known. The list has one level per common loop, outermost first. *)
+  | Distances of int option list
+      (** The accesses may select the same element. The list holds the distance
+          at each common loop, outermost first. [None] is an unknown distance.
+      *)
 
-val compare_paths :
-     loops:loop list
-  -> Accesses.index Accesses.access
-  -> Accesses.index Accesses.access
-  -> t
+val compare_paths : loops:loop list -> Accesses.access -> Accesses.access -> t
 (** Answers Question 1 for the first access (the source) and the second access
     (the sink) of one variable. [loops] holds the common loops. *)
 
@@ -181,6 +126,7 @@ val is_plausible : source_first_in_text:bool -> t -> bool
 (** Answers Question 2 for a result of {!compare_paths}. [source_first_in_text]
     tells whether the source statement comes before the sink statement. *)
 
-val pp : t Fmt.t
-(** Prints [independent], [unknown], or [distances] with one [[loop:distance]]
-    per level, as in [distances [n:1][m:*]]. *)
+val pp : loops:loop list -> t Fmt.t
+(** Prints [independent], [unknown] when no distance is known, or [distances]
+    with one [[loop:distance]] per common loop in [loops], as in
+    [distances [n:1][m:*]]. *)
