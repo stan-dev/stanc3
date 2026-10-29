@@ -1,5 +1,5 @@
-// A first-order recurrence: each iteration reads ia[i], written by the
-// previous iteration. Translated to 1-based Stan.
+// The loop is a first-order recurrence. Each iteration reads ia[i], which the
+// previous iteration wrote. Translated to 1-based Stan.
 // Source: GCC gcc.dg/vect/no-vfa-vect-depend-1.c (loop 1)
 // C: for (i = 0; i < N; i++) ia[i+1] = ia[i] * 4;
 // Dependences: true self dependence {Lt, 1} (recurrence)

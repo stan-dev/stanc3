@@ -1,6 +1,6 @@
-// The loop variable `n` is used as a value on the right-hand side, not only
-// as a subscript. The statement has no dependence edge, but a loop that uses
-// its loop variable as a value stays as written.
+// The loop variable `n` is used on the right-hand side as a value as well as
+// in a subscript. The statement does not have a dependence edge. A loop that
+// uses the loop variable as a value stays as written.
 // Source: TSVC s452 (Control Flow / induction), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] = b[i] + c[i] * (real_t) (i+1);
 // Intent: induction variable used as a value

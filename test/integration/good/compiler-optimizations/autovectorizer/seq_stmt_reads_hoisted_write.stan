@@ -1,5 +1,5 @@
 // A print statement must stay in the loop and reads mu3[n], which the
-// statement before it writes. The write is hoisted into a vector statement
+// preceding statement writes. The write is hoisted into a vector statement
 // placed before the remaining loop. Direction sets are for the loop over n.
 // Dependences: true a->b {Eq}
 // Desired outcome: partially vectorized.

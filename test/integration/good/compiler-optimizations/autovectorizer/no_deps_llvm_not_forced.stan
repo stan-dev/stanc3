@@ -1,4 +1,4 @@
-// An elementwise product of two vectors with no dependence between
+// An elementwise product of two vectors without a dependence between
 // iterations.
 // Source: LLVM test/Transforms/LoopDistribute/diagnostics.ll (`not_forced`),
 //   translated to 1-based Stan.
@@ -6,7 +6,7 @@
 // Dependences: none
 // Desired outcome: fully vectorized, `a1[1:N] = b .* d`.
 // LLVM does not distribute the loop because "memory operations are safe for
-// vectorization" and there is nothing to isolate.
+// vectorization" and the loop does not have anything to isolate.
 data {
   int<lower=1> N;
   vector[N] b;

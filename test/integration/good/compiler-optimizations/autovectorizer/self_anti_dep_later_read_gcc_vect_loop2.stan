@@ -1,5 +1,5 @@
-// Each iteration reads ib[i+1] before the next iteration overwrites it, a
-// self anti-dependence. A self anti-dependence adds no edge, so the
+// Each iteration reads ib[i+1] before the next iteration overwrites that
+// element. This is a self anti-dependence, which does not add an edge. The
 // statement becomes a vector statement. Translated to 1-based Stan.
 // Source: GCC gcc.dg/vect/no-vfa-vect-depend-1.c (loop 2)
 // C: for (i = 0; i < N; i++) ib[i] = ib[i+1] * 4;

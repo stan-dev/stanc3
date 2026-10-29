@@ -1,13 +1,13 @@
-// Radon model loop where every dependence is loop independent ({Eq}), so all
-// three statements become vector statements and no loop remains.
+// Radon model loop where every dependence is loop independent ({Eq}). All
+// three statements become vector statements and the loop is removed.
 // Direction sets are for the loop over n. V marks a statement that becomes a
 // vector statement, S one that stays in the loop.
 // Dependences: a->b {Eq}, b->c {Eq}. alpha, county_idx, log_uppm, ... are
-//   read-only and add no edges.
+//   read-only and do not add edges.
 // Desired outcome: fully vectorized.
-//   muj1[:] = alpha[county_idx] + log_uppm * beta[1];
-//   mu1[:]  = muj1 + floor_measure * beta[2];
-//   target += normal_lpdf(log_radon | mu1, sigma_y);
+//   `muj1[:] = alpha[county_idx] + log_uppm * beta[1]`
+//   `mu1[:] = muj1 + floor_measure * beta[2]`
+//   `target += normal_lpdf(log_radon | mu1, sigma_y)`
 data {
   int<lower=2> N;
   int<lower=1> J;

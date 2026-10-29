@@ -1,6 +1,6 @@
 // An update of `a3` guarded by an if. An `IfElse` statement is a single
-// sequential leaf of the loop dependence graph because there is no
-// if-conversion, so the loop stays as written.
+// sequential leaf of the loop dependence graph because the pass does not do
+// if-conversion. The loop stays as written.
 // Source: TSVC s271 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (b[i] > 0.) a[i] += b[i] * c[i];
 // Intent: loop with singularity handling, needs if-conversion

@@ -1,7 +1,7 @@
 // A scalar `s4` is written only when `a0[n] > 0` but read in every
-// iteration, so its value wraps around to later iterations. The `IfElse`
-// statement is a sequential leaf and the whole-variable access to `s4`
-// (subs = []) is confused, so the loop stays as written.
+// iteration, so the last written value wraps around to later iterations.
+// The `IfElse` statement is a sequential leaf and the whole-variable access
+// to `s4` (subs = []) is confused, so the loop stays as written.
 // Source: TSVC s258 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (a[i] > 0.) s = d[i] * d[i]; b[i] = s * c[i] + d[i];
 // Intent: wrap-around scalar under an if

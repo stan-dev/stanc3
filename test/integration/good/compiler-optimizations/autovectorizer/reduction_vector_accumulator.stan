@@ -1,7 +1,7 @@
 // A vector accumulator acc13 that sums the rows of an array.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
 // Desired outcome: left as a loop.
 // Only scalar accumulators are treated as reductions.
 data {

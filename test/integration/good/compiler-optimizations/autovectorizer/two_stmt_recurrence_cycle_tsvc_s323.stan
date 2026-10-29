@@ -1,6 +1,6 @@
 // S1 reads `b3[n - 1]` written by the previous iteration's S2, and S2 reads
-// `a3[n]` written by S1. The two statements form a true recurrence cycle,
-// so the loop may not be vectorized and stays as written.
+// `a3[n]` written by S1. The two statements form a true recurrence cycle.
+// The loop may not be vectorized and stays as written.
 // Source: TSVC s323 (Recurrences), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] = b[i-1] + c[i] * d[i]; b[i] = a[i] + c[i] * e[i];
 // Intent: coupled recurrence, not vectorizable

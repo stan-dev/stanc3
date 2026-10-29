@@ -1,7 +1,7 @@
 // An early `reject` under an if, followed by an independent update of `a2`.
 // The `IfElse` statement is a single sequential leaf of the loop dependence
-// graph (no if-conversion) and stays in the loop, but it does not stop the
-// independent update from becoming a vector statement.
+// graph because the pass does not do if-conversion. The `IfElse` stays in the
+// loop and the independent update still becomes a vector statement.
 // Source: TSVC s481 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (d[i] < 0.) exit(0); a[i] += b[i] * c[i];
 // Intent: non-local goto (exit)

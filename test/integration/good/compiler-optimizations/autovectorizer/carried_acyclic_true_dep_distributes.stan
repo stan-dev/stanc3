@@ -1,7 +1,7 @@
 // The second statement reads v7[n - 1], written by the first statement in
-// the previous iteration. The dependence is loop carried but acyclic, so the
-// loop can be distributed and each statement becomes a vector statement with
-// shifted ranges. Direction sets are for the loop over n.
+// the previous iteration. The dependence is loop carried but acyclic. The
+// loop can therefore be distributed and each statement becomes a vector
+// statement with shifted ranges. Direction sets are for the loop over n.
 // Dependences: true a->b {Lt}, distance 1
 // Desired outcome: fully vectorized.
 //   `v7[2:N] = x[2:N]` then `y7[2:N] = v7[1:(N-1)]`

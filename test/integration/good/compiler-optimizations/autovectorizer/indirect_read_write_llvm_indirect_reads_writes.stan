@@ -1,5 +1,5 @@
-// The loop writes and reads A through the index array idx, so which elements
-// two iterations touch cannot be compared.
+// The loop writes and reads A through the index array idx. The dependence
+// test cannot compare the elements that two iterations access.
 // Source: LLVM
 //   test/Analysis/LoopAccessAnalysis/loops-with-indirect-reads-and-writes.ll,
 //   translated to 1-based Stan.

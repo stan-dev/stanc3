@@ -1,5 +1,5 @@
-// A partially recursive loop: an independent update of a followed by a
-// recurrence on b that reads the new a. The update is distributed out as a
+// The loop is partially recursive. An independent update of a is followed by
+// a recurrence on b that reads the new a. The update is distributed out as a
 // vector statement and the recurrence stays in the loop. Translated to
 // 1-based Stan, with written variables as model-block locals initialised
 // from data.

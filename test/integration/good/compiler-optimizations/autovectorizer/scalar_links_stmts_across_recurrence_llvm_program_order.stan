@@ -1,5 +1,5 @@
-// A body-local scalar dd5, written by S1 and read by S3, ties those two
-// statements together on either side of the recurrence S2.
+// S1 writes a body-local scalar dd5 and S3 reads dd5. The scalar links these
+// two statements, which lie on either side of the recurrence S2.
 // Source: LLVM test/Transforms/LoopDistribute/program-order.ll, translated to
 //   1-based Stan.
 // C: for (i = 0; i < N; i++) { d = D[i]; A[i+1] = A[i] * B[i]; C[i] = d * E[i]; }

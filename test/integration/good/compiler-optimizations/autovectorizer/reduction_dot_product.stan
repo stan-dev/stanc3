@@ -1,7 +1,7 @@
 // A dot product written as a loop.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
 // Desired outcome: fully vectorized, `dot4 += sum(a[1:N] .* b[1:N])`.
 // A partial-evaluator rule can later turn this into `dot_product`.
 data {

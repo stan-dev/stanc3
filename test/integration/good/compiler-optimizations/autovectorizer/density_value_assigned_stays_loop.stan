@@ -1,5 +1,5 @@
-// A density used as a value, `v[n] = normal_lpdf(y[n] | mu, 1)`, rather
-// than added to the target.
+// The loop assigns a density value to each element with
+// `v[n] = normal_lpdf(y[n] | mu, 1)`.
 // Desired outcome: left as a loop.
 // A vectorized density returns one summed value, but the loop stores a
 // separate value per element.

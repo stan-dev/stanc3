@@ -1,6 +1,6 @@
 // Two statements write A[i+1] and A[i], then a third reads A[i]. This gives
-// a carried output dependence and two true dependences, all pointing forward,
-// so none of them forms a cycle.
+// a carried output dependence and two true dependences. All three point
+// forward and do not form a cycle.
 // Source: LLVM test/Analysis/LoopAccessAnalysis/forward-loop-independent.ll,
 //   translated to 1-based Stan.
 // C: for (i = 0; i < N; i++) { A[i+1] = B[i] + 1; A[i] = B[i] + 2; C[i] = A[i] * 2; }

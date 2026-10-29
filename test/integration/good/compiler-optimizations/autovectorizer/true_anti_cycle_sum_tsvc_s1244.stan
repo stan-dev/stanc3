@@ -1,6 +1,6 @@
 // S1 writes `a5[n]` and S2 sums `a5[n]` and `a5[n + 1]`, the element that
 // the next iteration's S1 overwrites. The true and anti dependences form a
-// cycle, so the loop stays as written.
+// cycle. The loop stays as written.
 // Source: TSVC s1244 (NodeSplitting), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D-1; i++) { a[i] = b[i] + c[i] * c[i] + b[i]*b[i] + c[i]; d[i] = a[i] + a[i+1]; }
 // Intent: cycle with true and anti dependency.

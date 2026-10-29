@@ -1,10 +1,10 @@
 // Two increments of the same accumulator s6 next to an assignment to mu6
 // that can become a vector statement.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
-// Dependences: true S1->S2 {Eq}; the two increments carry no edge between
-//   them
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
+// Dependences: true S1->S2 {Eq}; the two increments are not connected by
+//   an edge
 // Desired outcome: fully vectorized, `mu6[1:N] = alpha + beta * x`, then
 //   `s6 += sum(mu6[1:N])`, then `s6 += sum(w[1:N])`.
 data {

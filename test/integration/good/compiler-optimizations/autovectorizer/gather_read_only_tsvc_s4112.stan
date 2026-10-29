@@ -1,6 +1,6 @@
 // A gather `b[ip[n]]` through a read-only index array. The `Varying`
 // subscript can only create a dependence when the gathered variable is also
-// written in the loop. `b` never is, so the loop becomes one vector
+// written in the loop. The loop never writes `b` and becomes one vector
 // statement with a multi-index gather.
 // Source: TSVC s4112 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] += b[ip[i]] * s;

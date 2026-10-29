@@ -1,6 +1,6 @@
 // `a6[n]` is written from `a6[n + k]` for a data integer `k`. The offsets
-// differ by the symbol `k`, so the pair is confused and the loop correctly
-// stays as written.
+// differ by the symbol `k`. The pair is therefore confused and the loop stays
+// as written.
 // Source: TSVC s431 (Symbolics), UoB-HPC/TSVC_2 src/tsvc.c
 // C: int k = 2*inc_1d - 1; for (int i = 0; i < LEN_1D; i++) a[i] = a[i+k] + b[i];
 // Intent: needs the value of k to decide.

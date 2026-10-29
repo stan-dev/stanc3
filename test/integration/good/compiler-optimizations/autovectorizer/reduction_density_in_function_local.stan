@@ -1,9 +1,10 @@
-// A density accumulated into the function local lp1, the shape of most
-// user-defined densities, called from the model block on a parameter vector.
-// The loop is in the functions block, which the pass also visits.
+// A density is accumulated into the function local lp1, as in most
+// user-defined densities. The function is called from the model block on a
+// parameter vector. The loop is in the functions block, which the pass also
+// visits.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
 // Desired outcome: fully vectorized,
 //   `lp1 += normal_lpdf(y[1:num_elements(y)] | mu[1:...], sigma)`.
 // A density operand is widened the same way as in a `target +=` statement.

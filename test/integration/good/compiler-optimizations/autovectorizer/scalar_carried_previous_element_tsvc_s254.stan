@@ -1,7 +1,7 @@
-// A scalar `x3` carries `b[n]` into the next iteration, where it is read
-// before being overwritten. The whole-variable access to `x3` (subs = []) is
-// confused, so the loop stays as written until scalar expansion is
-// implemented.
+// A scalar `x3` carries `b[n]` into the next iteration, where `x3` is read
+// before being overwritten. Because the whole-variable access to `x3`
+// (subs = []) is confused, the loop stays as written until scalar expansion
+// is implemented.
 // Source: TSVC s254 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] = (b[i] + x) * 0.5; x = b[i];
 // Intent: carry-around variable

@@ -2,8 +2,8 @@
 // `y[i] ~ std_normal()` and then prints `target()`. Merging the densities would
 // change the value of `target()` that each print sees.
 // Desired outcome: left as a loop.
-// A read of `target()` anywhere in a loop, including a nested loop, blocks
-// widening every density in that loop, so both loops stay.
+// A read of `target()` anywhere in a loop, including a nested loop, prevents
+// widening of all densities in that loop. Both loops therefore stay.
 data {
   int<lower=0> N;
   vector[N] x;

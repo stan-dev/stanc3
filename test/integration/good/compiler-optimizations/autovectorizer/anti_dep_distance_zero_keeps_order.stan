@@ -1,5 +1,5 @@
-// The first statement reads v2[n] and the second then overwrites it, an
-// anti-dependence with distance 0. Both statements vectorize, and the vector
+// The first statement reads v2[n] and the second then overwrites v2[n]. This
+// is an anti-dependence with distance 0. Both statements vectorize. The vector
 // statements keep the original order. Direction sets are for the loop over n.
 // Dependences: anti a->b {Eq}
 // Desired outcome: fully vectorized.

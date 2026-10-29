@@ -1,6 +1,7 @@
 // The loop writes v9a[n] and reads the whole vector v9a with sum(v9a) in the
-// same iteration. The read has no subscripts, so the dependence test cannot
-// relate it to the write. Direction sets are for the loop over n.
+// same iteration. Because the read does not have subscripts, the dependence
+// test cannot relate the read to the write. Direction sets are for the loop
+// over n.
 // Dependences: whole-vector read (no subscripts) -> confused -> sequential
 // Desired outcome: left as a loop.
 data {

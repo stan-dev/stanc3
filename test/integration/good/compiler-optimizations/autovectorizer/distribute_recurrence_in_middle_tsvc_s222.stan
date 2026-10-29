@@ -1,5 +1,5 @@
-// A recurrence on e sits between two independent updates of a. The two
-// updates become vector statements and the recurrence stays in a loop
+// The loop has a recurrence on e between two independent updates of a. The
+// two updates become vector statements and the recurrence stays in a loop
 // between them. Translated to 1-based Stan, with written variables as
 // model-block locals initialised from data.
 // Source: TSVC s222 (LoopDistribution), UoB-HPC/TSVC_2 src/tsvc.c

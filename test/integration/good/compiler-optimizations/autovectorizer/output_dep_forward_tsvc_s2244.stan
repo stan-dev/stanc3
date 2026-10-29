@@ -1,5 +1,5 @@
-// Two writes to `a1` in each iteration, `a1[n + 1]` and then `a1[n]`. The
-// output dependence points forward, so both statements become vector
+// Two writes to `a1` in each iteration, `a1[n + 1]` and then `a1[n]`. Because
+// the output dependence points forward, both statements become vector
 // statements in their original order.
 // Source: TSVC s2244 (NodeSplitting), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D-1; i++) { a[i+1] = b[i] + e[i]; a[i] = b[i] + c[i]; }

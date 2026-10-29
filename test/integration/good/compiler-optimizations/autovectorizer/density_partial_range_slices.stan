@@ -1,5 +1,5 @@
 // A density loop that starts at 3 instead of 1. The vectorizer slices the
-// outcome to the iterated range rather than leaving the loop.
+// outcome to the iterated range.
 // Desired outcome: fully vectorized.
 //   `target += normal_lpdf(y[3:N], mu, sigma)`
 data {

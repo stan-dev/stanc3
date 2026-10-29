@@ -2,8 +2,8 @@
 // `target` on every call. A vector statement would call `bump_lp` once instead
 // of N times.
 // Desired outcome: left as a loop.
-// Expressions with side effects cannot be duplicated or merged, so the
-// assignment stays.
+// Expressions with side effects cannot be duplicated or merged. The
+// assignment stays in the loop.
 functions {
   real bump_lp(real x) {
     target += x;

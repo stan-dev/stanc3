@@ -1,6 +1,6 @@
 // An assignment loop `v[n] = exp(x[n])` where both the target and `x` are
-// real arrays. The widened right-hand side `exp(x)` is also an array, so the
-// sliced assignment typechecks.
+// real arrays. The widened right-hand side `exp(x)` is also an array. The
+// sliced assignment therefore typechecks.
 // Desired outcome: fully vectorized.
 //   `v[1:N] = exp(x)`
 data {

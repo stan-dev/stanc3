@@ -1,6 +1,6 @@
-// A void call `foo()` sits between two independent assignments. The call is
-// an effectful statement that stays in the loop, but it does not stop the
-// independent statements around it from becoming vector statements.
+// A void call `foo()` comes between two independent assignments. The call is
+// an effectful statement that stays in the loop. The independent statements
+// on either side still become vector statements.
 // Source: TSVC s471 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: x[i] = b[i] + d[i] * d[i]; s471s(); b[i] = c[i] + d[i] * e[i];
 // Intent: call statement in the loop

@@ -1,6 +1,6 @@
 // One loop holds two assignments, `v[n] = x[n] + alpha` and `w[n] = y[n] * 2`.
-// Neither statement reads what the other writes, so each becomes its own
-// vector statement and the loop disappears.
+// Neither statement reads what the other writes. Each statement becomes a
+// separate vector statement and the loop is removed.
 // Desired outcome: fully vectorized.
 //   `v[1:N] = x[1:N] + alpha`
 //   `w[1:N] = y[1:N] * 2`

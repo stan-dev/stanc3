@@ -1,7 +1,7 @@
-// A scalar temporary t8 is written and then read in every iteration. t8 has
-// no subscripts, so its accesses depend in every direction and both
-// statements form one strongly connected component. Direction sets are for
-// the loop over n.
+// A scalar temporary t8 is written and then read in every iteration. t8 does
+// not have subscripts. Accesses to t8 therefore depend in every direction and
+// both statements form one strongly connected component. Direction sets are
+// for the loop over n.
 // Dependences: a<->b {Lt,Eq,Gt}
 // Desired outcome: left as a loop.
 // Vectorizing this loop would need scalar expansion of t8.

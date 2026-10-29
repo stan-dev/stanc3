@@ -1,7 +1,8 @@
 // A sparse dot product written as a density, with a gather `b[ip[n]]`
-// through a read-only index array. `b` is never written in the loop and the
-// `target +=` increments are a reduction, so there is no dependence and the
-// loop becomes one vector statement with a multi-index gather.
+// through a read-only index array. Since `b` is never written in the loop and
+// the `target +=` increments are a reduction, the loop body does not have any
+// dependences. The loop becomes one vector statement with a multi-index
+// gather.
 // Source: TSVC s4115 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
 // C: sum += a[i] * b[ip[i]];   (sparse dot product, written as a density)
 // Intent: indirect addressing, reduction

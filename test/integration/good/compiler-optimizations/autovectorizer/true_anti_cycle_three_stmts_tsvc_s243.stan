@@ -1,6 +1,6 @@
 // Three statements alternate writes to `a3` and `b3`, and S3 reads
 // `a3[n + 1]`, the element that the next iteration's S1 overwrites. The
-// carried S3->S1 edge closes a cycle with the S1->S2->S3 chain, so the loop
+// carried S3->S1 edge forms a cycle with the S1->S2->S3 chain, so the loop
 // stays as written.
 // Source: TSVC s243 (NodeSplitting), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D-1; i++) { a[i] = b[i] + c[i] * d[i]; b[i] = a[i] + d[i] * e[i]; a[i] = b[i] + a[i+1] * d[i]; }

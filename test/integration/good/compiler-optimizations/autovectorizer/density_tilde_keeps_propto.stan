@@ -1,6 +1,6 @@
 // A tilde statement `y[n] ~ normal(mu[n], sigma)` inside a loop. The loop
-// lowers to `target +=` with the dropping-constants form of the density, and
-// the vectorized call keeps that form.
+// lowers to `target +=` with the dropping-constants form of the density. The
+// vectorized call keeps that form.
 // Desired outcome: fully vectorized.
 //   `target += normal_lupdf(y, mu, sigma)`
 data {

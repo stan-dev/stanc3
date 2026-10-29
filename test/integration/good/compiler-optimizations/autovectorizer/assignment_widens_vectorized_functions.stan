@@ -1,5 +1,5 @@
 // An assignment loop `v[n] = exp(x[n]) + sqrt(square(u[n]))`. Each unary
-// function has a vector signature, so the calls nest on whole vectors.
+// function has a vector signature. The calls therefore nest on whole vectors.
 // Desired outcome: fully vectorized.
 //   `v[1:N] = exp(x) + sqrt(square(u))`
 data {

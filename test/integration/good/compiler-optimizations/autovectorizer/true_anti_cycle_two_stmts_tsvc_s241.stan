@@ -1,6 +1,6 @@
 // S1 writes `a2[n]` and S2 reads `a2[n]` and `a2[n + 1]`, the element that
-// the next iteration's S1 overwrites. The two dependences form a cycle, so
-// without node splitting the loop correctly stays as written.
+// the next iteration's S1 overwrites. The two dependences form a cycle.
+// Without node splitting the loop stays as written.
 // Source: TSVC s241 (NodeSplitting), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D-1; i++) { a[i] = b[i] * c[i] * d[i]; b[i] = a[i] * a[i+1] * d[i]; }
 // Intent: needs preloading of a[i+1] (node splitting).

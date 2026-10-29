@@ -1,7 +1,7 @@
-// Each iteration reads a11[n + 1] before a later iteration overwrites it, a
-// self anti-dependence. A self anti-dependence adds no edge, so the
-// statement becomes a vector statement. Direction sets are for the loop
-// over n.
+// Each iteration reads a11[n + 1] before a later iteration overwrites that
+// element. This is a self anti-dependence. Because a self anti-dependence does
+// not add an edge, the statement becomes a vector statement. Direction sets
+// are for the loop over n.
 // Dependences: self anti-dependence, no edge
 // Desired outcome: fully vectorized.
 //   `a11[1:(N-1)] = a11[2:N] + 1`

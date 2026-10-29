@@ -1,6 +1,6 @@
-// A vector t9c is declared inside the loop body, written, and read. A
-// container declared in the body gets no loop subscripts, so the dependence
-// test cannot separate one iteration's accesses from another's. Direction
+// A vector t9c is declared inside the loop body, then written and read. A
+// container declared in the body does not get loop subscripts. The dependence
+// test then cannot separate one iteration's accesses from another's. Direction
 // sets are for the loop over n.
 // Dependences: subs = [] -> confused -> sequential
 // Desired outcome: left as a loop.

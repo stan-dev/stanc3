@@ -1,7 +1,7 @@
 // An inner loop over `j` copies `w2[j, i] = y[i, j]` and `w3[i, j] = z[i, j]`,
 // where `y[i]` is a vector and `z[i]` is a row_vector. The column slice of `w2`
-// is a vector and the row slice of `w3` is a row_vector, so each matches its
-// right hand side and the inner loop becomes two vector statements.
+// is a vector and the row slice of `w3` is a row_vector. Both slices match
+// the right-hand sides and the inner loop becomes two vector statements.
 // Desired outcome: partially vectorized.
 //   `w2[1:N, i] = y[i, 1:N]`
 //   `w3[i, 1:N] = z[i, 1:N]`

@@ -1,7 +1,6 @@
 // S1 writes `a4[n]`, S2 updates `b4[n]`, and S3 writes `a4[n + 1]`, the
 // element that the next iteration's S1 writes again. The output dependence
-// S3->S1 closes a cycle with the S1->S2->S3 chain, so the loop stays as
-// written.
+// S3->S1 and the S1->S2->S3 chain form a cycle. The loop stays as written.
 // Source: TSVC s244 (NodeSplitting), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D-1; ++i) { a[i] = b[i] + c[i] * d[i]; b[i] = c[i] + b[i]; a[i+1] = b[i] + a[i+1] * d[i]; }
 // Intent: false dependence cycle breaking.

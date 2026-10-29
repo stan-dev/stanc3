@@ -1,7 +1,7 @@
 // An integer counter incremented by the loop-invariant value 1.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
 // Desired outcome: fully vectorized, `count5 += (N - (1 - 1)) * 1`.
 // An invariant operand becomes the iteration count times the operand, as for
 // a density whose arguments are all invariant.

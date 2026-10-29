@@ -1,5 +1,5 @@
 // The inner loop over j reads and writes v[i], the same element on every
-// iteration, so each iteration depends on the one before.
+// iteration. Each iteration depends on the one before.
 // Source: LLVM test/Analysis/LoopAccessAnalysis/store-to-invariant-check1.ll,
 //   translated to 1-based Stan (inner loop over j).
 // C: for (i) for (j = 0; j < M; j++) v[i] = w[j] + v[i];

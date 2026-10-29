@@ -1,6 +1,7 @@
 // Two print statements surround a write of v5[n]. The prints are ordered
-// against each other through their effects, and the write must stay between
-// them, so all three statements form one strongly connected component.
+// against each other through their effects. The write must stay between the
+// two prints. All three statements therefore form one strongly connected
+// component.
 // Direction sets are for the loop over n.
 // Dependences: a<->c (effects), a->b, b->c
 // Desired outcome: left as a loop.

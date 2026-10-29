@@ -1,5 +1,5 @@
-// A recurrence on A next to an independent elementwise product. The loop can
-// be split so that only the recurrence stays sequential.
+// A recurrence on A next to an independent elementwise product. Splitting the
+// loop leaves only the recurrence sequential.
 // Source: LLVM test/Transforms/LoopDistribute/basic.ll and diagnostics.ll
 //   (`success`), translated to 1-based Stan.
 // C: for (i = 0; i < N; i++) { A[i+1] = A[i] * B[i]; C[i] = D[i] * E[i]; }

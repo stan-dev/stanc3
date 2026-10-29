@@ -1,6 +1,6 @@
-// A scalar `s6` grows by 2 in each iteration and scales `b[n]`, so it is an
-// induction variable. The whole-variable access to `s6` (subs = []) is
-// confused, so the loop stays as written.
+// A scalar `s6` grows by 2 in each iteration and scales `b[n]`. This makes
+// `s6` an induction variable. The whole-variable access to `s6` (subs = [])
+// is confused and the loop stays as written.
 // Source: TSVC s453 (Expansion / induction variable), UoB-HPC/TSVC_2
 //   src/tsvc.c
 // C: s += 2.; a[i] = s * b[i];

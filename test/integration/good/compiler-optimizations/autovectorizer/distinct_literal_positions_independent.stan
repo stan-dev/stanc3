@@ -1,5 +1,5 @@
-// The loop writes column 1 of v10 and reads column 2. The literal column
-// indices differ, so the accesses never overlap and both statements become
+// The loop writes column 1 of v10 and reads column 2. Because the literal
+// column indices differ, the accesses never overlap and both statements become
 // vector statements. Direction sets are for the loop over n.
 // Dependences: independent (distinct literal positions), no edges
 // Desired outcome: fully vectorized.

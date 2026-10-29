@@ -2,7 +2,7 @@
 // The vectorizer only widens built-in densities, whose signatures accept
 // containers.
 // Desired outcome: left as a loop.
-// A user-defined density has no vectorized signature to call.
+// A user-defined density does not have a vectorized signature to call.
 functions {
   real foo_lpdf(real y, real mu) {
     return -square(y - mu);

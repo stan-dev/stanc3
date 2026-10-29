@@ -1,8 +1,8 @@
 // A density accumulated into the model-block local lp2, which is then added
 // to target.
 // An accumulator `s` whose only accesses in the loop are increments `s += e`
-// is a reduction, so the increments can become one vector statement
-// `s += sum(...)`.
+// is a reduction. The increments of a reduction can become one vector
+// statement `s += sum(...)`.
 // Desired outcome: fully vectorized,
 //   `lp2 += normal_lpdf(y | alpha + beta * x, sigma)`.
 // A density operand is widened the same way as in a `target +=` statement.

@@ -1,6 +1,6 @@
 // The loop body holds `while (1) break;` and then `b[i] = exp(x[i])`. The
-// `break` leaves only the inner while loop, not the for loop, so the assignment
-// can still be widened. It moves out in front of the loop and the loop keeps
+// `break` leaves only the inner while loop, so the assignment can still be
+// widened. The assignment moves out in front of the loop and the loop keeps
 // only the while loop.
 // Desired outcome: partially vectorized.
 //   `b[1:N] = exp(x[1:N])`
