@@ -231,29 +231,22 @@ type statement =
     is the analyzed statement, the root of the map. Queries also use label [1]
     to stand for definitions from outside the analyzed statement, such as data.
 
-    In the running example, the entry definitions of [theta] at the condition
+    In the running example, the definitions of [theta] that reach the condition
     (label [10]) are [("theta", Some 5)], [("theta", Some 8)] and
     [("theta", Some 9)]. The set contains [Some 8] ([theta[n, 1] = a]), because
     step 2 of {e Finding data dependencies} keeps that write. Step 3 rejects
     that write later, when a query runs in {!node_immediate_dependencies}. *)
 type dependence_info =
   { statements: statement LabelMap.t
-  ; reaching_definitions:
-      reaching_defn Set.Poly.t Monotone_framework_sigs.entry_exit LabelMap.t
-        (** The result of the reaching definitions analysis for each statement.
-            [entry] holds the definitions that can reach the start of the
-            statement, and [exit] holds those that can reach the end. Each
+  ; reaching_definitions: reaching_defn Set.Poly.t LabelMap.t
+        (** The definitions that can reach the start of each statement. Each
             definition is a (variable name, label) pair. [Some label] is a
             statement in the map. [None] is a definition from outside the
             analyzed statement, such as data. *) }
 
-(** Maps the label of each statement to the labels of all the statements that
-    the statement depends on, directly or transitively. *)
-type dependency_graph = label Set.Poly.t LabelMap.t
-
 val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dependence_info
-(** Builds the map for the statement (label [1]) and the statements nested in
-    the statement. The function has five steps. *)
+(** Builds the statement records and the reaching definitions for the statement
+    (label [1]) and the statements nested in the statement. *)
 
 val log_prob_build_dep_info_map : Program.Typed.t -> dependence_info
 (** Builds the map for the statements of the log density. These statements are
@@ -290,11 +283,11 @@ val node_vars_dependencies :
 (** Like {!node_dependencies}, but the first step follows only the control
     parents and the definitions of the variables in the given set. *)
 
-val all_node_dependencies : dependence_info -> dependency_graph
+val all_node_dependencies : dependence_info -> label Set.Poly.t LabelMap.t
 (** Returns the direct and transitive dependencies of each statement. Unlike in
     {!node_dependencies}, the set of a statement leaves out that label. *)
 
-val log_prob_dependency_graph : Program.Typed.t -> dependency_graph
+val log_prob_dependency_graph : Program.Typed.t -> label Set.Poly.t LabelMap.t
 (** Returns {!all_node_dependencies} for the statements of the log density. *)
 
 val read_variables_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t

@@ -98,50 +98,28 @@ let%expect_test "Reaching definition labels for the loop variable" =
   let deps =
     LabelMap.map
       (log_prob_build_dep_info_map example1_program).reaching_definitions
-      ~f:(fun Analysis_and_optimization.Monotone_framework_sigs.{entry; exit} ->
-        (reaching_defn_lookup entry "j", reaching_defn_lookup exit "j")) in
-  print_s
-    [%sexp
-      (deps : (label option Set.Poly.t * label option Set.Poly.t) LabelMap.t)];
+      ~f:(fun definitions -> reaching_defn_lookup definitions "j") in
+  print_s [%sexp (deps : label option Set.Poly.t LabelMap.t)];
   [%expect
     {|
-    ((1 (() ())) (2 (((9)) ((9)))) (3 (() ())) (4 (() ())) (5 (() ()))
-     (6 (() ())) (7 (() ())) (8 (((9)) ((9)))) (9 (((9)) ((9))))
-     (10 (((9)) ((9)))) (11 (((9)) ((9)))) (12 (((9)) ((9)))) (13 (((9)) ((9))))
-     (14 (((9)) ((9)))) (15 (((9)) ((9)))) (16 (((9)) ((9)))) (17 (((9)) ((9))))
-     (18 (((9)) ((9)))) (19 (((9)) ((9)))) (20 (((9)) ((9)))) (21 (((9)) ((9))))
-     (22 (((9)) ((9)))))
+    ((1 ()) (2 ((9))) (3 ()) (4 ()) (5 ()) (6 ()) (7 ()) (8 ((9))) (9 ((9)))
+     (10 ((9))) (11 ((9))) (12 ((9))) (13 ((9))) (14 ((9))) (15 ((9))) (16 ((9)))
+     (17 ((9))) (18 ((9))) (19 ((9))) (20 ((9))) (21 ((9))) (22 ((9))))
     |}]
 
-let%expect_test "Reaching definition records at statement entry and exit" =
+let%expect_test "Reaching definition records at statement entry" =
   let deps =
-    LabelMap.map
-      (log_prob_build_dep_info_map example1_program).reaching_definitions
-      ~f:(fun Analysis_and_optimization.Monotone_framework_sigs.{entry; exit} ->
-        (entry, exit)) in
-  print_s
-    [%sexp
-      (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
+    (log_prob_build_dep_info_map example1_program).reaching_definitions in
+  print_s [%sexp (deps : reaching_defn Set.Poly.t LabelMap.t)];
   [%expect
     {|
-    ((1 (() ())) (2 (((i (4)) (j (9))) ((i (4)) (j (9))))) (3 (() ((i (3)))))
-     (4 (((i (3))) ((i (4))))) (5 (((i (4))) ((i (4)))))
-     (6 (((i (4))) ((i (4))))) (7 (((i (4))) ((i (4)))))
-     (8 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (9 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (10 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (11 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (12 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (13 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (14 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (15 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (16 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (17 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (18 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (19 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (20 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (21 (((i (4)) (j (9))) ((i (4)) (j (9)))))
-     (22 (((i (4)) (j (9))) ((i (4)) (j (9))))))
+    ((1 ()) (2 ((i (4)) (j (9)))) (3 ()) (4 ((i (3)))) (5 ((i (4))))
+     (6 ((i (4)))) (7 ((i (4)))) (8 ((i (4)) (j (9)))) (9 ((i (4)) (j (9))))
+     (10 ((i (4)) (j (9)))) (11 ((i (4)) (j (9)))) (12 ((i (4)) (j (9))))
+     (13 ((i (4)) (j (9)))) (14 ((i (4)) (j (9)))) (15 ((i (4)) (j (9))))
+     (16 ((i (4)) (j (9)))) (17 ((i (4)) (j (9)))) (18 ((i (4)) (j (9))))
+     (19 ((i (4)) (j (9)))) (20 ((i (4)) (j (9)))) (21 ((i (4)) (j (9))))
+     (22 ((i (4)) (j (9)))))
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -177,7 +155,8 @@ let%expect_test "External inputs remain dependencies after map construction" =
           print_s
             [%sexp
               (reaching_defn_lookup
-                 (LabelMap.find statement_id map.reaching_definitions).entry "N"
+                 (LabelMap.find statement_id map.reaching_definitions)
+                 "N"
                 : label option Set.Poly.t)];
           Fmt.pr "dependencies: %a@." Test_utils.pp_labels
             (node_immediate_dependencies map statement_id)
@@ -460,7 +439,8 @@ let%expect_test "Running example of the Dependence_analysis interface" =
   Fmt.pr "theta definitions reaching 10: %a@.dependencies of 10: %a@.read: %a@."
     Fmt.(list ~sep:(any " ") (option ~none:(any "None") int))
     (Set.Poly.to_list
-       (reaching_defn_lookup (LabelMap.find 10 map.reaching_definitions).entry
+       (reaching_defn_lookup
+          (LabelMap.find 10 map.reaching_definitions)
           "theta"))
     Test_utils.pp_labels dependency_labels
     Fmt.(list ~sep:(any " ") string)

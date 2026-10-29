@@ -48,7 +48,7 @@ type statement =
 
 type dependence_info =
   { statements: statement LabelMap.t
-  ; reaching_definitions: reaching_defn Set.Poly.t entry_exit LabelMap.t }
+  ; reaching_definitions: reaching_defn Set.Poly.t LabelMap.t }
 
 (** The loops around the statement at [statement_id], outermost first. *)
 let statement_loops (statements : statement LabelMap.t) (statement_id : label) :
@@ -101,15 +101,17 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
   | None, _ | _, None -> false
 
 (** Runs reaching definitions with [kills] on the forward flowgraph of [stmt].
-    Returns the entry and exit sets of each label. *)
+    Returns the definitions that reach the start of each label. *)
 let mir_reaching_definitions
     ~(kills : killer:label -> killed:label -> string -> bool)
     (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
-    reaching_defn Set.Poly.t entry_exit LabelMap.t =
+    reaching_defn Set.Poly.t LabelMap.t =
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt stmt in
   let (module Flowgraph) = flowgraph in
-  reaching_definitions_mfp ~kills mir (module Flowgraph) flowgraph_to_mir
+  LabelMap.map
+    (reaching_definitions_mfp ~kills mir (module Flowgraph) flowgraph_to_mir)
+    ~f:(fun definitions -> definitions.entry)
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     dependence_info =
@@ -179,8 +181,8 @@ let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
   let sink = LabelMap.find sink_id info.statements in
   let sink_accesses = Accesses.of_var var sink.accesses in
   let candidate_definitions =
-    reaching_defn_lookup (LabelMap.find sink_id info.reaching_definitions).entry
-      var in
+    reaching_defn_lookup (LabelMap.find sink_id info.reaching_definitions) var
+  in
   let sink_has_reads =
     List.exists sink_accesses ~f:(fun access ->
         match access.Accesses.kind with
@@ -258,9 +260,8 @@ let read_variables_at (info : dependence_info) (labels : label Set.Poly.t) :
   Set.Poly.union_map labels ~f:(fun label ->
       Accesses.read_vars (LabelMap.find label info.statements).accesses)
 
-type dependency_graph = label Set.Poly.t LabelMap.t
-
-let all_node_dependencies (info : dependence_info) : dependency_graph =
+let all_node_dependencies (info : dependence_info) : label Set.Poly.t LabelMap.t
+    =
   let immediate_map =
     LabelMap.mapi info.statements ~f:(fun label _ ->
         node_immediate_dependencies info label) in
@@ -283,5 +284,6 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) : dependence_info =
     Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dep_info_map mir log_prob_stmt
 
-let log_prob_dependency_graph (mir : Program.Typed.t) : dependency_graph =
+let log_prob_dependency_graph (mir : Program.Typed.t) :
+    label Set.Poly.t LabelMap.t =
   all_node_dependencies (log_prob_build_dep_info_map mir)

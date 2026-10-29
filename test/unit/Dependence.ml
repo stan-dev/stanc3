@@ -72,7 +72,8 @@ let print_verdicts ~var prog =
         Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt sink_statement.pattern;
         let reaching_ids =
           reaching_defn_lookup
-            (LabelMap.find sink_id info.reaching_definitions).entry var in
+            (LabelMap.find sink_id info.reaching_definitions)
+            var in
         LabelMap.iter info.statements ~f:(fun ~key:source_id ~data:_ ->
             if Set.Poly.mem (Some source_id) reaching_ids then
               let loops = common_loops (loops_of source_id) (loops_of sink_id) in
