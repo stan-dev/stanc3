@@ -15,10 +15,20 @@ type label = int [@@deriving sexp_of]
     runs on), such as data. *)
 type reaching_defn = string * label option [@@deriving sexp_of]
 
-(** A [for] or [while] loop around a statement. [id] is the label of the loop
-    statement. [var] is the loop variable of a [for], or [None] for a [while].
-*)
-type loop = {id: label; var: string option}
+(** A [for] loop. [id] is the label of the [for] statement, and [var] is the
+    loop variable. *)
+type for_loop = {id: label; var: string}
+
+(** A [for] loop, or a [while] loop given by the label of the [while] statement.
+    A loop is the only owner of a loop variable name. Other types hold the loop,
+    not the name. *)
+type loop = For of for_loop | While of label
+
+(** The label of the loop statement. *)
+let loop_id = function For {id; _} -> id | While id -> id
+
+(** Two loops are the same loop when they have the same label. *)
+let same_loop (left : loop) (right : loop) : bool = loop_id left = loop_id right
 
 (** The branch of an [if] that holds a statement. *)
 type branch = Then | Else

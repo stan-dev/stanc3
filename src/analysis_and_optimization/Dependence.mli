@@ -150,20 +150,11 @@ open Dataflow_types
     are two accesses to the same variable. [source_loops] and [sink_loops] are
     the loops around each access, outermost first.
     {[
-    let loops = common_loops source_loops sink_loops in
+    let loops = Dataflow_utils.common_loops source_loops sink_loops in
     is_plausible ~source_first_in_text (compare_paths ~loops source sink)
-    ]} *)
-
-(** A loop around an access. [id] is the label of the loop statement. [var] is
-    the loop variable of a [for], or [None] for a [while]. The loop statement
-    itself counts as inside the loop. The loop checks a [while] condition or a
-    [for] upper bound again after each iteration. So writes in the body can
-    reach these expressions. *)
-type loop = Dataflow_types.loop = {id: label; var: string option}
-
-val common_loops : loop list -> loop list -> loop list
-(** Returns the common loops of two outermost-first loop lists, which is the
-    longest start that both lists share. Loops match by [id]. *)
+    ]}
+    A loop statement counts as inside the loop that the statement forms
+    ({!Dataflow_utils.loops_around}). *)
 
 (** The distance at one common loop. [None] means that the distance is unknown,
     printed [*]. *)

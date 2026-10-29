@@ -3,16 +3,6 @@ open Middle
 open Dataflow_types
 open Accesses
 
-type loop = Dataflow_types.loop = {id: label; var: string option}
-
-(* After the first loop that differs, no loop is around both accesses. *)
-let rec common_loops (source_loops : loop list) (sink_loops : loop list) :
-    loop list =
-  match (source_loops, sink_loops) with
-  | source :: sources, sink :: sinks when source.id = sink.id ->
-      source :: common_loops sources sinks
-  | _ -> []
-
 type level = {loop: loop; distance: int option}
 type t = Independent | Unknown | Distances of level list
 
@@ -31,10 +21,12 @@ let test_strong_siv ~(loops : loop list) (source : index step)
     when Option.equal equal_loop_term source_term.loop_term sink_term.loop_term
          && Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol
     -> (
+      let sets_loopvar loopvar = function
+        | For {var; _} -> String.equal var loopvar
+        | While _ -> false in
       match source_term.loop_term with
       | Some {loopvar; direction}
-        when List.exists loops ~f:(fun (loop : loop) ->
-                 Option.equal String.equal loop.var (Some loopvar)) ->
+        when List.exists loops ~f:(sets_loopvar loopvar) ->
           (* A descending loop term flips the sign of the distance. *)
           let offset_difference = source_term.const - sink_term.const in
           let iteration_distance =
@@ -45,8 +37,7 @@ let test_strong_siv ~(loops : loop list) (source : index step)
             (List.map loops ~f:(fun loop ->
                  { loop
                  ; distance=
-                     (if Option.equal String.equal loop.var (Some loopvar) then
-                        Some iteration_distance
+                     (if sets_loopvar loopvar loop then Some iteration_distance
                       else None) }))
       | Some _ | None -> (* No common loop sets the loop variable. *) Unknown)
   | Subscript _, _ | Field _, _ -> Unknown
@@ -119,7 +110,7 @@ let is_plausible ~(source_first_in_text : bool) (dependence : t) : bool =
 (** Prints one level as [[n:1]], or as [[while:*]] for a [while] loop. *)
 let pp_level ppf {loop; distance} =
   Fmt.pf ppf "[%s:%a]"
-    (Option.value loop.var ~default:"while")
+    (match loop with For {var; _} -> var | While _ -> "while")
     Fmt.(option ~none:(any "*") int)
     distance
 

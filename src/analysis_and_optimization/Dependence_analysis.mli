@@ -212,7 +212,7 @@ open Dataflow_types
     that write later, when a query runs in {!node_immediate_dependencies}.
     {@text[
       predecessors:        {9}         (theta[n, 2] = x[n])
-      controls:            [Enclosing_loop {id = 6; var = Some "n"}]
+      controls:            [Enclosing_loop (For {id = 6; var = "n"})]
       reaching_definitions.entry:
                            {("theta", Some 5), ("theta", Some 8),
                             ("theta", Some 9)}

@@ -44,9 +44,8 @@ let write_path (accesses : Accesses.index Accesses.t) (var : string) :
     A later write [killer] kills the definition at [killed] when [killer] must
     overwrite the element of [killed]. Two rules give this result. *)
 let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
-    ~(controls : control list LabelMap.t)
-    ~(loops : Dependence.loop list LabelMap.t) ~(killer : label)
-    ~(killed : label) (var : string) : bool =
+    ~(controls : control list LabelMap.t) ~(loops : loop list LabelMap.t)
+    ~(killer : label) ~(killed : label) (var : string) : bool =
   let killed_controls = LabelMap.find killed controls in
   (* Whether each if, loop and jump that decides if [statement] runs also
      decides if [killed] runs. *)
@@ -72,13 +71,11 @@ let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
           Accesses.must_overwrite ~same_iteration:true ~killer:killer_path
             ~killed:killed_path
           && killer > killed
-          && List.equal
-               ~eq:(fun (left : Dependence.loop) (right : Dependence.loop) ->
-                 left.id = right.id)
+          && List.equal ~eq:same_loop
                (LabelMap.find killer loops)
                (LabelMap.find killed loops)
           && controls_cover killer
-          && controls_cover innermost.id
+          && controls_cover (loop_id innermost)
       | [] -> false)
   | None, _ | _, None -> false
 
@@ -132,7 +129,9 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         let loopvars =
           Set.Poly.of_list
             (List.filter_map (LabelMap.find statement_id enclosing_loops)
-               ~f:(fun loop -> loop.Dependence.var)) in
+               ~f:(function
+              | For {var; _} -> Some var
+              | While _ -> None)) in
         Accesses.classify ~loopvars ~written_vars raw_accesses) in
   (* The kills use the classified accesses, so classification comes first. *)
   let kills =
@@ -194,7 +193,7 @@ let writes_read_by (statement_map : dep_info_map) ~(sink_id : label)
     if (not source_has_writes) || not sink_has_reads then true
     else
       let loops =
-        Dependence.common_loops
+        common_loops
           (loops_around ~statement_id:source_id source_pattern
              source_info.controls)
           (loops_around ~statement_id:sink_id sink_pattern sink_info.controls)

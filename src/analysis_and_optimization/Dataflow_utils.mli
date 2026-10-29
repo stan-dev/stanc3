@@ -27,7 +27,7 @@
     [x = 1] are the loop and the [if], and the control parents of [x = 1] hold
     only the [if]. For both [x = 1] and the [for] statement, {!loops_around}
     gives the loop over [n]. If the [for] statement has label [6],
-    {!loop_of_statement} gives [Some {id = 6; var = Some "n"}]. *)
+    {!loop_of_statement} gives [Some (For {id = 6; var = "n"})]. *)
 
 open Std
 open Middle
@@ -53,6 +53,10 @@ val loops_around :
   statement_id:label -> ('e, 's) Stmt.Pattern.t -> control list -> loop list
 (** Returns the [for] and [while] loops in the controls, outermost first. For a
     loop statement at [statement_id], the list ends with that loop. *)
+
+val common_loops : loop list -> loop list -> loop list
+(** Returns the longest start that two outermost-first loop lists share. These
+    are the loops around both statements. Loops match by {!same_loop}. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

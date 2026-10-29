@@ -782,11 +782,10 @@ let%expect_test "Controls and the two views derived from them" =
   let pp_control ppf = function
     | Enclosing_if {id; branch= Then} -> Fmt.pf ppf "if %d then" id
     | Enclosing_if {id; branch= Else} -> Fmt.pf ppf "if %d else" id
-    | Enclosing_loop {id; var} ->
-        Fmt.pf ppf "loop %d (%s)" id (Option.value var ~default:"while")
+    | Enclosing_loop (For {id; var}) -> Fmt.pf ppf "loop %d (%s)" id var
+    | Enclosing_loop (While id) -> Fmt.pf ppf "loop %d (while)" id
     | Jump label -> Fmt.pf ppf "jump %d" label in
-  let pp_loop ppf (loop : Analysis_and_optimization.Dependence.loop) =
-    Fmt.int ppf loop.id in
+  let pp_loop ppf (loop : loop) = Fmt.int ppf (loop_id loop) in
   LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
         statement_id Test_utils.pp_stmt pattern

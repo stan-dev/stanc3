@@ -72,7 +72,7 @@ let print_verdicts ~var prog =
           ~f:(fun ~key:source_id ~data:(source_pattern, source_info) ->
             if Set.Poly.mem (Some source_id) reaching_ids then
               let loops =
-                Dependence.common_loops
+                common_loops
                   (loops_around ~statement_id:source_id source_pattern
                      source_info.controls)
                   (loops_around ~statement_id:sink_id pattern sink_info.controls)

@@ -76,8 +76,8 @@ let is_ctrl_flow pattern =
 let loop_of_statement (label : label) (pattern : ('e, 's) Stmt.Pattern.t) :
     loop option =
   match pattern with
-  | For {loopvar; _} -> Some {id= label; var= Some loopvar}
-  | While _ -> Some {id= label; var= None}
+  | For {loopvar; _} -> Some (For {id= label; var= loopvar})
+  | While _ -> Some (While label)
   | _ -> None
 
 (** Simultaneously builds the controlflow parent graph, the predecessor graph
@@ -232,8 +232,8 @@ let control_parents (controls : control list) : label Set.Poly.t =
   let nearest_enclosing =
     List.fold_left controls ~init:None ~f:(fun nearest control ->
         match control with
-        | Enclosing_if {id= label; _} | Enclosing_loop {id= label; _} ->
-            Some label
+        | Enclosing_if {id= label; _} -> Some label
+        | Enclosing_loop loop -> Some (loop_id loop)
         | Jump _ -> nearest) in
   let jumps =
     List.filter_map controls ~f:(function
@@ -248,6 +248,14 @@ let loops_around ~(statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
     | Enclosing_loop loop -> Some loop
     | Enclosing_if _ | Jump _ -> None)
   @ Option.to_list (loop_of_statement statement_id pattern)
+
+(* After the first loop that differs, no loop is around both statements. *)
+let rec common_loops (first_loops : loop list) (second_loops : loop list) :
+    loop list =
+  match (first_loops, second_loops) with
+  | first :: first_rest, second :: second_rest when same_loop first second ->
+      first :: common_loops first_rest second_rest
+  | _ -> []
 
 (** See interface file *)
 let build_cf_graph statement_map =
