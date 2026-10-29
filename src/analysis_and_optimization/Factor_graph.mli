@@ -41,10 +41,10 @@ open Dependence_analysis
 
     {!Dependence_analysis} gives each statement of the log density a label,
     which is an integer that identifies the statement. The statement map
-    ({!Dependence_analysis.dep_info_map}) maps each label to the statement with
-    that label. Each factor stores the label of the statement that contains the
-    factor. The label keeps equal terms in different statements apart. The
-    example has two factors.
+    ([statements] in {!Dependence_analysis.dependence_info}) maps each label to
+    the statement with that label. Each factor stores the label of the statement
+    that contains the factor. The label keeps equal terms in different
+    statements apart. The example has two factors.
     {@text[
       factor   term
       F1       normal_lpdf(centered | 0, 1)
@@ -142,9 +142,7 @@ val extract_factors_statement : (Expr.Typed.t, 'a) Stmt.Pattern.t -> factor list
     example, [target += a + b] gives [TargetTerm a] and [TargetTerm b]. *)
 
 val extract_factors :
-     ((Expr.Typed.t, label) Stmt.Pattern.t * 'a) LabelMap.t
-  -> label
-  -> (label * factor) list
+  Dependence_analysis.statement LabelMap.t -> label -> (label * factor) list
 (** Returns the factors at the given label of the statement map and in nested
     statements, each paired with the label of the statement. *)
 
@@ -153,7 +151,10 @@ val factor_rhs : factor -> string Set.Poly.t
     set. Each [LPFunction] argument must be a bare variable. *)
 
 val factor_var_dependencies :
-  dep_info_map -> string Set.Poly.t -> label * factor -> string Set.Poly.t
+     Dependence_analysis.dependence_info
+  -> string Set.Poly.t
+  -> label * factor
+  -> string Set.Poly.t
 (** Returns the names read by the factor and by the dependencies of the factor
     (step 2). The second argument holds the blockers, which the result keeps. *)
 

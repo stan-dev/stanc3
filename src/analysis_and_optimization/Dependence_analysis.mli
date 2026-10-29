@@ -186,12 +186,12 @@ open Dataflow_types
 
 (** {1 API reference}
 
-    {!build_dep_info_map} builds a map with a {!node_dep_info} for each
-    statement. The {e queries}, such as {!node_immediate_dependencies} and
-    {!node_dependencies}, take this map and a label, and return the labels of
-    the dependencies of the statement at that label. A statement {e uses} a
-    variable when the statement reads or increments the variable. Some queries
-    take a set of variables whose definitions the query follows, as [vars] in
+    {!build_dep_info_map} builds a {!dependence_info}. The {e queries}, such as
+    {!node_immediate_dependencies} and {!node_dependencies}, take a
+    {!dependence_info} and a label, and return the labels of the dependencies of
+    the statement at that label. A statement {e uses} a variable when the
+    statement reads or increments the variable. Some queries take a set of
+    variables whose definitions the query follows, as [vars] in
     {!node_immediate_dependencies} or as an argument of
     {!node_vars_dependencies}. By default, [vars] holds each variable that the
     statement uses. The factor graph and pedantic mode pass
@@ -200,66 +200,62 @@ open Dataflow_types
     follow. For example, the factor graph passes data and parameter names as
     [blockers]. By default, [blockers] is empty. *)
 
-(** The data that a dependency query needs about one statement. The fields hold
-    the statements that can run immediately before this statement, the controls
-    of the statement, the definitions that reach the statement, and the accesses
-    in the expressions of the statement.
+(** What a dependency query needs to know about one statement, apart from the
+    reaching definitions.
 
     The example record below is for the condition (label [10]) of the running
-    example. The record shows only the entry definitions of [theta].
-    [reaching_definitions.entry] contains [Some 8] ([theta[n, 1] = a]), because
-    step 2 of {e Finding data dependencies} keeps that write. Step 3 rejects
-    that write later, when a query runs in {!node_immediate_dependencies}.
+    example.
     {@text[
-      predecessors:        {9}         (theta[n, 2] = x[n])
-      controls:            {enclosing = [Loop (For {id = 6; var = "n"})];
-                            jumps = {}}
-      reaching_definitions.entry:
-                           {("theta", Some 5), ("theta", Some 8),
-                            ("theta", Some 9)}
-      accesses:            R theta[n, 2]
+      pattern:   if (theta[n, 2] > 0) 11
+      controls:  {enclosing = [Loop (For {id = 6; var = "n"})]; jumps = {}}
+      accesses:  R theta[n, 2]
     ]} *)
-type node_dep_info =
-  { predecessors: label Set.Poly.t
-        (** The labels of the statements that can run immediately before this
-            statement. *)
+type statement =
+  { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
+        (** The statement, with each nested statement replaced by the label of
+            the nested statement. *)
+  ; meta: Location_span.t  (** The source location for pedantic warnings. *)
   ; controls: controls
         (** The enclosing ifs and loops of this statement, outermost first, and
             the jumps that can skip the statement ({!Dataflow_types.controls}).
             A loop statement does not list itself.
             {!Dataflow_utils.control_parents} and {!Dataflow_utils.loops_around}
             give the two views that queries use. *)
+  ; accesses: Accesses.index Accesses.t
+        (** The reads, writes and increments in the expressions of this
+            statement. Each nested statement has a separate record. *) }
+
+(** The statements of the analyzed statement and the definitions that reach each
+    one. Both maps have the same labels. {e Running example} shows the labels
+    and statement patterns that {!log_prob_build_dep_info_map} gives. Label [1]
+    is the analyzed statement, the root of the map. Queries also use label [1]
+    to stand for definitions from outside the analyzed statement, such as data.
+
+    In the running example, the entry definitions of [theta] at the condition
+    (label [10]) are [("theta", Some 5)], [("theta", Some 8)] and
+    [("theta", Some 9)]. The set contains [Some 8] ([theta[n, 1] = a]), because
+    step 2 of {e Finding data dependencies} keeps that write. Step 3 rejects
+    that write later, when a query runs in {!node_immediate_dependencies}. *)
+type dependence_info =
+  { statements: statement LabelMap.t
   ; reaching_definitions:
-      reaching_defn Set.Poly.t Monotone_framework_sigs.entry_exit
-        (** The result of the reaching definitions analysis for this statement.
+      reaching_defn Set.Poly.t Monotone_framework_sigs.entry_exit LabelMap.t
+        (** The result of the reaching definitions analysis for each statement.
             [entry] holds the definitions that can reach the start of the
             statement, and [exit] holds those that can reach the end. Each
             definition is a (variable name, label) pair. [Some label] is a
             statement in the map. [None] is a definition from outside the
-            analyzed statement, such as data. *)
-  ; accesses: Accesses.index Accesses.t
-        (** The reads, writes and increments in the expressions of this
-            statement. Each nested statement has a separate record. *)
-  ; meta: Location_span.t  (** The source location for pedantic warnings. *) }
-
-(** Maps the label of each statement to the statement pattern and the
-    {!node_dep_info} of the statement. {e Running example} shows the keys and
-    statement patterns of the map that {!log_prob_build_dep_info_map} builds.
-    Label [1] is the analyzed statement, the root of the map. Queries also use
-    label [1] to stand for definitions from outside the analyzed statement, such
-    as data. *)
-type dep_info_map =
-  ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
+            analyzed statement, such as data. *) }
 
 (** Maps the label of each statement to the labels of all the statements that
     the statement depends on, directly or transitively. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
-val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dep_info_map
+val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dependence_info
 (** Builds the map for the statement (label [1]) and the statements nested in
     the statement. The function has five steps. *)
 
-val log_prob_build_dep_info_map : Program.Typed.t -> dep_info_map
+val log_prob_build_dep_info_map : Program.Typed.t -> dependence_info
 (** Builds the map for the statements of the log density. These statements are
     in the parameters, transformed parameters and model blocks. *)
 
@@ -273,7 +269,7 @@ val flows_into : 'index Accesses.access -> 'index Accesses.access -> bool
     sink) by the rules in step 1, comparing only variable names and kinds. *)
 
 val node_immediate_dependencies :
-     dep_info_map
+     dependence_info
   -> ?blockers:string Set.Poly.t
   -> ?vars:string Set.Poly.t
   -> label
@@ -281,12 +277,12 @@ val node_immediate_dependencies :
 (** Returns the control parents of the statement at the label, and each
     statement whose write can supply the value of [vars] used there. *)
 
-val node_dependencies : dep_info_map -> label -> label Set.Poly.t
+val node_dependencies : dependence_info -> label -> label Set.Poly.t
 (** Returns the labels of the direct and transitive dependencies of the
     statement at the label. The result also includes the label. *)
 
 val node_vars_dependencies :
-     dep_info_map
+     dependence_info
   -> ?blockers:string Set.Poly.t
   -> string Set.Poly.t
   -> label
@@ -294,14 +290,14 @@ val node_vars_dependencies :
 (** Like {!node_dependencies}, but the first step follows only the control
     parents and the definitions of the variables in the given set. *)
 
-val all_node_dependencies : dep_info_map -> dependency_graph
+val all_node_dependencies : dependence_info -> dependency_graph
 (** Returns the direct and transitive dependencies of each statement. Unlike in
     {!node_dependencies}, the set of a statement leaves out that label. *)
 
 val log_prob_dependency_graph : Program.Typed.t -> dependency_graph
 (** Returns {!all_node_dependencies} for the statements of the log density. *)
 
-val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
+val read_variables_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)
 

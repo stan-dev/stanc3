@@ -27,12 +27,13 @@ open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Dataflow_types
 module Accesses = Analysis_and_optimization.Accesses
 
-let pp_node_accesses ppf (statement_map : dep_info_map) =
-  LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
-      if not (List.is_empty info.accesses) then
-        Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt pattern
+let pp_node_accesses ppf (info : dependence_info) =
+  LabelMap.iter info.statements ~f:(fun ~key:statement_id ~data:statement ->
+      if not (List.is_empty statement.accesses) then
+        Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
+          statement.pattern
           (Test_utils.one_line (Accesses.pp Accesses.pp_index))
-          info.accesses)
+          statement.accesses)
 
 let print_node_accesses prog =
   Fmt.pr "%a" pp_node_accesses
@@ -367,11 +368,12 @@ let%expect_test "Comparing write paths" =
   in
   let pp_access = Test_utils.one_line (Accesses.pp_access Accesses.pp_index) in
   let path_of printed =
-    LabelMap.fold map ~init:None ~f:(fun ~key:_ ~data:(_, info) found ->
+    LabelMap.fold map.statements ~init:None
+      ~f:(fun ~key:_ ~data:statement found ->
         match found with
         | Some _ -> found
         | None ->
-            List.find_map info.accesses
+            List.find_map statement.accesses
               ~f:(fun (access : Accesses.index Accesses.access) ->
                 if String.equal (Fmt.str "%a" pp_access access) printed then
                   Some access.path

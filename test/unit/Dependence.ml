@@ -54,29 +54,28 @@ module Accesses = Analysis_and_optimization.Accesses
 module Dependence = Analysis_and_optimization.Dependence
 
 let print_verdicts ~var prog =
-  let map = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
+  let info = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
   let accesses_of statement_id =
-    Accesses.of_var var (snd (LabelMap.find statement_id map)).accesses in
+    Accesses.of_var var (LabelMap.find statement_id info.statements).accesses
+  in
+  let loops_of statement_id =
+    let statement = LabelMap.find statement_id info.statements in
+    loops_around ~statement_id statement.pattern statement.controls in
   let pp_access = Test_utils.one_line (Accesses.pp_access Accesses.pp_index) in
-  LabelMap.iter map ~f:(fun ~key:sink_id ~data:(pattern, sink_info) ->
+  LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
       let sinks =
         List.filter (accesses_of sink_id) ~f:(fun sink ->
             match sink.Accesses.kind with
             | Accesses.Read | Increment -> true
             | Write -> false) in
       if not (List.is_empty sinks) then (
-        Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt pattern;
+        Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt sink_statement.pattern;
         let reaching_ids =
-          reaching_defn_lookup sink_info.reaching_definitions.entry var in
-        LabelMap.iter map
-          ~f:(fun ~key:source_id ~data:(source_pattern, source_info) ->
+          reaching_defn_lookup
+            (LabelMap.find sink_id info.reaching_definitions).entry var in
+        LabelMap.iter info.statements ~f:(fun ~key:source_id ~data:_ ->
             if Set.Poly.mem (Some source_id) reaching_ids then
-              let loops =
-                common_loops
-                  (loops_around ~statement_id:source_id source_pattern
-                     source_info.controls)
-                  (loops_around ~statement_id:sink_id pattern sink_info.controls)
-              in
+              let loops = common_loops (loops_of source_id) (loops_of sink_id) in
               List.iter (accesses_of source_id) ~f:(fun source ->
                   List.iter sinks ~f:(fun sink ->
                       if flows_into source sink then

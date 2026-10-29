@@ -38,12 +38,12 @@ let extract_factors_statement stmt =
    |Decl {decl_id= _; _} ->
       []
 
-let rec extract_factors statement_map label =
-  let stmt, _ = LabelMap.find label statement_map in
+let rec extract_factors (statements : statement LabelMap.t) label =
+  let stmt = (LabelMap.find label statements).pattern in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
   Stmt.Pattern.fold Fun.const
-    (fun state label -> List.append state (extract_factors statement_map label))
+    (fun state label -> List.append state (extract_factors statements label))
     this_stmt stmt
 
 let factor_rhs (term : factor) : string Set.Poly.t =
@@ -52,12 +52,11 @@ let factor_rhs (term : factor) : string Set.Poly.t =
   | Reject -> Set.Poly.empty
   | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:var_name_of_expr_exn)
 
-let factor_var_dependencies statement_map blockers (label, factor) =
+let factor_var_dependencies info blockers (label, factor) =
   let term_read_names = factor_rhs factor in
   let dependency_labels =
-    node_vars_dependencies statement_map ~blockers term_read_names label in
-  let dependency_read_names =
-    read_variables_at statement_map dependency_labels in
+    node_vars_dependencies info ~blockers term_read_names label in
+  let dependency_read_names = read_variables_at info dependency_labels in
   (* The dependency traversal can leave out the statement where the traversal
      starts. The union adds the names that the factor itself reads, such as [mu]
      in [normal_lpdf(mu | 0, 1)]. *)
@@ -102,8 +101,8 @@ let remove_touching vars fg =
   without_facs
 
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
-  let statement_map = log_prob_build_dep_info_map prog in
-  let factors = extract_factors statement_map 1 in
+  let info = log_prob_build_dep_info_map prog in
+  let factors = extract_factors info.statements 1 in
   let data_vars = data_set prog in
   let vars =
     Set.Poly.union data_vars
@@ -112,8 +111,8 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
     List.map factors ~f:(fun (l, fac) ->
         ( l
         , fac
-        , Set.Poly.inter vars
-            (factor_var_dependencies statement_map vars (l, fac)) )) in
+        , Set.Poly.inter vars (factor_var_dependencies info vars (l, fac)) ))
+  in
   let fg = build_adjacency_maps factor_list in
   (* No caller in the compiler sets [exclude_data_facs]. Pedantic mode needs the
      data factors, because the prior test looks for paths to data. *)

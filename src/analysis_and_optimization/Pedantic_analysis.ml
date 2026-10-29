@@ -152,24 +152,20 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
 
 (** Returns [(location, names)] for each [if], [while], or [for] in [info_map]
     that depends on names in [targets]. [names] holds those target names. *)
-let list_target_dependant_cf
-    (info_map :
-      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
+let list_target_dependant_cf (info_map : dependence_info)
     (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   let cf_labels =
     Set.Poly.of_list
       (List.map ~f:fst
          (LabelMap.to_list
-            (LabelMap.filter info_map ~f:(fun _ (stmt, _) -> is_ctrl_flow stmt))))
-  in
+            (LabelMap.filter info_map.statements ~f:(fun _ statement ->
+                 is_ctrl_flow statement.pattern)))) in
   Set.Poly.filter_map
     ~f:(fun label ->
       let deps = var_deps info_map label targets in
       if Set.Poly.is_empty deps then None
-      else
-        let _, info = LabelMap.find label info_map in
-        Some (info.meta, deps))
+      else Some ((LabelMap.find label info_map.statements).meta, deps))
     cf_labels
 
 (** Applies {!list_target_dependant_cf} to the log density statements, with all
@@ -212,9 +208,7 @@ let stmts_collect_exprs (stmts : Stmt.Located.t List.t) ~f : 'a Set.Poly.t =
     stmts
 
 let list_param_dependant_fundef_cf (mir : Program.Typed.t)
-    (info_map :
-      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
-    (fun_def : 'a Program.fun_def) :
+    (info_map : dependence_info) (fun_def : 'a Program.fun_def) :
     (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t
     =
   let dep_args = list_arg_dependant_fundef_cf mir fun_def in
@@ -222,9 +216,10 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     Set.Poly.union_list
       (List.map ~f:snd
          (LabelMap.to_list
-            (LabelMap.filter_map info_map ~f:(fun label (stmt, _) ->
+            (LabelMap.filter_map info_map.statements ~f:(fun label statement ->
                  let funapps =
-                   Set.Poly.union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
+                   Set.Poly.union_map (stmt_rhs statement.pattern)
+                     ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
                            match rhs_subexpr.pattern with
                            | Expr.Pattern.FunApp (UserDefined (fname, _), _)

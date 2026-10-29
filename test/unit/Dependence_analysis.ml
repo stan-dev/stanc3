@@ -96,10 +96,10 @@ let%expect_test "Dependency graph example" =
 
 let%expect_test "Reaching definition labels for the loop variable" =
   let deps =
-    LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) ->
-        ( reaching_defn_lookup x.reaching_definitions.entry "j"
-        , reaching_defn_lookup x.reaching_definitions.exit "j" )) in
+    LabelMap.map
+      (log_prob_build_dep_info_map example1_program).reaching_definitions
+      ~f:(fun Analysis_and_optimization.Monotone_framework_sigs.{entry; exit} ->
+        (reaching_defn_lookup entry "j", reaching_defn_lookup exit "j")) in
   print_s
     [%sexp
       (deps : (label option Set.Poly.t * label option Set.Poly.t) LabelMap.t)];
@@ -115,9 +115,10 @@ let%expect_test "Reaching definition labels for the loop variable" =
 
 let%expect_test "Reaching definition records at statement entry and exit" =
   let deps =
-    LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) ->
-        (x.reaching_definitions.entry, x.reaching_definitions.exit)) in
+    LabelMap.map
+      (log_prob_build_dep_info_map example1_program).reaching_definitions
+      ~f:(fun Analysis_and_optimization.Monotone_framework_sigs.{entry; exit} ->
+        (entry, exit)) in
   print_s
     [%sexp
       (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
@@ -170,12 +171,13 @@ let%expect_test "External inputs remain dependencies after map construction" =
            model { if (N > 0) target += mu; }
          |})
   in
-  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
-      match pattern with
+  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+      match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
           print_s
             [%sexp
-              (reaching_defn_lookup info.reaching_definitions.entry "N"
+              (reaching_defn_lookup
+                 (LabelMap.find statement_id map.reaching_definitions).entry "N"
                 : label option Set.Poly.t)];
           Fmt.pr "dependencies: %a@." Test_utils.pp_labels
             (node_immediate_dependencies map statement_id)
@@ -187,10 +189,10 @@ let%expect_test "External inputs remain dependencies after map construction" =
 
 (** Prints each statement and the labels of the immediate dependencies of the
     statement. *)
-let pp_immediate_dependencies ppf (map : dep_info_map) =
-  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
-      Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt pattern
-        Test_utils.pp_labels
+let pp_immediate_dependencies ppf (map : dependence_info) =
+  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+      Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
+        statement.pattern Test_utils.pp_labels
         (node_immediate_dependencies map statement_id))
 
 let print_immediate_dependencies prog =
@@ -213,9 +215,9 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     |})
   in
   let if_id =
-    LabelMap.fold map ~init:0
-      ~f:(fun ~key:statement_id ~data:(pattern, _) found_id ->
-        match pattern with
+    LabelMap.fold map.statements ~init:0
+      ~f:(fun ~key:statement_id ~data:statement found_id ->
+        match statement.pattern with
         | Stmt.Pattern.IfElse _ -> statement_id
         | _ -> found_id) in
   Fmt.pr "%a" pp_immediate_dependencies map;
@@ -276,8 +278,8 @@ let%expect_test
            }
          |})
   in
-  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(stmt, _) ->
-      match stmt with
+  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+      match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
           Fmt.pr "%d: %a@." statement_id Test_utils.pp_labels
             (node_immediate_dependencies map statement_id)
@@ -419,8 +421,8 @@ let%expect_test "Variables read at a set of labels" =
       }
     |})
   in
-  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
-      Fmt.pr "%d: %a  // %a@." statement_id Test_utils.pp_stmt pattern
+  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+      Fmt.pr "%d: %a  // %a@." statement_id Test_utils.pp_stmt statement.pattern
         Fmt.(list ~sep:(any " ") string)
         (Set.Poly.to_list
            (read_variables_at map (Set.Poly.singleton statement_id))));
@@ -454,12 +456,12 @@ let%expect_test "Running example of the Dependence_analysis interface" =
   in
   print_immediate_dependencies program;
   let map = log_prob_build_dep_info_map (Test_utils.mir_of_string program) in
-  let condition_info = snd (LabelMap.find 10 map) in
   let dependency_labels = node_dependencies map 10 in
   Fmt.pr "theta definitions reaching 10: %a@.dependencies of 10: %a@.read: %a@."
     Fmt.(list ~sep:(any " ") (option ~none:(any "None") int))
     (Set.Poly.to_list
-       (reaching_defn_lookup condition_info.reaching_definitions.entry "theta"))
+       (reaching_defn_lookup (LabelMap.find 10 map.reaching_definitions).entry
+          "theta"))
     Test_utils.pp_labels dependency_labels
     Fmt.(list ~sep:(any " ") string)
     (Set.Poly.to_list (read_variables_at map dependency_labels));
@@ -790,13 +792,13 @@ let%expect_test "Controls and the two views derived from them" =
       (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
       @ List.map (Set.Poly.to_list jumps) ~f:(Fmt.str "jump %d")) in
   let pp_loop ppf (loop : loop) = Fmt.int ppf (loop_id loop) in
-  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
+  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
-        statement_id Test_utils.pp_stmt pattern pp_controls info.controls
-        Test_utils.pp_labels
-        (control_parents info.controls)
+        statement_id Test_utils.pp_stmt statement.pattern pp_controls
+        statement.controls Test_utils.pp_labels
+        (control_parents statement.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
-        (loops_around ~statement_id pattern info.controls));
+        (loops_around ~statement_id statement.pattern statement.controls));
   [%expect
     {|
     1: 2 3
