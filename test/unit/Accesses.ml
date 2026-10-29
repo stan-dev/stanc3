@@ -32,7 +32,8 @@ let pp_node_accesses ppf (info : dependence_info) =
       if not (List.is_empty statement.accesses) then
         Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
           statement.pattern
-          (Test_utils.one_line Accesses.pp)
+          (Test_utils.one_line
+             (Accesses.pp ~loop_name:(Test_utils.loop_name info)))
           statement.accesses)
 
 let print_node_accesses prog =

@@ -207,7 +207,7 @@ open Dataflow_types
     example.
     {@text[
       pattern:   if (theta[n, 2] > 0) 11
-      controls:  {enclosing = [Loop (For {id = 6; var = "n"})]; jumps = {}}
+      controls:  {enclosing = [{id = 6; side = None}]; jumps = {}}
       accesses:  R theta[n, 2]
     ]} *)
 type statement =
@@ -264,20 +264,17 @@ val flows_into : Accesses.access -> Accesses.access -> bool
 
 val dependence_between :
      dependence_info
-  -> source:label * Accesses.access
-  -> sink:label * Accesses.access
+  -> label * Accesses.access
+  -> label * Accesses.access
   -> Dependence.t
-(** Compares the elements that the [source] access and the [sink] access select,
-    over the loops around both statements. Each access comes paired with the
-    label of the statement that makes the access. *)
+(** Compares the elements that the first access (the source) and the second
+    access (the sink) select, over the loops around both statements. Each access
+    comes paired with the label of the statement that makes the access. *)
 
 val may_supply :
-     dependence_info
-  -> source:label * Accesses.access
-  -> sink:label * Accesses.access
-  -> bool
-(** Whether the [source] access can supply the value that the [sink] access
-    uses: {!flows_into}, then {!Dependence.is_plausible} on
+  dependence_info -> label * Accesses.access -> label * Accesses.access -> bool
+(** Whether the first access (the source) can supply the value that the second
+    access (the sink) uses: {!flows_into}, then {!Dependence.is_plausible} on
     {!dependence_between}. *)
 
 val node_immediate_dependencies :

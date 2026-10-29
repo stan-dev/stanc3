@@ -58,3 +58,15 @@ let pp_stmt : (Middle.Expr.Typed.t, int) Middle.Stmt.Pattern.t Fmt.t =
     of 3 and 1 prints as [1 3]. An empty set prints nothing. *)
 let pp_labels ppf (labels : int Set.Poly.t) =
   Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list labels)
+
+(** The loop variable of the [for] statement at a label, or [while] for a
+    [while] statement. The printers take this function as [loop_name]. *)
+let loop_name
+    (info : Analysis_and_optimization.Dependence_analysis.dependence_info)
+    (loop : int) : string =
+  match
+    (Analysis_and_optimization.Dataflow_types.LabelMap.find loop info.statements)
+      .pattern
+  with
+  | For {loopvar; _} -> loopvar
+  | _ -> "while"

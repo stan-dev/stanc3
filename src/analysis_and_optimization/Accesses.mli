@@ -88,10 +88,11 @@ val written_vars : access list -> string Set.Poly.t
 (** Returns the names of the variables that the accesses write or increment. In
     the running example, the result is [{"y"}]. *)
 
-val pp_access : access Fmt.t
+val pp_access : loop_name:(Dataflow_types.label -> string) -> access Fmt.t
 (** Prints the kind, the variable and the path in the notation of the running
-    example, as in [W v[n+1]], [R k], [+= target] or [W t.2]. *)
+    example, as in [W v[n+1]], [R k], [+= target] or [W t.2]. [loop_name] gives
+    the loop variable of a loop label. *)
 
-val pp : access list Fmt.t
+val pp : loop_name:(Dataflow_types.label -> string) -> access list Fmt.t
 (** Prints the reads, then the increments, then the writes, each group in the
     original order, as in [R v[n+1], R k, += target, W y[n]]. *)

@@ -50,9 +50,10 @@ type dependence_info =
   { statements: statement LabelMap.t
   ; reaching_definitions: reaching_defn Set.Poly.t LabelMap.t }
 
-(** The loops around the statement at [statement_id], outermost first. *)
+(** The labels of the loops around the statement at [statement_id], outermost
+    first. *)
 let statement_loops (statements : statement LabelMap.t) (statement_id : label) :
-    loop list =
+    label list =
   let statement = LabelMap.find statement_id statements in
   loops_around ~statement_id statement.pattern statement.controls
 
@@ -92,11 +93,10 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
       let killed_loops = statement_loops statements killed in
       match List.rev killed_loops with
       | innermost :: _ ->
-          List.equal ~eq:same_loop
+          List.equal ~eq:Int.equal
             (statement_loops statements killer)
             killed_loops
-          && controls_cover killer
-          && controls_cover (loop_id innermost)
+          && controls_cover killer && controls_cover innermost
       | [] -> false)
   | None, _ | _, None -> false
 
@@ -138,7 +138,14 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let statements =
     LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
         let controls = LabelMap.find statement_id control_ids in
-        let loops = loops_around ~statement_id pattern controls in
+        (* The variable and label of each [for] loop around the statement. The
+           [for] statement at the label holds the variable. *)
+        let for_loops =
+          List.filter_map (loops_around ~statement_id pattern controls)
+            ~f:(fun loop ->
+              match fst (LabelMap.find loop statement_map) with
+              | For {loopvar; _} -> Some (loopvar, loop)
+              | _ -> None) in
         (* A query reaches each enclosing loop, and the bounds of that loop,
            through the control dependency on the loop. No statement writes a
            loop variable, so a search for writes to a loop variable finds
@@ -147,14 +154,13 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         let reads_loop_variable (access : Accesses.access) =
           match access.kind with
           | Read ->
-              List.exists loops ~f:(function
-                | For {var; _} -> String.equal var access.var
-                | While _ -> false)
+              List.exists for_loops ~f:(fun (loopvar, _) ->
+                  String.equal loopvar access.var)
           | Write | Increment -> false in
         let accesses =
           List.filter
             (Accesses.of_stmt
-               ~classify:(Index_form.classify ~loops ~written_vars)
+               ~classify:(Index_form.classify ~for_loops ~written_vars)
                pattern)
             ~f:(fun access -> not (reads_loop_variable access)) in
         {pattern; meta; controls; accesses}) in
@@ -180,23 +186,22 @@ let flows_into (source : Accesses.access) (sink : Accesses.access) : bool =
   | Read, _ | Increment, Increment | _, Write -> false
 
 let dependence_between (info : dependence_info)
-    ~source:((source_id, source) : label * Accesses.access)
-    ~sink:((sink_id, sink) : label * Accesses.access) : Dependence.t =
+    ((source_id, source) : label * Accesses.access)
+    ((sink_id, sink) : label * Accesses.access) : Dependence.t =
   let loops =
     common_loops
       (statement_loops info.statements source_id)
       (statement_loops info.statements sink_id) in
   Dependence.compare_paths ~loops source sink
 
-let may_supply (info : dependence_info) ~(source : label * Accesses.access)
-    ~(sink : label * Accesses.access) : bool =
-  let source_id, source_access = source in
-  let sink_id, sink_access = sink in
+let may_supply (info : dependence_info)
+    ((source_id, source_access) : label * Accesses.access)
+    ((sink_id, sink_access) : label * Accesses.access) : bool =
   flows_into source_access sink_access
   (* In one statement, the read runs before the write. *)
   && Dependence.is_plausible
        ~source_first_in_text:(precedes_in_source source_id sink_id)
-       (dependence_between info ~source ~sink)
+       (dependence_between info (source_id, source_access) (sink_id, sink_access))
 
 (** Returns the labels of the candidate sources of [var] at [sink_id] that
     {!Dependence} keeps. A candidate stays if the source does not write or
@@ -226,8 +231,7 @@ let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
     (not source_has_writes) || (not sink_has_reads)
     || List.exists source_accesses ~f:(fun source ->
         List.exists sink_accesses ~f:(fun sink ->
-            may_supply info ~source:(source_id, source) ~sink:(sink_id, sink)))
-  in
+            may_supply info (source_id, source) (sink_id, sink))) in
   Set.Poly.filter_map candidate_definitions ~f:(function
     | None -> None
     | Some source_id ->

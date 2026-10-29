@@ -4,7 +4,7 @@ open Middle
 open Dataflow_types
 open Mir_utils
 
-type loop_term = {loop: for_loop; negated: bool}
+type loop_term = {loop: label; negated: bool}
 
 type form =
   {const: int; symbol: Expr.Typed.t option; loop_term: loop_term option}
@@ -13,7 +13,7 @@ type index = form option
 
 (** The same loop term: the same loop, with the same sign. *)
 let same_loop_term (left : loop_term) (right : loop_term) : bool =
-  left.loop.id = right.loop.id && Bool.equal left.negated right.negated
+  left.loop = right.loop && Bool.equal left.negated right.negated
 
 (** Arithmetic on forms. Each operation returns [None] when the result is not a
     form: a form holds at most one symbol, with coefficient 1, and at most one
@@ -67,12 +67,11 @@ module Form = struct
     | None -> None
 end
 
-let classify ~(loops : loop list) ~(written_vars : string Set.Poly.t)
-    (expr : Expr.Typed.t) : index =
+let classify ~(for_loops : (string * label) list)
+    ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : index =
   let for_loop_of name =
-    List.find_map loops ~f:(function
-      | For for_loop when String.equal for_loop.var name -> Some for_loop
-      | For _ | While _ -> None) in
+    List.find_map for_loops ~f:(fun (loopvar, loop) ->
+        if String.equal loopvar name then Some loop else None) in
   (* This function looks at [subexpr] as one unit and does not look at the sums
      inside [subexpr]. A written variable can change between iterations, so a
      read of a written variable gives no form. A loop variable in a form other
@@ -120,7 +119,7 @@ let classify ~(loops : loop list) ~(written_vars : string Set.Poly.t)
 type comparison =
   | Always_same
   | Never_same
-  | Same_at_distance of {loop: for_loop; distance: int}
+  | Same_at_distance of {loop: label; distance: int}
   | Cannot_tell
 
 let compare_subscripts ~(first : index Index.t) ~(second : index Index.t) :
@@ -148,10 +147,12 @@ let compare_subscripts ~(first : index Index.t) ~(second : index Index.t) :
                 (if negated then -const_difference else const_difference) })
   | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> Cannot_tell
 
-(** Prints the loop term, then the symbol, then the constant, as in [-n+N+1]. *)
-let pp_form ppf ({const; symbol; loop_term} : form) =
+(** Prints the loop term, then the symbol, then the constant, as in [-n+N+1].
+    [loop_name] gives the loop variable of a loop label. *)
+let pp_form ~(loop_name : label -> string) ppf
+    ({const; symbol; loop_term} : form) =
   Option.iter loop_term ~f:(fun {loop; negated} ->
-      Fmt.pf ppf "%s%s" (if negated then "-" else "") loop.var);
+      Fmt.pf ppf "%s%s" (if negated then "-" else "") (loop_name loop));
   (* The printer writes the loop term, then the symbol, then the constant. A
      term after a printed term starts with a sign. [leading] is true when no
      loop term is printed, so the symbol prints without a sign. [first] is true
@@ -166,6 +167,6 @@ let pp_form ppf ({const; symbol; loop_term} : form) =
       (if const < 0 then "-" else if first then "" else "+")
       (abs const)
 
-let pp ppf = function
-  | Some form -> pp_form ppf form
+let pp ~loop_name ppf = function
+  | Some form -> pp_form ~loop_name ppf form
   | None -> Fmt.string ppf "?"

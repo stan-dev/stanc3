@@ -64,7 +64,8 @@ let print_verdicts ~var prog =
   let loops_of statement_id =
     let statement = LabelMap.find statement_id info.statements in
     loops_around ~statement_id statement.pattern statement.controls in
-  let pp_access = Test_utils.one_line Accesses.pp_access in
+  let loop_name = Test_utils.loop_name info in
+  let pp_access = Test_utils.one_line (Accesses.pp_access ~loop_name) in
   LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
       let sinks =
         List.filter (accesses_of sink_id) ~f:(fun sink ->
@@ -84,19 +85,20 @@ let print_verdicts ~var prog =
                       if flows_into source sink then
                         let source = (source_id, source) in
                         let sink = (sink_id, sink) in
-                        let dependence = dependence_between info ~source ~sink in
+                        let dependence = dependence_between info source sink in
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
                           | Distances _ ->
-                              if may_supply info ~source ~sink then "  flows"
+                              if may_supply info source sink then "  flows"
                               else "  cannot flow" in
                         let loops =
                           common_loops (loops_of source_id) (loops_of sink_id)
                         in
                         Fmt.pr "  %d %a --> %a: %a%s@." source_id pp_access
                           (snd source) pp_access (snd sink)
-                          (Dependence.pp ~loops) dependence outcome)))))
+                          (Dependence.pp ~loop_name ~loops)
+                          dependence outcome)))))
 
 (* [must_overwrite] decides whether a later write kills an earlier one. The test
    finds each write by the printed access. A write to [m[1]] overwrites [m[1,
@@ -123,7 +125,9 @@ let%expect_test "Comparing write paths" =
       }
     |})
   in
-  let pp_access = Test_utils.one_line Accesses.pp_access in
+  let pp_access =
+    Test_utils.one_line
+      (Accesses.pp_access ~loop_name:(Test_utils.loop_name info)) in
   let path_of printed =
     LabelMap.fold info.statements ~init:None
       ~f:(fun ~key:_ ~data:statement found ->

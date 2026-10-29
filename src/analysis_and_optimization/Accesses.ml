@@ -124,35 +124,40 @@ let written_vars (accesses : access list) : string Set.Poly.t =
          match kind with Write | Increment -> Some var | Read -> None))
 
 (** Prints one subscript, with braces around a multi-index. *)
-let pp_subscript ppf (index : Index_form.index Index.t) =
+let pp_subscript ~loop_name ppf (index : Index_form.index Index.t) =
   match index with
-  | MultiIndex indices -> Fmt.pf ppf "{%a}" Index_form.pp indices
-  | All | Single _ | Upfrom _ | Between _ -> Index.pp Index_form.pp ppf index
+  | MultiIndex indices -> Fmt.pf ppf "{%a}" (Index_form.pp ~loop_name) indices
+  | All | Single _ | Upfrom _ | Between _ ->
+      Index.pp (Index_form.pp ~loop_name) ppf index
 
 (** Prints a path. [pp_subscripts_after] continues an open bracket. Consecutive
     subscripts thus share one pair of brackets. *)
-let rec pp_path ppf = function
+let rec pp_path ~loop_name ppf = function
   | [] -> ()
-  | Field field :: rest -> Fmt.pf ppf ".%d%a" field pp_path rest
+  | Field field :: rest -> Fmt.pf ppf ".%d%a" field (pp_path ~loop_name) rest
   | Subscript index :: rest ->
-      Fmt.pf ppf "[%a%a" pp_subscript index pp_subscripts_after rest
+      Fmt.pf ppf "[%a%a" (pp_subscript ~loop_name) index
+        (pp_subscripts_after ~loop_name)
+        rest
 
-and pp_subscripts_after ppf = function
+and pp_subscripts_after ~loop_name ppf = function
   | Subscript index :: rest ->
-      Fmt.pf ppf ", %a%a" pp_subscript index pp_subscripts_after rest
-  | path -> Fmt.pf ppf "]%a" pp_path path
+      Fmt.pf ppf ", %a%a" (pp_subscript ~loop_name) index
+        (pp_subscripts_after ~loop_name)
+        rest
+  | path -> Fmt.pf ppf "]%a" (pp_path ~loop_name) path
 
 (** Prints [R], [+=] or [W]. *)
 let pp_kind ppf kind =
   Fmt.string ppf
     (match kind with Read -> "R" | Increment -> "+=" | Write -> "W")
 
-let pp_access ppf {var; path; kind} =
-  Fmt.pf ppf "%a %s%a" pp_kind kind var pp_path path
+let pp_access ~loop_name ppf {var; path; kind} =
+  Fmt.pf ppf "%a %s%a" pp_kind kind var (pp_path ~loop_name) path
 
-let pp ppf (accesses : access list) =
+let pp ~loop_name ppf (accesses : access list) =
   let of_kind wanted =
     List.filter accesses ~f:(fun access -> equal_kind access.kind wanted) in
-  Fmt.(list ~sep:(any ", ") pp_access)
+  Fmt.(list ~sep:(any ", ") (pp_access ~loop_name))
     ppf
     (of_kind Read @ of_kind Increment @ of_kind Write)

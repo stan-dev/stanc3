@@ -15,30 +15,14 @@ type label = int [@@deriving sexp_of]
     runs on), such as data. *)
 type reaching_defn = string * label option [@@deriving sexp_of]
 
-(** A [for] loop. [id] is the label of the [for] statement, and [var] is the
-    loop variable. *)
-type for_loop = {id: label; var: string}
+(** The side of an [if] that holds a statement. *)
+type side = Then | Else
 
-(** A [for] loop, or a [while] loop given by the label of the [while] statement.
-    A loop is the only owner of a loop variable name. Other types hold the loop,
-    not the name. *)
-type loop = For of for_loop | While of label
-
-(** The label of the loop statement. *)
-let loop_id = function For {id; _} -> id | While id -> id
-
-(** Two loops are the same loop when they have the same label. *)
-let same_loop (left : loop) (right : loop) : bool = loop_id left = loop_id right
-
-(** The branch of an [if] that holds a statement. *)
-type branch = Then | Else
-
-(** An [if] or a loop around a statement. *)
-type enclosing =
-  | If of {id: label; branch: branch}
-      (** [id] is the label of the [if], and [branch] is the branch that holds
-          the statement. *)
-  | Loop of loop
+(** An [if] or a loop around a statement. [id] is the label of the [if] or the
+    loop. [side] is the side of the [if] that holds the statement, and [None]
+    for a loop. A loop is identified by the label of the loop statement, and the
+    statement at that label holds the loop variable. *)
+type enclosing = {id: label; side: side option}
 
 (** The {e controls} of a statement are the other statements that decide
     whether, or how often, the statement runs. {!Dataflow_utils.build_cf_graphs}

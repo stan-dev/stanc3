@@ -40,9 +40,10 @@ open Dataflow_types
 
 (** {1 API reference} *)
 
-(** A loop variable in a subscript. [negated] is true for [-n], as in [N - n].
-    {!pp} prints a loop term first, as [-n] in [-n+N+1]. *)
-type loop_term = {loop: for_loop; negated: bool}
+(** A loop variable in a subscript. [loop] is the label of the [for] loop, and
+    [negated] is true for [-n], as in [N - n]. {!pp} prints a loop term first,
+    as [-n] in [-n+N+1]. *)
+type loop_term = {loop: label; negated: bool}
 
 (** A subscript of the form [loop_term + symbol + const]. These examples are in
     a loop over [n], and [N] and [k] are not written.
@@ -59,11 +60,14 @@ type form =
 type index = form option
 
 val classify :
-  loops:loop list -> written_vars:string Set.Poly.t -> Expr.Typed.t -> index
-(** Returns the form of a subscript. [loops] are the loops around the statement,
-    and [written_vars] holds each variable that the analyzed statement writes.
-    Sums are read left to right, so [n + k + k] has no form, but [k + k + n] has
-    the symbol [k + k]. *)
+     for_loops:(string * label) list
+  -> written_vars:string Set.Poly.t
+  -> Expr.Typed.t
+  -> index
+(** Returns the form of a subscript. [for_loops] pairs the loop variable and the
+    label of each [for] loop around the statement, and [written_vars] holds each
+    variable that the analyzed statement writes. Sums are read left to right, so
+    [n + k + k] has no form, but [k + k + n] has the symbol [k + k]. *)
 
 (** The result of {!compare_subscripts}. *)
 type comparison =
@@ -73,10 +77,10 @@ type comparison =
   | Never_same
       (** The subscripts never select the same element, as [[1]] and [[2]] do.
       *)
-  | Same_at_distance of {loop: for_loop; distance: int}
+  | Same_at_distance of {loop: label; distance: int}
       (** The subscripts select the same element only when the second runs
-          [distance] iterations of [loop] after the first. [[n]] and [[n]] give
-          [0], and [[n + 1]] and [[n]] give [1]. *)
+          [distance] iterations of the loop labeled [loop] after the first.
+          [[n]] and [[n]] give [0], and [[n + 1]] and [[n]] give [1]. *)
   | Cannot_tell  (** Any other pair, as [[idx[n]]] and [[1]]. *)
 
 val compare_subscripts :
@@ -84,6 +88,7 @@ val compare_subscripts :
 (** Compares two subscripts at the same position of two paths. A slice or a
     multi-index gives {!Cannot_tell}. *)
 
-val pp : index Fmt.t
+val pp : loop_name:(label -> string) -> index Fmt.t
 (** Prints a form as [n], [n+1], [n+k-1], [-n+N+1], [3] or [k+1], and a
-    subscript without a form as [?]. *)
+    subscript without a form as [?]. [loop_name] gives the loop variable of a
+    loop label. *)

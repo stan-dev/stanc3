@@ -38,16 +38,16 @@ type t = Independent | Distances of int option list
     The result is [None] when [distances] already holds a different distance at
     [loop], because the two positions then never select the same element
     together. *)
-let fix_distance ~(loops : loop list) (distances : int option list)
-    ~(loop : for_loop) ~(distance : int) : int option list option =
+let fix_distance ~(loops : label list) (distances : int option list)
+    ~(loop : label) ~(distance : int) : int option list option =
   Option.all
     (List.map2 loops distances ~f:(fun common_loop known_distance ->
          match known_distance with
-         | _ when loop_id common_loop <> loop.id -> Some known_distance
+         | _ when common_loop <> loop -> Some known_distance
          | Some known when known <> distance -> None
          | Some _ | None -> Some (Some distance)))
 
-let compare_paths ~(loops : loop list) (source : access) (sink : access) : t =
+let compare_paths ~(loops : label list) (source : access) (sink : access) : t =
   let all_unknown = Distances (List.map loops ~f:(fun _ -> None)) in
   if List.compare_lengths source.path sink.path <> 0 then all_unknown
   else
@@ -77,19 +77,19 @@ let is_plausible ~(source_first_in_text : bool) (dependence : t) : bool =
   | Independent -> false
   | Distances distances -> source_may_run_first distances
 
-(** Prints the distance at one loop as [[n:1]], or as [[while:*]] for a [while]
-    loop. *)
-let pp_distance ppf ((loop, distance) : loop * int option) =
-  Fmt.pf ppf "[%s:%a]"
-    (match loop with For {var; _} -> var | While _ -> "while")
+(** Prints the distance at one loop as [[n:1]], with the loop variable that
+    [loop_name] gives for the loop label. *)
+let pp_distance ~(loop_name : label -> string) ppf
+    ((loop, distance) : label * int option) =
+  Fmt.pf ppf "[%s:%a]" (loop_name loop)
     Fmt.(option ~none:(any "*") int)
     distance
 
-let pp ~(loops : loop list) ppf = function
+let pp ~(loop_name : label -> string) ~(loops : label list) ppf = function
   | Independent -> Fmt.string ppf "independent"
   | Distances distances when List.for_all distances ~f:Option.is_none ->
       Fmt.string ppf "unknown"
   | Distances distances ->
       Fmt.pf ppf "distances %a"
-        Fmt.(list ~sep:nop pp_distance)
+        Fmt.(list ~sep:nop (pp_distance ~loop_name))
         (List.map2 loops distances ~f:(fun loop distance -> (loop, distance)))

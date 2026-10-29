@@ -23,11 +23,14 @@
     after each iteration, so writes in the body can reach the loop statement.
     LLVM also puts the loop header inside the loop.
 
-    The running example is [for (n in 1:N) if (c) x = 1;]. The controls of
-    [x = 1] are the loop and the [if], and the control parents of [x = 1] hold
-    only the [if]. For both [x = 1] and the [for] statement, {!loops_around}
-    gives the loop over [n]. If the [for] statement has label [6],
-    {!loop_of_statement} gives [Some (For {id = 6; var = "n"})]. *)
+    A loop is identified by the label of the loop statement. The statement at
+    that label holds the loop variable.
+
+    The running example is [for (n in 1:N) if (c) x = 1;], where the [for]
+    statement has label [6] and the [if] has label [8]. The controls of [x = 1]
+    are [{id = 6; side = None}] for the loop and [{id = 8; side = Some Then}]
+    for the [if], and the control parents of [x = 1] hold only [8]. For both
+    [x = 1] and the [for] statement, {!loops_around} gives [[6]]. *)
 
 open Std
 open Middle
@@ -45,27 +48,24 @@ val build_cf_graphs :
 (** Returns the exit set, the predecessor graph and the controls of each label.
     The first two parts equal the result of {!build_predecessor_graph}. *)
 
-val loop_of_statement : label -> ('e, 's) Stmt.Pattern.t -> loop option
-(** Returns the loop that the [for] or [while] statement at the label forms, or
-    [None] for any other statement. *)
-
 val control_parents : controls -> label Set.Poly.t
 (** Returns the control parents of a statement, given the controls of the
     statement. *)
 
 val loops_around :
-  statement_id:label -> ('e, 's) Stmt.Pattern.t -> controls -> loop list
-(** Returns the [for] and [while] loops around a statement, outermost first. For
-    a loop statement at [statement_id], the list ends with that loop. *)
+  statement_id:label -> ('e, 's) Stmt.Pattern.t -> controls -> label list
+(** Returns the labels of the [for] and [while] loops around a statement,
+    outermost first. For a loop statement at [statement_id], the list ends with
+    [statement_id]. *)
 
 val precedes_in_source : label -> label -> bool
 (** Whether the statement at the first label comes before the statement at the
     second in the program text. {!build_statement_map} numbers a statement
     before the statements nested inside, and nested statements in text order. *)
 
-val common_loops : loop list -> loop list -> loop list
-(** Returns the longest start that two outermost-first loop lists share. These
-    are the loops around both statements. Loops match by {!same_loop}. *)
+val common_loops : label list -> label list -> label list
+(** Returns the longest start that two outermost-first lists of loop labels
+    share. These are the loops around both statements. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

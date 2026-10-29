@@ -118,15 +118,16 @@ type t =
           at each common loop, outermost first. [None] is an unknown distance.
       *)
 
-val compare_paths : loops:loop list -> Accesses.access -> Accesses.access -> t
+val compare_paths : loops:label list -> Accesses.access -> Accesses.access -> t
 (** Answers Question 1 for the first access (the source) and the second access
-    (the sink) of one variable. [loops] holds the common loops. *)
+    (the sink) of one variable. [loops] holds the labels of the common loops. *)
 
 val is_plausible : source_first_in_text:bool -> t -> bool
 (** Answers Question 2 for a result of {!compare_paths}. [source_first_in_text]
     tells whether the source statement comes before the sink statement. *)
 
-val pp : loops:loop list -> t Fmt.t
+val pp : loop_name:(label -> string) -> loops:label list -> t Fmt.t
 (** Prints [independent], [unknown] when no distance is known, or [distances]
     with one [[loop:distance]] per common loop in [loops], as in
-    [distances [n:1][m:*]]. *)
+    [distances [n:1][m:*]]. [loop_name] gives the loop variable of a loop label,
+    or [while] for a [while] loop. *)
