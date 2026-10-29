@@ -100,14 +100,17 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
       | [] -> false)
   | None, _ | _, None -> false
 
-(** Runs reaching definitions with [kills] on the forward flowgraph of [stmt].
-    Returns the definitions that reach the start of each label. *)
+(** Runs reaching definitions with [kills] on the forward flowgraph of
+    [statement_map]. Returns the definitions that reach the start of each label.
+*)
 let mir_reaching_definitions
     ~(kills : killer:label -> killed:label -> string -> bool)
-    (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
+    (mir : Program.Typed.t)
+    (statement_map :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) :
     reaching_defn Set.Poly.t LabelMap.t =
   let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt in
+    Monotone_framework.forward_flowgraph_of_statement_map statement_map in
   let (module Flowgraph) = flowgraph in
   LabelMap.map
     (reaching_definitions_mfp ~kills mir (module Flowgraph) flowgraph_to_mir)
@@ -148,7 +151,9 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         {pattern; meta; controls; accesses}) in
   (* The kills use the classified accesses, so classification comes first. *)
   let reaching_definitions =
-    mir_reaching_definitions ~kills:(element_kills ~statements) mir stmt in
+    mir_reaching_definitions
+      ~kills:(element_kills ~statements)
+      mir statement_map in
   {statements; reaching_definitions}
 
 let reaching_defn_lookup (definitions : reaching_defn Set.Poly.t) (var : string)

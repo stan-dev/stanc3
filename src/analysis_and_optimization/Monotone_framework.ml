@@ -111,16 +111,14 @@ let top_free_vars_stmt
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Profile _ | Block _ | SList _ -> Set.Poly.empty
 
-(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt ?(flatten_loops = false)
-    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+(** The inverse flowgraph of a statement map. A caller that already has the
+    statement map passes the map here, so the flowgraph uses the same labels. *)
+let inverse_flowgraph_of_statement_map ?(flatten_loops = false)
+    ?(blocks_after_body = true)
+    (flowgraph_to_mir :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) :
     (module FLOWGRAPH with type labels = int)
     * Stmt.Located.Non_recursive.t LabelMap.t =
-  let flowgraph_to_mir =
-    Dataflow_utils.build_statement_map
-      (fun Stmt.{pattern; _} -> pattern)
-      (fun Stmt.{meta; _} -> meta)
-      stmt in
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
       flowgraph_to_mir in
@@ -134,6 +132,17 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
   , LabelMap.map
       ~f:(fun (pattern, meta) -> Stmt.Located.Non_recursive.{pattern; meta})
       flowgraph_to_mir )
+
+(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
+let inverse_flowgraph_of_stmt ?(flatten_loops = false)
+    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+    (module FLOWGRAPH with type labels = int)
+    * Stmt.Located.Non_recursive.t LabelMap.t =
+  inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
+    (Dataflow_utils.build_statement_map
+       (fun Stmt.{pattern; _} -> pattern)
+       (fun Stmt.{meta; _} -> meta)
+       stmt)
 
 (** Reverse flowgraphs to be used for reverse analyses. Observe that this
     respects the invariants listed for a FLOWGRAPH *)
@@ -187,6 +196,12 @@ let forward_flowgraph_of_stmt ?(flatten_loops = false)
   let inv_flowgraph =
     inverse_flowgraph_of_stmt ~flatten_loops ~blocks_after_body stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
+
+(** The forward flowgraph of a statement map, with the labels of that map. *)
+let forward_flowgraph_of_statement_map statement_map =
+  let inv_flowgraph, flowgraph_to_mir =
+    inverse_flowgraph_of_statement_map statement_map in
+  (reverse inv_flowgraph, flowgraph_to_mir)
 
 (** The lattice of sets of some values, with the inclusion order, set union and
     the empty set *)
