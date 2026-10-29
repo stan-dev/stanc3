@@ -1,13 +1,11 @@
-// TSVC "Recurrences" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). The loop is a true recurrence: a self-edge with a
-// non-Eq direction. The loop may not be vectorized and must appear
-// unchanged in mir.expected.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 2. TSVC s322 (Recurrences), UoB-HPC/TSVC_2 src/tsvc.c
+// `a2[n]` is updated from `a2[n - 1]` and `a2[n - 2]`, a second-order linear
+// recurrence. The true self-dependences with non-Eq directions mean the loop
+// may not be vectorized and stays as written.
+// Source: TSVC s322 (Recurrences), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] = a[i] + a[i-1] * b[i] + a[i-2] * c[i];
-// intent: second order linear recurrence; not vectorizable
-// graph: true self `{Lt,1}`, `{Lt,2}`   emitted: seq
+// Intent: second order linear recurrence, not vectorizable
+// Dependences: true self `{Lt,1}`, `{Lt,2}`
+// Desired outcome: left as a loop.
 data {
   int<lower=3> N;
   vector[N] a0;

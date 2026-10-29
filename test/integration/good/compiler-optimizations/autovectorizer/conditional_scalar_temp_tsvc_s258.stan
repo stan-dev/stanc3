@@ -1,13 +1,12 @@
-// TSVC "Expansion" loop (scalar and array expansion), translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). The loop carries a dependence through a scalar
-// written in the body, so the whole-variable access (subs = []) is confused
-// and the loop must stay sequential until scalar expansion is implemented.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 4. TSVC s258 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+// A scalar `s4` is written only when `a0[n] > 0` but read in every
+// iteration, so its value wraps around to later iterations. The `IfElse`
+// statement is a sequential leaf and the whole-variable access to `s4`
+// (subs = []) is confused, so the loop stays as written.
+// Source: TSVC s258 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (a[i] > 0.) s = d[i] * d[i]; b[i] = s * c[i] + d[i];
-// intent: wrap-around scalar under an if
-// graph: `IfElse` leaf + `s4` confused   emitted: seq
+// Intent: wrap-around scalar under an if
+// Dependences: `IfElse` leaf and `s4` confused
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

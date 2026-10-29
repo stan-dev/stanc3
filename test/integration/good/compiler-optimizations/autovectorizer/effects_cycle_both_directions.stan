@@ -1,10 +1,9 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 5. Both directions through effects: a<->c (effects), a->b, b->c: one
-// strongly connected component.
-// => unchanged
+// Two print statements surround a write of v5[n]. The prints are ordered
+// against each other through their effects, and the write must stay between
+// them, so all three statements form one strongly connected component.
+// Direction sets are for the loop over n.
+// Dependences: a<->c (effects), a->b, b->c
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   vector[N] x;

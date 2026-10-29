@@ -1,11 +1,11 @@
-// TSVC "Control Flow" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011).
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 5. TSVC s452 (Control Flow / induction), UoB-HPC/TSVC_2 src/tsvc.c
+// The loop variable `n` is used as a value on the right-hand side, not only
+// as a subscript. The statement has no dependence edge, but a loop that uses
+// its loop variable as a value stays as written.
+// Source: TSVC s452 (Control Flow / induction), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] = b[i] + c[i] * (real_t) (i+1);
-// intent: induction variable used as a value
-// graph: no edge   emitted: seq (existing bail "loop variable used as a value")
+// Intent: induction variable used as a value
+// Dependences: no edge
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

@@ -1,9 +1,8 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 9a. Whole-vector read of a written variable: subs = [] -> confused ->
-// sequential.
+// The loop writes v9a[n] and reads the whole vector v9a with sum(v9a) in the
+// same iteration. The read has no subscripts, so the dependence test cannot
+// relate it to the write. Direction sets are for the loop over n.
+// Dependences: whole-vector read (no subscripts) -> confused -> sequential
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   vector[N] x;

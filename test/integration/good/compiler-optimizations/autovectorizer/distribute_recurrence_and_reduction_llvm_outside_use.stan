@@ -1,14 +1,13 @@
-// Loop from LLVM's loop distribution test
-// llvm/test/Transforms/LoopDistribute/outside-use.ll, translated to 1-based
-// Stan.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Partially vectorized
-// 4. LLVM LoopDistribute/outside-use.ll
+// A recurrence on A next to a scalar sum `total4 += d[n]` that is used after
+// the loop.
+// Source: LLVM test/Transforms/LoopDistribute/outside-use.ll, translated to
+//   1-based Stan.
 // C: for (i = 0; i < N; i++) { A[i+1] = A[i] * B[i]; sum += C[i]; }
-// LLVM: distributed, the sum reduction merged by a phi.
-// Design: S1 self {Lt, 1}; total4 is an accumulator (reduction, section
-// 7.9 item 5), so S2 carries no edge.
-// Emitted: S1 seq, then vec total4 += sum(d[1:N]).
+// Dependences: true S1 self {Lt, 1}; total4 is a reduction accumulator, so S2
+//   carries no edge
+// Desired outcome: partially vectorized, S1 stays in a loop, then
+//   `total4 += sum(d[1:N])`.
+// LLVM distributes the loop and merges the sum reduction with a phi.
 data {
   int<lower=1> N;
   vector[N] b;

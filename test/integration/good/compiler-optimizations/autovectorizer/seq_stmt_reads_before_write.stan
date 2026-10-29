@@ -1,9 +1,9 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Partially vectorized
-//
-// 4. Sequential statement reads before the write: a->b {Eq}, loop before.
-// => for (n in 1:N) print(v4[n]);  v4[:] = x;
+// A print statement must stay in the loop and reads v4[n] before the next
+// statement overwrites it. The write becomes a vector statement placed after
+// the remaining loop. Direction sets are for the loop over n.
+// Dependences: anti a->b {Eq}
+// Desired outcome: partially vectorized.
+//   `for (n in 1:N) print(v4[n]);` then `v4[:] = x`
 data {
   int<lower=2> N;
   vector[N] x;

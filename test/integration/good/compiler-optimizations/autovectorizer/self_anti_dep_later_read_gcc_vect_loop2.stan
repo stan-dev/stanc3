@@ -1,16 +1,13 @@
-// Loop from the GCC vectorizer test suite, gcc/testsuite/gcc.dg/vect/
-// no-vfa-vect-depend-1.c, translated to 1-based Stan. GCC vectorizes exactly
-// the loops whose dependence distance is negative ("dependence distance
-// negative") and never reorders statements.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 5. GCC gcc.dg/vect/no-vfa-vect-depend-1.c (loop 2)
+// Each iteration reads ib[i+1] before the next iteration overwrites it, a
+// self anti-dependence. A self anti-dependence adds no edge, so the
+// statement becomes a vector statement. Translated to 1-based Stan.
+// Source: GCC gcc.dg/vect/no-vfa-vect-depend-1.c (loop 2)
 // C: for (i = 0; i < N; i++) ib[i] = ib[i+1] * 4;
-// GCC: vectorized (dependence distance negative).
-// Design: anti self dependence, read of a later iteration: no edge.
-// Emitted: vec ib5[1:N] = ib5[2:(N+1)] * 4 (deep_copy on the right-hand
-// side, section 7.11).
+// Dependences: anti self dependence on a later iteration's element, no edge
+// Desired outcome: fully vectorized.
+//   `ib5[1:N] = ib5[2:(N+1)] * 4`
+// A deep_copy of the right-hand side makes the vector statement safe. GCC
+// also vectorizes this loop (distance negative).
 data {
   int<lower=1> N;
 }

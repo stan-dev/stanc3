@@ -1,10 +1,10 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 2. Anti-dependence, distance 0: order kept (Allen and Kennedy p. 508).
-// a->b {Eq}
-// => mu2[:] = v2 + 1;  v2[:] = x;
+// The first statement reads v2[n] and the second then overwrites it, an
+// anti-dependence with distance 0. Both statements vectorize, and the vector
+// statements keep the original order. Direction sets are for the loop over n.
+// Dependences: anti a->b {Eq}
+// Desired outcome: fully vectorized.
+//   `mu2[:] = v2 + 1` then `v2[:] = x`
+// The read must happen before the write, as in Allen and Kennedy p. 508.
 data {
   int<lower=2> N;
   vector[N] x;

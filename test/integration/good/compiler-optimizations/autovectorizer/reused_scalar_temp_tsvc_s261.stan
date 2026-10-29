@@ -1,13 +1,12 @@
-// TSVC "Expansion" loop (scalar and array expansion), translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). The loop carries a dependence through a scalar
-// written in the body, so the whole-variable access (subs = []) is confused
-// and the loop must stay sequential until scalar expansion is implemented.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 5. TSVC s261 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+// A scalar `t5` is reused for two different temporaries in each iteration,
+// and `a5[n]` reads `c5[n - 1]` from the previous iteration. The
+// whole-variable access to `t5` (subs = []) is confused, so the loop stays
+// as written until scalar expansion is implemented.
+// Source: TSVC s261 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
 // C: t = a[i] + b[i]; a[i] = t + c[i-1]; t = c[i] * d[i]; c[i] = t;
-// intent: scalar renaming
-// graph: confused   emitted: seq
+// Intent: scalar renaming
+// Dependences: confused
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

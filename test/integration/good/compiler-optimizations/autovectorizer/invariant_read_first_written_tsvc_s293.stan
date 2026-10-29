@@ -1,13 +1,12 @@
-// TSVC "LinearDependence" loop (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011), from UoB-HPC/TSVC_2 src/tsvc.c. The loop is
-// translated to 1-based Stan with the loop variable `n`; array sizes are
-// chosen so every subscript is in range. Written variables are model-block
-// locals initialised from data.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 4. TSVC s293 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
+// Each iteration copies the fixed element `a4[1]`, which the first iteration
+// writes. The pair is confused and the loop correctly stays as written.
+// Source: TSVC s293 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
 // C: for (int i = 0; i < LEN_1D; i++) a[i] = a[0];
 // Intent: actual dependence cycle through a[0].
-// Design: confused -> seq (correct; contrast s113).
+// Dependences: confused
+// Desired outcome: left as a loop.
+// Contrast invariant_read_never_written_tsvc_s113.stan, where the loop never
+// writes the fixed element.
 data {
   int<lower=2> N;
   vector[N + 1] a0;

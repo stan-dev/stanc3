@@ -1,13 +1,13 @@
-// Loop from LLVM's LoopAccessAnalysis test
-// llvm/test/Analysis/LoopAccessAnalysis/loops-with-indirect-reads-and-writes.ll,
-// translated to 1-based Stan.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 3. LLVM LoopAccessAnalysis/loops-with-indirect-reads-and-writes.ll
+// The loop writes and reads A through the index array idx, so which elements
+// two iterations touch cannot be compared.
+// Source: LLVM
+//   test/Analysis/LoopAccessAnalysis/loops-with-indirect-reads-and-writes.ll,
+//   translated to 1-based Stan.
 // C: for (i = 0; i < N; i++) { A[idx[i]] = B[i]; C[i] = A[idx[i]]; }
-// LLVM: IndirectUnsafe.
-// Design: Varying subscript: confused.
-// Emitted: seq (loop unchanged).
+// Dependences: the subscript idx[n] varies with the loop, so the dependence
+//   is confused
+// Desired outcome: left as a loop.
+// LLVM reports IndirectUnsafe.
 data {
   int<lower=1> N;
   vector[N] b;

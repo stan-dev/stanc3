@@ -1,10 +1,11 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 7. Carried but acyclic: a->b {Lt}, distance 1. Legal to distribute, and
-// offset widening (section 7.6) expresses it.
-// => v7[2:N] = x[2:N];  y7[2:N] = v7[1:(N-1)];   (order forced by a->b)
+// The second statement reads v7[n - 1], written by the first statement in
+// the previous iteration. The dependence is loop carried but acyclic, so the
+// loop can be distributed and each statement becomes a vector statement with
+// shifted ranges. Direction sets are for the loop over n.
+// Dependences: true a->b {Lt}, distance 1
+// Desired outcome: fully vectorized.
+//   `v7[2:N] = x[2:N]` then `y7[2:N] = v7[1:(N-1)]`
+// The edge a->b forces the write of v7 to come first.
 data {
   int<lower=2> N;
   vector[N] x;

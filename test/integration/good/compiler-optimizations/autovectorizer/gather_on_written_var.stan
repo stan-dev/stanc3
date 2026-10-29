@@ -1,8 +1,9 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 9b. Gather on a written variable: Varying -> confused -> sequential.
+// The loop writes and reads v9b through the index array idx[n]. The
+// subscript varies in a way the dependence test cannot model, so the
+// accesses may overlap across iterations. Direction sets are for the loop
+// over n.
+// Dependences: Varying subscript -> confused -> sequential
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   array[N] int<lower=1, upper=N> idx;

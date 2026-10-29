@@ -1,14 +1,12 @@
-// Loop from LLVM's loop distribution test
-// llvm/test/Transforms/LoopDistribute/diagnostics.ll, translated to 1-based
-// Stan.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-// 1. LLVM LoopDistribute/diagnostics.ll `not_forced`
+// An elementwise product of two vectors with no dependence between
+// iterations.
+// Source: LLVM test/Transforms/LoopDistribute/diagnostics.ll (`not_forced`),
+//   translated to 1-based Stan.
 // C: for (i = 0; i < N; i++) A[i] = B[i] * C[i];
-// LLVM: not distributed ("memory operations are safe for
-// vectorization", nothing to isolate).
-// Design: no edges.
-// Emitted: vec a1[1:N] = b .* d.
+// Dependences: none
+// Desired outcome: fully vectorized, `a1[1:N] = b .* d`.
+// LLVM does not distribute the loop because "memory operations are safe for
+// vectorization" and there is nothing to isolate.
 data {
   int<lower=1> N;
   vector[N] b;

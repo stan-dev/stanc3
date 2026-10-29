@@ -1,0 +1,59 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../assignment_widens_vectorized_functions.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x");
+  FnValidateSize__("u", "N", N); }
+
+log_prob {
+  vector[N]
+    u = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    v[1:N] = (exp(x[1:N]) + sqrt(square(u[1:N])));
+    target += normal_lpdf(v, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  vector[N]
+    u = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    v[1:N] = (exp(x[1:N]) + sqrt(square(u[1:N])));
+    target += normal_lpdf(v, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data vector[N]
+    u = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var u))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[N] u;
+  FnReadData__(u, context__, "u");
+  (FnWriteParam(unconstrain_opt(Identity))(var u))__(); }
+output_vars {
+  parameters vector[N] u; //vector[N]
+}

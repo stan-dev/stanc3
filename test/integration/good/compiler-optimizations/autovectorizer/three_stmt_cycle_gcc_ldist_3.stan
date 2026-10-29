@@ -1,19 +1,15 @@
-// Loop from the GCC loop-distribution test suite,
-// gcc/testsuite/gcc.dg/tree-ssa/ldist-3.c, translated to 1-based Stan.
-// GCC's ldist pass has a cache-reuse cost model and declines to split several
-// legal cases; agreement with this design is expected on legality, not on
-// policy.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 3. GCC gcc.dg/tree-ssa/ldist-3.c
+// The first three statements form a dependence cycle through a and b, and
+// the fourth uses the loop variable n as a value. No statement can become a
+// vector statement. Translated to 1-based Stan.
+// Source: GCC gcc.dg/tree-ssa/ldist-3.c
 // C: for (i = 2; i < N-1; i++) { a[i] = k * i; b[i] = a[i-2] + k;
 //      c[i] = b[i] + a[i+1]; d[i] = c[i-1] + k + i; }
-// GCC: not split (statements stay fused).
-// Design: S1->S2 {Lt, 2}, S2->S3 {Eq}, anti S3->S1 {Lt, 1}: cycle
-// {S1, S2, S3}; S3->S4 {Lt, 1}.
-// Emitted: S1-S3 seq (cycle); S4 seq (uses n as a value); blocks fuse:
-// loop unchanged.
+// Dependences: S1->S2 {Lt, 2}, S2->S3 {Eq}, anti S3->S1 {Lt, 1}: cycle
+//   {S1, S2, S3}; S3->S4 {Lt, 1}
+// Desired outcome: left as a loop.
+// S1-S3 stay in the loop because of the cycle and S4 because it uses n as a
+// value, so the remaining loops fuse back into the original loop. GCC also
+// keeps the statements in one loop.
 data {
   int<lower=1> N;
   int k;

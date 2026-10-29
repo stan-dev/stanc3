@@ -1,9 +1,7 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 6. Recurrence: self-edge with {Lt}, distance 1. Sequential.
-// => unchanged
+// A first-order recurrence: v6[n] reads v6[n - 1], written by the previous
+// iteration. Direction sets are for the loop over n.
+// Dependences: true self-edge {Lt}, distance 1
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   vector[N] u;

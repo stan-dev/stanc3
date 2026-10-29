@@ -1,0 +1,62 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../data_dependent_second_index_stays_loop.stan : [exit 0] */
+input_vars {
+  int N;
+  array[int, N] x; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data array[int, N] x;
+  FnReadData__(x, context__, "x");
+  (FnCheck(trans(Lower 1))(var_name x)(var x))__(1);
+  (FnCheck(trans(Upper N))(var_name x)(var x))__(N);
+  FnValidateSize__("y", "N", N);
+  FnValidateSize__("y", "N", N); }
+
+log_prob {
+  array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  {
+    for(i in 1:N) {
+      target += std_normal_lupdf(y[i, x[i]]);
+    }
+  } }
+
+rev_log_prob {
+  array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  {
+    for(i in 1:N) {
+      target += std_normal_lupdf(y[i, x[i]]);
+    }
+  } }
+
+generate_quantities {
+  data array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  for(idx1__ in 1:N) {
+    for(idx2__ in 1:N) {
+      (FnWriteParam(unconstrain_opt())(var"y[idx2__, idx1__]"))__();
+    }
+  }
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  array[vector[N], N] y;
+  FnReadData__(y, context__, "y");
+  (FnWriteParam(unconstrain_opt(Identity))(var y))__(); }
+output_vars {
+  parameters array[vector[N], N] y; //array[vector[N], N]
+}

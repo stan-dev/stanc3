@@ -1,13 +1,10 @@
-// TSVC "InductionVariable" loop (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011), from UoB-HPC/TSVC_2 src/tsvc.c. The loop is
-// translated to 1-based Stan with the loop variable `n`; array sizes are
-// chosen so every subscript is in range. Written variables are model-block
-// locals initialised from data.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 5. TSVC s121 (InductionVariable), UoB-HPC/TSVC_2 src/tsvc.c
+// The read `a5[j5]` is subscripted by a scalar `j5` that the body
+// increments, so the subscript is `Varying` and the loop stays as written.
+// Source: TSVC s121 (InductionVariable), UoB-HPC/TSVC_2 src/tsvc.c
 // C: j = 1; for (int i = 0; i < LEN_1D-1; i++) { j++; a[i] = a[j] + b[i]; }
 // Intent: induction variable ambiguity.
-// Design: j5 is written in the body, so a5[j5] is Varying -> seq.
+// Dependences: `j5` is written in the body, so `a5[j5]` is Varying
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   vector[N + 1] a0;

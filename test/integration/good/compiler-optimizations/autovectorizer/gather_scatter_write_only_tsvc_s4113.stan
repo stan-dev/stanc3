@@ -1,16 +1,14 @@
-// TSVC "Indirect Addressing" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). A gather through a read-only index array is a
-// `Varying` subscript, but it can only create a dependence when the gathered
-// variable is also written in the loop; here it never is, so the loop is a
-// vector statement (multi-index gather/scatter).
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-// 2. TSVC s4113 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+// A scatter to `a2[ip[n]]` and a gather from `b[ip[n]]` through a read-only
+// index array. `a2` is written but never read in the loop and `b` is never
+// written, so there is no dependence and the loop becomes one vector
+// statement with a multi-index gather and scatter.
+// Source: TSVC s4113 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[ip[i]] = b[ip[i]] + c[i];
-// intent: indirect addressing, scatter and gather; vectorizable
-// graph: `a2` written only, never read: no edge
-// emitted: vec `a2[ip] = b[ip] + c` (Stan multi-index assignment is
-//          in-order, so duplicate indices behave as in the loop)
+// Intent: indirect addressing, scatter and gather, vectorizable
+// Dependences: `a2` written only, never read, so no edge
+// Desired outcome: fully vectorized, as `a2[ip] = b[ip] + c`.
+// Stan multi-index assignment is in-order, so duplicate indices behave as in
+// the loop.
 data {
   int<lower=1> N;
   array[N] int<lower=1, upper=N> ip;

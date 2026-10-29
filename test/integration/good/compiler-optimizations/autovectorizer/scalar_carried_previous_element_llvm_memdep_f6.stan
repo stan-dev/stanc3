@@ -1,12 +1,11 @@
-// Loop from LLVM's loop vectorizer test
-// llvm/test/Transforms/LoopVectorize/memdep.ll, translated to 1-based Stan.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 4. LLVM LoopVectorize/memdep.ll f6
+// The scalar prev4 carries the previous iteration's element of A into B[i].
+// Source: LLVM test/Transforms/LoopVectorize/memdep.ll (`f6`), translated to
+//   1-based Stan.
 // C: for (i = 0; i < N; i++) { B[i] = tmp; tmp = A[i]; }
-// LLVM: not vectorized ("dependence through a phi").
-// Design: prev4 has subs = []: confused in both directions.
-// Emitted: seq (loop unchanged).
+// Dependences: prev4 has no subscripts, so its accesses are confused in both
+//   directions
+// Desired outcome: left as a loop.
+// LLVM does not vectorize the loop ("dependence through a phi").
 data {
   int<lower=1> N;
 }

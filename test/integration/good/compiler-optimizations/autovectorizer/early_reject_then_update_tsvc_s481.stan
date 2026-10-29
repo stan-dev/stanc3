@@ -1,14 +1,13 @@
-// TSVC "Control Flow" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). `IfElse` statements are single sequential leaves of
-// the loop dependence graph (no if-conversion, roadmap item 6); effectful
-// statements (`reject`) stay sequential but do not stop independent
-// neighbours from being hoisted.
-// Outcome on feat/loop-vectorization-dependence: Partially vectorized
-// 2. TSVC s481 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
+// An early `reject` under an if, followed by an independent update of `a2`.
+// The `IfElse` statement is a single sequential leaf of the loop dependence
+// graph (no if-conversion) and stays in the loop, but it does not stop the
+// independent update from becoming a vector statement.
+// Source: TSVC s481 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (d[i] < 0.) exit(0); a[i] += b[i] * c[i];
-// intent: non-local goto (exit)
-// graph: S1 `IfElse` leaf with effect; S2 isolated   emitted: S1 seq, S2 vec
+// Intent: non-local goto (exit)
+// Dependences: S1 `IfElse` leaf with effect; S2 isolated
+// Desired outcome: partially vectorized. S1 stays in a loop and S2 becomes a
+//   vector statement.
 data {
   int<lower=1> N;
   vector[N] a0;

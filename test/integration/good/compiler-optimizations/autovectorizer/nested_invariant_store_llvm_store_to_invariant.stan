@@ -1,15 +1,12 @@
-// Loop from LLVM's LoopAccessAnalysis test
-// llvm/test/Analysis/LoopAccessAnalysis/store-to-invariant-check1.ll,
-// translated to 1-based Stan.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 4. LLVM LoopAccessAnalysis/store-to-invariant-check1.ll (inner loop
-// over j)
+// The inner loop over j reads and writes v[i], the same element on every
+// iteration, so each iteration depends on the one before.
+// Source: LLVM test/Analysis/LoopAccessAnalysis/store-to-invariant-check1.ll,
+//   translated to 1-based Stan (inner loop over j).
 // C: for (i) for (j = 0; j < M; j++) v[i] = w[j] + v[i];
-// LLVM: "Non vectorizable stores to invariant address".
-// Design: Invariant vs Invariant, same element every iteration: self
-// confused.
-// Emitted: seq (loop unchanged).
+// Dependences: both accesses are invariant in j and touch the same element
+//   every iteration, so the self dependence is confused
+// Desired outcome: left as a loop.
+// LLVM reports "Non vectorizable stores to invariant address".
 data {
   int<lower=1> N;
   int<lower=1> J;

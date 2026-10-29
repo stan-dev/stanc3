@@ -1,8 +1,9 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 9c. Container declared in the body: subs = [] -> confused -> sequential.
+// A vector t9c is declared inside the loop body, written, and read. A
+// container declared in the body gets no loop subscripts, so the dependence
+// test cannot separate one iteration's accesses from another's. Direction
+// sets are for the loop over n.
+// Dependences: subs = [] -> confused -> sequential
+// Desired outcome: left as a loop.
 data {
   int<lower=2> N;
   vector[N] x;

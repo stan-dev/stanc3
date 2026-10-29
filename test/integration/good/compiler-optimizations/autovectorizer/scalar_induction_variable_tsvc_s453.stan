@@ -1,13 +1,12 @@
-// TSVC "Expansion" loop (scalar and array expansion), translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). The loop carries a dependence through a scalar
-// written in the body, so the whole-variable access (subs = []) is confused
-// and the loop must stay sequential until scalar expansion is implemented.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 6. TSVC s453 (Expansion / induction variable), UoB-HPC/TSVC_2 src/tsvc.c
+// A scalar `s6` grows by 2 in each iteration and scales `b[n]`, so it is an
+// induction variable. The whole-variable access to `s6` (subs = []) is
+// confused, so the loop stays as written.
+// Source: TSVC s453 (Expansion / induction variable), UoB-HPC/TSVC_2
+//   src/tsvc.c
 // C: s += 2.; a[i] = s * b[i];
-// intent: induction variable recognition
-// graph: confused   emitted: seq
+// Intent: induction variable recognition
+// Dependences: confused
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

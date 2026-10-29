@@ -1,20 +1,12 @@
-// Scalar reductions, roadmap item 5 of
-// design-docs/active/vectorize-loop-fission.md (section 7.4, section 7.9). A
-// scalar whose every access in the loop body is an increment `s += e` (MIR
-// `s = s + e`, `e` free of `s`) is an accumulator: its increments commute
-// like `target +=`, so they carry no dependence edge and each becomes one
-// vector statement `s += sum(e over the loop)`. A density operand reuses the
-// `target` widening, an invariant operand becomes `count * e`. Reals are
-// summed in a different order than the loop, the reassociation Stan already
-// accepts for `target`. Any other access to the scalar (a read elsewhere, an
-// operand that mentions it, a declaration in the body) gives the increment a
-// confused edge `{<,=,>}` that keeps the loop sequential; an increment nested
-// in an `if` still commutes, but the if statement itself is not widened.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-// 6. Two increments of the same accumulator next to a hoistable
-// assignment; S1->S2 {Eq}, the increments carry no edge between them.
-// Emitted: mu6[1:N] = alpha + beta * x; s6 += sum(mu6[1:N]);
-//          s6 += sum(w[1:N])
+// Two increments of the same accumulator s6 next to an assignment to mu6
+// that can become a vector statement.
+// An accumulator `s` whose only accesses in the loop are increments `s += e`
+// is a reduction, so the increments can become one vector statement
+// `s += sum(...)`.
+// Dependences: true S1->S2 {Eq}; the two increments carry no edge between
+//   them
+// Desired outcome: fully vectorized, `mu6[1:N] = alpha + beta * x`, then
+//   `s6 += sum(mu6[1:N])`, then `s6 += sum(w[1:N])`.
 data {
   int<lower=2> N;
   vector[N] x;

@@ -1,9 +1,10 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-//
-// 8. Scalar temporary: t8 has subs = [], so a<->b {Lt,Eq,Gt}: one SCC.
-// => unchanged (until scalar expansion, section 7.9 item 2)
+// A scalar temporary t8 is written and then read in every iteration. t8 has
+// no subscripts, so its accesses depend in every direction and both
+// statements form one strongly connected component. Direction sets are for
+// the loop over n.
+// Dependences: a<->b {Lt,Eq,Gt}
+// Desired outcome: left as a loop.
+// Vectorizing this loop would need scalar expansion of t8.
 data {
   int<lower=2> N;
   vector[N] x;

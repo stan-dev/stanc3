@@ -1,16 +1,14 @@
-// TSVC "LoopDistribution" loop (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011), from UoB-HPC/TSVC_2 src/tsvc.c. Translated to
-// 1-based Stan with loop variable `n`; array sizes chosen so every
-// subscript is in range. Written variables are model-block locals
-// initialised from data (Stan does not allow a local to shadow a data
-// variable, so `b` is a local wherever it is written).
-// Outcome on feat/loop-vectorization-dependence: Partially vectorized
-//
-// 2. TSVC s222 (LoopDistribution), UoB-HPC/TSVC_2 src/tsvc.c
-// C: for (int i = 1; i < LEN_1D; i++) { a[i] += b[i] * c[i]; e[i] = e[i - 1] * e[i - 1]; a[i] -= b[i] * c[i]; }
-// Intent: recurrence in the middle of the loop.
-// Design: S1->S3 {Eq}; S2 self {Lt, 1}.
-// Emitted: S1 vec, S2 seq, S3 vec.
+// A recurrence on e sits between two independent updates of a. The two
+// updates become vector statements and the recurrence stays in a loop
+// between them. Translated to 1-based Stan, with written variables as
+// model-block locals initialised from data.
+// Source: TSVC s222 (LoopDistribution), UoB-HPC/TSVC_2 src/tsvc.c
+// C: for (int i = 1; i < LEN_1D; i++) { a[i] += b[i] * c[i];
+//      e[i] = e[i - 1] * e[i - 1]; a[i] -= b[i] * c[i]; }
+// Dependences: S1->S3 {Eq}; S2 self {Lt, 1}
+// Desired outcome: partially vectorized.
+//   S1 becomes a vector statement, S2 stays in a loop, S3 becomes a vector
+//   statement.
 data {
   int<lower=2> N;
   vector[N] a0;

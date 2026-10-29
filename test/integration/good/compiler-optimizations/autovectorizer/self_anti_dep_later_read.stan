@@ -1,10 +1,11 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 11. Self anti-dependence: read of a later iteration's element. No edge.
-// => a11[1:(N-1)] = a11[2:N] + 1;   (deep_copy on the right-hand side makes
-//    it safe, section 7.11)
+// Each iteration reads a11[n + 1] before a later iteration overwrites it, a
+// self anti-dependence. A self anti-dependence adds no edge, so the
+// statement becomes a vector statement. Direction sets are for the loop
+// over n.
+// Dependences: self anti-dependence, no edge
+// Desired outcome: fully vectorized.
+//   `a11[1:(N-1)] = a11[2:N] + 1`
+// A deep_copy of the right-hand side makes the vector statement safe.
 data {
   int<lower=2> N;
   vector[N] a0;

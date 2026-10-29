@@ -1,18 +1,13 @@
-// Loop from the GCC loop-distribution test suite,
-// gcc/testsuite/gcc.dg/tree-ssa/ldist-1.c, translated to 1-based Stan.
-// GCC's ldist pass has a cache-reuse cost model and declines to split several
-// legal cases; agreement with this design is expected on legality, not on
-// policy.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 1. GCC gcc.dg/tree-ssa/ldist-1.c
+// Four statements where the only dependences are loop independent ({Eq}),
+// so every statement becomes a vector statement. Translated to 1-based Stan.
+// Source: GCC gcc.dg/tree-ssa/ldist-1.c
 // C: for (i = 0; i < N; i++) { mya[i] = ia[i]*oxa[i] + ib[i]*oxb[i];
 //      myb[i] = -ia[i]*oxb[i] + ib[i]*oxa[i];
 //      oya[i] = mya[i] >> 10; oyb[i] = myb[i] >> 10; }
-// GCC: legal to distribute, not split (cost model).
-// Design: {Eq} edges only.
-// Emitted: four vec statements.
+// Dependences: {Eq} edges only
+// Desired outcome: fully vectorized, four vector statements.
+// GCC finds distribution legal here but does not split the loop because of
+// its cache-reuse cost model.
 data {
   int<lower=1> N;
   vector[N] ia;

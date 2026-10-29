@@ -1,11 +1,10 @@
-// TSVC "Control Flow" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). `break` bails the whole loop.
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 6. TSVC s482 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
+// An update of `a6` followed by a `break` under an if. A `break` in the body
+// keeps the whole loop as written.
+// Source: TSVC s482 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[i] += b[i] * c[i]; if (c[i] > b[i]) break;
-// intent: non-local goto (break)
-// graph: `breaks`   emitted: bail
+// Intent: non-local goto (break)
+// Dependences: the loop `breaks`
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

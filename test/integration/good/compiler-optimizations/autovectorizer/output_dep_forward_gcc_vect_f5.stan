@@ -1,15 +1,12 @@
-// Loop from the GCC vectorizer test suite, gcc/testsuite/gcc.dg/vect/
-// no-vfa-vect-depend-3.c, translated to 1-based Stan. GCC vectorizes exactly
-// the loops whose dependence distance is negative ("dependence distance
-// negative") and never reorders statements.
-// See design-docs/active/vectorize-loop-fission.md section 7.8.2.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 3. GCC gcc.dg/vect/no-vfa-vect-depend-3.c f5
+// The first statement writes ia[i+1] and the second overwrites the same
+// element in the next iteration. The output dependence keeps the two vector
+// statements in their original order. Translated to 1-based Stan.
+// Source: GCC gcc.dg/vect/no-vfa-vect-depend-3.c f5
 // C: for (i = 0; i < N; i++) { ia[i+1] = x[i]; ia[i] = z[i]; }
-// GCC: vectorized.
-// Design: output dependence S1->S2 {Lt, 1}.
-// Emitted: vec ia3[2:(N+1)] = x; vec ia3[1:N] = z.
+// Dependences: output S1->S2 {Lt, 1}
+// Desired outcome: fully vectorized.
+//   `ia3[2:(N+1)] = x` then `ia3[1:N] = z`
+// GCC also vectorizes this loop.
 data {
   int<lower=1> N;
   vector[N] x;

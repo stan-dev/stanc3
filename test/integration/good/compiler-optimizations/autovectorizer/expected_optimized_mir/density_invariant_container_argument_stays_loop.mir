@@ -1,0 +1,72 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../density_invariant_container_argument_stays_loop.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] y; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  FnReadData__(y, context__, "y");
+  FnValidateSize__("mu", "N", N); }
+
+log_prob {
+  vector[N]
+    mu = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    for(n in 1:N) {
+      target += normal_lupdf(y[n], mu, sigma);
+    }
+  } }
+
+rev_log_prob {
+  vector[N]
+    mu = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    for(n in 1:N) {
+      target += normal_lupdf(y[n], mu, sigma);
+    }
+  } }
+
+generate_quantities {
+  data vector[N]
+    mu = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var mu))__();
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[N] mu;
+  FnReadData__(mu, context__, "mu");
+  (FnWriteParam(unconstrain_opt(Identity))(var mu))__();
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+
+output_vars {
+  parameters vector[N] mu; //vector[N]
+  parameters real sigma; //real
+}

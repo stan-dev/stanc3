@@ -1,14 +1,13 @@
-// TSVC "Control Flow" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). An effectful statement (a void call) stays sequential
-// but does not stop independent neighbours from being hoisted.
-// Outcome on feat/loop-vectorization-dependence: Partially vectorized
-// 1. TSVC s471 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
+// A void call `foo()` sits between two independent assignments. The call is
+// an effectful statement that stays in the loop, but it does not stop the
+// independent statements around it from becoming vector statements.
+// Source: TSVC s471 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: x[i] = b[i] + d[i] * d[i]; s471s(); b[i] = c[i] + d[i] * e[i];
-// intent: call statement in the loop
-// graph: S2 effectful; S1, S3 isolated
-// emitted: S1 vec, S2 seq, S3 vec (S1 before S3 by position; `foo` cannot
-//          touch `x1`/`b1` in Stan's value semantics)
+// Intent: call statement in the loop
+// Dependences: S2 effectful; S1, S3 isolated
+// Desired outcome: partially vectorized. S1 and S3 become vector statements
+//   (S1 before S3 by position) and S2 stays in a loop.
+// `foo` cannot touch `x1` or `b1` under Stan's value semantics.
 functions {
   void foo() {
     print("foo");

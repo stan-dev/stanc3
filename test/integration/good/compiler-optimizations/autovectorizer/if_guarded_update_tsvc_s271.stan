@@ -1,12 +1,11 @@
-// TSVC "Control Flow" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). `IfElse` statements are single sequential leaves of
-// the loop dependence graph (no if-conversion, roadmap item 6).
-// Outcome on feat/loop-vectorization-dependence: Left unchanged
-// 3. TSVC s271 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
+// An update of `a3` guarded by an if. An `IfElse` statement is a single
+// sequential leaf of the loop dependence graph because there is no
+// if-conversion, so the loop stays as written.
+// Source: TSVC s271 (Control Flow), UoB-HPC/TSVC_2 src/tsvc.c
 // C: if (b[i] > 0.) a[i] += b[i] * c[i];
-// intent: loop with singularity handling; needs if-conversion
-// graph: `IfElse` leaf   emitted: seq (roadmap item 6)
+// Intent: loop with singularity handling, needs if-conversion
+// Dependences: `IfElse` leaf
+// Desired outcome: left as a loop.
 data {
   int<lower=1> N;
   vector[N] a0;

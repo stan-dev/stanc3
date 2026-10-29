@@ -1,10 +1,10 @@
-// From the design examples of design-docs/active/vectorize-loop-fission.md
-// section 7.8.1. Direction sets are for the loop over n.
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-//
-// 12. Symbolic offset (k data): both subscripts are Affine {1; {0; [k]}},
-// the symbols cancel, a->b {Eq}. Widening shifts the range by k.
-// => v12[(1 + k):(N + k)] = x;  y12[:] = v12[(1 + k):(N + k)] * 2;
+// The write v12[n + k] and the read v12[n + k] use the same symbolic offset
+// k, a data variable. The symbols cancel, so the dependence is loop
+// independent and both statements become vector statements with ranges
+// shifted by k. Direction sets are for the loop over n.
+// Dependences: both subscripts are Affine {1; {0; [k]}}, true a->b {Eq}
+// Desired outcome: fully vectorized.
+//   `v12[(1 + k):(N + k)] = x` then `y12[:] = v12[(1 + k):(N + k)] * 2`
 data {
   int<lower=2> N;
   int<lower=0> k;

@@ -1,14 +1,12 @@
-// TSVC "Indirect Addressing" loop, translated 1-based.
-// Source: UoB-HPC/TSVC_2 src/tsvc.c (Callahan, Dongarra and Levine 1988;
-// Maleki et al. 2011). An access through a read-only index array is a
-// `Varying` subscript, but it can only create a dependence when the indexed
-// variable is also read in the loop; here it never is, so the loop is a
-// vector statement (multi-index scatter).
-// Outcome on feat/loop-vectorization-dependence: Fully vectorized
-// 4. TSVC s491 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+// A scatter to `a4[ip[n]]` through a read-only index array. The `Varying`
+// subscript can only create a dependence when the indexed variable is also
+// read in the loop. `a4` never is, so the loop becomes one vector statement
+// with a multi-index scatter.
+// Source: TSVC s491 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
 // C: a[ip[i]] = b[i] + c[i] * d[i];
-// intent: indirect addressing, scatter; vectorizable
-// graph: no edge   emitted: vec
+// Intent: indirect addressing, scatter, vectorizable
+// Dependences: no edge
+// Desired outcome: fully vectorized.
 data {
   int<lower=1> N;
   array[N] int<lower=1, upper=N> ip;
