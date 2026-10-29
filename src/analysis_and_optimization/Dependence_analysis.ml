@@ -198,16 +198,11 @@ let may_supply (info : dependence_info) ~(source : label * Accesses.access)
        ~source_first_in_text:(precedes_in_source source_id sink_id)
        (dependence_between info ~source ~sink)
 
-(** The root label is the label of the analyzed statement itself. Results that
-    hold only labels use the root label to mark a definition from outside the
-    analyzed statement. Each label map of the analysis contains the root. *)
-let root_label : label = 1
-
 (** Returns the labels of the candidate sources of [var] at [sink_id] that
     {!Dependence} keeps. A candidate stays if the source does not write or
     increment [var], if the sink does not use [var], or if some access of [var]
-    in the source and some access in the sink pass {!flows_into} and
-    {!Dependence.is_plausible}. A definition from outside gives [root_label]. *)
+    in the source and some access in the sink pass {!may_supply}. A definition
+    from outside the analyzed statement has no label and is left out. *)
 let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
     label Set.Poly.t =
   let sink = LabelMap.find sink_id info.statements in
@@ -234,10 +229,7 @@ let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
             may_supply info ~source:(source_id, source) ~sink:(sink_id, sink)))
   in
   Set.Poly.filter_map candidate_definitions ~f:(function
-    | None ->
-        (* A definition from outside does not have an access record, so the root
-           label stands for the definition. *)
-        Some root_label
+    | None -> None
     | Some source_id ->
         if source_may_supply_read source_id then Some source_id else None)
 

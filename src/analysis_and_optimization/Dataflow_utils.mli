@@ -33,6 +33,10 @@ open Std
 open Middle
 open Dataflow_types
 
+val root_statement_label : label
+(** The label that {!build_statement_map} gives the statement that the map is
+    built from. *)
+
 val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool

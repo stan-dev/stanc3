@@ -545,7 +545,7 @@ let reaching_definitions_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
     type labels = int
-    type properties = (string * labels option) Set.Poly.t
+    type properties = reaching_defn Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
@@ -580,7 +580,7 @@ let reaching_definitions_transfer
       transfer_gen_kill p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string * int option) Set.Poly.t)
+     and type properties = reaching_defn Set.Poly.t)
 
 (** Adds each variable that the statement assigns. A write to one element counts
     as an assignment to the whole variable. *)

@@ -10,6 +10,9 @@ let merge_set_maps (module M : Map.S) m1 m2 =
   M.union ~f:merge_map_elems m1 m2
 
 (** See interface file *)
+let root_statement_label : label = 1
+
+(** See interface file *)
 let build_statement_map extract metadata stmt =
   let rec build_statement_map_rec next_label map stmt =
     let this_label = next_label in
@@ -20,7 +23,8 @@ let build_statement_map extract metadata stmt =
     ( ( next_label''
       , LabelMap.add map ~key:this_label ~data:(built, metadata stmt) )
     , this_label ) in
-  let (_, map), _ = build_statement_map_rec 1 LabelMap.empty stmt in
+  let (_, map), _ =
+    build_statement_map_rec root_statement_label LabelMap.empty stmt in
   map
 
 (* TODO: this currently does not seem to be labelling inside function bodies.
@@ -219,7 +223,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
         ; returns= Set.Poly.empty
         ; exits= Set.Poly.empty }
       , LabelMap.empty )
-      1 in
+      root_statement_label in
   ( state.exits
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
   , LabelMap.map edges ~f:(fun e -> e.controls) )

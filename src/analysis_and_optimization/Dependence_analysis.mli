@@ -228,8 +228,9 @@ type statement =
 (** The statements of the analyzed statement and the definitions that reach each
     one. Both maps have the same labels. {e Running example} shows the labels
     and statement patterns that {!log_prob_build_dep_info_map} gives. Label [1]
-    is the analyzed statement, the root of the map. Queries also use label [1]
-    to stand for definitions from outside the analyzed statement, such as data.
+    ({!Dataflow_utils.root_statement_label}) is the analyzed statement, the root
+    of the map. The queries return statement labels only, so a definition from
+    outside the analyzed statement, such as data, never appears in a result.
 
     In the running example, the definitions of [theta] that reach the condition
     (label [10]) are [("theta", Some 5)], [("theta", Some 8)] and

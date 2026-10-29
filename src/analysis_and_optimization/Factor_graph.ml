@@ -102,7 +102,7 @@ let remove_touching vars fg =
 
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let info = log_prob_build_dep_info_map prog in
-  let factors = extract_factors info.statements 1 in
+  let factors = extract_factors info.statements root_statement_label in
   let data_vars = data_set prog in
   let vars =
     Set.Poly.union data_vars

@@ -36,11 +36,9 @@ open Analysis_and_optimization.Dataflow_types
    element than the read, or that runs after the read
    ({!Analysis_and_optimization.Dependence}).
 
-   A definition from outside the analyzed statement, for example data and
-   parameters, has no label and prints as [()] in a reaching definition.
-   Dependency results contain only labels. Thus the analysis uses the root label
-   as a marker for these definitions. Every map has the root, so the marker is
-   always a valid label.
+   A definition from outside the analyzed statement, for example data, has no
+   label and prints as [()] in a reaching definition. Dependency results contain
+   statement labels only, so these definitions do not appear in them.
 
    Most later tests print [label: statement // labels]. The labels after // are
    the immediate dependencies, which are the writes that the statement reads and
@@ -139,7 +137,9 @@ let%expect_test "External definitions are distinct from statement label 1" =
     [%sexp (reaching_defn_lookup definitions "x" : label option Set.Poly.t)];
   [%expect {| (() (1)) |}]
 
-let%expect_test "External inputs remain dependencies after map construction" =
+(* The data [N] reaches the condition as an outside definition, [()], but the
+   dependencies of the condition hold statement labels only. *)
+let%expect_test "External inputs reach a statement but are not dependencies" =
   let map =
     log_prob_build_dep_info_map
       (Test_utils.mir_of_string
@@ -163,7 +163,7 @@ let%expect_test "External inputs remain dependencies after map construction" =
       | _ -> ());
   [%expect {|
     (())
-    dependencies: 1
+    dependencies:
     |}]
 
 (** Prints each statement and the labels of the immediate dependencies of the
@@ -288,13 +288,13 @@ let%expect_test "Graph: definitions that execute after the read never flow" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 7 8 9 10 }  //
-    4: FnValidateSize__("b", "N", N);  // 1
-    5: vector[N] b;  // 1
-    6: FnValidateSize__("c", "N", N);  // 1
-    7: vector[N] c;  // 1
-    8: FnValidateSize__("d", "N", N);  // 1
-    9: vector[N] d;  // 1
-    10: for(n in 1:(N - 1)) 11  // 1
+    4: FnValidateSize__("b", "N", N);  //
+    5: vector[N] b;  //
+    6: FnValidateSize__("c", "N", N);  //
+    7: vector[N] c;  //
+    8: FnValidateSize__("d", "N", N);  //
+    9: vector[N] d;  //
+    10: for(n in 1:(N - 1)) 11  //
     11: { 12 13 14 }  // 10
     12: c[n] = b[(n + 1)];  // 5 10
     13: d[n] = b[n];  // 5 10
@@ -322,17 +322,17 @@ let%expect_test "Graph: a definition in a later outer iteration never flows" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 7 8 9 10 11 12 }  //
-    4: FnValidateSize__("b", "N", N);  // 1
-    5: vector[N] b;  // 1
-    6: FnValidateSize__("c", "N", N);  // 1
-    7: FnValidateSize__("c", "M", M);  // 1
-    8: matrix[N, M] c;  // 1
-    9: FnValidateSize__("d", "N", N);  // 1
-    10: FnValidateSize__("d", "M", M);  // 1
-    11: matrix[N, M] d;  // 1
-    12: for(n in 2:(N - 1)) 13  // 1
+    4: FnValidateSize__("b", "N", N);  //
+    5: vector[N] b;  //
+    6: FnValidateSize__("c", "N", N);  //
+    7: FnValidateSize__("c", "M", M);  //
+    8: matrix[N, M] c;  //
+    9: FnValidateSize__("d", "N", N);  //
+    10: FnValidateSize__("d", "M", M);  //
+    11: matrix[N, M] d;  //
+    12: for(n in 2:(N - 1)) 13  //
     13: { 14 }  // 12
-    14: for(m in 1:M) 15  // 1 12
+    14: for(m in 1:M) 15  // 12
     15: { 16 17 18 }  // 14
     16: c[n, m] = b[(n + 1)];  // 5 14
     17: d[n, m] = b[(n - 1)];  // 5 14 18
@@ -361,8 +361,8 @@ let%expect_test "Graph: distinct literal subscripts are independent" =
     5: vector[2] theta;  //
     6: theta[1] = a;  // 2
     7: theta[2] = b;  // 3
-    8: target += normal_lupdf(y, theta[1], s);  // 1 5 6
-    9: target += normal_lupdf(y, theta[2], s);  // 1 5 7
+    8: target += normal_lupdf(y, theta[1], s);  // 5 6
+    9: target += normal_lupdf(y, theta[2], s);  // 5 7
     |}]
 
 (* An increment of target does not use the value of an earlier increment. Thus
@@ -450,16 +450,16 @@ let%expect_test "Running example of the Dependence_analysis interface" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 }  //
-    4: FnValidateSize__("theta", "N", N);  // 1
-    5: matrix[N, 2] theta;  // 1
-    6: for(n in 1:N) 7  // 1
+    4: FnValidateSize__("theta", "N", N);  //
+    5: matrix[N, 2] theta;  //
+    6: for(n in 1:N) 7  //
     7: { 8 9 10 }  // 6
     8: theta[n, 1] = a;  // 2 6
-    9: theta[n, 2] = x[n];  // 1 6
+    9: theta[n, 2] = x[n];  // 6
     10: if((theta[n, 2] > 0)) 11  // 5 6 9
     11: target += 1;  // 10
     theta definitions reaching 10: 5 8 9
-    dependencies of 10: 1 5 6 9 10
+    dependencies of 10: 5 6 9 10
     read: N theta x
     |}]
 
@@ -498,23 +498,23 @@ let%expect_test "Kills: the same element in every iteration" =
     {|
     1: 2 3 4  //
     2: real a;  //
-    3: row_vector[N] r;  // 1
+    3: row_vector[N] r;  //
     4: { 5 6 7 8 9 10 11 12 13 14 15 17 18 19 21 22 23 24 26 27 28 30 31 32 34 35 36 }  //
-    5: FnValidateSize__("theta", "N", N);  // 1
-    6: vector[N] theta;  // 1
-    7: FnValidateSize__("m", "N", N);  // 1
-    8: FnValidateSize__("m", "N", N);  // 1
-    9: matrix[N, N] m;  // 1
+    5: FnValidateSize__("theta", "N", N);  //
+    6: vector[N] theta;  //
+    7: FnValidateSize__("m", "N", N);  //
+    8: FnValidateSize__("m", "N", N);  //
+    9: matrix[N, N] m;  //
     10: tuple_ad(var, var)tuple(real, real) t;  //
     11: int j;  //
-    12: j = k;  // 1
+    12: j = k;  //
     13: theta[1] = a;  // 2
     14: theta[1] = promote(1, real, var);  //
     15: if((theta[1] > 0)) 16  // 6 14
     16: target += 1;  // 15
-    17: theta[k] = a;  // 1 2
-    18: theta[k] = promote(1, real, var);  // 1
-    19: if((theta[k] > 0)) 20  // 1 6 14 18
+    17: theta[k] = a;  // 2
+    18: theta[k] = promote(1, real, var);  //
+    19: if((theta[k] > 0)) 20  // 6 14 18
     20: target += 1;  // 19
     21: theta[j] = a;  // 2 12
     22: j = 2;  //
@@ -562,22 +562,22 @@ let%expect_test "Kills: control flow between the writes" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 7 9 10 12 13 16 18 19 21 23 24 25 }  //
-    4: FnValidateSize__("theta", "N", N);  // 1
-    5: vector[N] theta;  // 1
+    4: FnValidateSize__("theta", "N", N);  //
+    5: vector[N] theta;  //
     6: theta[1] = a;  // 2
-    7: if((c > 0)) 8  // 1
+    7: if((c > 0)) 8  //
     8: target += 1;  // 7
     9: theta[1] = promote(1, real, var);  //
     10: if((theta[1] > 0)) 11  // 5 9
     11: target += 1;  // 10
     12: theta[2] = a;  // 2
-    13: if((c > 0)) 14 else 15  // 1
+    13: if((c > 0)) 14 else 15  //
     14: theta[2] = promote(1, real, var);  // 13
     15: theta[2] = promote(2, real, var);  // 13
     16: if((theta[2] > 0)) 17  // 5 14 15
     17: target += 1;  // 16
     18: theta[3] = a;  // 2
-    19: if((c > 0)) 20  // 1
+    19: if((c > 0)) 20  //
     20: theta[3] = promote(1, real, var);  // 19
     21: if((theta[3] > 0)) 22  // 5 18 20
     22: target += 1;  // 21
@@ -622,35 +622,35 @@ let%expect_test "Kills: jumps and branches between the two writes" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 14 21 29 }  //
-    4: FnValidateSize__("theta", "N", N);  // 1
-    5: vector[N] theta;  // 1
-    6: for(n in 2:N) 7  // 1
+    4: FnValidateSize__("theta", "N", N);  //
+    5: vector[N] theta;  //
+    6: for(n in 2:N) 7  //
     7: { 8 9 11 12 }  // 6
     8: theta[n] = a;  // 2 6
-    9: while((c > 0)) 10  // 1 6 10
+    9: while((c > 0)) 10  // 6 10
     10: break;  // 9
     11: theta[n] = promote(1, real, var);  // 6
     12: if((theta[(n - 1)] > 0)) 13  // 5 6 11
     13: target += 1;  // 12
-    14: for(n in 2:N) 15  // 1
+    14: for(n in 2:N) 15  //
     15: { 16 18 19 }  // 14
-    16: if((c > 0)) 17  // 1 14
+    16: if((c > 0)) 17  // 14
     17: theta[n] = a;  // 2 16
     18: theta[n] = promote(1, real, var);  // 14
     19: if((theta[(n - 1)] > 0)) 20  // 5 11 14 18
     20: target += 1;  // 19
-    21: for(n in 2:N) 22  // 1
+    21: for(n in 2:N) 22  //
     22: { 23 24 27 }  // 21
     23: theta[n] = a;  // 2 21
-    24: if((c > 0)) 25 else 26  // 1 21
+    24: if((c > 0)) 25 else 26  // 21
     25: theta[n] = promote(1, real, var);  // 24
     26: theta[n] = promote(2, real, var);  // 24
     27: if((theta[(n - 1)] > 0)) 28  // 5 11 18 21 23 25 26
     28: target += 1;  // 27
-    29: for(n in 2:N) 30  // 1
+    29: for(n in 2:N) 30  //
     30: { 31 32 34 }  // 29
     31: theta[n] = a;  // 2 29
-    32: if((c > 0)) 33  // 1 29
+    32: if((c > 0)) 33  // 29
     33: theta[n] = promote(1, real, var);  // 32
     34: if((theta[(n - 1)] > 0)) 35  // 5 11 18 23 25 26 29 31 33
     35: target += 1;  // 34
@@ -697,42 +697,42 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
     1: 2 3  //
     2: real a;  //
     3: { 4 5 6 7 8 14 23 28 36 }  //
-    4: FnValidateSize__("theta", "N", N);  // 1
-    5: vector[N] theta;  // 1
-    6: FnValidateSize__("y", "N", N);  // 1
-    7: vector[N] y;  // 1
-    8: for(n in 2:N) 9  // 1
+    4: FnValidateSize__("theta", "N", N);  //
+    5: vector[N] theta;  //
+    6: FnValidateSize__("y", "N", N);  //
+    7: vector[N] y;  //
+    8: for(n in 2:N) 9  //
     9: { 10 11 12 }  // 8
     10: theta[n] = a;  // 2 8
     11: theta[n] = promote(1, real, var);  // 8
     12: if((theta[n] > 0)) 13  // 5 8 11
     13: target += 1;  // 12
-    14: for(n in 2:N) 15  // 1
+    14: for(n in 2:N) 15  //
     15: { 16 17 20 21 }  // 14
     16: theta[n] = a;  // 2 14
-    17: if((c > 0)) 18 else 19  // 1 14
+    17: if((c > 0)) 18 else 19  // 14
     18: y[n] = promote(1, real, var);  // 17
     19: y[n] = promote(2, real, var);  // 17
     20: theta[n] = promote(1, real, var);  // 14
     21: if((theta[n] > 0)) 22  // 5 11 14 20
     22: target += 1;  // 21
-    23: for(n in 2:N) 24  // 1
+    23: for(n in 2:N) 24  //
     24: { 25 26 27 }  // 23
     25: theta[n] = promote(1, real, var);  // 23
     26: theta[n] = a;  // 2 23
     27: y[n] = theta[(n - 1)];  // 5 11 20 23 26
-    28: for(n in 2:N) 29  // 1
+    28: for(n in 2:N) 29  //
     29: { 30 31 33 34 }  // 28
     30: theta[n] = a;  // 2 28
-    31: if((c > 0)) 32  // 1 28
+    31: if((c > 0)) 32  // 28
     32: continue;  // 31
     33: theta[n] = promote(1, real, var);  // 28 32
     34: if((theta[(n - 1)] > 0)) 35  // 5 11 20 26 28 30 32 33
     35: target += 1;  // 32 34
-    36: for(n in 2:N) 37  // 1
+    36: for(n in 2:N) 37  //
     37: { 38 39 42 }  // 36
     38: theta[n] = a;  // 2 36
-    39: for(m in 1:N) 40  // 1 36
+    39: for(m in 1:N) 40  // 36
     40: { 41 }  // 39
     41: theta[n] = promote(1, real, var);  // 39
     42: if((theta[(n - 1)] > 0)) 43  // 5 11 20 26 30 33 36 38 41
