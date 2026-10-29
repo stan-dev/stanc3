@@ -11,6 +11,8 @@ open Pedantic_dist_warnings
 
 type warning_span = Location_span.t * string
 
+(** Returns [(name, location)] for each parameters-block parameter that is not a
+    key of [factor_graph.var_map]. *)
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     (string * Location_span.t) Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
@@ -65,7 +67,8 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.Poly.add (key, data) s)
     multi_tildes
 
-(* Looks for nonlinear transformations in distribution arguments. *)
+(** Returns the locations of [~] statements in [mir.log_prob] whose first
+    distribution argument [e] can be a nonlinear function of a variable. *)
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
@@ -129,7 +132,8 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ~take_expr:Fun.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
-(* Returns the names in [targets] that the statement at [label] depends on. *)
+(** Returns the names in [targets] that the statement at [label], or only the
+    reads of [expr] in that statement, depends on. *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   let dependency_labels, expression_read_names =
@@ -139,12 +143,15 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
         let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
         (node_vars_dependencies info_map expr_names label, expr_names) in
   let dependency_read_names = read_variables_at info_map dependency_labels in
-  (* The variable query can omit the starting statement. Add the reads of
-     [expr], such as [a] in [a > 0], so that the result keeps them. *)
+  (* The dependency query for these names can leave out the statement where the
+     query starts. The union adds the names that [expr] reads, such as [a] in [a
+     > 0]. *)
   let all_read_names =
     Set.Poly.union dependency_read_names expression_read_names in
   Set.Poly.inter targets all_read_names
 
+(** Returns [(location, names)] for each [if], [while], or [for] in [info_map]
+    that depends on names in [targets]. [names] holds those target names. *)
 let list_target_dependant_cf
     (info_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
@@ -165,13 +172,16 @@ let list_target_dependant_cf
         Some (info.meta, deps))
     cf_labels
 
+(** Applies {!list_target_dependant_cf} to the log density statements, with all
+    parameters-block names as targets. *)
 let list_param_dependant_cf (mir : Program.Typed.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   let params = parameter_names_set mir in
   let info_map = log_prob_build_dep_info_map mir in
   list_target_dependant_cf info_map params
 
-(* Argument positions in the result are zero-based. *)
+(** Returns [(location, position, name)] for each control-flow statement in the
+    body of [fun_def] that depends on an argument. Positions are zero-based. *)
 let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (fun_def : 'a Program.fun_def) : (Location_span.t * int * string) Set.Poly.t
     =
@@ -254,6 +264,8 @@ let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
       Set.Poly.map dependant_args ~f:(fun (cf_loc, deps, arg_name, arg_loc) ->
           (fun_def.fdname, cf_loc, deps, arg_name, arg_loc)))
 
+(** Returns [(name, prior count, location)] for each parameter with a [var_map]
+    entry in [fg] whose number of priors is not one. *)
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
     (string * int * Location_span.t) Set.Poly.t =
   (* Use the factor graph definition of priors, which treats a neighboring
@@ -458,6 +470,8 @@ let uninitialized_message (vname : string) : string =
     "The variable %s may not have been assigned a value before its first use."
     vname
 
+(** Turns the uninitialized reads with a known location into warnings, keeping
+    the first read in set order for each variable name. *)
 let uninitialized_warnings (mir : Program.Typed.t) =
   let uninit_vars =
     Set.Poly.filter

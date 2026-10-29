@@ -1,6 +1,8 @@
-(** MIR statements. A statement pattern has separate type parameters for its
-    expressions and its child statements. An analysis can then replace each
-    child statement with a label. *)
+(** MIR statements. The child statements of a statement are the statements
+    directly inside the statement, such as the body of a [for]. A statement
+    pattern ({!Pattern.t}) is one statement with separate type parameters for
+    the expressions and for the child statements. An analysis can then replace
+    each child statement with a label, an integer that identifies the child. *)
 
 module Pattern : sig
   (** A statement with expressions of type ['a] and children of type ['b]. *)
@@ -44,13 +46,12 @@ module Pattern : sig
       over the children and replaces each child of type ['c] with a ['d]. *)
 
   val pp : 'a Fmt.t -> 'b Fmt.t -> ('a, 'b) t Fmt.t
-  (** Prints expressions with the first printer and children with the second.
-      For a [For] whose body is label [8], an integer printer gives
-      [for(n in 1:N) 8]. *)
+  (** Prints expressions with the first printer and children with the second. A
+      [for] with body label [8] can print as [for(n in 1:N) 8]. *)
 end
 
-(** A recursive statement. Its expressions have metadata of type ['a], and the
-    statement has metadata of type ['b]. *)
+(** A recursive statement, whose children are again statements of this type.
+    Expressions have metadata of type ['a], and statements of type ['b]. *)
 type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
 [@@deriving sexp_of]
 
@@ -77,7 +78,7 @@ module Located : sig
 
   val pp : t Fmt.t
 
-  (** A statement with a source location. Its children are labels. *)
+  (** A statement with a source location, whose children are labels. *)
   module Non_recursive : sig
     type t = {pattern: (Expr.Typed.t, int) Pattern.t; meta: Meta.t}
   end
@@ -97,7 +98,8 @@ module Numbered : sig
   val pp : t Fmt.t
 end
 
-(** Helpers to build statements and to query assignment destinations. *)
+(** Helpers to build statements and to query assignment destinations. The
+    destination of an assignment is the left side ({!Pattern.lvalue}). *)
 module Helpers : sig
   val temp_vars :
     Expr.Typed.t list -> Located.t list * Expr.Typed.t list * (unit -> unit)

@@ -1,3 +1,29 @@
+(* The interface file describes the analysis and the running example. This file
+   uses the terms below.
+
+   An access is one read, write or increment of a variable. The path of an
+   access lists the subscripts and tuple fields that select an element of the
+   variable ({!Accesses}).
+
+   A definition records a write as the variable name and the label of the
+   writing statement. A definition reaches a statement if the program can go
+   from the write to the statement with no write between them that overwrites
+   the same element. Reaching definitions
+   ({!Monotone_framework.reaching_definitions_mfp}) finds these definitions.
+
+   A later write kills an earlier definition when the later write overwrites
+   each element that the earlier write wrote. The killed definition no longer
+   reaches later statements. An element kill compares the paths of two writes to
+   single elements, such as [theta[n, 1]], to decide this.
+
+   The controls of a statement are the ifs and loops around the statement, and
+   the jumps ([break], [continue] and [return]) that can skip the statement
+   ({!Dataflow_types.control}).
+
+   Each reaching definition of a variable that a statement reads is a candidate
+   source for the read, and the read is the sink. {!Dependence} rejects a
+   candidate source that can never supply the value of the sink. *)
+
 open Std
 open Middle
 open Dataflow_types
@@ -5,6 +31,8 @@ open Dataflow_utils
 open Monotone_framework_sigs
 open Monotone_framework
 
+(** Returns the path of the first write to [var] in [accesses], or [None] if
+    [accesses] does not write [var]. *)
 let write_path (accesses : Accesses.index Accesses.t) (var : string) :
     Accesses.index Accesses.step list option =
   List.find_map accesses ~f:(fun (access : Accesses.index Accesses.access) ->
@@ -12,9 +40,9 @@ let write_path (accesses : Accesses.index Accesses.t) (var : string) :
       | Write when String.equal access.var var -> Some access.path
       | Write | Read | Increment -> None)
 
-(* The [kills] callback for reaching definitions. A later write [killer] removes
-   the definition at [killed] when it must overwrite the element of [killed].
-   Two rules give this result. *)
+(** The [kills] callback for reaching definitions, which decides element kills.
+    A later write [killer] kills the definition at [killed] when [killer] must
+    overwrite the element of [killed]. Two rules give this result. *)
 let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
     ~(controls : control list LabelMap.t)
     ~(loops : Dependence.loop list LabelMap.t) ~(killer : label)
@@ -35,6 +63,10 @@ let element_kills ~(accesses : Accesses.index Accesses.t LabelMap.t)
       Accesses.must_overwrite ~same_iteration:false ~killer:killer_path
         ~killed:killed_path
       ||
+      (* Rule B of 2: [killer] writes the element of [killed] in the same
+         iteration of the innermost loop around [killed]. [killer] comes later
+         in source order and has the same loops. Each control of [killer], and
+         of the innermost loop, is also a control of [killed]. *)
       match List.rev (LabelMap.find killed loops) with
       | innermost :: _ ->
           Accesses.must_overwrite ~same_iteration:true ~killer:killer_path
@@ -60,6 +92,8 @@ type node_dep_info =
 type dep_info_map =
   ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 
+(** Runs reaching definitions with [kills] on the forward flowgraph of [stmt].
+    Returns the entry and exit sets of each label. *)
 let mir_reaching_definitions
     ~(kills : killer:label -> killed:label -> string -> bool)
     (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
@@ -84,10 +118,10 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let all_stmt_accesses =
     LabelMap.map statement_map ~f:(fun (pattern, _) -> Accesses.of_stmt pattern)
   in
-  (* [classify] marks an index variable as invariant only if no statement in
-     [stmt] writes it. A written variable can change between iterations. For
-     example, a write [m = n] stops the classification of index [m] as
-     invariant. *)
+  (* [classify] marks an index variable as invariant (the same in each
+     iteration) only if no statement in [stmt] writes that variable. A written
+     variable can change between iterations. For example, a write [m = n] stops
+     the classification of index [m] as invariant. *)
   let written_vars =
     LabelMap.fold all_stmt_accesses ~init:Set.Poly.empty
       ~f:(fun ~key:_ ~data:stmt_accesses running_written_vars ->
@@ -128,11 +162,16 @@ let flows_into (source : 'index Accesses.access) (sink : 'index Accesses.access)
   | (Write | Increment), Read | Write, Increment -> true
   | Read, _ | Increment, Increment | _, Write -> false
 
-(* The root label is the label of the analyzed statement itself. Results that
-   hold only labels use it to mark a definition from outside the analyzed
-   statement. Each label map of the analysis contains the root. *)
+(** The root label is the label of the analyzed statement itself. Results that
+    hold only labels use the root label to mark a definition from outside the
+    analyzed statement. Each label map of the analysis contains the root. *)
 let root_label : label = 1
 
+(** Returns the labels of the candidate sources of [var] at [sink_id] that
+    {!Dependence} keeps. A candidate stays if the source does not write or
+    increment [var], if the sink does not use [var], or if some access of [var]
+    in the source and some access in the sink pass {!flows_into} and
+    {!Dependence.is_plausible}. A definition from outside gives [root_label]. *)
 let writes_read_by (statement_map : dep_info_map) ~(sink_id : label)
     (var : string) : label Set.Poly.t =
   let sink_pattern, sink_info = LabelMap.find sink_id statement_map in
@@ -170,8 +209,8 @@ let writes_read_by (statement_map : dep_info_map) ~(sink_id : label)
                    (Dependence.compare_paths ~loops source sink))) in
   Set.Poly.filter_map candidate_definitions ~f:(function
     | None ->
-        (* A definition from outside has no access record, so return the root
-           label for it. *)
+        (* A definition from outside does not have an access record, so the root
+           label stands for the definition. *)
         Some root_label
     | Some source_id ->
         if source_may_supply_read source_id then Some source_id else None)
@@ -188,12 +227,14 @@ let node_immediate_dependencies (statement_map : dep_info_map)
       ~f:(writes_read_by statement_map ~sink_id:node_id) in
   Set.Poly.union (control_parents node_info.controls) var_dependency_ids
 
+(** Adds [node_id] and the direct and transitive dependencies of [node_id] to
+    [visited_ids], without following the definitions of [blockers]. *)
 let rec node_dependencies_rec (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (node_id : label)
     (visited_ids : label Set.Poly.t) : label Set.Poly.t =
   if Set.Poly.mem node_id visited_ids then visited_ids
   else
-    (* The visited set is the result, and it includes the start label. *)
+    (* The visited set is the result and includes the start label. *)
     let visited_with_node_ids = Set.Poly.add node_id visited_ids in
     let dependency_ids =
       node_immediate_dependencies statement_map ~blockers node_id in

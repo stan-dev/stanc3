@@ -19,6 +19,8 @@ let increments_target (kind : 'e Fun_kind.t) : bool =
   | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
   | UserDefined _ | StanLib _ | Operator _ | CompilerInternal _ -> false
 
+(** True if the top node of [e] is an internal call with side effects or a call
+    that increments the target. Subexpressions are not checked. *)
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
   | FunApp (CompilerInternal internal_fn, _) ->
@@ -272,6 +274,7 @@ let rec expr_var_set Expr.{pattern; meta} =
   | TupleProjection (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
+(** Collects [(name, metadata)] for each variable in the expressions of [ix]. *)
 and index_var_set ix =
   match ix with
   | All -> Set.Poly.empty

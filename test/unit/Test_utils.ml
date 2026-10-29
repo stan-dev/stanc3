@@ -46,8 +46,11 @@ let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
   Buffer.contents buffer |> String.split_lines |> List.map ~f:String.trim
   |> String.concat ~sep:" " |> Fmt.string ppf
 
-(** Prints a statement with the labels of its child statements in place of the
-    child statements. A loop with body label 8 prints as [for(n in 1:N) 8]. *)
+(** Prints a statement pattern on one line. A label is the integer that
+    identifies a statement in the statement map of
+    {!Analysis_and_optimization.Dependence_analysis}. A statement pattern holds
+    the label of each child statement in place of the child statement. A loop
+    with body label 8 prints as [for(n in 1:N) 8]. *)
 let pp_stmt : (Middle.Expr.Typed.t, int) Middle.Stmt.Pattern.t Fmt.t =
   one_line (Middle.Stmt.Pattern.pp Middle.Expr.Typed.pp Fmt.int)
 

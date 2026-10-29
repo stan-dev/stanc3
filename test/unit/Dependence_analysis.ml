@@ -5,16 +5,46 @@ open Analysis_and_optimization.Dataflow_utils
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-(* These tests check the statement dependencies that pedantic mode and the
-   factor graph use. Each test builds a map from labels to statements. A label
-   is the number of a statement. The // comments in the first program give the
-   labels. Label 1 is the root statement of the map, the list of all statements.
-   Later tests print [label: statement // labels]. The labels after // are the
-   writes that the statement reads and the statements that control it.
+(* These tests check {!Analysis_and_optimization.Dependence_analysis}. The
+   module finds the earlier statements that each statement depends on. Pedantic
+   mode and the factor graph use these statement dependencies.
+
+   Each test builds a map from labels to statements with
+   [log_prob_build_dep_info_map]. A label is the integer that identifies a
+   statement. The map covers the log density, which contains the statements of
+   the parameters, transformed parameters and model blocks. The // comments in
+   the first program give the labels. Label 1 is the root statement of the map,
+   which holds all the other statements.
+
+   A statement has a data dependency on an earlier write when the write can
+   supply a value that the statement reads. Such a write flows to the read. A
+   statement has a control dependency on an enclosing if or loop, and on a jump
+   that can skip the statement. A jump is a [break], [continue] or [return].
+   These ifs, loops and jumps are the controls of the statement. An immediate
+   dependency is a direct data or control dependency. A transitive dependency is
+   a dependency of a dependency.
+
+   A definition is a write, recorded as the variable name and the label of the
+   statement that writes the variable. A definition reaches a read when the
+   program can run the write before the read, and no write between them replaces
+   the same element. These definitions are the reaching definitions of the read.
+   Each statement records the reaching definitions at entry, before the
+   statement runs, and at exit, after the statement runs. A later write kills an
+   earlier write when the later write always replaces the element of the earlier
+   write. The later write is the killer. A killed write no longer reaches later
+   reads. A query then drops each reaching write that selects a different
+   element than the read, or that runs after the read
+   ({!Analysis_and_optimization.Dependence}).
+
+   A definition from outside the analyzed statement, for example data and
+   parameters, has no label and prints as [()] in a reaching definition.
    Dependency results contain only labels. Thus the analysis uses the root label
-   as a marker for definitions from outside the analyzed statement, for example
-   data and parameters. Every map has the root, so the marker is always a valid
-   label. *)
+   as a marker for these definitions. Every map has the root, so the marker is
+   always a valid label.
+
+   Most later tests print [label: statement // labels]. The labels after // are
+   the immediate dependencies, which are the writes that the statement reads and
+   the statements that control the statement. *)
 
 let example1_program =
   Test_utils.mir_of_string
@@ -155,7 +185,8 @@ let%expect_test "External inputs remain dependencies after map construction" =
     dependencies: 1
     |}]
 
-(** Prints each statement and the labels of its direct dependencies. *)
+(** Prints each statement and the labels of the immediate dependencies of the
+    statement. *)
 let pp_immediate_dependencies ppf (map : dep_info_map) =
   LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt pattern
@@ -254,8 +285,8 @@ let%expect_test
   [%expect {| 6: 5 |}]
 
 (* The Graph tests use programs from test/unit/Dependence.ml. A write is not a
-   dependency of a read if it writes a different element, or if it runs after
-   the read. *)
+   dependency of a read if the write selects a different element, or if the
+   write runs after the read. *)
 
 let%expect_test "Graph: definitions that execute after the read never flow" =
   print_immediate_dependencies
@@ -450,9 +481,8 @@ let%expect_test "Running example of the Dependence_analysis interface" =
     read: N theta x
     |}]
 
-(* A later write kills an earlier write when it always replaces the element of
-   the earlier write. The Kills tests check that a killed write is not a
-   dependency of a read after the later write. *)
+(* The Kills tests check that a killed write is not a dependency of a read after
+   the later write. *)
 
 let%expect_test "Kills: the same element in every iteration" =
   print_immediate_dependencies
@@ -539,10 +569,10 @@ let%expect_test "Kills: control flow between the writes" =
         if (theta[2] > 0) target += 1;   // replaced in both branches, so removed
         theta[3] = a;
         if (c > 0) theta[3] = 1;
-        if (theta[3] > 0) target += 1;   // replaced in one branch only, so it remains
+        if (theta[3] > 0) target += 1;   // replaced in one branch only, so theta[3] = a remains
         theta[1:2] = [a, a]';
         theta[1:2] = [1, 1]';
-        if (theta[1] > 0) target += 1;   // a slice never removes a write, so it remains
+        if (theta[1] > 0) target += 1;   // a slice never removes a write, so theta[1:2] = [a, a]' remains
       }
     |};
   [%expect
@@ -596,12 +626,12 @@ let%expect_test "Kills: jumps and branches between the two writes" =
         for (n in 2:N) {
           theta[n] = a;
           if (c > 0) theta[n] = 1; else theta[n] = 2;
-          if (theta[n - 1] > 0) target += 1;  // killer must not be inside an if, so it remains
+          if (theta[n - 1] > 0) target += 1;  // a killer inside an if does not count, so theta[n] = a remains
         }
         for (n in 2:N) {
           theta[n] = a;
           if (c > 0) theta[n] = 1;
-          if (theta[n - 1] > 0) target += 1;  // only one branch replaces it, so it remains
+          if (theta[n - 1] > 0) target += 1;  // only one branch replaces theta[n], so theta[n] = a remains
         }
       }
     |};
@@ -676,7 +706,7 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
         for (n in 2:N) {
           theta[n] = a;
           for (m in 1:N) theta[n] = 1;
-          if (theta[n - 1] > 0) target += 1;  // the inner loop can run zero times, so it remains
+          if (theta[n - 1] > 0) target += 1;  // the inner loop can run zero times, so theta[n] = a remains
         }
       }
     |};
@@ -727,7 +757,7 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
     43: target += 1;  // 42
     |}]
 
-(* Each statement prints its controls, then the two views that queries use. The
+(* Each statement prints the controls, then the two views that queries use. The
    controls list the enclosing ifs and loops, outermost first, then the jumps.
    [control_parents] keeps the nearest enclosing if or loop and the jumps.
    [loops_around] keeps the loops, and a loop statement adds itself. *)

@@ -16,6 +16,13 @@ let rec common_loops (source_loops : loop list) (sink_loops : loop list) :
 type level = {loop: loop; distance: int option}
 type t = Independent | Unknown | Distances of level list
 
+(** The strong SIV test for one position. When [source] and [sink] are
+    [Sequential] with the same loop term and symbol, and a loop in [loops] sets
+    the loop variable, source iteration [i] selects [i + source_term.const] and
+    sink iteration [j] selects [j + sink_term.const]. These match when the
+    distance [j - i] is [source_term.const - sink_term.const]. The sign flips
+    for a [Descending] loop term. The other loops get an unknown distance. Any
+    other pair gives [Unknown]. *)
 let test_strong_siv ~(loops : loop list) (source : index step)
     (sink : index step) : t =
   match (source, sink) with
@@ -28,8 +35,7 @@ let test_strong_siv ~(loops : loop list) (source : index step)
       | Some {loopvar; direction}
         when List.exists loops ~f:(fun (loop : loop) ->
                  Option.equal String.equal loop.var (Some loopvar)) ->
-          (* i + source_offset equals j + sink_offset when j - i = source_offset
-             - sink_offset. A descending index flips the sign. *)
+          (* A descending loop term flips the sign of the distance. *)
           let offset_difference = source_term.const - sink_term.const in
           let iteration_distance =
             match direction with
@@ -45,16 +51,20 @@ let test_strong_siv ~(loops : loop list) (source : index step)
       | Some _ | None -> (* No common loop sets the loop variable. *) Unknown)
   | Subscript _, _ | Field _, _ -> Unknown
 
+(** Compares the [source] and [sink] steps at one position. The ZIV test gives
+    [Independent] for different constants or fields and [Unknown] for equal
+    ones. Other steps go to {!test_strong_siv}. *)
 let test_subscript ~(loops : loop list) (source : index step)
     (sink : index step) : t =
   match compare_steps source sink with
   (* The ZIV test separates different constants and different fields. *)
   | Different -> Independent
-  (* Equal constants or equal fields constrain no iteration distance. *)
+  (* Equal constants or equal fields do not constrain the iteration distance. *)
   | Same_every_iteration -> Unknown
   | Same_in_one_iteration | May_differ -> test_strong_siv ~loops source sink
 
-(* Both level lists hold the same common loops in the same order. *)
+(** Merges two level lists over the same common loops in the same order. The
+    result is [None] when the known distances at one loop differ. *)
 let merge_levels (path_levels : level list) (position_levels : level list) :
     level list option =
   let merge_level path_level position_level =
@@ -70,6 +80,9 @@ let merge_levels (path_levels : level list) (position_levels : level list) :
   in
   Option.all (List.map2 path_levels position_levels ~f:merge_level)
 
+(** Combines the result of the earlier positions with the result of one more
+    position. [Unknown] adds nothing. [Independent] or a conflict gives
+    [Independent]. *)
 let merge_path_constraints (path_constraints : t) (position_constraints : t) : t
     =
   match (path_constraints, position_constraints) with
@@ -103,6 +116,7 @@ let is_plausible ~(source_first_in_text : bool) (dependence : t) : bool =
   | Unknown -> true
   | Distances levels -> source_may_run_first levels
 
+(** Prints one level as [[n:1]], or as [[while:*]] for a [while] loop. *)
 let pp_level ppf {loop; distance} =
   Fmt.pf ppf "[%s:%a]"
     (Option.value loop.var ~default:"while")

@@ -9,13 +9,16 @@ type kind = Read | Write | Increment [@@deriving equal]
 type 'index access = {var: string; path: 'index step list; kind: kind}
 type 'index t = 'index access list
 
+(** Builds paths from expressions and from left-hand sides of assignments. *)
 module Path = struct
+  (** The variable and the path that [expr] selects, or [None] if [expr] is not
+      a variable with subscripts and fields, or indexes after a slice. *)
   let rec of_expr (expr : Expr.Typed.t) :
       (string * Expr.Typed.t step list) option =
     let extend_path base steps =
-      (* After a slice or a multi-index, later subscripts index the selected
-         result, not the base variable. The path of [base] and [steps] then
-         cannot join into one path of the base variable. *)
+      (* After a slice or a multi-index, later subscripts index the result of
+         the selection. The path of [base] and [steps] then cannot join into one
+         path of the base variable. *)
       match of_expr base with
       | Some (name, prefix)
         when List.for_all prefix ~f:(function
@@ -30,6 +33,7 @@ module Path = struct
     | TupleProjection (base, field) -> extend_path base [Field field]
     | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
 
+  (** The path of the left-hand side of an assignment. *)
   let rec of_lvalue ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
       Expr.Typed.t step list =
     (match lbase with
@@ -37,14 +41,18 @@ module Path = struct
       | LTupleProjection (inner, field) -> of_lvalue inner @ [Field field])
     @ List.map indices ~f:(fun index -> Subscript index)
 
+  (** The expressions inside the subscripts of [path]. *)
   let bounds (path : Expr.Typed.t step list) : Expr.Typed.t list =
     List.concat_map path ~f:(function
       | Subscript index -> Index.bounds index
       | Field _ -> [])
 end
 
+(** An increment of the whole of [target]. *)
 let increment_target : 'index access = {var= "target"; path= []; kind= Increment}
 
+(** The accesses in [expr]. A subscripted variable gives one read with the whole
+    path, then the accesses in the subscripts. *)
 let rec of_expr (expr : Expr.Typed.t) : Expr.Typed.t t =
   let of_children () =
     Expr.Pattern.fold
@@ -66,8 +74,9 @@ let rec of_expr (expr : Expr.Typed.t) : Expr.Typed.t t =
 
 let of_stmt (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) :
     Expr.Typed.t t =
-  (* Each nested statement has its own accesses. The statement fold thus visits
-     only the expressions of [stmt] and skips nested statements. *)
+  (* The accesses of each nested statement are collected separately. The
+     statement fold thus visits only the expressions of [stmt] and skips nested
+     statements. *)
   let of_children () =
     Stmt.Pattern.fold
       (fun running_accesses subexpr -> running_accesses @ of_expr subexpr)
@@ -95,12 +104,14 @@ type sequential =
 type varying_kind = Written | Unhandled
 type index = Sequential of sequential | Varying of varying_kind
 
-(* A sequential index is the sum of an integer constant, an optional symbol and
-   an optional loop term. A symbol is an expression that reads no loop variable
-   and no written variable. The symbol has coefficient 1. The loop term is a
-   loop variable with coefficient 1 ([Ascending]) or -1 ([Descending]). Each
-   operation returns [None] when its result does not have this form. *)
+(** A sequential index is the sum of an integer constant, an optional symbol and
+    an optional loop term. A symbol is an expression that does not read a loop
+    variable or a written variable. The symbol has coefficient 1. The loop term
+    is a loop variable with coefficient 1 ([Ascending]) or -1 ([Descending]).
+    Each operation returns [None] when the result does not have this form. *)
 module Sequential = struct
+  (** Adds two sequential indices. The result is [None] when both have a symbol
+      or both have a loop term. *)
   let add (left : sequential) (right : sequential) : sequential option =
     match ((left.symbol, right.symbol), (left.loop_term, right.loop_term)) with
     | (Some _, Some _), _ | _, (Some _, Some _) -> None
@@ -110,14 +121,15 @@ module Sequential = struct
           ; symbol= Option.first_some left_symbol right_symbol
           ; loop_term= Option.first_some left_loop_term right_loop_term }
 
+  (** The opposite direction. *)
   let negate_direction = function
     | Ascending -> Descending
     | Descending -> Ascending
 
-  (* [subtract] calls this function before it negates [right]. When both sides
-     have the same symbol, the symbols cancel, as in [(n + k) - k = n]. Equal
-     loop terms cancel in the same way. Without this step, [negate] fails on the
-     symbol of [right]. *)
+  (** [subtract] calls this function before negating [right]. When both sides
+      have the same symbol, the symbols cancel, as in [(n + k) - k = n]. Equal
+      loop terms cancel in the same way. Without this step, [negate] fails on
+      the symbol of [right]. *)
   let cancel_matching (left : sequential) (right : sequential) :
       sequential * sequential =
     let symbols_match = Option.equal Expr.Typed.equal left.symbol right.symbol in
@@ -129,9 +141,9 @@ module Sequential = struct
       ; loop_term= (if loop_terms_match then None else term.loop_term) } in
     (drop_matching left, drop_matching right)
 
-  (* The symbol has coefficient 1, so a sequential index cannot hold [-symbol].
-     The function returns [None] in that case. A negated loop variable has the
-     opposite direction, as [-n] has in [N - n]. *)
+  (** The symbol has coefficient 1, so a sequential index cannot hold [-symbol].
+      The function returns [None] in that case. A negated loop variable has the
+      opposite direction, as [-n] has in [N - n]. *)
   let negate (term : sequential) : sequential option =
     match term.symbol with
     | Some _ -> None
@@ -144,6 +156,8 @@ module Sequential = struct
                   { loop_term with
                     direction= negate_direction loop_term.direction }) }
 
+  (** Subtracts [right] from [left]. The result is [None] when the difference is
+      not a sequential index. *)
   let subtract (left : sequential) (right : sequential) : sequential option =
     let left, right = cancel_matching left right in
     match negate right with
@@ -151,13 +165,16 @@ module Sequential = struct
     | None -> None
 end
 
+(** Classifies one index expression. Sums and differences split into parts, and
+    any other form is classified as a whole, as the [index] type describes. *)
 let classify_index ~(loopvars : string Set.Poly.t)
     ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : index =
-  (* This function classifies [subexpr] as one unit, without its sum structure.
-     A written variable can change between iterations, so a read of it makes the
-     index vary. A loop variable in a form other than a sum, as in [2 * n], also
-     makes the index vary. Any other expression is constant in the loops, so it
-     becomes the symbol of a sequential index. *)
+  (* This function classifies [subexpr] as one unit and does not look at the
+     sums inside [subexpr]. A written variable can change between iterations, so
+     a read of a written variable makes the index vary. A loop variable in a
+     form other than a sum, as in [2 * n], also makes the index vary. Any other
+     expression is constant in the loops, so the expression becomes the symbol
+     of a sequential index. *)
   let classify_whole_expression (subexpr : Expr.Typed.t) : index =
     let read_names = expr_var_names_set subexpr in
     let reads_written_variable =
@@ -196,6 +213,7 @@ let classify_index ~(loopvars : string Set.Poly.t)
         classify_whole_expression subexpr in
   classify expr
 
+(** Classifies each subscript of [path] and keeps the tuple fields. *)
 let classify_path ~loopvars ~written_vars (path : Expr.Typed.t step list) :
     index step list =
   List.map path ~f:(function
@@ -206,8 +224,9 @@ let classify_path ~loopvars ~written_vars (path : Expr.Typed.t step list) :
 let classify ~loopvars ~written_vars (accesses : Expr.Typed.t t) : index t =
   (* A dependency query reaches each enclosing loop, and the bounds of that
      loop, through the control dependency on the loop. No statement writes a
-     loop variable, so a search for writes to it finds nothing. Thus the reads
-     of loop variables add no information, and this function removes them. *)
+     loop variable, so a search for writes to a loop variable finds nothing.
+     Thus the reads of loop variables do not add information. This function
+     removes those reads. *)
   let accesses_without_loop_reads =
     List.filter accesses ~f:(fun access ->
         match access.kind with
@@ -236,8 +255,7 @@ let compare_steps (left : index step) (right : index step) : step_comparison =
       | None, false -> Different
       | Some _, true -> Same_in_one_iteration
       (* [n] and [n + 1] differ within an iteration but can select the same
-         element in different iterations. Thus the result is [May_differ], not
-         [Different]. *)
+         element in different iterations. Thus the result is [May_differ]. *)
       | Some _, false -> May_differ)
   | Subscript _, _ | Field _, _ -> May_differ
 
@@ -291,6 +309,7 @@ let written_vars (accesses : 'index t) : string Set.Poly.t =
     (List.filter_map accesses ~f:(fun {var; kind; _} ->
          match kind with Write | Increment -> Some var | Read -> None))
 
+(** Prints the loop term, then the symbol, then the constant, as in [-n+N+1]. *)
 let pp_sequential ppf ({const; symbol; loop_term} : sequential) =
   Option.iter loop_term ~f:(fun {loopvar; direction} ->
       Fmt.pf ppf "%s%s"
@@ -300,7 +319,7 @@ let pp_sequential ppf ({const; symbol; loop_term} : sequential) =
      term after a printed term starts with a sign. [leading] is true when no
      loop term is printed, so the symbol prints without a sign. [first] is true
      when no term prints before the constant. Then the constant prints even when
-     it is 0, so the index is never empty. *)
+     the constant is 0, so the printed index is never empty. *)
   let leading = Option.is_none loop_term in
   Option.iter symbol ~f:(fun symbol ->
       Fmt.pf ppf "%s%a" (if leading then "" else "+") Expr.Typed.pp symbol);
@@ -310,6 +329,7 @@ let pp_sequential ppf ({const; symbol; loop_term} : sequential) =
       (if const < 0 then "-" else if first then "" else "+")
       (abs const)
 
+(** Prints [written] or [unhandled]. *)
 let pp_varying_kind ppf = function
   | Written -> Fmt.string ppf "written"
   | Unhandled -> Fmt.string ppf "unhandled"
@@ -318,11 +338,14 @@ let pp_index ppf = function
   | Sequential term -> pp_sequential ppf term
   | Varying kind -> Fmt.pf ppf "?%a" pp_varying_kind kind
 
+(** Prints one subscript, with braces around a multi-index. *)
 let pp_subscript pp_index ppf (index : 'index Index.t) =
   match index with
   | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_index indices
   | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_index ppf index
 
+(** Prints a path. [pp_subscripts_after] continues an open bracket. Consecutive
+    subscripts thus share one pair of brackets. *)
 let rec pp_path pp_index ppf = function
   | [] -> ()
   | Field field :: rest -> Fmt.pf ppf ".%d%a" field (pp_path pp_index) rest
@@ -338,6 +361,7 @@ and pp_subscripts_after pp_index ppf = function
         rest
   | path -> Fmt.pf ppf "]%a" (pp_path pp_index) path
 
+(** Prints [R], [+=] or [W]. *)
 let pp_kind ppf kind =
   Fmt.string ppf
     (match kind with Read -> "R" | Increment -> "+=" | Write -> "W")

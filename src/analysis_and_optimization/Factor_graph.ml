@@ -58,8 +58,9 @@ let factor_var_dependencies statement_map blockers (label, factor) =
     node_vars_dependencies statement_map ~blockers term_read_names label in
   let dependency_read_names =
     read_variables_at statement_map dependency_labels in
-  (* The traversal result can omit the starting statement. Add the term's own
-     reads, such as [mu], so that the result keeps them. *)
+  (* The dependency traversal can leave out the statement where the traversal
+     starts. The union adds the names that the factor itself reads, such as [mu]
+     in [normal_lpdf(mu | 0, 1)]. *)
   Set.Poly.union dependency_read_names term_read_names
 
 let build_adjacency_maps (factors : (label * factor * string Set.Poly.t) list) :
@@ -114,6 +115,8 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
         , Set.Poly.inter vars
             (factor_var_dependencies statement_map vars (l, fac)) )) in
   let fg = build_adjacency_maps factor_list in
+  (* No caller in the compiler sets [exclude_data_facs]. Pedantic mode needs the
+     data factors, because the prior test looks for paths to data. *)
   if exclude_data_facs then remove_touching data_vars fg else fg
 
 let fg_reaches (starts : string Set.Poly.t) (goals : string Set.Poly.t)

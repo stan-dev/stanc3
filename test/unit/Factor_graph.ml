@@ -3,9 +3,20 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
+(* These tests check {!Analysis_and_optimization.Factor_graph}. A factor is a
+   part of a statement that changes the log density. Each factor is a [target
+   +=] term, a [reject] or an [_lp] call. A label is the integer that identifies
+   a statement in the statement map of
+   {!Analysis_and_optimization.Dependence_analysis}. Each factor in the output
+   carries the label of the statement that contains the factor. The inputs of a
+   factor are the data and parameters that the value of the factor depends on.
+   The factor graph links each factor to the inputs of the factor. Pedantic mode
+   uses the graph to warn about unused parameters and about priors. *)
+
 (** Prints the factor map and the variable map of [graph]. The factor map links
-    each factor and its statement label to the variables that the factor reads.
-    The variable map links each variable to the factors that read it. *)
+    each factor and the statement label of the factor to the variables that the
+    factor reads. The variable map links each variable to the factors that read
+    the variable. *)
 let print_factor_graph (graph : factor_graph) =
   print_s
     [%sexp
@@ -16,8 +27,9 @@ let print_factor_graph (graph : factor_graph) =
           (String.Map.to_list graph.var_map
             : (string * (factor * label) Set.Poly.t) list) }]
 
-(* The two // comments give the labels of the two factors in the output. No
-   factor reads a parameter, so each factor maps to an empty variable set. *)
+(* The two // comments give the labels of the two factors in the output. None of
+   the factors reads a parameter, so each factor maps to an empty variable
+   set. *)
 let reject_example =
   Test_utils.mir_of_string
     {|

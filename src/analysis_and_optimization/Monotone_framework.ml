@@ -1,4 +1,37 @@
-(** The common elements of a monotone framework *)
+(** The common elements of a monotone framework
+
+    A dataflow analysis computes facts at the entry and the exit of each
+    statement, such as the variables that are initialized there. A
+    {e monotone framework} is the general scheme behind many such analyses. The
+    facts form a {e lattice}, which is a set of values with an order and a
+    {e join}. The join combines the facts from two control flow paths that meet,
+    for example by set union. A {e path} here is a sequence of statements that
+    the program can run one after another. A {e transfer function} gives the
+    facts at the exit of a statement from the facts at the entry. Many transfer
+    functions add a {e gen} set of facts and remove a {e kill} set.
+    {!monotone_framework} applies the transfer functions over the flowgraph
+    until the facts stop changing.
+
+    One instance is the reaching definitions analysis. A {e definition}
+    [(x, Some l)] records that the statement with label [l] can write [x]. The
+    definition {e reaches} a statement if some path goes from [l] to the
+    statement with no write between them that overwrites [x]. [(x, None)] is a
+    definition of [x] from outside the analyzed statement (the statement that
+    the analysis runs on), such as data.
+
+    A statement adds a definition for each variable that the statement assigns
+    or declares. A write to a whole variable kills the earlier definitions of
+    that variable. An indexed or tuple-field write keeps them, because the
+    transfer function sees only variable names. The transfer function does not
+    see which element a write selects, so the transfer function cannot tell when
+    an element write overwrites an earlier one.
+
+    A caller that knows the elements, such as
+    {!Dependence_analysis.build_dep_info_map}, passes a [kills] callback to kill
+    these definitions too. At label [killer], [kills ~killer ~killed x] kills
+    each definition [(x, Some killed)] for which [kills] is true. The callback
+    must be true only if [killer] overwrites every value that [killed] can leave
+    in [x], on every path to [killer]. The default kills nothing extra. *)
 
 open Std
 open Monotone_framework_sigs
@@ -441,10 +474,11 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
 (* The functions below find the variables that a statement assigns. Reaching
-   definitions and the initialized-variables analysis both use them. *)
+   definitions and the initialized-variables analysis both use these
+   functions. *)
 
-(* True if an expression in the statement calls a function that adds to
-   [target], for example [x = foo_lp(y)]. *)
+(** True if an expression in the statement calls a function that adds to
+    [target], for example [x = foo_lp(y)]. *)
 let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Stmt.Pattern.fold
     (fun increments_earlier expr ->
@@ -482,24 +516,14 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
-(* A declaration without a value is a reaching definition, but it does not
-   initialize the variable. *)
+(** Variables the statement assigns or declares. A declaration without a value
+    is a reaching definition, but the declaration does not initialize the
+    variable. *)
 let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** A definition [(x, Some l)] means that the statement with label [l] can write
-    [x]. A statement adds a definition for each variable it assigns or declares.
-    A write to a whole variable removes the earlier definitions of that
-    variable. An indexed or tuple-field write keeps them, because this function
-    sees only variable names. It does not see which element a write selects. So
-    it cannot tell when an element write overwrites an earlier one.
-
-    A caller that knows the elements, such as
-    [Dependence_analysis.element_kills], passes [kills] to remove these
-    definitions too. At label [killer], [kills ~killer ~killed x] removes each
-    definition [(x, Some killed)] for which it is true. It must be true only if
-    [killer] overwrites every value that [killed] can leave in [x], on every
-    path to [killer]. The default removes nothing extra. *)
+(** Transfer function for reaching definitions. The module overview describes
+    the gen and kill sets, and the [kills] callback. *)
 let reaching_definitions_transfer
     ?(kills : killer:int -> killed:int -> string -> bool =
       fun ~killer:_ ~killed:_ _ -> false)
@@ -953,8 +977,8 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Computes reaching definitions. Each input and output variable starts with
-    the definition [(x, None)]. *)
+(** Computes reaching definitions, with [kills] as in the module overview. Each
+    input and output variable of the program starts with [(x, None)]. *)
 let reaching_definitions_mfp
     ?(kills : killer:int -> killed:int -> string -> bool =
       fun ~killer:_ ~killed:_ _ -> false) (mir : Program.Typed.t)
@@ -985,7 +1009,7 @@ let reaching_definitions_mfp
   Mf.mfp ()
 
 (** Computes the variables that are assigned on every path to each statement. A
-    join takes the set intersection. The start set is empty. *)
+    join is the intersection. The analysis starts from the empty set. *)
 let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)

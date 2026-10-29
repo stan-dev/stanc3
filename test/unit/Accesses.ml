@@ -1,11 +1,26 @@
-(* These tests build the dependency map with [log_prob_build_dep_info_map]. This
-   map covers the log density, which contains the statements of the parameters,
-   transformed parameters and model blocks. The tests print [label: statement //
-   accesses]. R marks a read, and W marks a write. += marks an increment of
-   target, the log density accumulator. ?written marks an index that reads a
-   variable that a statement in this analyzed region writes. ?unhandled marks an
-   index that uses a loop variable in a form that the analysis does not
-   support. *)
+(* These tests check {!Analysis_and_optimization.Accesses}. The module records
+   the accesses of each statement. An access is one read, write or increment of
+   a variable. The dependence analysis uses the accesses to find the earlier
+   statements that a statement depends on.
+
+   The tests build a map of statements with [log_prob_build_dep_info_map]. A
+   label is the integer that identifies a statement in this map. The map covers
+   the log density, which contains the statements of the parameters, transformed
+   parameters and model blocks.
+
+   The tests print [label: statement // accesses]. R marks a read, and W marks a
+   write. += marks an increment of target, the log density accumulator. Each
+   access prints the variable and the indices. A sequential index has the form
+   loop variable + symbol + constant and prints in that form, as in [n+k-1]. A
+   symbol is an expression that has the same value in every iteration. An
+   invariant index has no loop variable, as in [v[k]] or [v[3]], and selects the
+   same element in every iteration. Every other index is varying. ?written marks
+   a varying index that reads a variable that a statement in the log density
+   writes. ?unhandled marks a varying index that uses a loop variable in a form
+   that the analysis does not support.
+
+   The path of an access lists the subscripts and tuple fields that select the
+   element. Each subscript or tuple field is one step of the path. *)
 
 open Std
 open Analysis_and_optimization.Dependence_analysis
@@ -320,11 +335,10 @@ let%expect_test "Accesses: the remaining index, base and statement forms" =
     12: y[n] = promote(0, real, var);  // W y[n]
     |}]
 
-(* The path of an access lists the subscripts and tuple fields that select the
-   element. This test compares the paths of the writes in the model block. It
-   finds each write by its printed access. A write to [m[1]] overwrites [m[1,
-   2]], because the row [m[1]] contains the element [m[1, 2]]. A write to [m[n,
-   1]] overwrites itself only within one iteration of the loop over [n]. A slice
+(* This test compares the paths of the writes in the model block and finds each
+   write by the printed access. A write to [m[1]] overwrites [m[1, 2]], because
+   the row [m[1]] contains the element [m[1, 2]]. A write to [m[n, 1]]
+   overwrites itself only within one iteration of the loop over [n]. A slice
    write never overwrites, because the comparison treats a slice step as a step
    that may select a different element. [may_overlap] is false only when the
    steps at one position never select the same element. [fixed_path] returns

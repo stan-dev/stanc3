@@ -1,16 +1,50 @@
-(* Each test prints the reads of one variable, with the label of each read.
-   Under a read, each line compares the read with one write that reaches it. The
-   parts of a line are, in order: - the label of the write, - the access of the
-   write, - [-->] and the access of the read, - the result, - the last word. The
-   result is independent, unknown, or one iteration distance for each common
-   loop, outermost first. Independent means the two accesses never select the
-   same element. Unknown means they can select the same element, but no distance
-   is known. A * distance is unknown. The last word is [flows] or [cannot flow].
-   [flows] means the written value can reach the read. [cannot flow] means the
-   distances put the read before the write. An independent line has no last
-   word. A definition from outside the log density, such as data, has no access
-   record. The test does not print it. Thus a read can show fewer lines than the
-   writes that reach it. *)
+(* These tests check {!Analysis_and_optimization.Dependence}. The module decides
+   whether a write can supply the value that a read uses.
+   {!Analysis_and_optimization.Dependence_analysis} uses the module to drop the
+   writes that never supply the value.
+
+   The tests build a map of statements with [log_prob_build_dep_info_map]. A
+   label is the integer that identifies a statement in this map. The map covers
+   the log density, which contains the statements of the parameters, transformed
+   parameters and model blocks. An access is one read, write or increment of a
+   variable ({!Analysis_and_optimization.Accesses}). The output prints a read as
+   R and a write as W, then the variable and the indices. ?written marks an
+   index that reads a variable that the log density writes. ?unhandled marks an
+   index that uses a loop variable in a form that the analysis does not compare.
+
+   A write reaches a read when the program can run the write before the read,
+   and no write between them replaces the same element. Each write that reaches
+   a read is a candidate source, and the read is the sink. Each test asks
+   whether a candidate source can supply the value of the sink.
+
+   A common loop is a loop around both the source and the sink. The distance at
+   a common loop is the iteration of the sink minus the iteration of the source.
+   In [b[n] = a; c[n] = b[n - 1];] the read of [b[n - 1]] uses the write to
+   [b[n]] from one iteration earlier, so the distance is 1. A dependency with a
+   nonzero distance at some loop is loop-carried. A dependency with distance 0
+   at each loop is loop-independent.
+
+   The test names refer to two standard dependence tests. The ZIV test (zero
+   index variables) compares two indices without a loop variable, such as
+   [theta[1]] and [theta[2]]. The strong SIV test (single index variable)
+   compares two indices with the same loop variable, such as [b[n]] and [b[n -
+   1]], and finds the distance.
+
+   Each test prints the reads of one variable, with the label of each read.
+   Under a read, each line compares the read with one candidate source. A line
+   holds the label of the write, the access of the write, [-->], the access of
+   the read, the result and a last word. The result is independent, unknown, or
+   one distance for each common loop, outermost first. [distances [n:1]] means
+   distance 1 at the loop over [n], and [[while:*]] stands for a [while] loop.
+   Independent means the two accesses never select the same element. Unknown
+   means the accesses can select the same element, but no distance is known. A *
+   distance is unknown. The last word is [flows] or [cannot flow]. [flows] means
+   the written value can reach the read. [cannot flow] means the distances put
+   the read before the write. An independent line has no last word.
+
+   A definition from outside the log density, such as data, has no access
+   record. The test does not print such a definition. Thus a read can show fewer
+   lines than the writes that reach the read. *)
 
 open Std
 open Analysis_and_optimization.Dependence_analysis

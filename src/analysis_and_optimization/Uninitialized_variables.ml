@@ -5,6 +5,8 @@ open Mir_utils
 open Monotone_framework_sigs
 open Monotone_framework
 
+(** Returns the labels reachable from [Flowgraph.initials] through successor
+    links, by repeated expansion until the set stops growing. *)
 let all_labels
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int) : int Set.Poly.t =
@@ -17,12 +19,16 @@ let all_labels
     if Set.Poly.equal set next then set else step_fix next in
   step_fix Flowgraph.initials
 
+(** Returns the names that the statements at [labels] read, from
+    {!Mir_utils.stmt_rhs_names_set}. *)
 let prog_rhs_variables
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t)
     (labels : int Set.Poly.t) : string Set.Poly.t =
   Set.Poly.union_map labels ~f:(fun label ->
       stmt_rhs_names_set (LabelMap.find label flowgraph_to_mir).pattern)
 
+(** Returns [(location, name)] for each read in [stmt] that the program can
+    reach without assigning [name], except names in [exceptions]. *)
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
@@ -66,8 +72,8 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   let check_against_data_params b =
     let globals_data_prep = Set.Poly.union globals_data parameters in
     stmt_uninitialized_variables globals_data_prep
-      (* Run transformed data first, so that its assignments initialize later
-         reads. *)
+      (* Run transformed data first, so that the transformed data assignments
+         initialize later reads. *)
       {pattern= SList (mir.prepare_data @ b); meta= Location_span.empty} in
   Set.Poly.union_list
     [ check_against_data mir.prepare_data; check_against_data_params mir.log_prob

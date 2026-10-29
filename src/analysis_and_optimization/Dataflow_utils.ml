@@ -51,8 +51,9 @@ type cf_state =
     where
     - predecessors points to the nodes which could have executed before this
       node
-    - controls lists the enclosing ifs and loops, outermost first, and then the
-      jumps that can skip this node *)
+    - controls lists the ifs and loops around this node, outermost first, and
+      then the jumps ([break], [continue] and [return]) that can skip this node
+      ({!Dataflow_types.control}) *)
 type cf_edges = {predecessors: label Set.Poly.t; controls: control list}
 
 (** Join the state of a controlflow traversal across different branches of
@@ -85,13 +86,16 @@ let loop_of_statement (label : label) (pattern : ('e, 's) Stmt.Pattern.t) :
     bookkeeping. *)
 let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
+  (* Visits the statement at [label] and the statements nested in the statement.
+     [enclosing] holds the ifs and loops around the statement, outermost
+     first. *)
   let rec build_cf_graph_rec (enclosing : control list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
-    (* Only an if or a loop adds itself to the enclosing list of its children. A
-       loop adds itself here. An if adds itself below, with the branch of each
-       child. *)
+    (* Only an if or a loop adds itself to the [enclosing] list that the
+       children of the statement receive. A loop adds itself here. An if adds
+       itself below, with the branch that holds each child. *)
     let child_cf =
       match loop_of_statement label stmt with
       | Some loop -> enclosing @ [Enclosing_loop loop]
