@@ -54,6 +54,11 @@ val loops_around :
 (** Returns the [for] and [while] loops around a statement, outermost first. For
     a loop statement at [statement_id], the list ends with that loop. *)
 
+val precedes_in_source : label -> label -> bool
+(** Whether the statement at the first label comes before the statement at the
+    second in the program text. {!build_statement_map} numbers a statement
+    before the statements nested inside, and nested statements in text order. *)
+
 val common_loops : loop list -> loop list -> loop list
 (** Returns the longest start that two outermost-first loop lists share. These
     are the loops around both statements. Loops match by {!same_loop}. *)

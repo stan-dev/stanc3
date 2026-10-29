@@ -58,9 +58,6 @@ let print_verdicts ~var prog =
   let accesses_of statement_id =
     Accesses.of_var var (LabelMap.find statement_id info.statements).accesses
   in
-  let loops_of statement_id =
-    let statement = LabelMap.find statement_id info.statements in
-    loops_around ~statement_id statement.pattern statement.controls in
   let pp_access = Test_utils.one_line (Accesses.pp_access Accesses.pp_index) in
   LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
       let sinks =
@@ -76,24 +73,21 @@ let print_verdicts ~var prog =
             var in
         LabelMap.iter info.statements ~f:(fun ~key:source_id ~data:_ ->
             if Set.Poly.mem (Some source_id) reaching_ids then
-              let loops = common_loops (loops_of source_id) (loops_of sink_id) in
               List.iter (accesses_of source_id) ~f:(fun source ->
                   List.iter sinks ~f:(fun sink ->
                       if flows_into source sink then
-                        let dependence =
-                          Dependence.compare_paths ~loops source sink in
+                        let source = (source_id, source) in
+                        let sink = (sink_id, sink) in
+                        let dependence = dependence_between info ~source ~sink in
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
                           | Unknown | Distances _ ->
-                              if
-                                Dependence.is_plausible
-                                  ~source_first_in_text:(source_id < sink_id)
-                                  dependence
-                              then "  flows"
+                              if may_supply info ~source ~sink then "  flows"
                               else "  cannot flow" in
                         Fmt.pr "  %d %a --> %a: %a%s@." source_id pp_access
-                          source pp_access sink Dependence.pp dependence outcome)))))
+                          (snd source) pp_access (snd sink) Dependence.pp
+                          dependence outcome)))))
 
 let%expect_test "Strong SIV: loop-carried and loop-independent" =
   print_verdicts ~var:"b"

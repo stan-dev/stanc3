@@ -85,7 +85,7 @@ let element_kills ~(statements : statement LabelMap.t) ~(killer : label)
          in source order and has the same loops. Each control of [killer], and
          of the innermost loop, is also a control of [killed]. The loops are
          found last, after the cheaper checks. *)
-      killer > killed
+      precedes_in_source killed killer
       && Accesses.must_overwrite ~same_iteration:true ~killer:killer_path
            ~killed:killed_path
       &&
@@ -171,6 +171,27 @@ let flows_into (source : 'index Accesses.access) (sink : 'index Accesses.access)
   | (Write | Increment), Read | Write, Increment -> true
   | Read, _ | Increment, Increment | _, Write -> false
 
+let dependence_between (info : dependence_info)
+    ~source:((source_id, source) : label * Accesses.index Accesses.access)
+    ~sink:((sink_id, sink) : label * Accesses.index Accesses.access) :
+    Dependence.t =
+  let loops =
+    common_loops
+      (statement_loops info.statements source_id)
+      (statement_loops info.statements sink_id) in
+  Dependence.compare_paths ~loops source sink
+
+let may_supply (info : dependence_info)
+    ~(source : label * Accesses.index Accesses.access)
+    ~(sink : label * Accesses.index Accesses.access) : bool =
+  let source_id, source_access = source in
+  let sink_id, sink_access = sink in
+  flows_into source_access sink_access
+  (* In one statement, the read runs before the write. *)
+  && Dependence.is_plausible
+       ~source_first_in_text:(precedes_in_source source_id sink_id)
+       (dependence_between info ~source ~sink)
+
 (** The root label is the label of the analyzed statement itself. Results that
     hold only labels use the root label to mark a definition from outside the
     analyzed statement. Each label map of the analysis contains the root. *)
@@ -193,7 +214,6 @@ let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
         match access.Accesses.kind with
         | Read | Increment -> true
         | Write -> false) in
-  let sink_loops = lazy (statement_loops info.statements sink_id) in
   let source_may_supply_read source_id =
     let source = LabelMap.find source_id info.statements in
     let source_accesses = Accesses.of_var var source.accesses in
@@ -202,20 +222,11 @@ let writes_read_by (info : dependence_info) ~(sink_id : label) (var : string) :
           match access.Accesses.kind with
           | Write | Increment -> true
           | Read -> false) in
-    if (not source_has_writes) || not sink_has_reads then true
-    else
-      let loops =
-        common_loops
-          (statement_loops info.statements source_id)
-          (Lazy.force sink_loops) in
-      (* Labels follow source order. Equal labels mean a write and a read in one
-         statement, and the read runs first. *)
-      let source_first_in_text = source_id < sink_id in
-      List.exists source_accesses ~f:(fun source ->
-          List.exists sink_accesses ~f:(fun sink ->
-              flows_into source sink
-              && Dependence.is_plausible ~source_first_in_text
-                   (Dependence.compare_paths ~loops source sink))) in
+    (not source_has_writes) || (not sink_has_reads)
+    || List.exists source_accesses ~f:(fun source ->
+        List.exists sink_accesses ~f:(fun sink ->
+            may_supply info ~source:(source_id, source) ~sink:(sink_id, sink)))
+  in
   Set.Poly.filter_map candidate_definitions ~f:(function
     | None ->
         (* A definition from outside does not have an access record, so the root

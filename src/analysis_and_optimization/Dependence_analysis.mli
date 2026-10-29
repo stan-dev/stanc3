@@ -261,6 +261,24 @@ val flows_into : 'index Accesses.access -> 'index Accesses.access -> bool
 (** Whether the first access (the source) can pass a value to the second (the
     sink) by the rules in step 1, comparing only variable names and kinds. *)
 
+val dependence_between :
+     dependence_info
+  -> source:label * Accesses.index Accesses.access
+  -> sink:label * Accesses.index Accesses.access
+  -> Dependence.t
+(** Compares the elements that the [source] access and the [sink] access select,
+    over the loops around both statements. Each access comes paired with the
+    label of the statement that makes the access. *)
+
+val may_supply :
+     dependence_info
+  -> source:label * Accesses.index Accesses.access
+  -> sink:label * Accesses.index Accesses.access
+  -> bool
+(** Whether the [source] access can supply the value that the [sink] access
+    uses: {!flows_into}, then {!Dependence.is_plausible} on
+    {!dependence_between}. *)
+
 val node_immediate_dependencies :
      dependence_info
   -> ?blockers:string Set.Poly.t

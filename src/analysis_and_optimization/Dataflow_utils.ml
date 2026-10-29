@@ -239,6 +239,9 @@ let loops_around ~(statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
     | If _ -> None)
   @ Option.to_list (loop_of_statement statement_id pattern)
 
+(** See interface file *)
+let precedes_in_source (first : label) (second : label) : bool = first < second
+
 (* After the first loop that differs, no loop is around both statements. *)
 let rec common_loops (first_loops : loop list) (second_loops : loop list) :
     loop list =
