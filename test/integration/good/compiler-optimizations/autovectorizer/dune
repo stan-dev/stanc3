@@ -18,3 +18,17 @@
 (subdir
  run
  (dynamic_include ../dunes/mir.dune))
+
+(rule
+ (alias runtest)
+ (enabled_if %{bin-available:grep})
+ (deps
+  (glob_files expected_optimized_mir/*))
+ (action
+  (progn
+   (with-stdout-to
+    vectorized_files.out
+    (pipe-stdout
+     (run grep "for(" expected_optimized_mir/ -R -L)
+     (run sort)))
+   (diff? vectorized_files.txt vectorized_files.out))))
