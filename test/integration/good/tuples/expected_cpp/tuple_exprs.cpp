@@ -277,6 +277,12 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"foo\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

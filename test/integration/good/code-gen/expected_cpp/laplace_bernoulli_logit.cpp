@@ -725,6 +725,35 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "theta_0");
+    stan::json::write_json_value(&json_stream__, theta_0);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "tolerance");
+    stan::json::write_json_value(&json_stream__, tolerance);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "max_num_steps");
+    stan::json::write_json_value(&json_stream__, max_num_steps);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "hessian_block_size");
+    stan::json::write_json_value(&json_stream__, hessian_block_size);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "solver");
+    stan::json::write_json_value(&json_stream__, solver);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "max_steps_line_search");
+    stan::json::write_json_value(&json_stream__, max_steps_line_search);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "allow_fallthrough");
+    stan::json::write_json_value(&json_stream__, allow_fallthrough);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "prior_mean");
+    stan::json::write_json_value(&json_stream__, prior_mean);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

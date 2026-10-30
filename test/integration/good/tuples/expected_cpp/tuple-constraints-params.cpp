@@ -888,6 +888,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((4 -1)) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(complicated_brack_dot2_1dim__) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "}]}}]}},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

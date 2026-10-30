@@ -605,6 +605,14 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"param\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"local\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "inputs");
+    stan::json::write_json_value(&json_stream__, inputs);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

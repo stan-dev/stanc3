@@ -1107,6 +1107,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age) + "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_region) + "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n_age) + ",\"cols\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_state) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

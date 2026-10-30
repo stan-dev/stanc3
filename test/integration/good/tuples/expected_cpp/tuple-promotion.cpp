@@ -961,6 +961,29 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "arrs");
+    stan::json::write_json_value(&json_stream__, arrs);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "nested");
+    stan::json::write_json_value(&json_stream__, nested);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "basic");
+    stan::json::write_json_value(&json_stream__, basic);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "CV");
+    stan::json::write_json_value(&json_stream__, CV);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "V2");
+    stan::json::write_json_value(&json_stream__, V2);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "t");
+    stan::json::write_json_value(&json_stream__, t);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

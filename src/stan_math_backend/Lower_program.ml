@@ -284,6 +284,40 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
          (intro @ Stmts.rethrow_located (lower_statements generate_quantities))
        ~cv_qualifiers:[Const] ())
 
+let gen_tdata_json {Program.prepare_data; input_vars; _} =
+  let data = String.Set.of_list (List.map ~f:fst3 input_vars) in
+  let tdata =
+    List.filter_map prepare_data ~f:(fun s ->
+        match s.Stmt.pattern with
+        | Decl {decl_id; decl_type= Sized s; _}
+          when Utils.is_user_ident decl_id && not (String.Set.mem decl_id data)
+          ->
+            Some decl_id
+        | _ -> None) in
+  let open Cpp.DSL in
+  let stream_decl =
+    VariableDefn
+      (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
+         ~name:"json_stream__" ()) in
+  let stream = "json_stream__" in
+  let write_object entries =
+    let write_data_item i m =
+      (if i > 0 then [Var stream <<: literal_string ",\n"] else [])
+      @ [ Expression
+            (fun_call "stan::json::write_key" [VarRef stream; literal_string m])
+        ; Expression
+            (fun_call "stan::json::write_json_value" [VarRef stream; Var m]) ]
+    in
+    (Var stream <<: literal_string "{")
+    :: List.concat_mapi ~f:write_data_item entries
+    @ [Var stream <<: literal_string "}"] in
+  let body =
+    (stream_decl :: write_object tdata) @ [Return (Some (Var stream).@!("str"))]
+  in
+  FunDef
+    (make_fun_defn ~inline:true ~return_type:Types.string
+       ~name:"get_transformed_data_json" ~body ~cv_qualifiers:[Const] ())
+
 let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
@@ -778,7 +812,7 @@ let lower_model_public p =
     ; (* Begin metadata methods *) gen_get_param_names p
     ; (* Post-data metadata methods *) gen_get_dims p
     ; gen_constrained_param_names p; gen_unconstrained_param_names p
-    ; gen_constrained_types p; gen_unconstrained_types p ]
+    ; gen_constrained_types p; gen_unconstrained_types p; gen_tdata_json p ]
   (* Boilerplate *)
   @ gen_overloads p
 

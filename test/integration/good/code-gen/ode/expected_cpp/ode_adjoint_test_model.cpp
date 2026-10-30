@@ -706,6 +706,44 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y0\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"t0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"times\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "rel_tol_f");
+    stan::json::write_json_value(&json_stream__, rel_tol_f);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "abs_tol_f");
+    stan::json::write_json_value(&json_stream__, abs_tol_f);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "rel_tol_b");
+    stan::json::write_json_value(&json_stream__, rel_tol_b);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "abs_tol_b");
+    stan::json::write_json_value(&json_stream__, abs_tol_b);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "rel_tol_q");
+    stan::json::write_json_value(&json_stream__, rel_tol_q);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "abs_tol_q");
+    stan::json::write_json_value(&json_stream__, abs_tol_q);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "max_num_steps");
+    stan::json::write_json_value(&json_stream__, max_num_steps);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "num_checkpoints");
+    stan::json::write_json_value(&json_stream__, num_checkpoints);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "interpolation_polynomial");
+    stan::json::write_json_value(&json_stream__, interpolation_polynomial);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "solver_f");
+    stan::json::write_json_value(&json_stream__, solver_f);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "solver_b");
+    stan::json::write_json_value(&json_stream__, solver_b);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

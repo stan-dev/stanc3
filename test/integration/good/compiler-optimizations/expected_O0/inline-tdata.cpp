@@ -314,6 +314,20 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "N");
+    stan::json::write_json_value(&json_stream__, N);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "M");
+    stan::json::write_json_value(&json_stream__, M);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "bar");
+    stan::json::write_json_value(&json_stream__, bar);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

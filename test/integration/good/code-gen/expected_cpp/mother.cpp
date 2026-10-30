@@ -9357,6 +9357,132 @@ class mother_model final : public model_base_crtp<mother_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_upper\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_lower\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"no_offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"offset_no_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "td_int");
+    stan::json::write_json_value(&json_stream__, td_int);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_1d");
+    stan::json::write_json_value(&json_stream__, td_1d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_1dk");
+    stan::json::write_json_value(&json_stream__, td_1dk);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_a");
+    stan::json::write_json_value(&json_stream__, td_a);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_b");
+    stan::json::write_json_value(&json_stream__, td_b);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_c");
+    stan::json::write_json_value(&json_stream__, td_c);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_ar_mat");
+    stan::json::write_json_value(&json_stream__, td_ar_mat);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_simplex");
+    stan::json::write_json_value(&json_stream__, td_simplex);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_1d_simplex");
+    stan::json::write_json_value(&json_stream__, td_1d_simplex);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_3d_simplex");
+    stan::json::write_json_value(&json_stream__, td_3d_simplex);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_cfcov_54");
+    stan::json::write_json_value(&json_stream__, td_cfcov_54);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_cfcov_33");
+    stan::json::write_json_value(&json_stream__, td_cfcov_33);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "x");
+    stan::json::write_json_value(&json_stream__, x);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y");
+    stan::json::write_json_value(&json_stream__, y);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "dat");
+    stan::json::write_json_value(&json_stream__, dat);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "dat_int");
+    stan::json::write_json_value(&json_stream__, dat_int);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "x_r");
+    stan::json::write_json_value(&json_stream__, x_r);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "x_i");
+    stan::json::write_json_value(&json_stream__, x_i);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "arr_mul_ind");
+    stan::json::write_json_value(&json_stream__, arr_mul_ind);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "x_mul_ind");
+    stan::json::write_json_value(&json_stream__, x_mul_ind);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_real");
+    stan::json::write_json_value(&json_stream__, transformed_data_real);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_real_array");
+    stan::json::write_json_value(&json_stream__, transformed_data_real_array);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_real_array_2d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_real_array_2d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_real_array_3d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_real_array_3d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_matrix");
+    stan::json::write_json_value(&json_stream__, transformed_data_matrix);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_matrix_array);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array_2d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_matrix_array_2d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array_3d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_matrix_array_3d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_vector");
+    stan::json::write_json_value(&json_stream__, transformed_data_vector);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_vector_array);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array_2d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_vector_array_2d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array_3d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_vector_array_3d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_row_vector");
+    stan::json::write_json_value(&json_stream__, transformed_data_row_vector);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "transformed_data_row_vector_array");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_row_vector_array);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__,
+      "transformed_data_row_vector_array_2d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_row_vector_array_2d);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__,
+      "transformed_data_row_vector_array_3d");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_row_vector_array_3d);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

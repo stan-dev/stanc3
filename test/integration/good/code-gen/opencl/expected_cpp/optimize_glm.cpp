@@ -2210,6 +2210,38 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "k_td");
+    stan::json::write_json_value(&json_stream__, k_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "n_td");
+    stan::json::write_json_value(&json_stream__, n_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "X_d_td");
+    stan::json::write_json_value(&json_stream__, X_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y_v_d_td");
+    stan::json::write_json_value(&json_stream__, y_v_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "X_rv_d_td");
+    stan::json::write_json_value(&json_stream__, X_rv_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y_vi_d_td");
+    stan::json::write_json_value(&json_stream__, y_vi_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y2_vi_d_td");
+    stan::json::write_json_value(&json_stream__, y2_vi_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y_s_d_td");
+    stan::json::write_json_value(&json_stream__, y_s_d_td);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "y_r_d_td");
+    stan::json::write_json_value(&json_stream__, y_r_d_td);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

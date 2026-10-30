@@ -776,6 +776,26 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((ROWS -1)) + ",\"cols\":" + std::to_string(COLS) + "},\"block\":\"parameters\"},{\"name\":\"p_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "ROWS");
+    stan::json::write_json_value(&json_stream__, ROWS);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "COLS");
+    stan::json::write_json_value(&json_stream__, COLS);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_csm");
+    stan::json::write_json_value(&json_stream__, td_csm);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_rsm");
+    stan::json::write_json_value(&json_stream__, td_rsm);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "td_arsm");
+    stan::json::write_json_value(&json_stream__, td_arsm);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

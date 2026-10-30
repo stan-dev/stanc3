@@ -1861,6 +1861,20 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(max_age) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "n_occ_minus_1");
+    stan::json::write_json_value(&json_stream__, n_occ_minus_1);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "first");
+    stan::json::write_json_value(&json_stream__, first);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "last");
+    stan::json::write_json_value(&json_stream__, last);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

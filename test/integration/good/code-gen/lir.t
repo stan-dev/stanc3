@@ -4036,7 +4036,7 @@
              (Block
               ((Expression
                 (FunCall stan::math::stan_print () ((Var pstream__) (Literal "\"hi\""))))
-               (Expression (StreamInsertion (Deref (Var pstream__)) ((Literal std::endl))))))
+               (Expression (StreamInsertion (Deref (Var pstream__)) ((Var std::endl))))))
              ()))
            ((Const (Ref (TypeLiteral std::exception))) e)
            ((Expression
@@ -15326,6 +15326,265 @@
                ((Constructor (TypeLiteral std::string)
                  ((Literal
                    "\"[{\\\"name\\\":\\\"p_real\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_upper\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_lower\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"offset_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"no_offset_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"offset_no_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(5) + \",\\\"cols\\\":\" + std::to_string(4) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"x_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"y_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"tp_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(5) + \",\\\"cols\\\":\" + std::to_string(4) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"theta_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_real\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"gq_r1\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_r2\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"indices\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"int\\\"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"indexing_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res1\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res2\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res3\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(3) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res11\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res21\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res31\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(3) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res4\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res5\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(2) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"}},\\\"block\\\":\\\"generated_quantities\\\"}]\""))))))))))
+         (FunDef
+          ((templates_init ((()) false)) (inline true)
+           (return_type (TypeLiteral std::string)) (name get_transformed_data_json)
+           (args ()) (cv_qualifiers (Const))
+           (body
+            (((VariableDefn
+               ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
+                (name json_stream__) (init Uninitialized)))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\"{\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_int\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_int))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_1d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_1d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_1dk\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_1dk))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_a\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_a))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_b\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_b))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_c\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_c))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_ar_mat\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_ar_mat))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_simplex\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_1d_simplex\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_1d_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_3d_simplex\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_3d_simplex))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_cfcov_54\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_cfcov_54))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"td_cfcov_33\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var td_cfcov_33))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"x\""))))
+              (Expression
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"y\""))))
+              (Expression
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var y))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"dat\""))))
+              (Expression
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var dat))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"dat_int\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var dat_int))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"x_r\""))))
+              (Expression
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x_r))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"x_i\""))))
+              (Expression
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x_i))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"arr_mul_ind\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var arr_mul_ind))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"x_mul_ind\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var x_mul_ind))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_real\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_real))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_real_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_real_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_real_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_row_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_row_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__)
+                 (Literal "\"transformed_data_row_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__)
+                 (Literal "\"transformed_data_row_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\"}\""))))
+              (Return ((MethodCall (Var json_stream__) str () ()))))))))
          (GlobalComment "Begin method overload boilerplate")
          (FunDef
           ((templates_init ((((Typename RNG))) false)) (inline true) (return_type Void)
@@ -17392,7 +17651,7 @@
                       (Expression
                        (FunCall stan::math::stan_print () ((Var pstream__) (Var l_mat))))
                       (Expression
-                       (StreamInsertion (Deref (Var pstream__)) ((Literal std::endl))))))
+                       (StreamInsertion (Deref (Var pstream__)) ((Var std::endl))))))
                     ())))))))
              (Expression (Assign (Var current_statement__) (Literal 347)))
              (Expression

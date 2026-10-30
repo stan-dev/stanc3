@@ -987,6 +987,20 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nind) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream__;
+    json_stream__ << "{";
+    stan::json::write_key(&json_stream__, "n_occ_minus_1");
+    stan::json::write_json_value(&json_stream__, n_occ_minus_1);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "first");
+    stan::json::write_json_value(&json_stream__, first);
+    json_stream__ << ",\n";
+    stan::json::write_key(&json_stream__, "last");
+    stan::json::write_json_value(&json_stream__, last);
+    json_stream__ << "}";
+    return json_stream__.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
