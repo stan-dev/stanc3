@@ -1,0 +1,53 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../density_lpmf_int_array_outcome.stan : [exit 0] */
+input_vars {
+  int N;
+  array[int, N] y; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("y", "N", N);
+  data array[int, N] y;
+  FnReadData__(y, context__, "y");
+  (FnCheck(trans(Lower 0))(var_name y)(var y))__(0);
+  (FnCheck(trans(Upper 1))(var_name y)(var y))__(1);
+  FnValidateSize__("eta", "N", N); }
+
+log_prob {
+  vector[N]
+    eta = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    target += bernoulli_logit_lupmf(y[1:N], eta[1:N]);
+  } }
+
+rev_log_prob {
+  vector[N]
+    eta = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    target += bernoulli_logit_lupmf(y[1:N], eta[1:N]);
+  } }
+
+generate_quantities {
+  data vector[N]
+    eta = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var eta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[N] eta;
+  FnReadData__(eta, context__, "eta");
+  (FnWriteParam(unconstrain_opt(Identity))(var eta))__(); }
+output_vars {
+  parameters vector[N] eta; //vector[N]
+}

@@ -1,0 +1,50 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../reduction_vector_accumulator.stan : [exit 0] */
+input_vars {
+  int N;
+  int K;
+  array[vector[K], N] rows; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int K;
+  FnReadData__(K, context__, "K");
+  (FnCheck(trans(Lower 1))(var_name K)(var K))__(1);
+  FnValidateSize__("rows", "N", N);
+  FnValidateSize__("rows", "K", K);
+  data array[vector[K], N] rows;
+  FnReadData__(rows, context__, "rows"); }
+
+log_prob {
+  {
+    FnValidateSize__("acc13", "K", K);
+    vector[K] acc13;
+    acc13 = rep_vector(promote(0, real, data), K);
+    for(n in 1:N) {
+      acc13 = (acc13 + rows[n]);
+    }
+    target += sum(acc13);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("acc13", "K", K);
+    vector[K] acc13;
+    acc13 = rep_vector(promote(0, real, data), K);
+    for(n in 1:N) {
+      acc13 = (acc13 + rows[n]);
+    }
+    target += sum(acc13);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

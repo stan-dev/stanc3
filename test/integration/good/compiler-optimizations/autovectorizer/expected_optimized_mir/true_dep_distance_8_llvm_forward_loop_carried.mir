@@ -1,0 +1,51 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../true_dep_distance_8_llvm_forward_loop_carried.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] b; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b"); }
+
+log_prob {
+  {
+    data int a1_1dim__ = (N + 8);
+    FnValidateSize__("a1", "N + 8", a1_1dim__);
+    vector[a1_1dim__] a1;
+    FnValidateSize__("c1", "N", N);
+    vector[N] c1;
+    for(n in 1:N) {
+      a1[(n + 8)] = (b[n] + promote(2, real, data));
+      c1[n] = (a1[n] * promote(2, real, data));
+    }
+    target += (sum(a1) + sum(c1));
+  } }
+
+rev_log_prob {
+  {
+    data int a1_1dim__ = (N + 8);
+    FnValidateSize__("a1", "N + 8", a1_1dim__);
+    vector[a1_1dim__] a1;
+    FnValidateSize__("c1", "N", N);
+    vector[N] c1;
+    for(n in 1:N) {
+      a1[(n + 8)] = (b[n] + promote(2, real, data));
+      c1[n] = (a1[n] * promote(2, real, data));
+    }
+    target += (sum(a1) + sum(c1));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

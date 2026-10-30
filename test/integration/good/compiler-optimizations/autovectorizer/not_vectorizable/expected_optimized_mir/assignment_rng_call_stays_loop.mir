@@ -1,0 +1,22 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../assignment_rng_call_stays_loop.stan : [exit 0] */
+functions {
+  real draw_sum_rng(vector x) {
+    {
+      data int draws_1dim__ = num_elements(x);
+      FnValidateSize__("draws", "num_elements(x)", draws_1dim__);
+      vector[draws_1dim__] draws;
+      for(n in 1:num_elements(x)) {
+        draws[n] = (x[n] + normal_rng(0, 1));
+      }
+      return sum(draws);
+    }
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

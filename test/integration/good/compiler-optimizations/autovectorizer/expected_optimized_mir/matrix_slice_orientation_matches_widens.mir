@@ -1,0 +1,91 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../matrix_slice_orientation_matches_widens.stan : [exit 0] */
+input_vars {
+  int N; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("y", "N", N);
+  FnValidateSize__("y", "N", N);
+  FnValidateSize__("z", "N", N);
+  FnValidateSize__("z", "N", N); }
+
+log_prob {
+  array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  array[row_vector[N], N]
+    z = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("w2", "N", N);
+    FnValidateSize__("w2", "N", N);
+    matrix[N, N] w2;
+    FnValidateSize__("w3", "N", N);
+    FnValidateSize__("w3", "N", N);
+    matrix[N, N] w3;
+    for(i in 1:N) {
+      w2[1:N, i] = y[i, 1:N];
+      w3[i, 1:N] = z[i, 1:N];
+    }
+  } }
+
+rev_log_prob {
+  array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  array[row_vector[N], N]
+    z = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("w2", "N", N);
+    FnValidateSize__("w2", "N", N);
+    matrix[N, N] w2;
+    FnValidateSize__("w3", "N", N);
+    FnValidateSize__("w3", "N", N);
+    matrix[N, N] w3;
+    for(i in 1:N) {
+      w2[1:N, i] = y[i, 1:N];
+      w3[i, 1:N] = z[i, 1:N];
+    }
+  } }
+
+generate_quantities {
+  data array[vector[N], N]
+    y = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  data array[row_vector[N], N]
+    z = (FnReadParam(constrain Identity)(dims(N N))(mem_pattern AoS))__(
+    );
+  for(idx1__ in 1:N) {
+    for(idx2__ in 1:N) {
+      (FnWriteParam(unconstrain_opt())(var"y[idx2__, idx1__]"))__();
+    }
+  }
+  for(idx1__ in 1:N) {
+    for(idx2__ in 1:N) {
+      (FnWriteParam(unconstrain_opt())(var"z[idx2__, idx1__]"))__();
+    }
+  }
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  array[vector[N], N] y;
+  FnReadData__(y, context__, "y");
+  (FnWriteParam(unconstrain_opt(Identity))(var y))__();
+  array[row_vector[N], N] z;
+  FnReadData__(z, context__, "z");
+  (FnWriteParam(unconstrain_opt(Identity))(var z))__(); }
+
+output_vars {
+  parameters array[vector[N], N] y; //array[vector[N], N]
+  parameters array[row_vector[N], N] z; //array[row_vector[N], N]
+}

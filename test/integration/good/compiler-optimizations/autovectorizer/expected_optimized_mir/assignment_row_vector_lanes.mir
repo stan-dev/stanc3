@@ -1,0 +1,56 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../assignment_row_vector_lanes.stan : [exit 0] */
+input_vars {
+  int N;
+  row_vector[N] r; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("r", "N", N);
+  data row_vector[N] r;
+  FnReadData__(r, context__, "r"); }
+
+log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    row_vector[N] v;
+    v[1:N] = (r[1:N] * promote(2, real, data));
+    target += normal_lpdf(v, promote(0, real, data), sigma);
+  } }
+
+rev_log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    row_vector[N] v;
+    v[1:N] = (r[1:N] * promote(2, real, data));
+    target += normal_lpdf(v, promote(0, real, data), sigma);
+  } }
+
+generate_quantities {
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+output_vars {
+  parameters real sigma; //real
+}

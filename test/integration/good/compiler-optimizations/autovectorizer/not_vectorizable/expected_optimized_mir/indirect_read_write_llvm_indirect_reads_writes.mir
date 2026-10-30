@@ -1,0 +1,55 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../indirect_read_write_llvm_indirect_reads_writes.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] b;
+  array[int, N] idx; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("idx", "N", N);
+  data array[int, N] idx;
+  FnReadData__(idx, context__, "idx");
+  (FnCheck(trans(Lower 1))(var_name idx)(var idx))__(1);
+  (FnCheck(trans(Upper N))(var_name idx)(var idx))__(N); }
+
+log_prob {
+  {
+    FnValidateSize__("a3", "N", N);
+    vector[N] a3;
+    FnValidateSize__("c3", "N", N);
+    vector[N] c3;
+    for(n in 1:N) {
+      a3[idx[n]] = b[n];
+      c3[n] = a3[idx[n]];
+    }
+    target += (sum(a3) + sum(c3));
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a3", "N", N);
+    vector[N] a3;
+    FnValidateSize__("c3", "N", N);
+    vector[N] c3;
+    for(n in 1:N) {
+      a3[idx[n]] = b[n];
+      c3[n] = a3[idx[n]];
+    }
+    target += (sum(a3) + sum(c3));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

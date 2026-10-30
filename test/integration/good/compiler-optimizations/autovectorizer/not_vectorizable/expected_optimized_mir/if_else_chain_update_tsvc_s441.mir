@@ -1,0 +1,73 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../if_else_chain_update_tsvc_s441.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b0;
+  vector[N] c;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  FnReadData__(b0, context__, "b0");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d"); }
+
+log_prob {
+  {
+    FnValidateSize__("a4", "N", N);
+    vector[N] a4;
+    a4 = a0;
+    for(n in 1:N) {
+      if((d[n] < 0)) {
+        a4[n] = (a4[n] + (b0[n] * c[n]));
+      } else {
+        if((d[n] == 0)) {
+          a4[n] = (a4[n] + (b0[n] * b0[n]));
+        } else {
+          a4[n] = (a4[n] + (c[n] * c[n]));
+        }
+      }
+    }
+    target += sum(a4);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a4", "N", N);
+    vector[N] a4;
+    a4 = a0;
+    for(n in 1:N) {
+      if((d[n] < 0)) {
+        a4[n] = (a4[n] + (b0[n] * c[n]));
+      } else {
+        if((d[n] == 0)) {
+          a4[n] = (a4[n] + (b0[n] * b0[n]));
+        } else {
+          a4[n] = (a4[n] + (c[n] * c[n]));
+        }
+      }
+    }
+    target += sum(a4);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

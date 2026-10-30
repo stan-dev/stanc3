@@ -1,0 +1,45 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../loop_body_partially_widened.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    vector[N] a;
+    target += std_normal_lupdf(x[1:N]);
+    a[1:N] = exp(x[1:N]);
+    for(i in 1:N) {
+      FnPrint__(x[i]);
+    }
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    vector[N] a;
+    target += std_normal_lupdf(x[1:N]);
+    a[1:N] = exp(x[1:N]);
+    for(i in 1:N) {
+      FnPrint__(x[i]);
+    }
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

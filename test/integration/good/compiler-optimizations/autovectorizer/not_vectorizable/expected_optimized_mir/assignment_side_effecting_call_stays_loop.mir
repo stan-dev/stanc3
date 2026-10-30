@@ -1,0 +1,67 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../assignment_side_effecting_call_stays_loop.stan : [exit 0] */
+functions {
+  real bump_lp(real x) {
+    {
+      target += x;
+      return x;
+    }
+  } }
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    for(n in 1:N) {
+      v[n] = (x[n] + bump_lp(sigma));
+    }
+    target += normal_lpdf(v, promote(0, real, data), sigma);
+  } }
+
+rev_log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    for(n in 1:N) {
+      v[n] = (x[n] + bump_lp(sigma));
+    }
+    target += normal_lpdf(v, promote(0, real, data), sigma);
+  } }
+
+generate_quantities {
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+output_vars {
+  parameters real sigma; //real
+}

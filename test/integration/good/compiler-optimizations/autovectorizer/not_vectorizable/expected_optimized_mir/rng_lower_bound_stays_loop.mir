@@ -1,0 +1,28 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../rng_lower_bound_stays_loop.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("a", "N", N);
+  data vector[N] a;
+  FnReadData__(a, context__, "a");
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  for(i in poisson_rng(10):N) {
+    x[i] = a[i];
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

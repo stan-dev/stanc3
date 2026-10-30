@@ -1,0 +1,79 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../reduction_mixed_density_operand.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] y;
+  vector[N] w; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  FnReadData__(y, context__, "y");
+  FnValidateSize__("w", "N", N);
+  data vector[N] w;
+  FnReadData__(w, context__, "w");
+  (FnCheck(trans(Lower 0))(var_name w)(var w))__(0); }
+
+log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    real lp12;
+    lp12 = promote(0, real, var);
+    for(n in 1:N) {
+      lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));
+    }
+    target += lp12;
+  } }
+
+rev_log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    real lp12;
+    lp12 = promote(0, real, var);
+    for(n in 1:N) {
+      lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));
+    }
+    target += lp12;
+  } }
+
+generate_quantities {
+  data real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var alpha))__();
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real alpha;
+  FnReadData__(alpha, context__, "alpha");
+  (FnWriteParam(unconstrain_opt(Identity))(var alpha))__();
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+output_vars {
+  parameters real alpha; //real
+  parameters real sigma; //real
+}
