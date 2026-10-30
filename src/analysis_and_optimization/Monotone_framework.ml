@@ -1,4 +1,38 @@
-(** The common elements of a monotone framework *)
+(** The common elements of a monotone framework
+
+    A dataflow analysis computes facts at the entry and the exit of each
+    statement, such as the variables that are initialized there. A
+    {e monotone framework} is the general scheme behind many such analyses. The
+    facts form a {e lattice}, which is a set of values with an order and a
+    {e join}. The join combines the facts from two control flow paths that meet,
+    for example by set union. A {e path} here is a sequence of statements that
+    the program can run one after another. A {e transfer function} gives the
+    facts at the exit of a statement from the facts at the entry. Many transfer
+    functions add a {e gen} set of facts and remove a {e kill} set.
+    {!monotone_framework} applies the transfer functions over the flowgraph
+    until the facts stop changing.
+
+    One instance is the reaching definitions analysis. A {e definition}
+    [(x, Some l)] records that the statement with label [l] can write [x]. The
+    definition {e reaches} a statement if some path goes from [l] to the
+    statement with no write between them that overwrites [x]. [(x, None)] is a
+    definition of [x] from outside the analyzed statement (the statement that
+    the analysis runs on), such as data.
+
+    A statement adds a definition for each variable that the statement assigns
+    or declares. A write to a whole variable kills the earlier definitions of
+    that variable. An indexed or tuple-field write keeps them, because the
+    transfer function sees only variable names. The transfer function does not
+    see which element a write selects, so the transfer function cannot tell when
+    an element write overwrites an earlier one.
+
+    A caller that knows the elements, such as
+    {!Dependence_analysis.build_dependence_info}, passes an [is_killed] callback
+    to kill these definitions too. At label [killer],
+    [is_killed ~killer ~killed x] kills each definition [(x, Some killed)] for
+    which [is_killed] is true. The callback must be true only if [killer]
+    overwrites every value that [killed] can leave in [x], on every path to
+    [killer]. The default kills nothing extra. *)
 
 open Std
 open Monotone_framework_sigs
@@ -78,16 +112,14 @@ let top_free_vars_stmt
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Profile _ | Block _ | SList _ -> Set.Poly.empty
 
-(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt ?(flatten_loops = false)
-    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+(** The inverse flowgraph of a statement map. A caller that already has the
+    statement map passes the map here, so the flowgraph uses the same labels. *)
+let inverse_flowgraph_of_statement_map ?(flatten_loops = false)
+    ?(blocks_after_body = true)
+    (flowgraph_to_mir :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) :
     (module FLOWGRAPH with type labels = int)
     * Stmt.Located.Non_recursive.t LabelMap.t =
-  let flowgraph_to_mir =
-    Dataflow_utils.build_statement_map
-      (fun Stmt.{pattern; _} -> pattern)
-      (fun Stmt.{meta; _} -> meta)
-      stmt in
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
       flowgraph_to_mir in
@@ -101,6 +133,17 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
   , LabelMap.map
       ~f:(fun (pattern, meta) -> Stmt.Located.Non_recursive.{pattern; meta})
       flowgraph_to_mir )
+
+(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
+let inverse_flowgraph_of_stmt ?(flatten_loops = false)
+    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+    (module FLOWGRAPH with type labels = int)
+    * Stmt.Located.Non_recursive.t LabelMap.t =
+  inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
+    (Dataflow_utils.build_statement_map
+       (fun Stmt.{pattern; _} -> pattern)
+       (fun Stmt.{meta; _} -> meta)
+       stmt)
 
 (** Reverse flowgraphs to be used for reverse analyses. Observe that this
     respects the invariants listed for a FLOWGRAPH *)
@@ -154,6 +197,12 @@ let forward_flowgraph_of_stmt ?(flatten_loops = false)
   let inv_flowgraph =
     inverse_flowgraph_of_stmt ~flatten_loops ~blocks_after_body stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
+
+(** The forward flowgraph of a statement map, with the labels of that map. *)
+let forward_flowgraph_of_statement_map statement_map =
+  let inv_flowgraph, flowgraph_to_mir =
+    inverse_flowgraph_of_statement_map statement_map in
+  (reverse inv_flowgraph, flowgraph_to_mir)
 
 (** The lattice of sets of some values, with the inclusion order, set union and
     the empty set *)
@@ -274,7 +323,8 @@ let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
       let initial = Set.Poly.empty
     end)
 
-(** The specific powerset lattice we use for reaching definitions analysis *)
+(** Lattice for reaching definitions. A join takes the set union. [(x, None)] is
+    a definition of [x] from outside the analyzed statement. *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -437,80 +487,105 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
     with type labels = int
      and type properties = Expr.Typed.t String.Map.t option)
 
-(** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
-(* TODO: from here *)
+(* The functions below find the variables that a statement assigns. Reaching
+   definitions and the initialized-variables analysis both use these
+   functions. *)
 
-(** Calculate the set of variables that a statement can assign to *)
+(** True if an expression in the statement calls a function that adds to
+    [target], for example [x = foo_lp(y)]. *)
+let is_target_incremented_in_exprs (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+  Stmt.Pattern.fold
+    (fun is_incremented_earlier expr ->
+      is_incremented_earlier
+      || expr_any
+           (fun (subexpr : Expr.Typed.t) ->
+             match subexpr.pattern with
+             | FunApp (kind, _) -> is_target_increment kind
+             | _ -> false)
+           expr)
+    Fun.const false s
+
+(** Variables the statement assigns. An update to [target] is an assignment. *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
-  match s with
-  | Assignment (lhs, _, _) ->
-      Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
-  | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
-  | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
-  | NRFunApp
-      ( ( UserDefined (_, (FnTarget | FnJacobian))
-        | StanLib (_, (FnTarget | FnJacobian)) )
-      , _ ) ->
-      Set.Poly.singleton "target"
-  | For {loopvar= x; _} -> Set.Poly.singleton x
-  | Decl {decl_id= _; _}
-   |NRFunApp (_, _)
-   |Break | Continue | Return _ | Skip
-   |IfElse (_, _, _)
-   |While (_, _)
-   |Profile _ | Block _ | SList _ ->
-      Set.Poly.empty
+  let assigned =
+    match s with
+    | Assignment (lhs, _, _) ->
+        Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
+    | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
+    | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
+    | NRFunApp (kind, _) when is_target_increment kind ->
+        Set.Poly.singleton "target"
+    | For {loopvar= x; _} -> Set.Poly.singleton x
+    | Decl {decl_id= _; _}
+     |NRFunApp (_, _)
+     |Break | Continue | Return _ | Skip
+     |IfElse (_, _, _)
+     |While (_, _)
+     |Profile _ | Block _ | SList _ ->
+        Set.Poly.empty in
+  if is_target_incremented_in_exprs s then Set.Poly.add "target" assigned
+  else assigned
 
-(** Calculate the set of variables that a statement can declare *)
 let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
-(** Calculate the set of variables that a statement can assign to or declare *)
-let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+(** Variables the statement assigns or declares. A declaration without a value
+    is a reaching definition, but the declaration does not initialize the
+    variable. *)
+let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** The transfer function for a reaching definitions analysis *)
+(** Transfer function for reaching definitions. The module overview describes
+    the gen and kill sets, and the [is_killed] callback. *)
 let reaching_definitions_transfer
+    ?(is_killed : killer:int -> killed:int -> string -> bool =
+      fun ~killer:_ ~killed:_ _ -> false)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
     type labels = int
-    type properties = (string * labels option) Set.Poly.t
+    type properties = reaching_definition Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let gen =
-        Set.Poly.map
-          ~f:(fun x -> (x, Some l))
-          (assigned_or_declared_vars_stmt mir_node) in
-      let kill =
+      let written = assigned_or_declared_vars mir_node in
+      let gen = Set.Poly.map ~f:(fun x -> (x, Some l)) written in
+      let target_defns = Set.Poly.filter p ~f:(fun (y, _) -> y = "target") in
+      let killed =
         match mir_node with
         | Decl {decl_id= x; _}
          |Assignment ((LVariable x, []), _, _)
          |For {loopvar= x; _} ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ | JacobianPE _ ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp
-            ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian)) )
-            , _ ) ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
+        | TargetPE _ | JacobianPE _ -> target_defns
+        | NRFunApp (kind, _) when is_target_increment kind -> target_defns
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
          |Profile _ | Block _ | SList _ | Assignment _ ->
             Set.Poly.empty in
+      let element_killed =
+        Set.Poly.filter p ~f:(fun (var, definition) ->
+            match definition with
+            | Some killed ->
+                Set.Poly.mem var written && is_killed ~killer:l ~killed var
+            | None -> false) in
+      let kill =
+        Set.Poly.union_list
+          [ killed; element_killed
+          ; (if is_target_incremented_in_exprs mir_node then target_defns
+             else Set.Poly.empty) ] in
       transfer_gen_kill p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string * int option) Set.Poly.t)
+     and type properties = reaching_definition Set.Poly.t)
 
-(** The transfer function for an initialized variables analysis *)
+(** Adds each variable that the statement assigns. A write to one element counts
+    as an assignment to the whole variable. *)
 let initialized_vars_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
@@ -661,7 +736,7 @@ let killed_expressions_stmt (p : ExprSet.t)
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here, but it
          would require us to duplicate some code. *)
-      let assigned_vars = assigned_or_declared_vars_stmt s in
+      let assigned_vars = assigned_or_declared_vars s in
       not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)))
 
 (** Calculate the set of subexpressions that needs to be computed at each node
@@ -919,7 +994,11 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-let reaching_definitions_mfp (mir : Program.Typed.t)
+(** Computes reaching definitions, with [is_killed] as in the module overview.
+    Each input and output variable of the program starts with [(x, None)]. *)
+let reaching_definitions_mfp
+    ?(is_killed : killer:int -> killed:int -> string -> bool =
+      fun ~killer:_ ~killed:_ _ -> false) (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
@@ -939,12 +1018,15 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
     end : TYPE
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  let (module Transfer) =
+    reaching_definitions_transfer ~is_killed flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in
   Mf.mfp ()
 
+(** Computes the variables that are assigned on every path to each statement. A
+    join is the intersection. The analysis starts from the empty set. *)
 let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)

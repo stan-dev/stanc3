@@ -1,27 +1,40 @@
 open Std
 open Std.Sexp_conv
 
-(***********************************)
-(* Basic datatypes                 *)
-(***********************************)
-
-(** A label is a unique identifier for a node in the dataflow/dependency graph,
-    and often corresponds to one node in the Mir. *)
+(** A label is an integer that identifies one statement in a statement map or
+    graph. A {e statement map} ({!Dataflow_utils.build_statement_map}) maps each
+    label to a statement. Labels from different maps do not match. *)
 type label = int [@@deriving sexp_of]
 
-(** Representation of an expression that can be assigned to. This should also be
-    able to represent indexed variables, but we don't support that yet. *)
-type vexpr = VVar of string [@@deriving sexp_of]
+(** A possible source of the value of a variable at a statement. The source is a
+    write that can run before the statement with no write between them that
+    overwrites the value. Such a write is a {e reaching definition}
+    ({!Monotone_framework.reaching_definitions_mfp}). [(x, Some l)] means that
+    the statement with label [l] can write [x]. [(x, None)] means that [x] gets
+    a value from outside the analyzed statement (the statement that the analysis
+    runs on), such as data. *)
+type reaching_definition = string * label option [@@deriving sexp_of]
 
-(** A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that
-    the variable v could have been affected at the label l. *)
-type reaching_defn = vexpr * label [@@deriving sexp_of]
+(** The side of an [if] that holds a statement. *)
+type side = Then | Else
 
-(** The most recently nested control flow (block start, if/then, or loop)
+(** An [if] or a loop around a statement. [id] is the label of the [if] or the
+    loop. [side] is the side of the [if] that holds the statement, and [None]
+    for a loop. A loop is identified by the label of the loop statement, and the
+    statement at that label holds the loop variable. *)
+type enclosing = {id: label; side: side option}
 
-    This isn't included in the traversal_state because it only flows downward
-    through the tree, not across and up like everything else *)
-type cf_state = label
+(** The {e controls} of a statement are the other statements that decide
+    whether, or how often, the statement runs.
+    {!Dataflow_utils.build_control_flow} finds the controls of each statement.
+*)
+type controls =
+  { enclosing: enclosing list
+        (** The ifs and loops around the statement, outermost first. *)
+  ; jump_ids: label Set.Poly.t
+        (** The labels of the [break], [continue] and [return] statements that
+            can skip the statement. For a loop statement, also each [break] or
+            [return] in the loop body that can end the loop. *) }
 
 module LabelMap = struct
   include Int.Map

@@ -2,10 +2,49 @@ open Std
 open Middle
 open Dataflow_types
 
+(** Utilities to inspect and rewrite MIR, the middle intermediate representation
+    of a Stan program. The docs below use the following terms.
+
+    - The log density of a model is the sum that [target] accumulates. A call
+      increments the target if the call can add to this sum. A user function
+      whose name ends in [_lp], or a user or Stan Math function whose name ends
+      in [_jacobian], can do so. In [Fun_kind.t], these functions have the
+      suffix [FnTarget] or [FnJacobian].
+    - The destination of an assignment is the left side, such as [y[k]] in
+      [y[k] = v[j]]. The destination indices are the indices in the destination,
+      such as [k].
+    - The input expressions of a statement are the expressions that the
+      statement itself evaluates. A [for] gives the loop bounds, and an [if] or
+      [while] gives the condition. A call gives the arguments and the
+      expressions in the [Fun_kind.t] of the call. For [y[k] = v[j]], the input
+      expression is [v[j]]. Nested statements, declarations, and destination
+      indices are not input expressions.
+    - The child statements of a statement are the statements directly inside the
+      statement, such as the body of a [for]. A label map maps an integer label
+      to a statement whose child statements are replaced by labels
+      ([Stmt.Located.Non_recursive.t]).
+    - The autodiff level of an expression records whether the value needs
+      automatic differentiation (autodiffable) or is data-only. *)
+
 val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
+(** [expr_any p e] is true if [p] holds for a subexpression of [e], indices
+    included. [p] does not test an indexed expression as a whole. *)
+
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
+(** Applies {!expr_any} to each expression in an index. *)
+
+val is_target_increment : 'e Fun_kind.t -> bool
+(** True if a call to a function of this kind increments the target. The Stan
+    Math call [target()] only reads [target] and gives false. *)
+
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
+(** True if two evaluations can differ, as with side effects, random draws, or
+    [target()]. [preserve_stability] adds autodiffable expressions. *)
+
 val cannot_remove_expr : ExprSet.elt -> bool
+(** True if evaluation of the expression can have a side effect. A read of
+    [target()] does not have a side effect. *)
+
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
@@ -96,91 +135,94 @@ val unnumbered_prog_of_numbered_prog :
   -> ('a -> 'b)
   -> (Stmt.Located.Non_recursive.t, 'a, 'c) Program.t
   -> (Stmt.Located.t, 'b, 'c) Program.t
+(** Rebuilds recursive statements from the label map. The second argument maps
+    the other parts of the program. *)
+
+(** {1 Statement traversal and read collection} *)
 
 val fwd_traverse_statement :
      ('e, 'a) Stmt.Pattern.t
   -> init:'f
   -> f:('f -> 'a -> 'f * 'c)
   -> 'f * ('e, 'c) Stmt.Pattern.t
-(** A traversal that simultaneously accumulates a state (type 'f) and replaces
-    the substatement values from ('a to 'c). Traversal is done in-order but
-    ignores branching, e.g., and if's then block is followed by the else block
-    rather than branching. *)
+(** Folds [~f] over the child statements in order, mapping ['a] to ['c]. The
+    then-branch state of an [if] goes into the else branch. *)
 
-val vexpr_of_expr_exn : Expr.Typed.t -> vexpr
-(** Take a LHS expression from a general expression, throwing an exception if it
-    can't be a LHS expression. *)
+val var_name_of_expr_exn : Expr.Typed.t -> string
+(** Returns the name of a [Var] expression. Any other expression, for example
+    [v[n]], raises an internal compiler error. *)
 
-val expr_var_set : Expr.Typed.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(** The set of variables in an expression, including inside an index. For use in
-    RHS sets, not LHS assignment sets, except in a target term. *)
+val expr_var_set : Expr.Typed.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
+(** Collects [(name, metadata)] for each variable in an expression, including
+    variables in indices. For [v[k]], the result has pairs for [v] and [k]. *)
 
-val index_var_set :
-  Expr.Typed.t Index.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(** The set of variables in an index. For use in RHS sets, not LHS assignment
-    sets, except in a target term *)
-
-val expr_var_names_set : Expr.Typed.t -> string Set.Poly.t
-(** Return the names of the variables in an expression. *)
+val expr_names : Expr.Typed.t -> string Set.Poly.t
+(** The names from {!expr_var_set}. For [v[k] + v[j]], the result is
+    [{"v"; "k"; "j"}]. *)
 
 val stmt_rhs : (Expr.Typed.t, 's) Stmt.Pattern.t -> Expr.Typed.t Set.Poly.t
-(** The set of variables that can affect the value or behavior of the
-    expression, i.e. rhs. Using Set.Poly instead of ExprSet so that 'e can be
-    polymorphic, it usually doesn't matter if there's duplication. *)
+(** Returns the input expressions of the statement, as defined in the overview.
+    For [y[k] = v[j]], the result is [v[j]]. *)
 
 val stmt_rhs_var_set :
-  (Expr.Typed.t, 's) Stmt.Pattern.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(** The set of variables in an expression, including inside an index. For use in
-    RHS sets, not LHS assignment sets, except in a target term. *)
+  (Expr.Typed.t, 's) Stmt.Pattern.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
+(** Applies {!expr_var_set} to the result of {!stmt_rhs}. For [y[k] = v[j]], the
+    result has pairs for [v] and [j], but not for [y] or [k]. *)
 
-val stmt_rhs_names_set : ('a Expr.t, 'b) Stmt.Pattern.t -> vexpr Set.Poly.t
-(** The set of variable names in an expression, including inside an index. For
-    use in RHS sets, not LHS assignment sets, except in a target term. *)
+val stmt_rhs_names_set : ('a Expr.t, 'b) Stmt.Pattern.t -> string Set.Poly.t
+(** The names from {!stmt_rhs_var_set}. For [y[k] = v[j]], the result is
+    [{"v"; "j"}]. *)
 
-val expr_assigned_var : Expr.Typed.t -> vexpr
-(** The variable being assigned to when the expression is the LHS *)
+(** {1 Expression rewriting} *)
 
 val summation_terms : Expr.Typed.t -> Expr.Typed.t list
-(** The list of terms in expression separated by a + *)
+(** Splits nested [+] expressions into a list of terms, in order. For
+    [a + (b + c)], the result is [[a; b; c]]. [a - b] is one term. *)
 
 val subst_expr : Expr.Typed.t String.Map.t -> Expr.Typed.t -> Expr.Typed.t
-(** Substitute variables in an expression according to the provided Map. *)
+(** Replaces variables with the expressions in the map. The map does not apply
+    to inserted expressions. *)
 
 val subst_stmt_base :
      Expr.Typed.t String.Map.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
-(** Substitute variables occurring at the top level in statements according to
-    the provided Map. *)
+(** Applies {!subst_expr} to the expressions of the statement itself, including
+    destination indices. Nested statements do not change. *)
 
 val subst_stmt : Expr.Typed.t String.Map.t -> Stmt.Located.t -> Stmt.Located.t
-(** Substitute variables occurring anywhere in a statement according to the
-    provided Map. *)
+(** Applies {!subst_stmt_base} to the statement and to all nested statements.
+    Declared names and destination names do not change. *)
 
 val name_subst_stmt : string String.Map.t -> Stmt.Located.t -> Stmt.Located.t
-(** Substitute subexpressions occurring anywhere in a statement according to the
-    provided Map. *)
+(** Renames variables in all expressions of the statement. Declared names and
+    destination names do not change. *)
 
 val expr_subst_expr : Expr.Typed.t ExprMap.t -> Expr.Typed.t -> Expr.Typed.t
-(** Substitute subexpressions in an expression according to the provided Map,
-    trying to match on larger subexpressions before smaller ones. *)
+(** Replaces subexpressions with the expressions in the map, trying larger
+    subexpressions first. The map does not apply to inserted expressions. *)
 
 val expr_subst_stmt_base :
      Expr.Typed.t ExprMap.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
-(** Substitute subexpressions occurring at the top level in statements according
-    to the provided Map. *)
+(** Applies {!expr_subst_expr} to the expressions of the statement itself,
+    including destination indices. Nested statements do not change. *)
 
 val expr_depth : Expr.Typed.t -> int
-(** Calculate how deeply nested an expression is. *)
+(** The depth of the expression tree. A variable or literal has depth [0]. For
+    [a + b * c], the depth is [2]. *)
 
 val update_expr_ad_levels :
   ?keep_promotions:bool -> string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
-(** Recompute all AD-levels in the metadata of an expression from the bottom up,
-    making the variables in the first argument autodiffable *)
+(** Recomputes autodiff levels bottom up. Variables outside the set become
+    data-only. [~keep_promotions:true] leaves [Promotion] nodes unchanged. *)
 
 val cleanup_empty_stmts : ('e, 's) Stmt.t list -> ('e, 's) Stmt.t list
+(** Removes skips, empty blocks and loops with empty bodies. Flattens blocks
+    that have no declarations. Profile blocks stay. *)
 
 val unsafe_unsized_to_sized_type :
   Expr.Typed.t Type.t -> Expr.Typed.t SizedType.t
+(** Converts a type to a sized type with placeholder size zero in each unsized
+    dimension. A function type gives the return type of the function. *)

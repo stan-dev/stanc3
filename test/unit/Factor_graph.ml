@@ -3,6 +3,33 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
+(* These tests check {!Analysis_and_optimization.Factor_graph}. A factor is a
+   part of a statement that changes the log density. Each factor is a [target
+   +=] term, a [reject] or an [_lp] call. A label is the integer that identifies
+   a statement in the statement map of
+   {!Analysis_and_optimization.Dependence_analysis}. Each factor in the output
+   carries the label of the statement that contains the factor. The inputs of a
+   factor are the data and parameters that the value of the factor depends on.
+   The factor graph links each factor to the inputs of the factor. Pedantic mode
+   uses the graph to warn about unused parameters and about priors. *)
+
+(** Prints the factor map and the variable map of [graph]. The factor map links
+    each factor and the statement label of the factor to the variables that the
+    factor reads. The variable map links each variable to the factors that read
+    the variable. *)
+let print_factor_graph (graph : factor_graph) =
+  print_s
+    [%sexp
+      { factor_map=
+          (FactorMap.to_list graph.factor_map
+            : ((factor * label) * string Set.Poly.t) list)
+      ; var_map=
+          (String.Map.to_list graph.var_map
+            : (string * (factor * label) Set.Poly.t) list) }]
+
+(* The two // comments give the labels of the two factors in the output. None of
+   the factors reads a parameter, so each factor maps to an empty variable
+   set. *)
 let reject_example =
   Test_utils.mir_of_string
     {|
@@ -10,32 +37,32 @@ let reject_example =
           real x;
         }
         model
-        {                                // 1
-          int i                          // 2: 3
-              = 0;                       //    4
-          if (i < 0)                     // 5
-          {                              // 6
-            print(i);                    // 7
+        {
+          int i
+              = 0;
+          if (i < 0)
+          {
+            print(i);
           } else
-          {                              // 8
-            for (j in 1:10)              // 9
-            {                            // 10
-              if (j > 9)                 // 11
-              {                          // 12
-                break;                   // 13
+          {
+            for (j in 1:10)
+            {
+              if (j > 9)
+              {
+                break;
               }
-              if (j > 8 && i < -1)       // 14
-              {                          // 15
-                continue;                // 16
+              if (j > 8 && i < -1)
+              {
+                continue;
               }
-              if (j > 5)                 // 17
-              {                          // 18
-                reject(0);               // 19
+              if (j > 5)
+              {
+                reject(0);               // 20
               } else
-              {                          // 20
-                target += 1 + 1;         // 21
+              {
+                target += 1 + 1;         // 22
               }
-              print("Fin");              // 22
+              print("Fin");
             }
           }
         }
@@ -43,7 +70,7 @@ let reject_example =
 
 let%expect_test "Factor graph reject example" =
   let deps = prog_factor_graph reject_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
       ((factor_map
@@ -91,7 +118,7 @@ let complex_example =
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
     ((factor_map
@@ -110,7 +137,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          10)
-        ((VVar a) (VVar b)))
+        (a b))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -130,7 +157,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          9)
-        ((VVar b)))
+        (b))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -146,7 +173,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          17)
-        ((VVar a) (VVar c)))
+        (a c))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -158,7 +185,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          18)
-        ((VVar b) (VVar c) (VVar d)))
+        (b c d))
        (((TargetTerm
           ((pattern
             (FunApp (Operator Times)
@@ -168,7 +195,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          21)
-        ((VVar f)))
+        (f))
        (((TargetTerm
           ((pattern
             (FunApp (Operator Times)
@@ -178,9 +205,9 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          21)
-        ((VVar a) (VVar b) (VVar c) (VVar d) (VVar e)))))
+        (a b c d e))))
      (var_map
-      (((VVar a)
+      ((a
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -220,7 +247,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar b)
+       (b
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -275,7 +302,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar c)
+       (c
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -311,7 +338,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar d)
+       (d
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -332,7 +359,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar e)
+       (e
         (((TargetTerm
            ((pattern
              (FunApp (Operator Times)
@@ -342,7 +369,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar f)
+       (f
         (((TargetTerm
            ((pattern
              (FunApp (Operator Times)
@@ -386,12 +413,13 @@ let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
   print_s
     [%sexp
-      (priors
-        : ((factor * label) Set.Poly.t option * Middle.Location_span.t)
-          VExprMap.t)];
+      (String.Map.to_list priors
+        : (string
+          * ((factor * label) Set.Poly.t option * Middle.Location_span.t))
+          list)];
   [%expect
     {|
-    (((VVar a)
+    ((a
       (((((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -447,7 +475,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 7) (col_num 17) (byte_num 100)
           (included_from ()))))))
-     ((VVar b)
+     (b
       (((((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -484,7 +512,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 8) (col_num 17) (byte_num 118)
           (included_from ()))))))
-     ((VVar c)
+     (c
       ((())
        ((begin_loc
          ((filename string) (line_num 9) (col_num 10) (byte_num 129)
@@ -492,7 +520,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 9) (col_num 17) (byte_num 136)
           (included_from ()))))))
-     ((VVar d)
+     (d
       ((())
        ((begin_loc
          ((filename string) (line_num 10) (col_num 10) (byte_num 147)
@@ -500,7 +528,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 10) (col_num 17) (byte_num 154)
           (included_from ()))))))
-     ((VVar e)
+     (e
       ((())
        ((begin_loc
          ((filename string) (line_num 11) (col_num 10) (byte_num 165)
@@ -508,7 +536,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 11) (col_num 17) (byte_num 172)
           (included_from ()))))))
-     ((VVar f)
+     (f
       ((())
        ((begin_loc
          ((filename string) (line_num 12) (col_num 10) (byte_num 183)

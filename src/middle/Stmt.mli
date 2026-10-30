@@ -1,6 +1,11 @@
-(** MIR types and modules corresponding to the statements of the language *)
+(** MIR statements. The child statements of a statement are the statements
+    directly inside the statement, such as the body of a [for]. A statement
+    pattern ({!Pattern.t}) is one statement with separate type parameters for
+    the expressions and for the child statements. An analysis can then replace
+    each child statement with a label, an integer that identifies the child. *)
 
 module Pattern : sig
+  (** A statement with expressions of type ['a] and children of type ['b]. *)
   type ('a, 'b) t =
     | Assignment of 'a lvalue * UnsizedType.t * 'a
     | TargetPE of 'a
@@ -37,10 +42,16 @@ module Pattern : sig
     -> 'a
     -> ('b, 'c) t
     -> 'a * ('b, 'd) t
+  (** Folds the first function over the expressions. Folds the second function
+      over the children and replaces each child of type ['c] with a ['d]. *)
+
+  val pp : 'a Fmt.t -> 'b Fmt.t -> ('a, 'b) t Fmt.t
+  (** Prints expressions with the first printer and children with the second. A
+      [for] with body label [8] can print as [for(n in 1:N) 8]. *)
 end
 
-(** The "two-level" type for statements in the MIR. This corresponds to what the
-    AST calls [Frontend.Ast.statement_with] *)
+(** A recursive statement, whose children are again statements of this type.
+    Expressions have metadata of type ['a], and statements of type ['b]. *)
 type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
 [@@deriving sexp_of]
 
@@ -51,15 +62,10 @@ val rewrite_bottom_up :
   -> g:(('a, 'b) t -> ('a, 'b) t)
   -> ('a, 'b) t
   -> ('a, 'b) t
-(** [rewrite_bottom_up] specializes [fold] so that the result type ['r1] is
-    equal to the type of the nested fixed-point type i.e. ['r1 = 'a Expr.t] and
-    the result type ['r2] is equal to the top-level fixed-point type i.e.
-    ['r2 = ('a,'b) t].
+(** Rewrites expressions with [f] and statements with [g], from the bottom up.
+    Each callback gets a node whose children are already rewritten. *)
 
-    This also means that the function [f] can be written with our nested
-    fixed-point type ['a Expr.t] as its argument and [g] can be written with
-    [('a,'b) t] as its argument. *)
-
+(** Recursive statements with typed expressions and source locations. *)
 module Located : sig
   module Meta : sig
     type t = Location_span.t
@@ -72,11 +78,13 @@ module Located : sig
 
   val pp : t Fmt.t
 
+  (** A statement with a source location, whose children are labels. *)
   module Non_recursive : sig
     type t = {pattern: (Expr.Typed.t, int) Pattern.t; meta: Meta.t}
   end
 end
 
+(** Recursive statements with an integer label as metadata. *)
 module Numbered : sig
   module Meta : sig
     type t = int
@@ -90,6 +98,8 @@ module Numbered : sig
   val pp : t Fmt.t
 end
 
+(** Helpers to build statements and to query assignment destinations. The
+    destination of an assignment is the left side ({!Pattern.lvalue}). *)
 module Helpers : sig
   val temp_vars :
     Expr.Typed.t list -> Located.t list * Expr.Typed.t list * (unit -> unit)
@@ -116,14 +126,15 @@ module Helpers : sig
     (Expr.Typed.t -> Located.t) -> Expr.Typed.t -> Location_span.t -> Located.t
 
   val get_lhs_name : 'a Pattern.lvalue -> string
-  (** The name of the lhs. This adds "." and an index to tuple projections *)
+  (** The destination name with tuple fields and without subscripts. For
+      [x[i].2[j]], the result is ["x.2"]. *)
 
   val lvariable : string -> 'e Pattern.lvalue
   val lvalue_of_expr_opt : 'e Expr.t -> 'e Expr.t Pattern.lvalue option
 
   val expr_of_lvalue : 'e Expr.t Pattern.lvalue -> meta:'e -> 'e Expr.t
-  (** Warning: the type of the top-level expr is as provided in meta, but any
-      internal types will likely be incorrect in this function *)
+  (** Builds an expression for the destination. Each new node gets [meta], so
+      the types of the inner nodes can be wrong. *)
 
   val map_lhs_variable :
     f:(string -> string) -> 'e Pattern.lvalue -> 'e Pattern.lvalue
@@ -131,15 +142,14 @@ module Helpers : sig
   val lhs_indices : 'e Pattern.lvalue -> 'e Index.t list
 
   val lhs_variable : 'e Pattern.lvalue -> string
-  (** This gets the innermost name of the variable. It differs from
-      [get_lhs_name] in that tuple projections do not add their indices here. *)
+  (** The base variable name, without tuple fields or subscripts. For
+      [x[i].2[j]], the result is ["x"]. *)
 
   val lvalue_base_reference : 'e Pattern.lvalue -> 'e Pattern.lvalue
-  (** Reduce an lvalue down to its "base reference", which is a variable with
-      maximum tuple indices after it. For example:
-      {[
-        x[1,2][3] -> x
-        x.1[1,2].2[3].3 -> x.1
-        x.1.2[1,2][3].3 -> x.1.2
+  (** Removes all subscripts and keeps all tuple fields.
+      {@text[
+        x[1, 2][3]          -> x
+        x.1[1, 2].2[3].3    -> x.1.2.3
+        x.1.2[1, 2][3].3    -> x.1.2.3
       ]} *)
 end
