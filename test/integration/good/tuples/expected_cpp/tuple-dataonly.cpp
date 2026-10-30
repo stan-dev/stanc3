@@ -557,20 +557,20 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "d2");
-    stan::json::write_json_value(json_stream__, d2);
+    stan::json::write_key(&json_stream__, "d2");
+    stan::json::write_json_value(&json_stream__, d2);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "m");
-    stan::json::write_json_value(json_stream__, m);
+    stan::json::write_key(&json_stream__, "m");
+    stan::json::write_json_value(&json_stream__, m);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "m2");
-    stan::json::write_json_value(json_stream__, m2);
+    stan::json::write_key(&json_stream__, "m2");
+    stan::json::write_json_value(&json_stream__, m2);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x");
-    stan::json::write_json_value(json_stream__, x);
+    stan::json::write_key(&json_stream__, "x");
+    stan::json::write_json_value(&json_stream__, x);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x2");
-    stan::json::write_json_value(json_stream__, x2);
+    stan::json::write_key(&json_stream__, "x2");
+    stan::json::write_json_value(&json_stream__, x2);
     json_stream__ << "}";
     return json_stream__.str();
   }

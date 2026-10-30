@@ -779,20 +779,20 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "ROWS");
-    stan::json::write_json_value(json_stream__, ROWS);
+    stan::json::write_key(&json_stream__, "ROWS");
+    stan::json::write_json_value(&json_stream__, ROWS);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "COLS");
-    stan::json::write_json_value(json_stream__, COLS);
+    stan::json::write_key(&json_stream__, "COLS");
+    stan::json::write_json_value(&json_stream__, COLS);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_csm");
-    stan::json::write_json_value(json_stream__, td_csm);
+    stan::json::write_key(&json_stream__, "td_csm");
+    stan::json::write_json_value(&json_stream__, td_csm);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_rsm");
-    stan::json::write_json_value(json_stream__, td_rsm);
+    stan::json::write_key(&json_stream__, "td_rsm");
+    stan::json::write_json_value(&json_stream__, td_rsm);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_arsm");
-    stan::json::write_json_value(json_stream__, td_arsm);
+    stan::json::write_key(&json_stream__, "td_arsm");
+    stan::json::write_json_value(&json_stream__, td_arsm);
     json_stream__ << "}";
     return json_stream__.str();
   }

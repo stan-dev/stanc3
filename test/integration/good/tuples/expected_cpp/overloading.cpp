@@ -345,20 +345,20 @@ class overloading_model final : public model_base_crtp<overloading_model> {
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "x3");
-    stan::json::write_json_value(json_stream__, x3);
+    stan::json::write_key(&json_stream__, "x3");
+    stan::json::write_json_value(&json_stream__, x3);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x2");
-    stan::json::write_json_value(json_stream__, x2);
+    stan::json::write_key(&json_stream__, "x2");
+    stan::json::write_json_value(&json_stream__, x2);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "y3");
-    stan::json::write_json_value(json_stream__, y3);
+    stan::json::write_key(&json_stream__, "y3");
+    stan::json::write_json_value(&json_stream__, y3);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "y2");
-    stan::json::write_json_value(json_stream__, y2);
+    stan::json::write_key(&json_stream__, "y2");
+    stan::json::write_json_value(&json_stream__, y2);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "y4");
-    stan::json::write_json_value(json_stream__, y4);
+    stan::json::write_key(&json_stream__, "y4");
+    stan::json::write_json_value(&json_stream__, y4);
     json_stream__ << "}";
     return json_stream__.str();
   }

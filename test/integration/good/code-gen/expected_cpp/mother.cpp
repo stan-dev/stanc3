@@ -9360,123 +9360,125 @@ class mother_model final : public model_base_crtp<mother_model> {
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "td_int");
-    stan::json::write_json_value(json_stream__, td_int);
+    stan::json::write_key(&json_stream__, "td_int");
+    stan::json::write_json_value(&json_stream__, td_int);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_1d");
-    stan::json::write_json_value(json_stream__, td_1d);
+    stan::json::write_key(&json_stream__, "td_1d");
+    stan::json::write_json_value(&json_stream__, td_1d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_1dk");
-    stan::json::write_json_value(json_stream__, td_1dk);
+    stan::json::write_key(&json_stream__, "td_1dk");
+    stan::json::write_json_value(&json_stream__, td_1dk);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_a");
-    stan::json::write_json_value(json_stream__, td_a);
+    stan::json::write_key(&json_stream__, "td_a");
+    stan::json::write_json_value(&json_stream__, td_a);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_b");
-    stan::json::write_json_value(json_stream__, td_b);
+    stan::json::write_key(&json_stream__, "td_b");
+    stan::json::write_json_value(&json_stream__, td_b);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_c");
-    stan::json::write_json_value(json_stream__, td_c);
+    stan::json::write_key(&json_stream__, "td_c");
+    stan::json::write_json_value(&json_stream__, td_c);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_ar_mat");
-    stan::json::write_json_value(json_stream__, td_ar_mat);
+    stan::json::write_key(&json_stream__, "td_ar_mat");
+    stan::json::write_json_value(&json_stream__, td_ar_mat);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_simplex");
-    stan::json::write_json_value(json_stream__, td_simplex);
+    stan::json::write_key(&json_stream__, "td_simplex");
+    stan::json::write_json_value(&json_stream__, td_simplex);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_1d_simplex");
-    stan::json::write_json_value(json_stream__, td_1d_simplex);
+    stan::json::write_key(&json_stream__, "td_1d_simplex");
+    stan::json::write_json_value(&json_stream__, td_1d_simplex);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_3d_simplex");
-    stan::json::write_json_value(json_stream__, td_3d_simplex);
+    stan::json::write_key(&json_stream__, "td_3d_simplex");
+    stan::json::write_json_value(&json_stream__, td_3d_simplex);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_cfcov_54");
-    stan::json::write_json_value(json_stream__, td_cfcov_54);
+    stan::json::write_key(&json_stream__, "td_cfcov_54");
+    stan::json::write_json_value(&json_stream__, td_cfcov_54);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_cfcov_33");
-    stan::json::write_json_value(json_stream__, td_cfcov_33);
+    stan::json::write_key(&json_stream__, "td_cfcov_33");
+    stan::json::write_json_value(&json_stream__, td_cfcov_33);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x");
-    stan::json::write_json_value(json_stream__, x);
+    stan::json::write_key(&json_stream__, "x");
+    stan::json::write_json_value(&json_stream__, x);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "y");
-    stan::json::write_json_value(json_stream__, y);
+    stan::json::write_key(&json_stream__, "y");
+    stan::json::write_json_value(&json_stream__, y);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "dat");
-    stan::json::write_json_value(json_stream__, dat);
+    stan::json::write_key(&json_stream__, "dat");
+    stan::json::write_json_value(&json_stream__, dat);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "dat_int");
-    stan::json::write_json_value(json_stream__, dat_int);
+    stan::json::write_key(&json_stream__, "dat_int");
+    stan::json::write_json_value(&json_stream__, dat_int);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x_r");
-    stan::json::write_json_value(json_stream__, x_r);
+    stan::json::write_key(&json_stream__, "x_r");
+    stan::json::write_json_value(&json_stream__, x_r);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x_i");
-    stan::json::write_json_value(json_stream__, x_i);
+    stan::json::write_key(&json_stream__, "x_i");
+    stan::json::write_json_value(&json_stream__, x_i);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "arr_mul_ind");
-    stan::json::write_json_value(json_stream__, arr_mul_ind);
+    stan::json::write_key(&json_stream__, "arr_mul_ind");
+    stan::json::write_json_value(&json_stream__, arr_mul_ind);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x_mul_ind");
-    stan::json::write_json_value(json_stream__, x_mul_ind);
+    stan::json::write_key(&json_stream__, "x_mul_ind");
+    stan::json::write_json_value(&json_stream__, x_mul_ind);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_real");
-    stan::json::write_json_value(json_stream__, transformed_data_real);
+    stan::json::write_key(&json_stream__, "transformed_data_real");
+    stan::json::write_json_value(&json_stream__, transformed_data_real);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_real_array");
-    stan::json::write_json_value(json_stream__, transformed_data_real_array);
+    stan::json::write_key(&json_stream__, "transformed_data_real_array");
+    stan::json::write_json_value(&json_stream__, transformed_data_real_array);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_real_array_2d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_real_array_2d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_real_array_2d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_real_array_3d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_real_array_3d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_real_array_3d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_matrix");
-    stan::json::write_json_value(json_stream__, transformed_data_matrix);
+    stan::json::write_key(&json_stream__, "transformed_data_matrix");
+    stan::json::write_json_value(&json_stream__, transformed_data_matrix);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_matrix_array");
-    stan::json::write_json_value(json_stream__, transformed_data_matrix_array);
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_matrix_array);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_matrix_array_2d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array_2d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_matrix_array_2d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_matrix_array_3d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_matrix_array_3d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_matrix_array_3d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_vector");
-    stan::json::write_json_value(json_stream__, transformed_data_vector);
+    stan::json::write_key(&json_stream__, "transformed_data_vector");
+    stan::json::write_json_value(&json_stream__, transformed_data_vector);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_vector_array");
-    stan::json::write_json_value(json_stream__, transformed_data_vector_array);
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array");
+    stan::json::write_json_value(&json_stream__,
+      transformed_data_vector_array);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_vector_array_2d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array_2d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_vector_array_2d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_vector_array_3d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_vector_array_3d");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_vector_array_3d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_row_vector");
-    stan::json::write_json_value(json_stream__, transformed_data_row_vector);
+    stan::json::write_key(&json_stream__, "transformed_data_row_vector");
+    stan::json::write_json_value(&json_stream__, transformed_data_row_vector);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "transformed_data_row_vector_array");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_key(&json_stream__, "transformed_data_row_vector_array");
+    stan::json::write_json_value(&json_stream__,
       transformed_data_row_vector_array);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__,
+    stan::json::write_key(&json_stream__,
       "transformed_data_row_vector_array_2d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_json_value(&json_stream__,
       transformed_data_row_vector_array_2d);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__,
+    stan::json::write_key(&json_stream__,
       "transformed_data_row_vector_array_3d");
-    stan::json::write_json_value(json_stream__,
+    stan::json::write_json_value(&json_stream__,
       transformed_data_row_vector_array_3d);
     json_stream__ << "}";
     return json_stream__.str();

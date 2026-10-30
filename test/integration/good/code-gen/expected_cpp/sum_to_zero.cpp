@@ -958,23 +958,23 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "v");
-    stan::json::write_json_value(json_stream__, v);
+    stan::json::write_key(&json_stream__, "v");
+    stan::json::write_json_value(&json_stream__, v);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "N");
-    stan::json::write_json_value(json_stream__, N);
+    stan::json::write_key(&json_stream__, "N");
+    stan::json::write_json_value(&json_stream__, N);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_stzv");
-    stan::json::write_json_value(json_stream__, td_stzv);
+    stan::json::write_key(&json_stream__, "td_stzv");
+    stan::json::write_json_value(&json_stream__, td_stzv);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_astzv");
-    stan::json::write_json_value(json_stream__, td_astzv);
+    stan::json::write_key(&json_stream__, "td_astzv");
+    stan::json::write_json_value(&json_stream__, td_astzv);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_stzm");
-    stan::json::write_json_value(json_stream__, td_stzm);
+    stan::json::write_key(&json_stream__, "td_stzm");
+    stan::json::write_json_value(&json_stream__, td_stzm);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_astzm");
-    stan::json::write_json_value(json_stream__, td_astzm);
+    stan::json::write_key(&json_stream__, "td_astzm");
+    stan::json::write_json_value(&json_stream__, td_astzm);
     json_stream__ << "}";
     return json_stream__.str();
   }

@@ -15337,239 +15337,252 @@
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\"{\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_int\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_int))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_1d\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_1d))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_1dk\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_1dk))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_a\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_a))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_b\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_b))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_c\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var td_c))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_ar_mat\""))))
+                ((VarRef json_stream__) (Literal "\"td_int\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_ar_mat))))
+                ((VarRef json_stream__) (Var td_int))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_simplex\""))))
+                ((VarRef json_stream__) (Literal "\"td_1d\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_simplex))))
+                ((VarRef json_stream__) (Var td_1d))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_1d_simplex\""))))
+                ((VarRef json_stream__) (Literal "\"td_1dk\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_1d_simplex))))
+                ((VarRef json_stream__) (Var td_1dk))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_3d_simplex\""))))
+                ((VarRef json_stream__) (Literal "\"td_a\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_3d_simplex))))
+                ((VarRef json_stream__) (Var td_a))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_cfcov_54\""))))
+                ((VarRef json_stream__) (Literal "\"td_b\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_cfcov_54))))
+                ((VarRef json_stream__) (Var td_b))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"td_cfcov_33\""))))
+                ((VarRef json_stream__) (Literal "\"td_c\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var td_cfcov_33))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"y\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var y))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"dat\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var dat))))
+                ((VarRef json_stream__) (Var td_c))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"dat_int\""))))
+                ((VarRef json_stream__) (Literal "\"td_ar_mat\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var dat_int))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x_r\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x_r))))
-              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
-              (Expression
-               (FunCall stan::json::write_key () ((Var json_stream__) (Literal "\"x_i\""))))
-              (Expression
-               (FunCall stan::json::write_json_value () ((Var json_stream__) (Var x_i))))
+                ((VarRef json_stream__) (Var td_ar_mat))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"arr_mul_ind\""))))
+                ((VarRef json_stream__) (Literal "\"td_simplex\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var arr_mul_ind))))
+                ((VarRef json_stream__) (Var td_simplex))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"x_mul_ind\""))))
+                ((VarRef json_stream__) (Literal "\"td_1d_simplex\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var x_mul_ind))))
+                ((VarRef json_stream__) (Var td_1d_simplex))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_real\""))))
+                ((VarRef json_stream__) (Literal "\"td_3d_simplex\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_real))))
+                ((VarRef json_stream__) (Var td_3d_simplex))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_real_array\""))))
+                ((VarRef json_stream__) (Literal "\"td_cfcov_54\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_real_array))))
+                ((VarRef json_stream__) (Var td_cfcov_54))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_real_array_2d\""))))
+                ((VarRef json_stream__) (Literal "\"td_cfcov_33\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_real_array_2d))))
+                ((VarRef json_stream__) (Var td_cfcov_33))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_real_array_3d\""))))
+                ((VarRef json_stream__) (Literal "\"x\""))))
               (Expression
-               (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_real_array_3d))))
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_matrix\""))))
+                ((VarRef json_stream__) (Literal "\"y\""))))
               (Expression
-               (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_matrix))))
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var y))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_matrix_array\""))))
+                ((VarRef json_stream__) (Literal "\"dat\""))))
               (Expression
-               (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_matrix_array))))
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var dat))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_matrix_array_2d\""))))
+                ((VarRef json_stream__) (Literal "\"dat_int\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_matrix_array_2d))))
+                ((VarRef json_stream__) (Var dat_int))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_matrix_array_3d\""))))
+                ((VarRef json_stream__) (Literal "\"x_r\""))))
               (Expression
-               (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_matrix_array_3d))))
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x_r))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_vector\""))))
+                ((VarRef json_stream__) (Literal "\"x_i\""))))
               (Expression
-               (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_vector))))
+               (FunCall stan::json::write_json_value () ((VarRef json_stream__) (Var x_i))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_vector_array\""))))
+                ((VarRef json_stream__) (Literal "\"arr_mul_ind\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_vector_array))))
+                ((VarRef json_stream__) (Var arr_mul_ind))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_vector_array_2d\""))))
+                ((VarRef json_stream__) (Literal "\"x_mul_ind\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_vector_array_2d))))
+                ((VarRef json_stream__) (Var x_mul_ind))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_vector_array_3d\""))))
+                ((VarRef json_stream__) (Literal "\"transformed_data_real\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_vector_array_3d))))
+                ((VarRef json_stream__) (Var transformed_data_real))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_row_vector\""))))
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_row_vector))))
+                ((VarRef json_stream__) (Var transformed_data_real_array))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array\""))))
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array_2d\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_row_vector_array))))
+                ((VarRef json_stream__) (Var transformed_data_real_array_2d))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array_2d\""))))
+                ((VarRef json_stream__) (Literal "\"transformed_data_real_array_3d\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_row_vector_array_2d))))
+                ((VarRef json_stream__) (Var transformed_data_real_array_3d))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
               (Expression
                (FunCall stan::json::write_key ()
-                ((Var json_stream__) (Literal "\"transformed_data_row_vector_array_3d\""))))
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix\""))))
               (Expression
                (FunCall stan::json::write_json_value ()
-                ((Var json_stream__) (Var transformed_data_row_vector_array_3d))))
+                ((VarRef json_stream__) (Var transformed_data_matrix))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_matrix_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_matrix_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_vector_array_3d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_row_vector\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__) (Literal "\"transformed_data_row_vector_array\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__)
+                 (Literal "\"transformed_data_row_vector_array_2d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array_2d))))
+              (Expression (StreamInsertion (Var json_stream__) ((Literal "\",\\n\""))))
+              (Expression
+               (FunCall stan::json::write_key ()
+                ((VarRef json_stream__)
+                 (Literal "\"transformed_data_row_vector_array_3d\""))))
+              (Expression
+               (FunCall stan::json::write_json_value ()
+                ((VarRef json_stream__) (Var transformed_data_row_vector_array_3d))))
               (Expression (StreamInsertion (Var json_stream__) ((Literal "\"}\""))))
               (Return ((MethodCall (Var json_stream__) str () ()))))))))
          (GlobalComment "Begin method overload boilerplate")

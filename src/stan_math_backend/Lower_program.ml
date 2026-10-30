@@ -299,19 +299,21 @@ let gen_tdata_json {Program.prepare_data; input_vars; _} =
     VariableDefn
       (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
          ~name:"json_stream__" ()) in
-  let stream = Var "json_stream__" in
+  let stream = "json_stream__" in
   let write_object entries =
     let write_data_item i m =
-      (if i > 0 then [stream <<: literal_string ",\n"] else [])
+      (if i > 0 then [Var stream <<: literal_string ",\n"] else [])
       @ [ Expression
-            (fun_call "stan::json::write_key" [stream; literal_string m])
-        ; Expression (fun_call "stan::json::write_json_value" [stream; Var m])
-        ] in
-    (stream <<: literal_string "{")
+            (fun_call "stan::json::write_key" [VarRef stream; literal_string m])
+        ; Expression
+            (fun_call "stan::json::write_json_value" [VarRef stream; Var m]) ]
+    in
+    (Var stream <<: literal_string "{")
     :: List.concat_mapi ~f:write_data_item entries
-    @ [stream <<: literal_string "}"] in
+    @ [Var stream <<: literal_string "}"] in
   let body =
-    (stream_decl :: write_object tdata) @ [Return (Some stream.@!("str"))] in
+    (stream_decl :: write_object tdata) @ [Return (Some (Var stream).@!("str"))]
+  in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Types.string
        ~name:"get_transformed_data_json" ~body ~cv_qualifiers:[Const] ())

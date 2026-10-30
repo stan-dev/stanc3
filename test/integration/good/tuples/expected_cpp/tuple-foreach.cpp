@@ -224,8 +224,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "arr");
-    stan::json::write_json_value(json_stream__, arr);
+    stan::json::write_key(&json_stream__, "arr");
+    stan::json::write_json_value(&json_stream__, arr);
     json_stream__ << "}";
     return json_stream__.str();
   }

@@ -445,8 +445,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "x");
-    stan::json::write_json_value(json_stream__, x);
+    stan::json::write_key(&json_stream__, "x");
+    stan::json::write_json_value(&json_stream__, x);
     json_stream__ << "}";
     return json_stream__.str();
   }

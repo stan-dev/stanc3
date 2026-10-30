@@ -1879,14 +1879,14 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "n_occ_minus_1");
-    stan::json::write_json_value(json_stream__, n_occ_minus_1);
+    stan::json::write_key(&json_stream__, "n_occ_minus_1");
+    stan::json::write_json_value(&json_stream__, n_occ_minus_1);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "first");
-    stan::json::write_json_value(json_stream__, first);
+    stan::json::write_key(&json_stream__, "first");
+    stan::json::write_json_value(&json_stream__, first);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "last");
-    stan::json::write_json_value(json_stream__, last);
+    stan::json::write_key(&json_stream__, "last");
+    stan::json::write_json_value(&json_stream__, last);
     json_stream__ << "}";
     return json_stream__.str();
   }

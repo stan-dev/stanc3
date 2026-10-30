@@ -620,23 +620,23 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "tolerance");
-    stan::json::write_json_value(json_stream__, tolerance);
+    stan::json::write_key(&json_stream__, "tolerance");
+    stan::json::write_json_value(&json_stream__, tolerance);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "max_num_steps");
-    stan::json::write_json_value(json_stream__, max_num_steps);
+    stan::json::write_key(&json_stream__, "max_num_steps");
+    stan::json::write_json_value(&json_stream__, max_num_steps);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "hessian_block_size");
-    stan::json::write_json_value(json_stream__, hessian_block_size);
+    stan::json::write_key(&json_stream__, "hessian_block_size");
+    stan::json::write_json_value(&json_stream__, hessian_block_size);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "solver");
-    stan::json::write_json_value(json_stream__, solver);
+    stan::json::write_key(&json_stream__, "solver");
+    stan::json::write_json_value(&json_stream__, solver);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "max_steps_line_search");
-    stan::json::write_json_value(json_stream__, max_steps_line_search);
+    stan::json::write_key(&json_stream__, "max_steps_line_search");
+    stan::json::write_json_value(&json_stream__, max_steps_line_search);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "allow_fallthrough");
-    stan::json::write_json_value(json_stream__, allow_fallthrough);
+    stan::json::write_key(&json_stream__, "allow_fallthrough");
+    stan::json::write_json_value(&json_stream__, allow_fallthrough);
     json_stream__ << "}";
     return json_stream__.str();
   }

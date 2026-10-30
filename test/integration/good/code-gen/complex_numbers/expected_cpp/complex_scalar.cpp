@@ -2906,20 +2906,20 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "td_i");
-    stan::json::write_json_value(json_stream__, td_i);
+    stan::json::write_key(&json_stream__, "td_i");
+    stan::json::write_json_value(&json_stream__, td_i);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_r");
-    stan::json::write_json_value(json_stream__, td_r);
+    stan::json::write_key(&json_stream__, "td_r");
+    stan::json::write_json_value(&json_stream__, td_r);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_complex");
-    stan::json::write_json_value(json_stream__, td_complex);
+    stan::json::write_key(&json_stream__, "td_complex");
+    stan::json::write_json_value(&json_stream__, td_complex);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_complex_array");
-    stan::json::write_json_value(json_stream__, td_complex_array);
+    stan::json::write_key(&json_stream__, "td_complex_array");
+    stan::json::write_json_value(&json_stream__, td_complex_array);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "td_complex_array_2d");
-    stan::json::write_json_value(json_stream__, td_complex_array_2d);
+    stan::json::write_key(&json_stream__, "td_complex_array_2d");
+    stan::json::write_json_value(&json_stream__, td_complex_array_2d);
     json_stream__ << "}";
     return json_stream__.str();
   }

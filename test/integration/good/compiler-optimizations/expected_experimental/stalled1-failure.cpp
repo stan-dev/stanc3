@@ -772,11 +772,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   inline std::string get_transformed_data_json() const {
     std::stringstream json_stream__;
     json_stream__ << "{";
-    stan::json::write_key(json_stream__, "K");
-    stan::json::write_json_value(json_stream__, K);
+    stan::json::write_key(&json_stream__, "K");
+    stan::json::write_json_value(&json_stream__, K);
     json_stream__ << ",\n";
-    stan::json::write_key(json_stream__, "x1x2");
-    stan::json::write_json_value(json_stream__, x1x2);
+    stan::json::write_key(&json_stream__, "x1x2");
+    stan::json::write_json_value(&json_stream__, x1x2);
     json_stream__ << "}";
     return json_stream__.str();
   }
