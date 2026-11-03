@@ -4,201 +4,164 @@ open Dataflow_types
 
 (** {1 Purpose}
 
-    Dependence analysis finds the earlier statements that each statement depends
-    on. A statement can depend on an earlier statement in two ways.
+    Dependence analysis finds the statements that each statement of a program
+    depends on. A statement depends on another statement through the values that
+    the two statements read and write, or through the statements that decide
+    whether the statement runs. Knowing these dependences allows correctness
+    checks on a program, and optimizations that reorder statements.
 
-    - A {e data dependence} exists when the earlier statement writes a value
-      that this statement reads.
-    - A {e control dependence} exists when the earlier statement decides whether
-      this statement runs. The earlier statement is an [if] or loop around this
-      statement (an {e enclosing} [if] or loop), or a [break], [continue] or
-      [return] that can skip this statement (a {e jump}).
+    Pedantic mode ({!Pedantic_analysis}) uses dependences to warn when the
+    condition of an [if] or the bounds of a loop depend on a parameter. The
+    factor graph ({!Factor_graph}) uses dependences to connect each [target +=]
+    term to the parameters and data that the term uses.
 
-    The enclosing ifs and loops and the jumps are the {e controls} of a
-    statement ({!Dataflow_types.controls}). A statement has a direct control
-    dependence only on the nearest enclosing [if] or loop, and on the jumps. The
-    other enclosing ifs and loops are transitive dependences (dependences of a
-    dependence). The direct control dependencies are the {e control parents} of
-    the statement ({!Dataflow_utils.control_parent_ids}).
-
-    Pedantic mode uses dependences to warn when a parameter decides an [if] or a
-    loop. The factor graph ({!Factor_graph}) uses them to connect each
-    [target +=] term to the parameters and data that the term uses. A planned
-    loop optimization will use them to decide which loops the optimization can
-    vectorize (see {{!section-distances}Loop distances}). Optimizations do not
-    use them yet.
+    This documentation describes how dependency analysis works in stanc. Each
+    section uses the running example below.
 
     {1 Running example}
-
-    The analysis runs on one statement, the {e analyzed statement}, and on the
-    statements nested in the analyzed statement. The analysis gives each
-    statement a {e label}, an integer that identifies the statement. A test in
-    [test/unit/Dependence_analysis.ml] prints the labels and dependences that
-    this file quotes.
-    {@stan[
-      data { int N; vector[N] x; }
-      parameters { real a; }
-      model {
-        matrix[N, 2] theta;
-        for (n in 1:N) {
-          theta[n, 1] = a;
-          theta[n, 2] = x[n];
-          if (theta[n, 2] > 0) target += 1;
-        }
-      }
-    ]}
-    In the examples, the analyzed statement is the {e log density}, the sum that
-    [target] accumulates. The statements of the log density are in the
-    parameters, transformed parameters and model blocks. The analyzed statement
-    gets label [1], and the nested statements, blocks included, get the next
-    labels in source order. The analysis keeps the statements in a map from each
-    label to a {e statement pattern}. A statement pattern is the statement with
-    each nested statement replaced by the label of the nested statement. For
-    example, the [if] at key [10] refers to the body by key [11].
     {@text[
-      map key   statement pattern
-      1         block of 2, 3 (the whole log density)
-      2         real a;
-      3         block of 4, 5, 6 (the model block)
-      4         FnValidateSize__("theta", "N", N);
-      5         matrix[N, 2] theta;
-      6         for (n in 1:N) 7
-      7         block of 8, 9, 10
-      8         theta[n, 1] = a;
-      9         theta[n, 2] = x[n];
-      10        if (theta[n, 2] > 0) 11
-      11        target += 1;
+       1  data {
+       2    int N;
+       3    vector[N] x;
+       4  }
+       5  parameters {
+       6    real a;
+       7  }
+       8  model {
+       9    matrix[N, 2] theta;
+      10    for (n in 1:N) {
+      11      theta[n, 1] = a;
+      12      theta[n, 2] = x[n];
+      13      if (theta[n, 2] > 0) {
+      14        target += 1;
+      15      }
+      16    }
+      17  }
     ]}
-    Label [4] is [FnValidateSize__], a size check. The compiler adds this check
-    before a sized declaration, such as [matrix[N, 2] theta].
 
-    The table below lists the dependences of the [if] and of [target += 1].
+    The [if] on line 13 of the running example reads the value that line 12
+    writes, and the [if] runs only when the loop on line 10 runs. In dependency
+    analysis, we focus on two main forms of dependency from reads and writes.
+    Each form describes when a statement depends on another statement.
+
+    - A {e data dependence} exists when a write in the other statement can
+      supply a value that this statement reads. The write runs before the read
+      when the program runs. > example here
+
+    - A statement can also depend on another statement without reading a value
+      from the other statement. A {e control dependence} exists when the other
+      statement decides whether this statement runs. The other statement is
+      control dependence if it is an [if] or a loop around this statement, or a
+      [break], [continue], or [return] that can skip this statement. > example
+      here
+
+    A statement has a direct control dependence only on the innermost [if] or
+    loop around the statement, and on the jumps that can skip the statement.
+    These statements are the {e control parents} of the statement
+    ({!Dataflow_utils.control_parent_ids}). The outer [if]s and loops around a
+    statement are dependences of the control parent. They are therefore
+    transitive control dependences of the statement.
+
+    > example here
+
+    The rest of this section shows how the analysis finds these dependences for
+    the running example. Dependence analysis reads a large group of statements
+    at once, the {e analyzed code}, and then finds the dependences between the
+    statements in that group. For the log density, the analyzed code is the
+    parameters, transformed parameters, and model blocks, which are lines 5 to
+    17 in the running example. The analysis puts the analyzed code under one
+    {e root}, which gets label [1], and gives each statement inside the root an
+    integer {e label} that offsets it from root. The dependencies between the
+    labeled statements form a graph whose nodes are the labels
+    ({!dependence_graph}). Statements outside the analyzed code, such as the
+    data block on lines 1 to 4, do not get a label.
+
+    To build this graph, the analysis first records the statement at each label.
+    The [statements] field of {!dependence_info} maps each label to the
+    statement at that label. A statement that holds other statements refers to
+    each nested statement by its label. For example, the [if] at label [13]
+    holds the label [11] in place of its body [target += 1].
+
+    The table below shows what the analysis builds for the running example. The
+    analysis builds the table by walking the root depth first. The root gets
+    label [1]. Each statement that the walk visits gets the next label, and the
+    walk labels the statements nested inside a statement before it moves on to
+    the next statement at the same level. For example, the loop on line 10 gets
+    label [6], the braces of its body get label [7], and the three statements in
+    the body get labels [8], [9], and [10]. While labeling, the analysis
+    replaces each nested statement with its label, which gives the statement
+    column. Label [4] is a size check that the MIR adds before the declaration
+    on line 9. The Stan lines column gives the lines of the running example that
+    each statement comes from, and the direct dependences column gives the
+    labels that each statement directly depends on.
     {@text[
-      if (theta[n, 2] > 0)  --data-->       matrix[N, 2] theta;
-      if (theta[n, 2] > 0)  --data-->       theta[n, 2] = x[n]
-      if (theta[n, 2] > 0)  --control-->    for (n in 1:N)
-      target += 1           --control-->    if (theta[n, 2] > 0)
-      target += 1           --transitive--> matrix[N, 2] theta;
-      target += 1           --transitive--> theta[n, 2] = x[n]
-      target += 1           --transitive--> for (n in 1:N)
+     5  parameters {
+     6    real a;
+     7  }
+     8  model {
+     9    matrix[N, 2] theta;
+    10    for (n in 1:N) {
+    11      theta[n, 1] = a;
+    12      theta[n, 2] = x[n];
+    13      if (theta[n, 2] > 0) {
+    14        target += 1;
+    15      }
+    16    }
+    17  }
     ]}
-    The table leaves out the data [N] and [x], because the values of [N] and [x]
-    come from outside the model block. Step 3 of {e Finding data dependences}
-    explains why the declaration of [theta] is a data dependence.
+    {@text[
+      label  Stan lines  statement                           data dependences  conditional dependences
+      1      5-17        root { #2 #3 }                      -                 -
+      2      6           real a;                             -                 -
+      3      8-17        model { #4 #5 #6 }                  -                 -
+      4      9           FnValidateSize__("theta", "N", N);  -                 -
+      5      9           matrix[N, 2] theta;                 -                 -
+      6      10-16       for (n in 1:N) #7                   -                 -
+      7      10-16       Block { #8 #9 #10 }                 -                 6
+      8      11          theta[n, 1] = a;                    2                 6
+      9      12          theta[n, 2] = x[n];                 -                 6
+      10     13-15       if (theta[n, 2] > 0) #11            5, 9              6
+      11     13-15       if body { #12 }                     -                 10
+      12     14          target += 1;                        -                 10
+    ]}
 
-    {1 Finding data dependences}
+    The [if] statement at label [10] has three direct dependences.
+    - Labels [5] and [9] are data dependences. The condition [theta[n, 2] > 0]
+      reads [theta[n, 2]]. The declaration [matrix[N, 2] theta] at label [5] and
+      the assignment [theta[n, 2] = x[n]] at label [9] write values that this
+      read can use.
+    - Label [6] is a control dependence. The loop at label [6] is the innermost
+      loop around the [if], and the loop decides whether the [if] runs.
 
-    A data dependence connects a read to each write that can supply the value
-    read. The analysis finds these writes in three steps.
+    {1 Using the dependences}
 
-    {ol
-     {- Step 1 of 3, record the elements: An {e access} is one read, write or
-        {e increment} of a variable. An increment is an addition to [target], as
-        in [target +=] or a call to an [_lp] function. {!Accesses} records the
-        accesses of each statement, with the element that each access selects.
-        Step 2 and step 3 need these elements to decide whether a write can
-        supply a value to a read.
+    The factor graph and pedantic mode both start at one statement and follow
+    the dependences in the table, then the dependences of those statements. The
+    tree below shows this walk from [target += 1] at label [12]. The right
+    column lists the variables that each statement reads, leaving out loop
+    variables.
+    {@text[
+      12  target += 1;
+      `-- conditional: 10  if (theta[n, 2] > 0)         reads theta
+          |-- data: 5  matrix[N, 2] theta;              reads N
+          |-- data: 9  theta[n, 2] = x[n];              reads x
+          |   `-- conditional: 6  for (n in 1:N)        reads N
+          `-- conditional: 6  for (n in 1:N)            reads N
 
-        A write or an increment can pass a value to a read, and a write can pass
-        a value to an increment. A read of [target], as in [target()], depends
-        on each earlier increment, because the read sees their sum. Two
-        increments of [target] do not depend on each other, because the
-        additions can occur in any order.
-     }
-     {- Step 2 of 3, find the writes that reach each read: Step 2 records each
-        write as a {e definition}. A definition holds the name of the written
-        variable and the label of the statement that writes the variable. A
-        write {e reaches} a read if the program can go from the write to the
-        read, and no other write overwrites the same element between them. The
-        standard {e reaching definitions} analysis
-        ({!Monotone_framework.reaching_definitions_mfp}) finds the definitions
-        that reach the start of each statement (the {e entry} set) and the end
-        of each statement (the {e exit} set).
+      8  theta[n, 1] = a;                               reads a (not reached)
+    ]}
 
-        In the running example, the read is [theta[n, 2]] in the condition
-        [if (theta[n, 2] > 0)]. Three writes reach the read. These writes are
-        the declaration of [theta], [theta[n, 1] = a], and [theta[n, 2] = x[n]].
-        Each of these writes is a {e candidate source} for the read, and the
-        read is the {e sink}.
+    The factor graph ({!Factor_graph}) starts the walk at each factor, a term
+    that changes the log density, such as [target += 1]. It records the data and
+    parameters that the walk reads, here [N] and [x]. The walk never reaches
+    label [8], so pedantic mode warns that the parameter [a] is not used in the
+    density.
 
-        The analysis removes a write when a later write always overwrites the
-        same element. The later write {e kills} the earlier definition. For
-        example, [theta[1] = 1] kills an earlier [theta[1] = a]. In the running
-        example, [theta[n, 1] = a] writes column 1, and [theta[n, 2] = x[n]]
-        writes column 2. Because the two writes change different elements,
-        neither write overwrites the other. Thus both assignments stay candidate
-        sources for the read.
-
-        Step 2 never asks whether a write selects the element that the read
-        selects. Step 2 only removes writes that a later write overwrites. So
-        [theta[n, 1] = a] stays a candidate source, although that write never
-        writes column 2. Step 3 handles this case.
-     }
-     {- Step 3 of 3, compare elements and order: {!Dependence} asks two
-        questions about each candidate source and the read.
-        - Question 1: Can the write select the element that the read selects?
-          {!Dependence} compares the indices of the write with the indices of
-          the read. If the numbers of indices differ, the comparison cannot
-          decide, and the answer is yes.
-        - Question 2: Can the write run before the read? Inside one loop, two
-          accesses in the same iteration pass question 2 when the write comes
-          first in the loop body.
-
-        The analysis rejects the candidate source if the answer to a question is
-        no. A rejection means the analysis has proved that the write can never
-        supply the value the read uses, so the analysis drops that write from
-        the data dependences of the read. In the running example, the [if] no
-        longer depends on [theta[n, 1] = a], and therefore not on the parameter
-        [a]. The declaration writes the whole of [theta] with no indices. The
-        read [theta[n, 2]] has two indices, so question 1 cannot decide.
-        {@text[
-          candidate source     question 1 (element)   question 2 (order)  result
-          matrix[N, 2] theta;  cannot decide, so yes  yes, runs before    keep
-                                                      the loop
-          theta[n, 1] = a      no, column 1 is        not needed          reject
-                               never column 2
-          theta[n, 2] = x[n]   yes, same element      yes, same           keep
-                                                      iteration, and the
-                                                      write runs first
-        ]}
-     }
-    }
-
-    If the analysis kept [theta[n, 1] = a], pedantic mode would falsely warn
-    that [a] decides the [if]. Question 1 and question 2 of step 3 reject a
-    candidate source only when they prove that the source never supplies the
-    value. Some cases are too hard for question 1 and question 2, and
-    {!Dependence} lists these cases. In these cases the candidate source stays,
-    so the result can contain extra dependences. But the result never misses a
-    dependence.
-
-    {1:distances Loop distances}
-
-    Question 2 of step 3 needs the execution order of a write and a read in a
-    loop. {!Dependence} answers question 2 with a {e distance} for each
-    dependence. The distance is the number of iterations from the write to the
-    read that uses the written value. The words "same iteration" in the step 3
-    table mean distance [0]. In the running example, each distance is [0]. Then
-    no value passes from one iteration to another. Thus the iterations can run
-    in any order, and a loop optimization can vectorize them. In
-    [for (n in 2:N) b[n] = b[n - 1] + a;] the distance is [1], so the iterations
-    must run in order. *)
-
-(** {1 API reference}
-
-    {!build_dependence_info} builds a {!dependence_info}. The {e queries}, such
-    as {!direct_dependence_ids} and {!transitive_dependence_ids}, take a
-    {!dependence_info} and a label, and return the labels of the dependences of
-    the statement at that label. A statement {e uses} a variable when the
-    statement reads or increments the variable, and {e defines} a variable when
-    the statement writes or increments the variable. Some queries take a set of
-    variables whose definitions the query follows, as [vars] in
-    {!direct_dependence_ids} or as an argument of {!var_dependence_ids}. By
-    default, [vars] holds each variable that the statement uses. The factor
-    graph and pedantic mode pass {!var_dependence_ids} the names in a factor or
-    an expression. Some queries also take [blockers], the names whose
-    definitions the query does not follow. For example, the factor graph passes
-    data and parameter names as [blockers]. By default, [blockers] is empty. *)
+    Pedantic mode ({!Pedantic_analysis}) starts the same walk at each [if] and
+    loop, and warns if the walk reads a parameter. From the [if] at label [10],
+    the walk does not read [a]. If line 13 read [theta[n, 1]], the walk would
+    reach label [8], and pedantic mode would warn that the [if] depends on [a].
+*)
 
 (** What a dependence query needs to know about one statement, apart from the
     reaching definitions.
@@ -225,26 +188,19 @@ type statement =
         (** The reads, writes and increments in the expressions of this
             statement. Each nested statement has a separate record. *) }
 
-(** The statements of the analyzed statement and the definitions that reach each
-    one. Both maps have the same labels. {e Running example} shows the labels
-    and statement patterns that {!build_log_prob_dependence_info} gives. Label
-    [1] ({!Dataflow_utils.root_statement_id}) is the analyzed statement, the
-    root of the map. The queries return statement labels only, so a definition
-    from outside the analyzed statement, such as data, never appears in a
-    result.
-
-    In the running example, the definitions of [theta] that reach the condition
-    (label [10]) are [("theta", Some 5)], [("theta", Some 8)] and
-    [("theta", Some 9)]. The set contains [Some 8] ([theta[n, 1] = a]), because
-    step 2 of {e Finding data dependences} keeps that write. Step 3 rejects that
-    write later, when a query runs in {!direct_dependence_ids}. *)
+(** The statements of the analyzed code and the definitions that reach each one.
+    Both maps have the same labels. {e Running example} shows the labels and
+    statement patterns that {!build_log_prob_dependence_info} gives. Label [1]
+    ({!Dataflow_utils.root_statement_id}) is the root. The queries return
+    statement labels only, so a definition from outside the analyzed code, such
+    as data, never appears in a result. *)
 type dependence_info =
   { statements: statement LabelMap.t
   ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t
         (** The definitions that can reach the start of each statement. Each
             definition is a (variable name, label) pair. [Some label] is a
             statement in the map. [None] is a definition from outside the
-            analyzed statement, such as data. *) }
+            analyzed code, such as data. *) }
 
 val build_dependence_info : Program.Typed.t -> Stmt.Located.t -> dependence_info
 (** Builds the statement records and the reaching definitions for the statement
@@ -317,9 +273,3 @@ val dependence_graph : dependence_info -> label Set.Poly.t LabelMap.t
 val used_vars_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)
-
-(* TODO: [reaching_definitions_mfp] takes the whole program but needs only the
-   names of variables defined before the analyzed statement. *)
-
-(* TODO: Cache the results of [direct_dependence_ids] and [definition_ids] per
-   map. Each query computes them again. *)

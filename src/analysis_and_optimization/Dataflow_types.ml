@@ -30,7 +30,7 @@ type enclosing = {id: label; side: side option}
 *)
 type controls =
   { enclosing: enclosing list
-        (** The ifs and loops around the statement, outermost first. *)
+        (** The index of ifs and loops around the statement, outermost first. *)
   ; jump_ids: label Set.Poly.t
         (** The labels of the [break], [continue] and [return] statements that
             can skip the statement. For a loop statement, also each [break] or
