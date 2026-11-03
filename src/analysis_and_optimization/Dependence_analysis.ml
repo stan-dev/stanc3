@@ -31,13 +31,13 @@ open Dataflow_utils
 open Monotone_framework_sigs
 open Monotone_framework
 
-(** Returns the path of the first write to [var] in [accesses], or [None] if
-    [accesses] does not write [var]. *)
+(** Returns the path of the first write or increment of [var] in [accesses], or
+    [None] if [accesses] does not define [var]. *)
 let write_path (accesses : Accesses.access list) (var : string) :
     Accesses.step list option =
   List.find_map accesses ~f:(fun (access : Accesses.access) ->
       match access.kind with
-      | Write when String.equal access.var var -> Some access.path
+      | (Write | Increment) when String.equal access.var var -> Some access.path
       | Write | Read | Increment -> None)
 
 type stmt_info =
@@ -67,66 +67,98 @@ let common_loop_ids (statements : stmt_info LabelMap.t) (first_id : label)
     (loop_ids first_id first.pattern first.controls)
     (loop_ids second_id second.pattern second.controls)
 
-(** The [is_killed] callback for reaching definitions, which decides element
-    kills. A later write [killer] kills the definition at [killed] when [killer]
-    must overwrite the element of [killed]. Two rules give this result. *)
-let is_element_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
-    ~(killed : label) (var : string) : bool =
+(** The [is_killed] callback for reaching definitions. A write at [killer] kills
+    a definition of [var] when the write must overwrite the element that the
+    definition wrote, by one of two rules. An increment of [var] kills every
+    earlier definition of [var], so the definition of [target] is always the
+    latest increment. *)
+let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
+    ((var, killed_label) : reaching_definition) : bool =
   let killer_statement = LabelMap.find killer statements in
-  let killed_statement = LabelMap.find killed statements in
-  (* Whether each if, loop and jump that decides if [statement_id] runs also
-     decides if [killed] runs. *)
-  let is_covered_by_killed (statement_id : label) : bool =
-    let covered = (LabelMap.find statement_id statements).controls in
-    List.for_all covered.enclosing ~f:(fun enclosing ->
-        List.mem enclosing ~set:killed_statement.controls.enclosing)
-    && Set.Poly.subset covered.jump_ids killed_statement.controls.jump_ids in
-  match
-    ( write_path killer_statement.accesses var
-    , write_path killed_statement.accesses var )
-  with
-  | Some killer_path, Some killed_path -> (
-      (* Rule A of 2: [killer] writes the element of [killed] in every
-         iteration. *)
-      Dependence.is_overwritten ~is_same_iteration:false killer_path killed_path
-      ||
-      (* Rule B of 2: [killer] writes the element of [killed] in the same
-         iteration of the innermost loop around [killed]. [killer] comes later
-         in source order and has the same loops. Each control of [killer], and
-         of the innermost loop, is also a control of [killed]. The loops are
-         found last, after the cheaper checks. *)
-      killed < killer
-      && Dependence.is_overwritten ~is_same_iteration:true killer_path
-           killed_path
+  (* A definition from outside the analyzed code is a write of the whole
+     variable. *)
+  let killed_path =
+    match killed_label with
+    | None -> Some []
+    | Some killed -> write_path (LabelMap.find killed statements).accesses var
+  in
+  (* Rule B of 2: [killer] writes the element of [killed] in the same iteration
+     of the innermost loop around [killed]. [killer] comes later in source order
+     and has the same loops. Each control of [killer], and of the innermost
+     loop, is also a control of [killed]. The loops are found last, after the
+     cheaper checks. *)
+  let is_killed_in_same_iteration (killer_path : Accesses.step list)
+      (killed_path : Accesses.step list) : bool =
+    match killed_label with
+    | None -> false
+    | Some killed -> (
+        let killed_statement = LabelMap.find killed statements in
+        (* Whether each if, loop and jump that decides if [statement_id] runs
+           also decides if [killed] runs. *)
+        let is_covered_by_killed (statement_id : label) : bool =
+          let covered = (LabelMap.find statement_id statements).controls in
+          List.for_all covered.enclosing ~f:(fun enclosing ->
+              List.mem enclosing ~set:killed_statement.controls.enclosing)
+          && Set.Poly.subset covered.jump_ids killed_statement.controls.jump_ids
+        in
+        killed < killer
+        && Dependence.is_overwritten ~is_same_iteration:true killer_path
+             killed_path
+        &&
+        let killed_loop_ids =
+          loop_ids killed killed_statement.pattern killed_statement.controls
+        in
+        match List.rev killed_loop_ids with
+        | innermost :: _ ->
+            List.equal ~eq:Int.equal
+              (loop_ids killer killer_statement.pattern
+                 killer_statement.controls)
+              killed_loop_ids
+            && is_covered_by_killed killer
+            && is_covered_by_killed innermost
+        | [] -> false) in
+  List.exists killer_statement.accesses ~f:(fun (access : Accesses.access) ->
+      String.equal access.var var
       &&
-      let killed_loop_ids =
-        loop_ids killed killed_statement.pattern killed_statement.controls in
-      match List.rev killed_loop_ids with
-      | innermost :: _ ->
-          List.equal ~eq:Int.equal
-            (loop_ids killer killer_statement.pattern killer_statement.controls)
-            killed_loop_ids
-          && is_covered_by_killed killer
-          && is_covered_by_killed innermost
-      | [] -> false)
-  | None, _ | _, None -> false
+      match (access.kind, killed_path) with
+      | Read, _ | Write, None -> false
+      | Increment, _ -> true
+      | Write, Some killed_path ->
+          (* Rule A of 2: [killer] writes the element of [killed] in every
+             iteration. A write of the whole variable has an empty path and
+             overwrites every element. *)
+          Dependence.is_overwritten ~is_same_iteration:false access.path
+            killed_path
+          || is_killed_in_same_iteration access.path killed_path)
 
-(** Runs reaching definitions with [is_killed] on the forward flowgraph of
-    [statement_map]. Returns the definitions that reach the start of each label.
-*)
-let compute_reaching_definitions
-    ~(is_killed : killer:label -> killed:label -> string -> bool)
-    (mir : Program.Typed.t)
-    (statement_map :
-      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) :
+(** Runs reaching definitions on the forward flowgraph of [statements]. The
+    definitions from outside are the input and output variables of [mir], each
+    statement adds a definition for each write or increment in the accesses of
+    the statement, and {!is_killed} removes definitions. Returns the definitions
+    that reach the node of each label. *)
+let compute_reaching_definitions (mir : Program.Typed.t)
+    (statements : stmt_info LabelMap.t) :
     reaching_definition Set.Poly.t LabelMap.t =
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_statement_map statement_map in
+  let flowgraph, _ =
+    Monotone_framework.forward_flowgraph_of_statement_map
+      (LabelMap.map statements ~f:(fun {pattern; meta; _} -> (pattern, meta)))
+  in
   let (module Flowgraph) = flowgraph in
+  let outside_definitions =
+    Set.Poly.of_list
+      (List.map mir.input_vars ~f:(fun (name, _, _) -> (name, None))
+      @ List.map mir.output_vars ~f:(fun (name, _, _) -> (name, None))) in
+  let definitions_of (statement_id : label) : reaching_definition Set.Poly.t =
+    Set.Poly.of_list
+      (List.filter_map (LabelMap.find statement_id statements).accesses
+         ~f:(fun (access : Accesses.access) ->
+           match access.kind with
+           | Write | Increment -> Some (access.var, Some statement_id)
+           | Read -> None)) in
   LabelMap.map
-    (reaching_definitions_mfp ~is_killed mir
-       (module Flowgraph)
-       flowgraph_to_mir)
+    (reaching_definitions_mfp ~initial:outside_definitions ~gen:definitions_of
+       ~is_killed:(is_killed ~statements)
+       (module Flowgraph))
     ~f:(fun definitions -> definitions.entry)
 
 let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
@@ -177,11 +209,9 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
                pattern)
             ~f:(fun access -> not (is_loop_var_read access)) in
         {pattern; meta; controls; accesses}) in
-  (* The kills use the classified accesses, so classification comes first. *)
-  let reaching_definitions =
-    compute_reaching_definitions
-      ~is_killed:(is_element_killed ~statements)
-      mir statement_map in
+  (* The definitions and the kills use the classified accesses, so
+     classification comes first. *)
+  let reaching_definitions = compute_reaching_definitions mir statements in
   {statements; reaching_definitions}
 
 let definition_ids (definitions : reaching_definition Set.Poly.t) (var : string)

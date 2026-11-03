@@ -12,27 +12,17 @@
     {!monotone_framework} applies the transfer functions over the flowgraph
     until the facts stop changing.
 
-    One instance is the reaching definitions analysis. A {e definition}
-    [(x, Some l)] records that the statement with label [l] can write [x]. The
-    definition {e reaches} a statement if some path goes from [l] to the
-    statement with no write between them that overwrites [x]. [(x, None)] is a
-    definition of [x] from outside the analyzed statement (the statement that
-    the analysis runs on), such as data.
-
-    A statement adds a definition for each variable that the statement assigns
-    or declares. A write to a whole variable kills the earlier definitions of
-    that variable. An indexed or tuple-field write keeps them, because the
-    transfer function sees only variable names. The transfer function does not
-    see which element a write selects, so the transfer function cannot tell when
-    an element write overwrites an earlier one.
-
-    A caller that knows the elements, such as
-    {!Dependence_analysis.build_dependence_info}, passes an [is_killed] callback
-    to kill these definitions too. At label [killer],
-    [is_killed ~killer ~killed x] kills each definition [(x, Some killed)] for
-    which [is_killed] is true. The callback must be true only if [killer]
-    overwrites every value that [killed] can leave in [x], on every path to
-    [killer]. The default kills nothing extra. *)
+    One instance is the reaching definitions analysis. A {e definition} records
+    a write. The definition {e reaches} a statement if some path goes from the
+    write to the statement with no write between them that overwrites the
+    written value. The analysis is generic in the definition type. The caller
+    passes the definitions from outside the analyzed code, a [gen] function that
+    gives the definitions a statement adds, and an [is_killed] function that
+    decides whether the statement at [killer] removes an earlier definition.
+    [is_killed] must be true only if [killer] overwrites every value that the
+    definition can leave, on every path to [killer].
+    {!Dependence_analysis.build_dependence_info} is the caller, and the
+    interface of that module describes the definitions. *)
 
 open Std
 open Monotone_framework_sigs
@@ -323,18 +313,6 @@ let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
       let initial = Set.Poly.empty
     end)
 
-(** Lattice for reaching definitions. A join takes the set union. [(x, None)] is
-    a definition of [x] from outside the analyzed statement. *)
-let reaching_definitions_lattice (type v l)
-    (module Variables : INITIALTYPE with type vals = v)
-    (module Labels : TYPE with type vals = l) =
-  powerset_lattice
-    (module struct
-      type vals = Variables.vals * Labels.vals option
-
-      let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
-    end)
-
 (** Lattice for finding the smallest set that satisfies some criterion *)
 let minimal_variables_lattice initial_variables =
   powerset_lattice
@@ -489,8 +467,8 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
 
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
-(* The functions below find the variables that a statement assigns. Reaching
-   definitions and the initialized-variables analysis both use these
+(* The functions below find the variables that a statement assigns. The
+   initialized-variables analysis and the free-variable check use these
    functions. *)
 
 (** True if an expression in the statement calls a function that adds to
@@ -539,50 +517,22 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** Transfer function for reaching definitions. The module overview describes
-    the gen and kill sets, and the [is_killed] callback. *)
-let reaching_definitions_transfer
-    ?(is_killed : killer:int -> killed:int -> string -> bool =
-      fun ~killer:_ ~killed:_ _ -> false)
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
+(** Transfer function for reaching definitions. [gen] gives the definitions that
+    a statement adds, and [is_killed ~killer] the earlier definitions that the
+    statement at [killer] removes. The module overview describes both. *)
+let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
+    ~(is_killed : killer:int -> d -> bool) =
   (module struct
     type labels = int
-    type properties = reaching_definition Set.Poly.t
+    type properties = d Set.Poly.t
 
     let transfer_function l p =
-      let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let written = assigned_or_declared_vars mir_node in
-      let gen = Set.Poly.map ~f:(fun x -> (x, Some l)) written in
-      let target_defns = Set.Poly.filter p ~f:(fun (y, _) -> y = "target") in
-      let killed =
-        match mir_node with
-        | Decl {decl_id= x; _}
-         |Assignment ((LVariable x, []), _, _)
-         |For {loopvar= x; _} ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ | JacobianPE _ -> target_defns
-        | NRFunApp (kind, _) when is_target_increment kind -> target_defns
-        | NRFunApp (_, _)
-         |Break | Continue | Return _ | Skip
-         |IfElse (_, _, _)
-         |While (_, _)
-         |Profile _ | Block _ | SList _ | Assignment _ ->
-            Set.Poly.empty in
-      let element_killed =
-        Set.Poly.filter p ~f:(fun (var, definition) ->
-            match definition with
-            | Some killed ->
-                Set.Poly.mem var written && is_killed ~killer:l ~killed var
-            | None -> false) in
-      let kill =
-        Set.Poly.union_list
-          [ killed; element_killed
-          ; (if is_target_incremented_in_exprs mir_node then target_defns
-             else Set.Poly.empty) ] in
-      transfer_gen_kill p gen kill
+      Set.Poly.union (gen l)
+        (Set.Poly.filter p ~f:(fun definition ->
+             not (is_killed ~killer:l definition)))
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = reaching_definition Set.Poly.t)
+     and type properties = d Set.Poly.t)
 
 (** Adds each variable that the statement assigns. A write to one element counts
     as an assignment to the whole variable. *)
@@ -994,32 +944,22 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Computes reaching definitions, with [is_killed] as in the module overview.
-    Each input and output variable of the program starts with [(x, None)]. *)
-let reaching_definitions_mfp
-    ?(is_killed : killer:int -> killed:int -> string -> bool =
-      fun ~killer:_ ~killed:_ _ -> false) (mir : Program.Typed.t)
+(** Computes reaching definitions over the flowgraph. [initial] holds the
+    definitions from outside the analyzed code, which reach the entry. The
+    module overview describes [gen] and [is_killed]. *)
+let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
+    ~(gen : int -> d Set.Poly.t) ~(is_killed : killer:int -> d -> bool)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
-  let variables =
-    (module struct
-      type vals = string
+      with type labels = int) =
+  let (module Lattice) =
+    powerset_lattice
+      (module struct
+        type vals = d
 
-      let initial =
-        Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ]
-    end : INITIALTYPE
-      with type vals = string) in
-  let labels =
-    (module struct
-      type vals = int
-    end : TYPE
-      with type vals = int) in
-  let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) =
-    reaching_definitions_transfer ~is_killed flowgraph_to_mir in
+        let initial = initial
+      end : INITIALTYPE
+        with type vals = d) in
+  let (module Transfer) = reaching_definitions_transfer ~gen ~is_killed in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

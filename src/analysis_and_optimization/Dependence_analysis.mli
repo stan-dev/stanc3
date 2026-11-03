@@ -203,12 +203,12 @@ open Dataflow_types
     5      matrix[N, 2] theta;        (a, 2)
     6      real s;                    (a, 2) (theta, 5)
     7      s = promote(0, real, var); (a, 2) (s, 6) (theta, 5)
-    8      for(n in 1:N) #9           (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    10     theta[n, 1] = a;           (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    11     theta[n, 2] = x[n];        (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    12     s = (s + theta[n, 2]);     (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    13     if((s > 0)) #14            (a, 2) (n, 8) (s, 12) (target, 15) (theta, [5, 10, 11])
-    15     target += 1;               (a, 2) (n, 8) (s, 12) (target, 15) (theta, [5, 10, 11])
+    8      for(n in 1:N) #9           (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    10     theta[n, 1] = a;           (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    11     theta[n, 2] = x[n];        (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    12     s = (s + theta[n, 2]);     (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    13     if((s > 0)) #14            (a, 2) (s, 12) (target, 15) (theta, [5, 10, 11])
+    15     target += 1;               (a, 2) (s, 12) (target, 15) (theta, [5, 10, 11])
     ]}
 
     A few things in the table are worth reading closely.

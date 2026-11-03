@@ -93,32 +93,19 @@ let%expect_test "Dependency graph example" =
        (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
     |}]
 
-let%expect_test "Reaching definition labels for the loop variable" =
-  let deps =
-    LabelMap.map
-      (build_log_prob_dependence_info example1_program).reaching_definitions
-      ~f:(fun definitions -> definition_ids definitions "j") in
-  print_s [%sexp (deps : label option Set.Poly.t LabelMap.t)];
-  [%expect
-    {|
-    ((1 ()) (2 ((9))) (3 ()) (4 ()) (5 ()) (6 ()) (7 ()) (8 ((9))) (9 ((9)))
-     (10 ((9))) (11 ((9))) (12 ((9))) (13 ((9))) (14 ((9))) (15 ((9))) (16 ((9)))
-     (17 ((9))) (18 ((9))) (19 ((9))) (20 ((9))) (21 ((9))) (22 ((9))))
-    |}]
-
+(* The loop variable [j] of the loop at label 9 is not a definition: no
+   statement writes a loop variable. *)
 let%expect_test "Reaching definition records at statement entry" =
   let deps =
     (build_log_prob_dependence_info example1_program).reaching_definitions in
   print_s [%sexp (deps : reaching_definition Set.Poly.t LabelMap.t)];
   [%expect
     {|
-    ((1 ()) (2 ((i (4)) (j (9)))) (3 ()) (4 ((i (3)))) (5 ((i (4))))
-     (6 ((i (4)))) (7 ((i (4)))) (8 ((i (4)) (j (9)))) (9 ((i (4)) (j (9))))
-     (10 ((i (4)) (j (9)))) (11 ((i (4)) (j (9)))) (12 ((i (4)) (j (9))))
-     (13 ((i (4)) (j (9)))) (14 ((i (4)) (j (9)))) (15 ((i (4)) (j (9))))
-     (16 ((i (4)) (j (9)))) (17 ((i (4)) (j (9)))) (18 ((i (4)) (j (9))))
-     (19 ((i (4)) (j (9)))) (20 ((i (4)) (j (9)))) (21 ((i (4)) (j (9))))
-     (22 ((i (4)) (j (9)))))
+    ((1 ()) (2 ((i (4)))) (3 ()) (4 ((i (3)))) (5 ((i (4)))) (6 ((i (4))))
+     (7 ((i (4)))) (8 ((i (4)))) (9 ((i (4)))) (10 ((i (4)))) (11 ((i (4))))
+     (12 ((i (4)))) (13 ((i (4)))) (14 ((i (4)))) (15 ((i (4)))) (16 ((i (4))))
+     (17 ((i (4)))) (18 ((i (4)))) (19 ((i (4)))) (20 ((i (4)))) (21 ((i (4))))
+     (22 ((i (4)))))
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -613,12 +600,12 @@ let%expect_test "Running example: the reaching definitions" =
     5      matrix[N, 2] theta;                 (N, None) (x, None) (a, Some 2)
     6      real s;                             (N, None) (x, None) (a, Some 2) (theta, Some 5)
     7      s = promote(0, real, var);          (N, None) (x, None) (a, Some 2) (s, Some 6) (theta, Some 5)
-    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
-    15     target += 1;                        (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    15     target += 1;                        (N, None) (x, None) (a, Some 2) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
