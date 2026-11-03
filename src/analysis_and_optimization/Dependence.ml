@@ -4,7 +4,8 @@ open Accesses
 
 (** Compares the steps at one position of two paths. Two tuple fields compare
     like two constant subscripts. *)
-let compare_steps (first : step) (second : step) : Affine_subscript.comparison =
+let compare_steps (first : Affine_subscript.t step)
+    (second : Affine_subscript.t step) : Affine_subscript.comparison =
   match (first, second) with
   | Field first_field, Field second_field ->
       if first_field = second_field then Always_same else Never_same
@@ -17,8 +18,9 @@ let compare_steps (first : step) (second : step) : Affine_subscript.comparison =
     the same element in every iteration, as [[1]] and [[1]] do. Steps that
     select the same element only within one iteration, as [[n]] and [[n]] do,
     count only when both writes run in the same iteration. *)
-let rec is_overwritten ~(is_same_iteration : bool) (killer : step list)
-    (killed : step list) : bool =
+let rec is_overwritten ~(is_same_iteration : bool)
+    (killer : Affine_subscript.t step list)
+    (killed : Affine_subscript.t step list) : bool =
   match (killer, killed) with
   | [], _ -> true
   | _ :: _, [] -> false

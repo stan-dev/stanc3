@@ -41,9 +41,11 @@ open Middle
 (** {1 API reference} *)
 
 (** One position in a path. A step is a subscript or a tuple field. The path of
-    [x[i].2[j]] has the three steps [i], [.2] and [j]. *)
-type step =
-  | Subscript of Affine_subscript.t Index.t
+    [x[i].2[j]] has the three steps [i], [.2] and [j]. ['e] is the type of a
+    subscript: an expression while the path is collected, and an
+    {!Affine_subscript.t} once classified. *)
+type 'e step =
+  | Subscript of 'e Index.t
       (** One subscript, such as [n + 1], with the affine subscript of each
           index, or [None]. *)
   | Field of int  (** One tuple field, such as [.2] in [t.2]. *)
@@ -58,12 +60,15 @@ type kind = Read | Write | Increment [@@deriving equal]
 (** One access by a statement. [var] is the variable, [kind] tells how the
     statement uses the variable, and [path] selects the element. An empty path
     means the whole variable, as in [sum(v)] or the declaration of [v]. *)
-type access = {var: string; path: step list; kind: kind}
+type access = {var: string; path: Affine_subscript.t step list; kind: kind}
+
+(** The accesses of one statement. *)
+type t = access list
 
 val of_statement :
      classify:(Expr.Typed.t -> Affine_subscript.t)
   -> (Expr.Typed.t, 'substatement) Stmt.Pattern.t
-  -> access list
+  -> t
 (** Collects the accesses in the expressions of a statement, and gives each
     subscript the result of [classify]. Nested statements are collected
     separately. The accesses come in this order, which is not the run-time
@@ -77,23 +82,29 @@ val of_statement :
     - An addition to the log density gives an increment of [target]. [target()]
       gives a read of [target]. *)
 
-val filter_var : string -> access list -> access list
+val filter_var : string -> t -> t
 (** Keeps the accesses to the named variable, in their original order. In the
     running example, ["v"] gives [R v[n+1], R v[k]]. *)
 
-val used_vars : access list -> string Set.Poly.t
+val used_vars : t -> string Set.Poly.t
 (** Returns the names of the variables that the accesses use, which means read
     or increment. In the running example, the result is [{"n"; "v"; "k"}]. *)
 
-val defined_vars : access list -> string Set.Poly.t
+val defined_vars : t -> string Set.Poly.t
 (** Returns the names of the variables that the accesses define, which means
     write or increment. In the running example, the result is [{"y"}]. *)
+
+val pp_path :
+     loop_name:(Dataflow_types.label -> string)
+  -> Affine_subscript.t step list Fmt.t
+(** Prints a path, as in [[n+1]], [[n, 1]] or [.2]. An empty path prints
+    nothing. *)
 
 val pp_access : loop_name:(Dataflow_types.label -> string) -> access Fmt.t
 (** Prints the kind, the variable and the path in the notation of the running
     example, as in [W v[n+1]], [R k], [+= target] or [W t.2]. [loop_name] gives
     the loop variable of a loop label. *)
 
-val pp : loop_name:(Dataflow_types.label -> string) -> access list Fmt.t
+val pp : loop_name:(Dataflow_types.label -> string) -> t Fmt.t
 (** Prints the reads, then the increments, then the writes, each group in the
     original order, as in [R v[n+1], R k, += target, W y[n]]. *)

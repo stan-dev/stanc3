@@ -99,16 +99,15 @@ module Accesses = Analysis_and_optimization.Accesses
     definitions come first. *)
 let pp_definitions (info : dependence_info) ppf
     (definitions : reaching_definition Set.Poly.t) =
-  let pp_access =
-    Test_utils.one_line
-      (Accesses.pp_access ~loop_name:(Test_utils.loop_name info)) in
+  let loop_name = Test_utils.loop_name info in
+  (* The variable and the path of a write, without the kind. *)
+  let pp_access ppf ({var; path; _} : Accesses.access) =
+    Fmt.pf ppf "%s%a" var
+      (Test_utils.one_line (Accesses.pp_path ~loop_name))
+      path in
   let entries =
     List.map (Set.Poly.to_list definitions) ~f:(fun (access, label) ->
         (Fmt.str "%a" pp_access access, label)) in
-  let outside =
-    List.filter_map entries ~f:(function
-      | text, None -> Some (text ^ " None")
-      | _, Some _ -> None) in
   (* The distinct access texts with a label, in set order. *)
   let texts =
     List.rev
@@ -127,7 +126,11 @@ let pp_definitions (info : dependence_info) ppf
         | [label] -> Fmt.str "%s %d" text label
         | labels -> Fmt.str "%s [%a]" text Fmt.(list ~sep:(any ", ") int) labels)
   in
-  Fmt.(list ~sep:(any ", ") string) ppf (outside @ inside)
+  (* A set with only definitions from outside the analyzed code prints
+     [None]. *)
+  if List.is_empty inside && not (Set.Poly.is_empty definitions) then
+    Fmt.string ppf "None"
+  else Fmt.(list ~sep:(any ", ") string) ppf inside
 
 (* The loop variable [j] of the loop at label 9 is not a definition: no
    statement writes a loop variable. *)
@@ -138,27 +141,27 @@ let%expect_test "Reaching definition records at statement entry" =
   [%expect
     {|
     1: []
-    2: [W i 4]
+    2: [i 4]
     3: []
-    4: [W i 3]
-    5: [W i 4]
-    6: [W i 4]
-    7: [W i 4]
-    8: [W i 4]
-    9: [W i 4]
-    10: [W i 4]
-    11: [W i 4]
-    12: [W i 4]
-    13: [W i 4]
-    14: [W i 4]
-    15: [W i 4]
-    16: [W i 4]
-    17: [W i 4]
-    18: [W i 4]
-    19: [W i 4]
-    20: [W i 4]
-    21: [W i 4]
-    22: [W i 4]
+    4: [i 3]
+    5: [i 4]
+    6: [i 4]
+    7: [i 4]
+    8: [i 4]
+    9: [i 4]
+    10: [i 4]
+    11: [i 4]
+    12: [i 4]
+    13: [i 4]
+    14: [i 4]
+    15: [i 4]
+    16: [i 4]
+    17: [i 4]
+    18: [i 4]
+    19: [i 4]
+    20: [i 4]
+    21: [i 4]
+    22: [i 4]
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -624,17 +627,17 @@ let%expect_test "Running example: the reaching definitions" =
   [%expect
     {|
     label  pattern                             reaching definitions
-    2      real a;                             W N None, W a None, W x None
-    4      FnValidateSize__("theta", "N", N);  W N None, W x None, W a 2
-    5      matrix[N, 2] theta;                 W N None, W x None, W a 2
-    6      real s;                             W N None, W x None, W a 2, W theta 5
-    7      s = promote(0, real, var);          W N None, W x None, W a 2, W s 6, W theta 5
-    8      for(n in 1:N) #9                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
-    10     theta[n, 1] = a;                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
-    11     theta[n, 2] = x[n];                 W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
-    12     s = (s + theta[n, 2]);              W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
-    13     if((s > 0)) #14                     W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
-    15     target += 1;                        W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    2      real a;                             None
+    4      FnValidateSize__("theta", "N", N);  a 2
+    5      matrix[N, 2] theta;                 a 2
+    6      real s;                             a 2, theta 5
+    7      s = promote(0, real, var);          a 2, s 6, theta 5
+    8      for(n in 1:N) #9                    a 2, s [7, 12], target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
+    10     theta[n, 1] = a;                    a 2, s [7, 12], target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
+    11     theta[n, 2] = x[n];                 a 2, s [7, 12], target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
+    12     s = (s + theta[n, 2]);              a 2, s [7, 12], target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
+    13     if((s > 0)) #14                     a 2, s 12, target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
+    15     target += 1;                        a 2, s 12, target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
@@ -964,7 +967,7 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
 (* Each statement prints the controls, then the two views that queries use. The
    controls list the enclosing ifs and loops, outermost first, then the jumps.
    [control_parent_ids] keeps the nearest enclosing if or loop and the jumps.
-   [loop_ids] keeps the loops, and a loop statement adds itself. *)
+   [enclosing_loop_ids] keeps the loops, and a loop statement adds itself. *)
 let%expect_test "Controls and the two views derived from them" =
   let map =
     build_log_prob_dependence_info
@@ -990,7 +993,7 @@ let%expect_test "Controls and the two views derived from them" =
         statement.controls Test_utils.pp_labels
         (control_parent_ids statement.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
-        (loop_ids statement_id statement.pattern statement.controls));
+        (enclosing_loop_ids statement_id statement.pattern statement.controls));
   [%expect
     {|
     1: 2 3

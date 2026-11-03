@@ -20,11 +20,7 @@ let%expect_test "Loop test" =
   in
   let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.(
-      build_statement_map
-        (fun {pattern; _} -> pattern)
-        (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block}) in
+    build_statement_map Stmt.{meta= Location_span.empty; pattern= block} in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
@@ -123,11 +119,7 @@ let%expect_test "Loop passthrough" =
   in
   let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.(
-      build_statement_map
-        (fun {pattern; _} -> pattern)
-        (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block}) in
+    build_statement_map Stmt.{meta= Location_span.empty; pattern= block} in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)];
   [%expect {|
@@ -173,12 +165,7 @@ let example1_program =
   let block = Stmt.Pattern.Block mir.log_prob in
   Stmt.{meta= Location_span.empty; pattern= block}
 
-let example1_statement_map =
-  Stmt.(
-    build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
-      example1_program)
+let example1_statement_map = build_statement_map example1_program
 
 let%expect_test "Statement label map example" =
   print_s
@@ -331,12 +318,7 @@ let example3_program =
   in
   Stmt.{meta= Location_span.empty; pattern= blocks}
 
-let example3_statement_map =
-  Stmt.(
-    build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
-      example3_program)
+let example3_statement_map = build_statement_map example3_program
 
 let%expect_test "Statement label map example 3" =
   print_s
@@ -438,12 +420,7 @@ let example4_program =
   in
   Stmt.{meta= Location_span.empty; pattern= blocks}
 
-let example4_statement_map =
-  Stmt.(
-    build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
-      example4_program)
+let example4_statement_map = build_statement_map example4_program
 
 let%expect_test "Statement label map example 4" =
   print_s
@@ -558,12 +535,7 @@ let example5_program =
   in
   Stmt.{meta= Location_span.empty; pattern= blocks}
 
-let example5_statement_map =
-  Stmt.(
-    build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
-      example5_program)
+let example5_statement_map = build_statement_map example5_program
 
 let%expect_test "Statement label map example 5" =
   print_s

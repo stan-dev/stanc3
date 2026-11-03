@@ -38,6 +38,16 @@ open Dataflow_types
       of the second subscript minus the iteration of the first. For [n + 1]
       against [n - 1], the distance is [2].
 
+    In this loop, iteration [n] reads the element that iteration [n - 1] wrote.
+    {@stan[
+      for (n in 2:N) {
+        b[n] = a;
+        c[n] = b[n - 1];
+      }
+    ]}
+    The write [b[n]] and the read [b[n - 1]] select the same element when the
+    read runs one iteration after the write, so the distance is [1].
+
     Every other pair gives {!Cannot_tell}. *)
 
 (** {1 API reference} *)
@@ -76,15 +86,17 @@ val of_expr :
 (** The result of {!compare_subscripts}. *)
 type comparison =
   | Always_same
-      (** The subscripts select the same element in every iteration, as [[1]]
-          and [[1]], or [[k + 1]] and [[k + 1]], do. *)
+      (** The subscripts select the same element whichever iterations the two
+          accesses run in, because neither has a loop term, as [[1]] and [[1]],
+          or [[k + 1]] and [[k + 1]], do. *)
   | Never_same
       (** The subscripts never select the same element, as [[1]] and [[2]] do.
       *)
   | Same_at_distance of {loop_id: label; distance: int}
-      (** The subscripts select the same element only when the second runs
-          [distance] iterations of the loop labeled [loop_id] after the first.
-          [[n]] and [[n]] give [0], and [[n + 1]] and [[n]] give [1]. *)
+      (** The subscripts select the same element only when the second access
+          runs [distance] iterations of the loop labeled [loop_id] after the
+          first. [[n]] and [[n]] give [0], so they select the same element only
+          in the same iteration. [[n + 1]] and [[n]] give [1]. *)
   | Cannot_tell  (** Any other pair, as [[idx[n]]] and [[1]]. *)
 
 val compare_subscripts : t Index.t -> t Index.t -> comparison

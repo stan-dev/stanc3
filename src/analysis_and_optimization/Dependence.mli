@@ -70,7 +70,7 @@ open Dataflow_types
     in an earlier iteration. A negative distance gives false. If every distance
     is zero, the source and the sink run in the same iteration, which makes the
     dependence {e loop-independent}. A loop-independent dependence needs the
-    source statement to come before the sink statement. It cannot exist when
+    source statement to come before the sink statement, and cannot exist when
     both accesses are in one statement, because an assignment reads the
     right-hand side before the assignment writes. In the notation of {!pp}:
     - [[m:0][n:-1]] gives false. In the same iteration of [m], the source runs
@@ -84,8 +84,8 @@ open Dataflow_types
     same tests, and LLVM's [DependenceAnalysis] implements them. LLVM calls the
     source [Src] and the sink [Dst]. A vector with no known distance is what
     LLVM calls a confused dependence, and GCC [chrec_dont_know]. The
-    [is_loop_independent_possible] flag has the role of LLVM's
-    [PossiblyLoopIndependent].
+    [is_loop_independent_possible] flag has the role of the
+    [PossiblyLoopIndependent] flag of LLVM's [FullDependence].
 
     These cases leave every distance unknown, so the module keeps the pair. Each
     name in parentheses is a standard test that this module does not implement.
@@ -104,7 +104,10 @@ open Dataflow_types
 (** {1 API reference} *)
 
 val is_overwritten :
-  is_same_iteration:bool -> Accesses.step list -> Accesses.step list -> bool
+     is_same_iteration:bool
+  -> Affine_subscript.t Accesses.step list
+  -> Affine_subscript.t Accesses.step list
+  -> bool
 (** Whether a later write to the first path (the killer) overwrites each element
     that an earlier write to the second path (the killed write) wrote.
     [is_same_iteration] tells whether both writes run in the same loop

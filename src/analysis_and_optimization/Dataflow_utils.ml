@@ -9,22 +9,21 @@ let merge_set_maps (module M : Map.S) m1 m2 =
   let merge_map_elems _ e1 e2 = Some (Set.Poly.union e1 e2) in
   M.union ~f:merge_map_elems m1 m2
 
-(** See interface file *)
 let root_statement_id : label = 1
 
 (** See interface file *)
-let build_statement_map extract metadata stmt =
-  let rec build_statement_map_rec next_label map stmt =
-    let this_label = next_label in
-    let next_label' = next_label + 1 in
-    let f (label, map) stmt = build_statement_map_rec label map stmt in
-    let (next_label'', map), built =
-      fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f in
-    ( ( next_label''
-      , LabelMap.add map ~key:this_label ~data:(built, metadata stmt) )
-    , this_label ) in
-  let (_, map), _ =
-    build_statement_map_rec root_statement_id LabelMap.empty stmt in
+let build_statement_map (stmt : Stmt.Located.t) =
+  let rec label_statement (next_label, map) (stmt : Stmt.Located.t) =
+    let (next_unused_label, nested_map), pattern =
+      Stmt.Pattern.fold_map
+        (fun state _ -> state)
+        label_statement
+        (next_label + 1, map)
+        stmt.pattern in
+    let map =
+      LabelMap.add nested_map ~key:next_label ~data:(pattern, stmt.meta) in
+    ((next_unused_label, map), next_label) in
+  let (_, map), _ = label_statement (root_statement_id, LabelMap.empty) stmt in
   map
 
 (* TODO: this currently does not seem to be labelling inside function bodies.
@@ -80,23 +79,16 @@ let is_ctrl_flow pattern =
     because they both rely on some of the same Break, Continue and Return
     bookkeeping. *)
 let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
-    statement_map =
-  (* Visits the statement at [label] and the statements nested in the statement.
-     [enclosing] holds the ifs and loops around the statement, outermost
-     first. *)
+    (statement_map :
+      ((ExprSet.elt, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) =
   let rec build_cf_graph_rec (enclosing : enclosing list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
-    (* Only an if or a loop adds itself to the [enclosing] list that the
-       children of the statement receive. A loop adds itself here. An if adds
-       itself below, with the side that holds each child. *)
     let child_cf =
       match stmt with
       | Stmt.Pattern.For _ | While _ -> enclosing @ [{id= label; side= None}]
       | _ -> enclosing in
-    (* This node is the parent of substatements, unless this is a Block, which
-       is visited after substatements *)
     let substmt_preds =
       match stmt with
       | (Block _ | Profile _) when blocks_after_body -> in_state.exits
@@ -125,9 +117,11 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
               (join_cf_states then_state else_state, after_both_map))
       | _ ->
           fst
-            (fwd_traverse_statement stmt ~init:(child_init, in_map)
-               ~f:(fun state child ->
-                 (build_cf_graph_rec child_cf state child, ()))) in
+            (Stmt.Pattern.fold_map
+               (fun state _ -> state)
+               (fun state child ->
+                 (build_cf_graph_rec child_cf state child, ()))
+               (child_init, in_map) stmt) in
     (* If the statement is a loop, we need to include the loop body exits as
        predecessors of the loop *)
     let substmt_state, predecessors =
@@ -220,28 +214,30 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
   , LabelMap.map edges ~f:(fun e -> e.controls) )
 
-(** See interface file *)
 let control_parent_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t =
   match List.hd (List.rev enclosing) with
   | Some {id; _} -> Set.Poly.add id jump_ids
   | None -> jump_ids
 
-(** See interface file *)
-let loop_ids (statement_id : label) (pattern : ('e, 's) Stmt.Pattern.t)
-    (controls : controls) : label list =
+let enclosing_loop_ids (statement_id : label)
+    (pattern : ('e, 's) Stmt.Pattern.t) (controls : controls) : label list =
   List.filter_map controls.enclosing ~f:(function
     | {id; side= None} -> Some id
     | {side= Some _; _} -> None)
   @ match pattern with For _ | While _ -> [statement_id] | _ -> []
 
 (** See interface file *)
-let build_cf_graph statement_map =
+let build_controls statement_map =
   let _, _, controls = build_control_flow statement_map in
-  LabelMap.map controls ~f:control_parent_ids
+  controls
+
+let build_cf_graph statement_map =
+  LabelMap.map (build_controls statement_map) ~f:control_parent_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
-    statement_map =
+    (statement_map :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) =
   let exits, pred_graph, _ =
     build_control_flow ~flatten_loops ~blocks_after_body statement_map in
   (exits, pred_graph)

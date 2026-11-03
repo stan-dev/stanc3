@@ -37,7 +37,7 @@ type stmt_info =
   { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
   ; meta: Location_span.t
   ; controls: controls
-  ; accesses: Accesses.access list }
+  ; accesses: Accesses.t }
 
 type dependence_info =
   { statements: stmt_info LabelMap.t
@@ -57,8 +57,8 @@ let common_loop_ids (statements : stmt_info LabelMap.t) (first_id : label)
         first_loop_id :: common_prefix first_rest second_rest
     | _ -> [] in
   common_prefix
-    (loop_ids first_id first.pattern first.controls)
-    (loop_ids second_id second.pattern second.controls)
+    (enclosing_loop_ids first_id first.pattern first.controls)
+    (enclosing_loop_ids second_id second.pattern second.controls)
 
 (** The [is_killed] callback for reaching definitions. A write at [killer] kills
     a definition when the write must overwrite the element that the definition
@@ -73,7 +73,8 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
      and has the same loops. Each control of [killer], and of the innermost
      loop, is also a control of [killed]. The loops are found last, after the
      cheaper checks. A definition from outside has no label and no iteration. *)
-  let is_killed_in_same_iteration (killer_path : Accesses.step list) : bool =
+  let is_killed_in_same_iteration
+      (killer_path : Affine_subscript.t Accesses.step list) : bool =
     match killed_label with
     | None -> false
     | Some killed -> (
@@ -91,12 +92,12 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
              killed_access.path
         &&
         let killed_loop_ids =
-          loop_ids killed killed_statement.pattern killed_statement.controls
-        in
+          enclosing_loop_ids killed killed_statement.pattern
+            killed_statement.controls in
         match List.rev killed_loop_ids with
         | innermost :: _ ->
             List.equal ~eq:Int.equal
-              (loop_ids killer killer_statement.pattern
+              (enclosing_loop_ids killer killer_statement.pattern
                  killer_statement.controls)
               killed_loop_ids
             && is_covered_by_killed killer
@@ -147,59 +148,6 @@ let compute_reaching_definitions (mir : Program.Typed.t)
        ~is_killed:(is_killed ~statements)
        (module Flowgraph))
     ~f:(fun definitions -> definitions.entry)
-
-let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
-    dependence_info =
-  let statement_map =
-    build_statement_map
-      (fun Stmt.{pattern; _} -> pattern)
-      (fun Stmt.{meta; _} -> meta)
-      stmt in
-  let _, _, control_ids = build_control_flow statement_map in
-  (* A subscript is affine only if no statement in [stmt] defines the variables
-     that the subscript uses, because a defined variable can change between
-     iterations. For example, a write [m = n] stops [v[m]] from being affine.
-     The defined names do not depend on the classification, so this first pass
-     classifies no subscript. *)
-  let defined_vars =
-    LabelMap.fold statement_map ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:(pattern, _) running_defined_vars ->
-        Set.Poly.union running_defined_vars
-          (Accesses.defined_vars
-             (Accesses.of_statement ~classify:(fun _ -> None) pattern))) in
-  let statements =
-    LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
-        let controls = LabelMap.find statement_id control_ids in
-        (* The variable and label of each [for] loop around the statement. The
-           [for] statement at the label holds the variable. *)
-        let for_loops =
-          List.filter_map (loop_ids statement_id pattern controls)
-            ~f:(fun loop_id ->
-              match fst (LabelMap.find loop_id statement_map) with
-              | For {loopvar; _} -> Some (loopvar, loop_id)
-              | _ -> None) in
-        (* A query reaches each enclosing loop, and the bounds of that loop,
-           through the control dependence on the loop. No statement writes a
-           loop variable, so a search for writes to a loop variable finds
-           nothing. The reads of loop variables thus add no information and are
-           dropped. *)
-        let is_loop_var_read (access : Accesses.access) =
-          match access.kind with
-          | Read ->
-              List.exists for_loops ~f:(fun (loopvar, _) ->
-                  String.equal loopvar access.var)
-          | Write | Increment -> false in
-        let accesses =
-          List.filter
-            (Accesses.of_statement
-               ~classify:(Affine_subscript.of_expr ~for_loops ~defined_vars)
-               pattern)
-            ~f:(fun access -> not (is_loop_var_read access)) in
-        {pattern; meta; controls; accesses}) in
-  (* The definitions and the kills use the classified accesses, so
-     classification comes first. *)
-  let reaching_definitions = compute_reaching_definitions mir statements in
-  {statements; reaching_definitions}
 
 let definition_ids (definitions : reaching_definition Set.Poly.t) (var : string)
     : label option Set.Poly.t =
@@ -333,6 +281,43 @@ let dependence_graph (info : dependence_info) : label Set.Poly.t LabelMap.t =
     let m' = step_map m in
     if map_equal m m' then m else step_until_fixed m' in
   step_until_fixed immediate_map
+
+let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
+    dependence_info =
+  let statement_map = build_statement_map stmt in
+  let control_ids = build_controls statement_map in
+  let defined_vars =
+    LabelMap.fold statement_map ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:(pattern, _) running_defined_vars ->
+        Set.Poly.union running_defined_vars
+          (Accesses.defined_vars
+             (Accesses.of_statement ~classify:(fun _ -> None) pattern))) in
+  let statements =
+    LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
+        let controls = LabelMap.find statement_id control_ids in
+        let for_loops =
+          List.filter_map (enclosing_loop_ids statement_id pattern controls)
+            ~f:(fun loop_id ->
+              match fst (LabelMap.find loop_id statement_map) with
+              | For {loopvar; _} -> Some (loopvar, loop_id)
+              | _ -> None) in
+        let is_loop_var_read (access : Accesses.access) =
+          match access.kind with
+          | Read ->
+              List.exists for_loops ~f:(fun (loopvar, _) ->
+                  String.equal loopvar access.var)
+          | Write | Increment -> false in
+        let accesses =
+          List.filter
+            (Accesses.of_statement
+               ~classify:(Affine_subscript.of_expr ~for_loops ~defined_vars)
+               pattern)
+            ~f:(fun access -> not (is_loop_var_read access)) in
+        {pattern; meta; controls; accesses}) in
+  (* The definitions and the kills use the classified accesses, so
+     classification comes first. *)
+  let reaching_definitions = compute_reaching_definitions mir statements in
+  {statements; reaching_definitions}
 
 let build_log_prob_dependence_info (mir : Program.Typed.t) : dependence_info =
   let log_prob_stmt =

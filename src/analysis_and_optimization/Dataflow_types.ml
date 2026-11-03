@@ -1,9 +1,12 @@
 open Std
 open Std.Sexp_conv
 
-(** A label is an integer that identifies one statement in a statement map or
-    graph. A {e statement map} ({!Dataflow_utils.build_statement_map}) maps each
-    label to a statement. Labels from different maps do not match. *)
+(***********************************)
+(* Basic datatypes                 *)
+(***********************************)
+
+(** A label is a unique identifier for a node in the dataflow/dependency graph,
+    and often corresponds to one node in the Mir. *)
 type label = int [@@deriving sexp_of]
 
 (** The side of an [if] that holds a statement. *)
@@ -16,9 +19,8 @@ type side = Then | Else
 type enclosing = {id: label; side: side option}
 
 (** The {e controls} of a statement are the other statements that decide
-    whether, or how often, the statement runs.
-    {!Dataflow_utils.build_control_flow} finds the controls of each statement.
-*)
+    whether, or how often, the statement runs. {!Dataflow_utils.build_controls}
+    finds the controls of each statement. *)
 type controls =
   { enclosing: enclosing list
         (** The index of ifs and loops around the statement, outermost first. *)

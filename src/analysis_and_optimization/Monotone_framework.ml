@@ -1,28 +1,4 @@
-(** The common elements of a monotone framework
-
-    A dataflow analysis computes facts at the entry and the exit of each
-    statement, such as the variables that are initialized there. A
-    {e monotone framework} is the general scheme behind many such analyses. The
-    facts form a {e lattice}, which is a set of values with an order and a
-    {e join}. The join combines the facts from two control flow paths that meet,
-    for example by set union. A {e path} here is a sequence of statements that
-    the program can run one after another. A {e transfer function} gives the
-    facts at the exit of a statement from the facts at the entry. Many transfer
-    functions add a {e gen} set of facts and remove a {e kill} set.
-    {!monotone_framework} applies the transfer functions over the flowgraph
-    until the facts stop changing.
-
-    One instance is the reaching definitions analysis. A {e definition} records
-    a write. The definition {e reaches} a statement if some path goes from the
-    write to the statement with no write between them that overwrites the
-    written value. The analysis is generic in the definition type. The caller
-    passes the definitions from outside the analyzed code, a [gen] function that
-    gives the definitions a statement adds, and an [is_killed] function that
-    decides whether the statement at [killer] removes an earlier definition.
-    [is_killed] must be true only if [killer] overwrites every value that the
-    definition can leave, on every path to [killer].
-    {!Dependence_analysis.build_dependence_info} is the caller, and the
-    interface of that module describes the definitions. *)
+(** The common elements of a monotone framework *)
 
 open Std
 open Monotone_framework_sigs
@@ -130,10 +106,7 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
     (module FLOWGRAPH with type labels = int)
     * Stmt.Located.Non_recursive.t LabelMap.t =
   inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
-    (Dataflow_utils.build_statement_map
-       (fun Stmt.{pattern; _} -> pattern)
-       (fun Stmt.{meta; _} -> meta)
-       stmt)
+    (Dataflow_utils.build_statement_map stmt)
 
 (** Reverse flowgraphs to be used for reverse analyses. Observe that this
     respects the invariants listed for a FLOWGRAPH *)
@@ -465,11 +438,10 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
     with type labels = int
      and type properties = Expr.Typed.t String.Map.t option)
 
+(** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
-(* The functions below find the variables that a statement assigns. The
-   initialized-variables analysis and the free-variable check use these
-   functions. *)
+(* TODO: from here *)
 
 (** True if an expression in the statement calls a function that adds to
     [target], for example [x = foo_lp(y)]. *)
@@ -506,6 +478,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   if is_target_incremented_in_exprs s then Set.Poly.add "target" assigned
   else assigned
 
+(** Calculate the set of variables that a statement can declare *)
 let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
@@ -517,9 +490,11 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** Transfer function for reaching definitions. [gen] gives the definitions that
-    a statement adds, and [is_killed ~killer] the earlier definitions that the
-    statement at [killer] removes. The module overview describes both. *)
+(** Transfer function for reaching definitions. The definitions that leave
+    statement [l] are [gen l], the definitions that [l] adds, together with the
+    definitions that reach [l] and that [is_killed ~killer:l] rejects.
+    [is_killed] must be true only if [l] overwrites, on every path to [l], every
+    value that the definition can leave. *)
 let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
     ~(is_killed : killer:int -> d -> bool) =
   (module struct
@@ -534,8 +509,7 @@ let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
     with type labels = int
      and type properties = d Set.Poly.t)
 
-(** Adds each variable that the statement assigns. A write to one element counts
-    as an assignment to the whole variable. *)
+(** The transfer function for an initialized variables analysis *)
 let initialized_vars_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
@@ -944,9 +918,10 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Computes reaching definitions over the flowgraph. [initial] holds the
-    definitions from outside the analyzed code, which reach the entry. The
-    module overview describes [gen] and [is_killed]. *)
+(** Computes the definitions that reach each statement of the flowgraph, for any
+    definition type. [initial] holds the definitions from outside the analyzed
+    code, which reach the entry; [gen] and [is_killed] are the arguments of
+    {!reaching_definitions_transfer}. *)
 let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
     ~(gen : int -> d Set.Poly.t) ~(is_killed : killer:int -> d -> bool)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -965,8 +940,6 @@ let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
   in
   Mf.mfp ()
 
-(** Computes the variables that are assigned on every path to each statement. A
-    join is the intersection. The analysis starts from the empty set. *)
 let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
