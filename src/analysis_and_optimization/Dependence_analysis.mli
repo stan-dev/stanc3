@@ -178,62 +178,46 @@ open Dataflow_types
     variable that is the last write of the variable on at least one path to the
     statement. The set at a statement holds one entry per such write, so a
     statement that two paths reach, such as a loop header, can hold two writes
-    of one variable, and a statement that one write dominates holds that write
-    alone. The writes that reach a statement are the only places the value the
-    statement reads can come from, so every data dependence starts as a reaching
-    definition. The [reaching_definitions] field of {!dependence_info} maps each
-    label to the definitions that reach the node of the statement in the
-    flowgraph. Each definition is a {!Dataflow_types.reaching_definition}, the
-    variable paired with a [label option]. [Some label] is the statement that
-    writes the variable, and the write is a [W] or [+=] access of that label in
-    the table above. [None] is a write from outside the analyzed code. The
-    analysis starts with a [None] definition for every data variable and every
-    parameter, since both hold a value before the analyzed code runs. A
-    declaration, an assignment, a [target +=] and a loop variable all define the
-    variable they name.
+    of one variable. The writes that reach a statement are the only places the
+    value the statement reads can come from, so every data dependence starts as
+    a reaching definition.
 
     A write of a whole variable {e kills} every earlier definition of that
     variable, and a write of one element kills an earlier definition only when
     the earlier write must have written the same element. A killed definition
     leaves the set, so the set is not cumulative.
 
-    The table leaves out the four block labels. The node of a block comes after
-    the statements of the block, so the set of a block holds what reaches the
-    end of the block, which no query asks for. The column groups the pairs of
-    the set by variable: the outside definitions come first, and a variable with
-    several writes shows the labels in one entry, so [(s, Some [7, 12])] stands
-    for the pairs [(s, Some 7)] and [(s, Some 12)]. The unit test "Running
-    example: the reaching definitions" prints this table.
+    The table shows each set in a short form, grouped by variable. The reaching
+    definitions show that, for each variable, where could it have been written
+    to before the statement executes. In a for loop, previous iterations of the
+    loop can contribute a write in the current loop. For label [#10] you can see
+    that [s] has reaching definitions at both [#7] and [#12]. This is because
+    the loop follows the flowgraph of the program order, so the previous
+    iterations write at label [#12] needs to be accounted for in the reaching
+    definition. The unit test "Running example: the reaching definitions" prints
+    the same sets in full.
     {@text[
-    label  pattern                             reaching definitions
-    2      real a;                             (N, None) (a, None) (x, None)
-    4      FnValidateSize__("theta", "N", N);  (N, None) (x, None) (a, Some 2)
-    5      matrix[N, 2] theta;                 (N, None) (x, None) (a, Some 2)
-    6      real s;                             (N, None) (x, None) (a, Some 2) (theta, Some 5)
-    7      s = promote(0, real, var);          (N, None) (x, None) (a, Some 2) (s, Some 6) (theta, Some 5)
-    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
-    15     target += 1;                        (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    label  pattern                    reaching definitions
+    2      real a;                    None
+    4      validate_size("theta", N); (a, 2)
+    5      matrix[N, 2] theta;        (a, 2)
+    6      real s;                    (a, 2) (theta, 5)
+    7      s = promote(0, real, var); (a, 2) (s, 6) (theta, 5)
+    8      for(n in 1:N) #9           (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    10     theta[n, 1] = a;           (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    11     theta[n, 2] = x[n];        (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    12     s = (s + theta[n, 2]);     (a, 2) (n, 8) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
+    13     if((s > 0)) #14            (a, 2) (n, 8) (s, 12) (target, 15) (theta, [5, 10, 11])
+    15     target += 1;               (a, 2) (n, 8) (s, 12) (target, 15) (theta, [5, 10, 11])
     ]}
 
-    Four things in the table are worth reading closely.
-    - The data [N] and [x] keep the [None] definition at every label, because
-      the data block is outside the analyzed code and nothing inside writes
-      them. The parameter [a] starts as [(a, None)] too, but the declaration at
-      label [2] is a write of the whole of [a] inside the analyzed code, so that
-      write kills the outside definition, and from label [4] on the only
-      definition of [a] is [(a, Some 2)].
+    A few things in the table are worth reading closely.
     - The entries for [s] show a set that grows and then shrinks. At label [7]
       the only definition is the declaration at [6]. At label [8], the loop
-      header, two paths meet: the path into the loop, where the last write of
-      [s] is the initializer at [7], and the back edge from the end of the body,
-      where the last write is label [12]. Both entries stay through label [12].
-      The assignment at [12] writes the whole of [s], so both are killed and
-      only [(s, Some 12)] reaches the [if] at label [13]. The set at [13] has
-      one entry fewer than the set at [12].
+      header, we see [s] with reaching definitions for [7] and [12]. Both labels
+      stay in the entry through label [12]. The assignment at [12] writes the
+      whole of [s], so the write at [7] ends and only [(s, 12)] reaches the [if]
+      at label [13].
     - Inside the loop, all three writes of [theta] reach every statement. Label
       [5] reaches from the first iteration, and labels [10] and [11] reach from
       an earlier iteration through the back edge. None of the three kills
