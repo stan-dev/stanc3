@@ -435,47 +435,212 @@ let%expect_test "Variables read at a set of labels" =
     9: v[n] = x[n];  // x
     |}]
 
-let%expect_test "Running example of the Dependence_analysis interface" =
-  let program =
-    {|
-      data { int N; vector[N] x; }
-      parameters { real a; }
-      model {
-        matrix[N, 2] theta;
-        for (n in 1:N) {
-          theta[n, 1] = a;
-          theta[n, 2] = x[n];
-          if (theta[n, 2] > 0) target += 1;
-        }
-      }
-    |}
-  in
-  print_immediate_dependencies program;
-  let map = build_log_prob_dependence_info (Test_utils.mir_of_string program) in
-  let dependency_labels = transitive_dependence_ids map 10 in
-  Fmt.pr "theta definitions reaching 10: %a@.dependencies of 10: %a@.read: %a@."
-    Fmt.(list ~sep:(any " ") (option ~none:(any "None") int))
-    (Set.Poly.to_list
-       (definition_ids (LabelMap.find 10 map.reaching_definitions) "theta"))
-    Test_utils.pp_labels dependency_labels
-    Fmt.(list ~sep:(any " ") string)
-    (Set.Poly.to_list (used_vars_at map dependency_labels));
+(** Prints the controls of a statement as [loop 8 (n); if 13 then; jump 9]. *)
+let pp_controls (info : dependence_info) ppf ({enclosing; jump_ids} : controls)
+    =
+  let pp_enclosing ppf = function
+    | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
+    | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
+    | {id; side= None} ->
+        Fmt.pf ppf "loop %d (%s)" id (Test_utils.loop_name info id) in
+  Fmt.(list ~sep:(any "; ") string)
+    ppf
+    (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
+    @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d"))
+
+(** Prints rows of cells as a table. The first row is the header. Each column is
+    padded to the widest cell of the column, except the last column, and two
+    spaces separate the columns. *)
+let pp_table ppf (rows : string list list) =
+  let rec widen widths row =
+    match (widths, row) with
+    | width :: widths, cell :: cells ->
+        max width (String.length cell) :: widen widths cells
+    | [], cell :: cells -> String.length cell :: widen [] cells
+    | widths, [] -> widths in
+  let widths = List.fold_left rows ~init:[] ~f:widen in
+  let last_column = List.length widths - 1 in
+  (* An empty last cell would leave trailing spaces after the padding. *)
+  let rec strip_trailing_spaces line =
+    if String.ends_with ~suffix:" " line then
+      strip_trailing_spaces
+        (String.sub line ~pos:0 ~len:(String.length line - 1))
+    else line in
+  List.iter rows ~f:(fun row ->
+      let cells =
+        List.mapi row ~f:(fun column cell ->
+            if column = last_column then cell
+            else Printf.sprintf "%-*s" (List.nth widths column) cell) in
+      Fmt.pf ppf "%s@." (strip_trailing_spaces (String.concat ~sep:"  " cells)))
+
+(** The rows of a table, one per label of the statement map in ascending order,
+    leaving out the labels for which [row] returns [None]. *)
+let table_rows (info : dependence_info)
+    ~(row : label -> stmt_info -> string list option) : string list list =
+  List.rev
+    (LabelMap.fold info.statements ~init:[] ~f:(fun ~key ~data rows ->
+         match row key data with Some cells -> cells :: rows | None -> rows))
+
+(* The running example of the Dependence_analysis interface. The tests below
+   print the tables of the interface documentation, so the tables and the
+   analysis cannot drift apart. The program starts at the first line of the
+   string, so the Stan line of each statement is the line of the listing in the
+   documentation. *)
+let running_example =
+  {|data {
+  int N;
+  vector[N] x;
+}
+parameters {
+  real a;
+}
+model {
+  matrix[N, 2] theta;
+  real s = 0;
+  for (n in 1:N) {
+    theta[n, 1] = a;
+    theta[n, 2] = x[n];
+    s = s + theta[n, 2];
+    if (s > 0) {
+      target += 1;
+    }
+  }
+}|}
+
+let running_example_info () =
+  build_log_prob_dependence_info (Test_utils.mir_of_string running_example)
+
+(** Whether the statement at a label is the root or a block, which hold other
+    statements and have no accesses of their own. *)
+let is_block (statement : stmt_info) =
+  match statement.pattern with
+  | Stmt.Pattern.SList _ | Stmt.Pattern.Block _ -> true
+  | _ -> false
+
+let%expect_test "Running example: the statement map" =
+  let info = running_example_info () in
+  let stan_lines (meta : Location_span.t) =
+    let first = meta.begin_loc.line_num and last = meta.end_loc.line_num in
+    if first < 0 then "-"
+    else if first = last then Int.to_string first
+    else Fmt.str "%d-%d" first last in
+  let row statement_id (statement : stmt_info) =
+    Some
+      [ Int.to_string statement_id; stan_lines statement.meta
+      ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern
+      ; Fmt.str "[%a]" (pp_controls info) statement.controls
+      ; Fmt.str "%a"
+          (Test_utils.one_line
+             (Analysis_and_optimization.Accesses.pp
+                ~loop_name:(Test_utils.loop_name info)))
+          statement.accesses ] in
+  Fmt.pr "%a" pp_table
+    (["label"; "Stan lines"; "pattern"; "controls"; "accesses"]
+    :: table_rows info ~row);
   [%expect
     {|
-    1: 2 3  //
-    2: real a;  //
-    3: { 4 5 6 }  //
-    4: FnValidateSize__("theta", "N", N);  //
-    5: matrix[N, 2] theta;  //
-    6: for(n in 1:N) 7  //
-    7: { 8 9 10 }  // control 6
-    8: theta[n, 1] = a;  // data 2  control 6
-    9: theta[n, 2] = x[n];  // control 6
-    10: if((theta[n, 2] > 0)) 11  // data 5 9  control 6
-    11: target += 1;  // control 10
-    theta definitions reaching 10: 5 8 9
-    dependencies of 10: 5 6 9 10
-    read: N theta x
+    label  Stan lines  pattern                             controls                  accesses
+    1      -           2 3                                 []
+    2      6           real a;                             []                        W a
+    3      9           { 4 5 6 7 8 }                       []
+    4      9           FnValidateSize__("theta", "N", N);  []                        R N
+    5      9           matrix[N, 2] theta;                 []                        R N, W theta
+    6      10          real s;                             []                        W s
+    7      10          s = promote(0, real, var);          []                        W s
+    8      11-18       for(n in 1:N) 9                     []                        R N
+    9      11-18       { 10 11 12 13 }                     [loop 8 (n)]
+    10     12          theta[n, 1] = a;                    [loop 8 (n)]              R a, W theta[n, 1]
+    11     13          theta[n, 2] = x[n];                 [loop 8 (n)]              R x[n], W theta[n, 2]
+    12     14          s = (s + theta[n, 2]);              [loop 8 (n)]              R s, R theta[n, 2], W s
+    13     15-17       if((s > 0)) 14                      [loop 8 (n)]              R s
+    14     15-17       { 15 }                              [loop 8 (n); if 13 then]
+    15     16          target += 1;                        [loop 8 (n); if 13 then]  += target
+    |}]
+
+let%expect_test "Running example: the reaching definitions" =
+  let info = running_example_info () in
+  let pp_definition ppf ((var, label) : reaching_definition) =
+    Fmt.pf ppf "(%s, %a)" var
+      Fmt.(option ~none:(any "None") (fun ppf label -> pf ppf "Some %d" label))
+      label in
+  (* A row whose set equals the set of the row above prints [same as <label>] in
+     place of the set. *)
+  let previous = ref None in
+  let row statement_id (statement : stmt_info) =
+    if is_block statement then None
+    else
+      let definitions = LabelMap.find statement_id info.reaching_definitions in
+      let cell =
+        match !previous with
+        | Some (previous_id, previous_definitions)
+          when Set.Poly.equal definitions previous_definitions ->
+            Fmt.str "same as %d" previous_id
+        | _ ->
+            Fmt.str "%a"
+              Fmt.(list ~sep:(any " ") pp_definition)
+              (Set.Poly.to_list definitions) in
+      previous := Some (statement_id, definitions);
+      Some
+        [ Int.to_string statement_id
+        ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern; cell ] in
+  Fmt.pr "%a" pp_table
+    (["label"; "pattern"; "reaching definitions"] :: table_rows info ~row);
+  [%expect
+    {|
+    label  pattern                             reaching definitions
+    2      real a;                             (N, None) (a, None) (x, None)
+    4      FnValidateSize__("theta", "N", N);  (N, None) (a, Some 2) (x, None)
+    5      matrix[N, 2] theta;                 same as 4
+    6      real s;                             (N, None) (a, Some 2) (theta, Some 5) (x, None)
+    7      s = promote(0, real, var);          (N, None) (a, Some 2) (s, Some 6) (theta, Some 5) (x, None)
+    8      for(n in 1:N) 9                     (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    10     theta[n, 1] = a;                    same as 8
+    11     theta[n, 2] = x[n];                 same as 10
+    12     s = (s + theta[n, 2]);              same as 11
+    13     if((s > 0)) 14                      (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    15     target += 1;                        same as 13
+    |}]
+
+let%expect_test "Running example: the direct dependencies" =
+  let info = running_example_info () in
+  let pp_kind ppf = function
+    | Data id -> Fmt.pf ppf "Data %d" id
+    | Control id -> Fmt.pf ppf "Control %d" id in
+  let row statement_id (statement : stmt_info) =
+    let dependences = direct_dependence_ids info statement_id in
+    if Set.Poly.is_empty dependences then None
+    else
+      Some
+        [ Int.to_string statement_id
+        ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern
+        ; Fmt.str "{%a}"
+            Fmt.(list ~sep:(any "; ") pp_kind)
+            (Set.Poly.to_list dependences) ] in
+  Fmt.pr "%a" pp_table
+    (["label"; "pattern"; "direct dependencies"] :: table_rows info ~row);
+  [%expect
+    {|
+    label  pattern                 direct dependencies
+    9      { 10 11 12 13 }         {Control 8}
+    10     theta[n, 1] = a;        {Data 2; Control 8}
+    11     theta[n, 2] = x[n];     {Control 8}
+    12     s = (s + theta[n, 2]);  {Data 5; Data 7; Data 11; Data 12; Control 8}
+    13     if((s > 0)) 14          {Data 12; Control 8}
+    14     { 15 }                  {Control 13}
+    15     target += 1;            {Control 13}
+    |}]
+
+let%expect_test "Running example: the walk from target += 1" =
+  let info = running_example_info () in
+  let dependency_labels = transitive_dependence_ids info 15 in
+  Fmt.pr "dependencies of 15: %a@.read: %a@." Test_utils.pp_labels
+    dependency_labels
+    Fmt.(list ~sep:(any " ") string)
+    (Set.Poly.to_list (used_vars_at info dependency_labels));
+  [%expect
+    {|
+    dependencies of 15: 5 7 8 11 12 13 15
+    read: N s target theta x
     |}]
 
 (* The Kills tests check that a killed write is not a dependency of a read after
@@ -776,20 +941,10 @@ let%expect_test "Controls and the two views derived from them" =
       }
     |})
   in
-  let pp_enclosing ppf = function
-    | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
-    | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
-    | {id; side= None} ->
-        Fmt.pf ppf "loop %d (%s)" id (Test_utils.loop_name map id) in
-  let pp_controls ppf {enclosing; jump_ids} =
-    Fmt.(list ~sep:(any "; ") string)
-      ppf
-      (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
-      @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d")) in
   let pp_loop = Fmt.int in
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
-        statement_id Test_utils.pp_stmt statement.pattern pp_controls
+        statement_id Test_utils.pp_stmt statement.pattern (pp_controls map)
         statement.controls Test_utils.pp_labels
         (control_parent_ids statement.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
