@@ -242,14 +242,20 @@ val is_flow_dependence :
     the sink uses: {!is_flow_kind}, then
     {!Dependence.is_lexicographically_positive} on {!dependence_between}. *)
 
+(** One direct dependence of a statement ({!direct_dependence_ids}). The label
+    is the statement depended on. For the [if] at label [10] of the running
+    example the set is [{Data 5; Data 9; Control 6}]. *)
+type kind = Data of label | Control of label
+
 val direct_dependence_ids :
      dependence_info
   -> ?blockers:string Set.Poly.t
   -> ?vars:string Set.Poly.t
   -> label
-  -> label Set.Poly.t
-(** Returns the control parents of the statement at the label, and each
-    statement whose write can supply the value of [vars] used there. *)
+  -> kind Set.Poly.t
+(** Returns the direct dependences of the statement at the label: [Control] for
+    each control parent, and [Data] for each statement whose write can supply
+    the value of [vars] used there. *)
 
 val transitive_dependence_ids : dependence_info -> label -> label Set.Poly.t
 (** Returns the labels of the direct and transitive dependences of the statement

@@ -247,9 +247,11 @@ let source_ids (info : dependence_info) (sink_id : label) (var : string) :
     | Some source_id ->
         if is_possible_source source_id then Some source_id else None)
 
+type kind = Data of label | Control of label
+
 let direct_dependence_ids (info : dependence_info)
     ?(blockers : string Set.Poly.t = Set.Poly.empty)
-    ?(vars : string Set.Poly.t option) (statement_id : label) : label Set.Poly.t
+    ?(vars : string Set.Poly.t option) (statement_id : label) : kind Set.Poly.t
     =
   let statement = LabelMap.find statement_id info.statements in
   let vars =
@@ -258,7 +260,14 @@ let direct_dependence_ids (info : dependence_info)
     Set.Poly.union_map
       (Set.Poly.diff vars blockers)
       ~f:(source_ids info statement_id) in
-  Set.Poly.union (control_parent_ids statement.controls) data_dependence_ids
+  Set.Poly.union
+    (Set.Poly.map (control_parent_ids statement.controls) ~f:(fun id ->
+         Control id))
+    (Set.Poly.map data_dependence_ids ~f:(fun id -> Data id))
+
+(** The label of a direct dependence, for the queries that follow dependences of
+    either kind. *)
+let label_of_kind : kind -> label = function Data id | Control id -> id
 
 (** Adds [statement_id] and the direct and transitive dependences of
     [statement_id] to [visited_ids], without following the definitions of
@@ -270,7 +279,10 @@ let rec add_transitive_dependence_ids (info : dependence_info)
   else
     (* The visited set is the result and includes the start label. *)
     let visited_with_statement_ids = Set.Poly.add statement_id visited_ids in
-    let dependence_ids = direct_dependence_ids info ~blockers statement_id in
+    let dependence_ids =
+      Set.Poly.map
+        (direct_dependence_ids info ~blockers statement_id)
+        ~f:label_of_kind in
     Set.Poly.fold dependence_ids ~init:visited_with_statement_ids
       ~f:(add_transitive_dependence_ids info ~blockers)
 
@@ -282,7 +294,9 @@ let var_dependence_ids (info : dependence_info)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (vars : string Set.Poly.t)
     (statement_id : label) : label Set.Poly.t =
   Set.Poly.fold
-    (direct_dependence_ids info ~blockers ~vars statement_id)
+    (Set.Poly.map
+       (direct_dependence_ids info ~blockers ~vars statement_id)
+       ~f:label_of_kind)
     ~init:Set.Poly.empty
     ~f:(add_transitive_dependence_ids info ~blockers)
 
@@ -294,7 +308,7 @@ let used_vars_at (info : dependence_info) (statement_ids : label Set.Poly.t) :
 let dependence_graph (info : dependence_info) : label Set.Poly.t LabelMap.t =
   let immediate_map =
     LabelMap.mapi info.statements ~f:(fun label _ ->
-        direct_dependence_ids info label) in
+        Set.Poly.map (direct_dependence_ids info label) ~f:label_of_kind) in
   let step_node label m =
     let immediate = LabelMap.find label immediate_map in
     let updated =

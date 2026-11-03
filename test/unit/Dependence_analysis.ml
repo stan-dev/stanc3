@@ -137,6 +137,25 @@ let%expect_test "External definitions are distinct from statement label 1" =
   print_s [%sexp (definition_ids definitions "x" : label option Set.Poly.t)];
   [%expect {| (() (1)) |}]
 
+(** Prints the data labels, then the control labels, of a set of direct
+    dependences, as [data 5 9  control 6]. A missing kind prints nothing. *)
+let pp_dependences ppf (dependences : kind Set.Poly.t) =
+  let labels_of kind_name labels =
+    if Set.Poly.is_empty labels then None
+    else Some (Fmt.str "%s %a" kind_name Test_utils.pp_labels labels) in
+  let data_ids =
+    Set.Poly.filter_map dependences ~f:(function
+      | Data id -> Some id
+      | Control _ -> None) in
+  let control_ids =
+    Set.Poly.filter_map dependences ~f:(function
+      | Control id -> Some id
+      | Data _ -> None) in
+  Fmt.(list ~sep:(any "  ") string)
+    ppf
+    (List.filter_map ~f:Fun.id
+       [labels_of "data" data_ids; labels_of "control" control_ids])
+
 (* The data [N] reaches the condition as an outside definition, [()], but the
    dependencies of the condition hold statement labels only. *)
 let%expect_test "External inputs reach a statement but are not dependencies" =
@@ -158,7 +177,7 @@ let%expect_test "External inputs reach a statement but are not dependencies" =
                  (LabelMap.find statement_id map.reaching_definitions)
                  "N"
                 : label option Set.Poly.t)];
-          Fmt.pr "dependencies: %a@." Test_utils.pp_labels
+          Fmt.pr "dependencies: %a@." pp_dependences
             (direct_dependence_ids map statement_id)
       | _ -> ());
   [%expect {|
@@ -166,12 +185,11 @@ let%expect_test "External inputs reach a statement but are not dependencies" =
     dependencies:
     |}]
 
-(** Prints each statement and the labels of the immediate dependencies of the
-    statement. *)
+(** Prints each statement and the immediate dependences of the statement. *)
 let pp_immediate_dependencies ppf (map : dependence_info) =
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
-        statement.pattern Test_utils.pp_labels
+        statement.pattern pp_dependences
         (direct_dependence_ids map statement_id))
 
 let print_immediate_dependencies prog =
@@ -227,13 +245,13 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     3: real sigma;  //
     4: { 5 6 7 8 9 10 11 }  //
     5: real a;  //
-    6: a = (mu + promote(1, real, data));  // 2
+    6: a = (mu + promote(1, real, data));  // data 2
     7: real b;  //
-    8: b = (a * promote(2, real, data));  // 6
+    8: b = (a * promote(2, real, data));  // data 6
     9: real c;  //
-    10: c = sigma;  // 3
-    11: if((b > 0)) 12  // 8
-    12: target += normal_lpdf(c, promote(0, real, data), promote(1, real, data));  // 10 11
+    10: c = sigma;  // data 3
+    11: if((b > 0)) 12  // data 8
+    12: target += normal_lpdf(c, promote(0, real, data), promote(1, real, data));  // data 10  control 11
     transitive_dependence_ids 11: 2 6 8 11
     var_dependence_ids {b} 11: 2 6 8
     var_dependence_ids ~blockers:{b} {b} 11:
@@ -260,10 +278,10 @@ let%expect_test
   LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
       match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
-          Fmt.pr "%d: %a@." statement_id Test_utils.pp_labels
+          Fmt.pr "%d: %a@." statement_id pp_dependences
             (direct_dependence_ids map statement_id)
       | _ -> ());
-  [%expect {| 6: 5 |}]
+  [%expect {| 6: data 5 |}]
 
 (* The Graph tests use programs from test/unit/Dependence.ml. A write is not a
    dependency of a read if the write selects a different element, or if the
@@ -295,10 +313,10 @@ let%expect_test "Graph: definitions that execute after the read never flow" =
     8: FnValidateSize__("d", "N", N);  //
     9: vector[N] d;  //
     10: for(n in 1:(N - 1)) 11  //
-    11: { 12 13 14 }  // 10
-    12: c[n] = b[(n + 1)];  // 5 10
-    13: d[n] = b[n];  // 5 10
-    14: b[n] = a;  // 2 10
+    11: { 12 13 14 }  // control 10
+    12: c[n] = b[(n + 1)];  // data 5  control 10
+    13: d[n] = b[n];  // data 5  control 10
+    14: b[n] = a;  // data 2  control 10
     |}]
 
 let%expect_test "Graph: a definition in a later outer iteration never flows" =
@@ -331,12 +349,12 @@ let%expect_test "Graph: a definition in a later outer iteration never flows" =
     10: FnValidateSize__("d", "M", M);  //
     11: matrix[N, M] d;  //
     12: for(n in 2:(N - 1)) 13  //
-    13: { 14 }  // 12
-    14: for(m in 1:M) 15  // 12
-    15: { 16 17 18 }  // 14
-    16: c[n, m] = b[(n + 1)];  // 5 14
-    17: d[n, m] = b[(n - 1)];  // 5 14 18
-    18: b[n] = a;  // 2 14
+    13: { 14 }  // control 12
+    14: for(m in 1:M) 15  // control 12
+    15: { 16 17 18 }  // control 14
+    16: c[n, m] = b[(n + 1)];  // data 5  control 14
+    17: d[n, m] = b[(n - 1)];  // data 5 18  control 14
+    18: b[n] = a;  // data 2  control 14
     |}]
 
 let%expect_test "Graph: distinct literal subscripts are independent" =
@@ -359,10 +377,10 @@ let%expect_test "Graph: distinct literal subscripts are independent" =
     3: real b;  //
     4: { 5 6 7 8 9 }  //
     5: vector[2] theta;  //
-    6: theta[1] = a;  // 2
-    7: theta[2] = b;  // 3
-    8: target += normal_lupdf(y, theta[1], s);  // 5 6
-    9: target += normal_lupdf(y, theta[2], s);  // 5 7
+    6: theta[1] = a;  // data 2
+    7: theta[2] = b;  // data 3
+    8: target += normal_lupdf(y, theta[1], s);  // data 5 6
+    9: target += normal_lupdf(y, theta[2], s);  // data 5 7
     |}]
 
 (* An increment of target does not use the value of an earlier increment. Thus
@@ -382,8 +400,8 @@ let%expect_test "Graph: increments of target do not depend on each other" =
     2: real a;  //
     3: real b;  //
     4: { 5 6 }  //
-    5: target += a;  // 2
-    6: target += b;  // 3
+    5: target += a;  // data 2
+    6: target += b;  // data 3
     |}]
 
 let%expect_test "Variables read at a set of labels" =
@@ -450,11 +468,11 @@ let%expect_test "Running example of the Dependence_analysis interface" =
     4: FnValidateSize__("theta", "N", N);  //
     5: matrix[N, 2] theta;  //
     6: for(n in 1:N) 7  //
-    7: { 8 9 10 }  // 6
-    8: theta[n, 1] = a;  // 2 6
-    9: theta[n, 2] = x[n];  // 6
-    10: if((theta[n, 2] > 0)) 11  // 5 6 9
-    11: target += 1;  // 10
+    7: { 8 9 10 }  // control 6
+    8: theta[n, 1] = a;  // data 2  control 6
+    9: theta[n, 2] = x[n];  // control 6
+    10: if((theta[n, 2] > 0)) 11  // data 5 9  control 6
+    11: target += 1;  // control 10
     theta definitions reaching 10: 5 8 9
     dependencies of 10: 5 6 9 10
     read: N theta x
@@ -505,31 +523,31 @@ let%expect_test "Kills: the same element in every iteration" =
     10: tuple_ad(var, var)tuple(real, real) t;  //
     11: int j;  //
     12: j = k;  //
-    13: theta[1] = a;  // 2
+    13: theta[1] = a;  // data 2
     14: theta[1] = promote(1, real, var);  //
-    15: if((theta[1] > 0)) 16  // 6 14
-    16: target += 1;  // 15
-    17: theta[k] = a;  // 2
+    15: if((theta[1] > 0)) 16  // data 6 14
+    16: target += 1;  // control 15
+    17: theta[k] = a;  // data 2
     18: theta[k] = promote(1, real, var);  //
-    19: if((theta[k] > 0)) 20  // 6 14 18
-    20: target += 1;  // 19
-    21: theta[j] = a;  // 2 12
+    19: if((theta[k] > 0)) 20  // data 6 14 18
+    20: target += 1;  // control 19
+    21: theta[j] = a;  // data 2 12
     22: j = 2;  //
-    23: theta[j] = promote(1, real, var);  // 22
-    24: if((theta[1] > 0)) 25  // 6 14 18 21 23
-    25: target += 1;  // 24
-    26: t.1 = a;  // 2
+    23: theta[j] = promote(1, real, var);  // data 22
+    24: if((theta[1] > 0)) 25  // data 6 14 18 21 23
+    25: target += 1;  // control 24
+    26: t.1 = a;  // data 2
     27: t.1 = promote(1, real, var);  //
-    28: if((t.1 > 0)) 29  // 10 27
-    29: target += 1;  // 28
-    30: m[1, 2] = a;  // 2
-    31: m[1] = r;  // 3
-    32: if((m[1, 2] > 0)) 33  // 9 31
-    33: target += 1;  // 32
-    34: m[2] = r;  // 3
+    28: if((t.1 > 0)) 29  // data 10 27
+    29: target += 1;  // control 28
+    30: m[1, 2] = a;  // data 2
+    31: m[1] = r;  // data 3
+    32: if((m[1, 2] > 0)) 33  // data 9 31
+    33: target += 1;  // control 32
+    34: m[2] = r;  // data 3
     35: m[2, 2] = promote(1, real, var);  //
-    36: if((m[2, 3] > 0)) 37  // 9 31 34
-    37: target += 1;  // 36
+    36: if((m[2, 3] > 0)) 37  // data 9 31 34
+    37: target += 1;  // control 36
     |}]
 
 let%expect_test "Kills: control flow between the writes" =
@@ -561,27 +579,27 @@ let%expect_test "Kills: control flow between the writes" =
     3: { 4 5 6 7 9 10 12 13 16 18 19 21 23 24 25 }  //
     4: FnValidateSize__("theta", "N", N);  //
     5: vector[N] theta;  //
-    6: theta[1] = a;  // 2
+    6: theta[1] = a;  // data 2
     7: if((c > 0)) 8  //
-    8: target += 1;  // 7
+    8: target += 1;  // control 7
     9: theta[1] = promote(1, real, var);  //
-    10: if((theta[1] > 0)) 11  // 5 9
-    11: target += 1;  // 10
-    12: theta[2] = a;  // 2
+    10: if((theta[1] > 0)) 11  // data 5 9
+    11: target += 1;  // control 10
+    12: theta[2] = a;  // data 2
     13: if((c > 0)) 14 else 15  //
-    14: theta[2] = promote(1, real, var);  // 13
-    15: theta[2] = promote(2, real, var);  // 13
-    16: if((theta[2] > 0)) 17  // 5 14 15
-    17: target += 1;  // 16
-    18: theta[3] = a;  // 2
+    14: theta[2] = promote(1, real, var);  // control 13
+    15: theta[2] = promote(2, real, var);  // control 13
+    16: if((theta[2] > 0)) 17  // data 5 14 15
+    17: target += 1;  // control 16
+    18: theta[3] = a;  // data 2
     19: if((c > 0)) 20  //
-    20: theta[3] = promote(1, real, var);  // 19
-    21: if((theta[3] > 0)) 22  // 5 18 20
-    22: target += 1;  // 21
-    23: theta[1:2] = (FnMakeRowVec__(a, a) ');  // 2
+    20: theta[3] = promote(1, real, var);  // control 19
+    21: if((theta[3] > 0)) 22  // data 5 18 20
+    22: target += 1;  // control 21
+    23: theta[1:2] = (FnMakeRowVec__(a, a) ');  // data 2
     24: theta[1:2] = (FnMakeRowVec__(promote(1, real, data), promote(1, real, data)) ');  //
-    25: if((theta[1] > 0)) 26  // 5 9 23 24
-    26: target += 1;  // 25
+    25: if((theta[1] > 0)) 26  // data 5 9 23 24
+    26: target += 1;  // control 25
     |}]
 
 let%expect_test "Kills: jumps and branches between the two writes" =
@@ -622,35 +640,35 @@ let%expect_test "Kills: jumps and branches between the two writes" =
     4: FnValidateSize__("theta", "N", N);  //
     5: vector[N] theta;  //
     6: for(n in 2:N) 7  //
-    7: { 8 9 11 12 }  // 6
-    8: theta[n] = a;  // 2 6
-    9: while((c > 0)) 10  // 6 10
-    10: break;  // 9
-    11: theta[n] = promote(1, real, var);  // 6
-    12: if((theta[(n - 1)] > 0)) 13  // 5 6 11
-    13: target += 1;  // 12
+    7: { 8 9 11 12 }  // control 6
+    8: theta[n] = a;  // data 2  control 6
+    9: while((c > 0)) 10  // control 6 10
+    10: break;  // control 9
+    11: theta[n] = promote(1, real, var);  // control 6
+    12: if((theta[(n - 1)] > 0)) 13  // data 5 11  control 6
+    13: target += 1;  // control 12
     14: for(n in 2:N) 15  //
-    15: { 16 18 19 }  // 14
-    16: if((c > 0)) 17  // 14
-    17: theta[n] = a;  // 2 16
-    18: theta[n] = promote(1, real, var);  // 14
-    19: if((theta[(n - 1)] > 0)) 20  // 5 11 14 18
-    20: target += 1;  // 19
+    15: { 16 18 19 }  // control 14
+    16: if((c > 0)) 17  // control 14
+    17: theta[n] = a;  // data 2  control 16
+    18: theta[n] = promote(1, real, var);  // control 14
+    19: if((theta[(n - 1)] > 0)) 20  // data 5 11 18  control 14
+    20: target += 1;  // control 19
     21: for(n in 2:N) 22  //
-    22: { 23 24 27 }  // 21
-    23: theta[n] = a;  // 2 21
-    24: if((c > 0)) 25 else 26  // 21
-    25: theta[n] = promote(1, real, var);  // 24
-    26: theta[n] = promote(2, real, var);  // 24
-    27: if((theta[(n - 1)] > 0)) 28  // 5 11 18 21 23 25 26
-    28: target += 1;  // 27
+    22: { 23 24 27 }  // control 21
+    23: theta[n] = a;  // data 2  control 21
+    24: if((c > 0)) 25 else 26  // control 21
+    25: theta[n] = promote(1, real, var);  // control 24
+    26: theta[n] = promote(2, real, var);  // control 24
+    27: if((theta[(n - 1)] > 0)) 28  // data 5 11 18 23 25 26  control 21
+    28: target += 1;  // control 27
     29: for(n in 2:N) 30  //
-    30: { 31 32 34 }  // 29
-    31: theta[n] = a;  // 2 29
-    32: if((c > 0)) 33  // 29
-    33: theta[n] = promote(1, real, var);  // 32
-    34: if((theta[(n - 1)] > 0)) 35  // 5 11 18 23 25 26 29 31 33
-    35: target += 1;  // 34
+    30: { 31 32 34 }  // control 29
+    31: theta[n] = a;  // data 2  control 29
+    32: if((c > 0)) 33  // control 29
+    33: theta[n] = promote(1, real, var);  // control 32
+    34: if((theta[(n - 1)] > 0)) 35  // data 5 11 18 23 25 26 31 33  control 29
+    35: target += 1;  // control 34
     |}]
 
 let%expect_test "Kills: loop-variable indices within one iteration" =
@@ -699,41 +717,41 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
     6: FnValidateSize__("y", "N", N);  //
     7: vector[N] y;  //
     8: for(n in 2:N) 9  //
-    9: { 10 11 12 }  // 8
-    10: theta[n] = a;  // 2 8
-    11: theta[n] = promote(1, real, var);  // 8
-    12: if((theta[n] > 0)) 13  // 5 8 11
-    13: target += 1;  // 12
+    9: { 10 11 12 }  // control 8
+    10: theta[n] = a;  // data 2  control 8
+    11: theta[n] = promote(1, real, var);  // control 8
+    12: if((theta[n] > 0)) 13  // data 5 11  control 8
+    13: target += 1;  // control 12
     14: for(n in 2:N) 15  //
-    15: { 16 17 20 21 }  // 14
-    16: theta[n] = a;  // 2 14
-    17: if((c > 0)) 18 else 19  // 14
-    18: y[n] = promote(1, real, var);  // 17
-    19: y[n] = promote(2, real, var);  // 17
-    20: theta[n] = promote(1, real, var);  // 14
-    21: if((theta[n] > 0)) 22  // 5 11 14 20
-    22: target += 1;  // 21
+    15: { 16 17 20 21 }  // control 14
+    16: theta[n] = a;  // data 2  control 14
+    17: if((c > 0)) 18 else 19  // control 14
+    18: y[n] = promote(1, real, var);  // control 17
+    19: y[n] = promote(2, real, var);  // control 17
+    20: theta[n] = promote(1, real, var);  // control 14
+    21: if((theta[n] > 0)) 22  // data 5 11 20  control 14
+    22: target += 1;  // control 21
     23: for(n in 2:N) 24  //
-    24: { 25 26 27 }  // 23
-    25: theta[n] = promote(1, real, var);  // 23
-    26: theta[n] = a;  // 2 23
-    27: y[n] = theta[(n - 1)];  // 5 11 20 23 26
+    24: { 25 26 27 }  // control 23
+    25: theta[n] = promote(1, real, var);  // control 23
+    26: theta[n] = a;  // data 2  control 23
+    27: y[n] = theta[(n - 1)];  // data 5 11 20 26  control 23
     28: for(n in 2:N) 29  //
-    29: { 30 31 33 34 }  // 28
-    30: theta[n] = a;  // 2 28
-    31: if((c > 0)) 32  // 28
-    32: continue;  // 31
-    33: theta[n] = promote(1, real, var);  // 28 32
-    34: if((theta[(n - 1)] > 0)) 35  // 5 11 20 26 28 30 32 33
-    35: target += 1;  // 32 34
+    29: { 30 31 33 34 }  // control 28
+    30: theta[n] = a;  // data 2  control 28
+    31: if((c > 0)) 32  // control 28
+    32: continue;  // control 31
+    33: theta[n] = promote(1, real, var);  // control 28 32
+    34: if((theta[(n - 1)] > 0)) 35  // data 5 11 20 26 30 33  control 28 32
+    35: target += 1;  // control 32 34
     36: for(n in 2:N) 37  //
-    37: { 38 39 42 }  // 36
-    38: theta[n] = a;  // 2 36
-    39: for(m in 1:N) 40  // 36
-    40: { 41 }  // 39
-    41: theta[n] = promote(1, real, var);  // 39
-    42: if((theta[(n - 1)] > 0)) 43  // 5 11 20 26 30 33 36 38 41
-    43: target += 1;  // 42
+    37: { 38 39 42 }  // control 36
+    38: theta[n] = a;  // data 2  control 36
+    39: for(m in 1:N) 40  // control 36
+    40: { 41 }  // control 39
+    41: theta[n] = promote(1, real, var);  // control 39
+    42: if((theta[(n - 1)] > 0)) 43  // data 5 11 20 26 30 33 38 41  control 36
+    43: target += 1;  // control 42
     |}]
 
 (* Each statement prints the controls, then the two views that queries use. The
