@@ -142,7 +142,7 @@ val extract_factors_statement : (Expr.Typed.t, 'a) Stmt.Pattern.t -> factor list
     example, [target += a + b] gives [TargetTerm a] and [TargetTerm b]. *)
 
 val extract_factors :
-  Dependence_analysis.statement LabelMap.t -> label -> (label * factor) list
+  Dependence_analysis.stmt_info LabelMap.t -> label -> (label * factor) list
 (** Returns the factors at the given label of the statement map and in nested
     statements, each paired with the label of the statement. *)
 

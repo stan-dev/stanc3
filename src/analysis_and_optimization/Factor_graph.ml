@@ -38,7 +38,7 @@ let extract_factors_statement stmt =
    |Decl {decl_id= _; _} ->
       []
 
-let rec extract_factors (statements : statement LabelMap.t) label =
+let rec extract_factors (statements : stmt_info LabelMap.t) label =
   let stmt = (LabelMap.find label statements).pattern in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in

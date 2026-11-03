@@ -40,17 +40,17 @@ let write_path (accesses : Accesses.access list) (var : string) :
       | Write when String.equal access.var var -> Some access.path
       | Write | Read | Increment -> None)
 
-type statement =
+type stmt_info =
   { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
   ; meta: Location_span.t
   ; controls: controls
   ; accesses: Accesses.access list }
 
 type dependence_info =
-  { statements: statement LabelMap.t
+  { statements: stmt_info LabelMap.t
   ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t }
 
-let common_loop_ids (statements : statement LabelMap.t) (first_id : label)
+let common_loop_ids (statements : stmt_info LabelMap.t) (first_id : label)
     (second_id : label) : label list =
   let first = LabelMap.find first_id statements in
   let second = LabelMap.find second_id statements in
@@ -70,7 +70,7 @@ let common_loop_ids (statements : statement LabelMap.t) (first_id : label)
 (** The [is_killed] callback for reaching definitions, which decides element
     kills. A later write [killer] kills the definition at [killed] when [killer]
     must overwrite the element of [killed]. Two rules give this result. *)
-let is_element_killed ~(statements : statement LabelMap.t) ~(killer : label)
+let is_element_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
     ~(killed : label) (var : string) : bool =
   let killer_statement = LabelMap.find killer statements in
   let killed_statement = LabelMap.find killed statements in

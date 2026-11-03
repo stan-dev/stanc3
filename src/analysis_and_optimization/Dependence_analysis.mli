@@ -194,7 +194,7 @@ open Dataflow_types
       controls:  {enclosing = [{id = 6; side = None}]; jump_ids = {}}
       accesses:  R theta[n, 2]
     ]} *)
-type statement =
+type stmt_info =
   { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
         (** The statement, with each nested statement replaced by the label of
             the nested statement. *)
@@ -216,7 +216,7 @@ type statement =
     statement labels only, so a definition from outside the analyzed code, such
     as data, never appears in a result. *)
 type dependence_info =
-  { statements: statement LabelMap.t
+  { statements: stmt_info LabelMap.t
   ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t
         (** The definitions that can reach the start of each statement. Each
             definition is a (variable name, label) pair. [Some label] is a
@@ -241,7 +241,7 @@ val is_flow_kind : Accesses.access -> Accesses.access -> bool
 (** Whether the first access (the source) can pass a value to the second (the
     sink) by the rules in step 1, comparing only variable names and kinds. *)
 
-val common_loop_ids : statement LabelMap.t -> label -> label -> label list
+val common_loop_ids : stmt_info LabelMap.t -> label -> label -> label list
 (** Returns the labels of the {e common loops} of two statements, the loops that
     contain both statements, outermost first. A loop statement counts as inside
     its own loop. *)
