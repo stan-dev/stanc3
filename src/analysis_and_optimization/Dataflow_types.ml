@@ -6,15 +6,6 @@ open Std.Sexp_conv
     label to a statement. Labels from different maps do not match. *)
 type label = int [@@deriving sexp_of]
 
-(** A possible source of the value of a variable at a statement. The source is a
-    write that can run before the statement with no write between them that
-    overwrites the value. Such a write is a {e reaching definition}
-    ({!Monotone_framework.reaching_definitions_mfp}). [(x, Some l)] means that
-    the statement with label [l] can write [x]. [(x, None)] means that [x] gets
-    a value from outside the analyzed statement (the statement that the analysis
-    runs on), such as data. *)
-type reaching_definition = string * label option [@@deriving sexp_of]
-
 (** The side of an [if] that holds a statement. *)
 type side = Then | Else
 

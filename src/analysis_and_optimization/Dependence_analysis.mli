@@ -334,14 +334,28 @@ type stmt_info =
         (** The reads, writes and increments in the expressions of this
             statement. Each nested statement has a separate record. *) }
 
+(** One write that can still hold the value of a variable when a statement runs:
+    the access of the write ({!Accesses.access}, a [Write] or an [Increment])
+    and the label of the writing statement. [None] is a write from outside the
+    analyzed code, such as data or a parameter, and the access of such a write
+    is the whole variable.
+
+    The set at label [12] of the running example holds eight definitions. Two of
+    them are
+    {@text[
+      ({var = "theta"; path = [n, 1]; kind = Write}, Some 10)
+      ({var = "N"; path = []; kind = Write}, None)
+    ]} *)
+type reaching_definition = Accesses.access * label option
+
 (** The statements of the analyzed code and the definitions that reach each one.
     Both maps have the same labels, and the sections {e The statement map} and
     {e Reaching definitions} above show both for the running example. The two
     maps are read differently. Every query, and the kill rule inside the
     reaching-definitions dataflow, reads [statements]. Only the data half of
     {!direct_dependence_ids} reads [reaching_definitions], once per sink, to
-    find the candidate writers of a variable before the accesses of each writer
-    decide the element. Label [1] ({!Dataflow_utils.root_statement_id}) is the
+    find the candidate writers of a variable; the access in each definition then
+    decides the element. Label [1] ({!Dataflow_utils.root_statement_id}) is the
     root. The queries return statement labels only, so a definition from outside
     the analyzed code, such as data, never appears in a result. *)
 type dependence_info =
@@ -350,12 +364,9 @@ type dependence_info =
             controls and the accesses ({!stmt_info}). *)
   ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t
         (** The writes that can reach the node of each statement in the
-            flowgraph with no overwrite in between, one (variable name, label)
-            pair per write. [Some label] is a statement in the map. [None] is a
-            write from outside the analyzed code, such as data. The node of a
-            block comes after the statements of the block, so the set of a block
-            holds what reaches the end of the block. How a writer changes the
-            variable is in the accesses of the writer. *) }
+            flowgraph with no overwrite in between, one definition per write.
+            The node of a block comes after the statements of the block, so the
+            set of a block holds what reaches the end of the block. *) }
 
 val build_dependence_info : Program.Typed.t -> Stmt.Located.t -> dependence_info
 (** Builds the statement records and the reaching definitions for the statement
@@ -368,8 +379,8 @@ val build_log_prob_dependence_info : Program.Typed.t -> dependence_info
 
 val definition_ids :
   reaching_definition Set.Poly.t -> string -> label option Set.Poly.t
-(** Returns the labels in the definitions of the named variable. The lookup
-    compares names only and ignores which element each definition writes. *)
+(** Returns the labels of the definitions of the named variable, whichever
+    element each definition writes. *)
 
 val is_flow_kind : Accesses.access -> Accesses.access -> bool
 (** Whether the first access (the source) can pass a value to the second (the

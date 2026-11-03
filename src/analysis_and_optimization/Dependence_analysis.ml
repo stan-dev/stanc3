@@ -5,7 +5,7 @@
    access lists the subscripts and tuple fields that select an element of the
    variable ({!Accesses}).
 
-   A definition records a write as the variable name and the label of the
+   A definition records a write as the access of the write and the label of the
    writing statement. A definition reaches a statement if the program can go
    from the write to the statement with no write between them that overwrites
    the same element. Reaching definitions
@@ -31,14 +31,7 @@ open Dataflow_utils
 open Monotone_framework_sigs
 open Monotone_framework
 
-(** Returns the path of the first write or increment of [var] in [accesses], or
-    [None] if [accesses] does not define [var]. *)
-let write_path (accesses : Accesses.access list) (var : string) :
-    Accesses.step list option =
-  List.find_map accesses ~f:(fun (access : Accesses.access) ->
-      match access.kind with
-      | (Write | Increment) when String.equal access.var var -> Some access.path
-      | Write | Read | Increment -> None)
+type reaching_definition = Accesses.access * label option
 
 type stmt_info =
   { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
@@ -68,27 +61,19 @@ let common_loop_ids (statements : stmt_info LabelMap.t) (first_id : label)
     (loop_ids second_id second.pattern second.controls)
 
 (** The [is_killed] callback for reaching definitions. A write at [killer] kills
-    a definition of [var] when the write must overwrite the element that the
-    definition wrote, by one of two rules. An increment of [var] kills every
-    earlier definition of [var], so the definition of [target] is always the
+    a definition when the write must overwrite the element that the definition
+    wrote, by one of two rules. An increment of a variable kills every earlier
+    definition of the variable, so the definition of [target] is always the
     latest increment. *)
 let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
-    ((var, killed_label) : reaching_definition) : bool =
+    ((killed_access, killed_label) : reaching_definition) : bool =
   let killer_statement = LabelMap.find killer statements in
-  (* A definition from outside the analyzed code is a write of the whole
-     variable. *)
-  let killed_path =
-    match killed_label with
-    | None -> Some []
-    | Some killed -> write_path (LabelMap.find killed statements).accesses var
-  in
   (* Rule B of 2: [killer] writes the element of [killed] in the same iteration
      of the innermost loop around [killed]. [killer] comes later in source order
      and has the same loops. Each control of [killer], and of the innermost
      loop, is also a control of [killed]. The loops are found last, after the
-     cheaper checks. *)
-  let is_killed_in_same_iteration (killer_path : Accesses.step list)
-      (killed_path : Accesses.step list) : bool =
+     cheaper checks. A definition from outside has no label and no iteration. *)
+  let is_killed_in_same_iteration (killer_path : Accesses.step list) : bool =
     match killed_label with
     | None -> false
     | Some killed -> (
@@ -103,7 +88,7 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
         in
         killed < killer
         && Dependence.is_overwritten ~is_same_iteration:true killer_path
-             killed_path
+             killed_access.path
         &&
         let killed_loop_ids =
           loop_ids killed killed_statement.pattern killed_statement.controls
@@ -118,18 +103,18 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
             && is_covered_by_killed innermost
         | [] -> false) in
   List.exists killer_statement.accesses ~f:(fun (access : Accesses.access) ->
-      String.equal access.var var
+      String.equal access.var killed_access.var
       &&
-      match (access.kind, killed_path) with
-      | Read, _ | Write, None -> false
-      | Increment, _ -> true
-      | Write, Some killed_path ->
+      match access.kind with
+      | Read -> false
+      | Increment -> true
+      | Write ->
           (* Rule A of 2: [killer] writes the element of [killed] in every
              iteration. A write of the whole variable has an empty path and
-             overwrites every element. *)
+             overwrites every element, including an outside definition. *)
           Dependence.is_overwritten ~is_same_iteration:false access.path
-            killed_path
-          || is_killed_in_same_iteration access.path killed_path)
+            killed_access.path
+          || is_killed_in_same_iteration access.path)
 
 (** Runs reaching definitions on the forward flowgraph of [statements]. The
     definitions from outside are the input and output variables of [mir], each
@@ -144,16 +129,18 @@ let compute_reaching_definitions (mir : Program.Typed.t)
       (LabelMap.map statements ~f:(fun {pattern; meta; _} -> (pattern, meta)))
   in
   let (module Flowgraph) = flowgraph in
+  let outside_definition (name, _, _) : reaching_definition =
+    ({var= name; path= []; kind= Write}, None) in
   let outside_definitions =
     Set.Poly.of_list
-      (List.map mir.input_vars ~f:(fun (name, _, _) -> (name, None))
-      @ List.map mir.output_vars ~f:(fun (name, _, _) -> (name, None))) in
+      (List.map mir.input_vars ~f:outside_definition
+      @ List.map mir.output_vars ~f:outside_definition) in
   let definitions_of (statement_id : label) : reaching_definition Set.Poly.t =
     Set.Poly.of_list
       (List.filter_map (LabelMap.find statement_id statements).accesses
          ~f:(fun (access : Accesses.access) ->
            match access.kind with
-           | Write | Increment -> Some (access.var, Some statement_id)
+           | Write | Increment -> Some (access, Some statement_id)
            | Read -> None)) in
   LabelMap.map
     (reaching_definitions_mfp ~initial:outside_definitions ~gen:definitions_of
@@ -217,8 +204,8 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
 let definition_ids (definitions : reaching_definition Set.Poly.t) (var : string)
     : label option Set.Poly.t =
   Set.Poly.map
-    (Set.Poly.filter definitions ~f:(fun (defined, _) ->
-         String.equal defined var))
+    (Set.Poly.filter definitions ~f:(fun ((access : Accesses.access), _) ->
+         String.equal access.var var))
     ~f:snd
 
 let is_flow_kind (source : Accesses.access) (sink : Accesses.access) : bool =
@@ -245,37 +232,31 @@ let is_flow_dependence (info : dependence_info)
        (dependence_between info (source_id, source_access) (sink_id, sink_access))
 
 (** Returns the labels of the candidate sources of [var] at [sink_id] that
-    {!Dependence} keeps. A candidate stays if the source does not define [var],
-    if the sink does not use [var], or if some access of [var] in the source and
-    some access in the sink pass {!is_flow_dependence}. A definition from
-    outside the analyzed statement has no label and is left out. *)
+    {!Dependence} keeps. A candidate is a reaching definition of [var] at the
+    sink. The candidate stays if the sink does not use [var], or if the write of
+    the candidate and some access of [var] in the sink pass
+    {!is_flow_dependence}. A definition from outside the analyzed statement has
+    no label and is left out. *)
 let source_ids (info : dependence_info) (sink_id : label) (var : string) :
     label Set.Poly.t =
   let sink = LabelMap.find sink_id info.statements in
   let sink_accesses = Accesses.filter_var var sink.accesses in
-  let candidate_definitions =
-    definition_ids (LabelMap.find sink_id info.reaching_definitions) var in
   let is_sink_reading =
     List.exists sink_accesses ~f:(fun access ->
         match access.Accesses.kind with
         | Read | Increment -> true
         | Write -> false) in
-  let is_possible_source source_id =
-    let source = LabelMap.find source_id info.statements in
-    let source_accesses = Accesses.filter_var var source.accesses in
-    let is_source_writing =
-      List.exists source_accesses ~f:(fun access ->
-          match access.Accesses.kind with
-          | Write | Increment -> true
-          | Read -> false) in
-    (not is_source_writing) || (not is_sink_reading)
-    || List.exists source_accesses ~f:(fun source ->
-        List.exists sink_accesses ~f:(fun sink ->
-            is_flow_dependence info (source_id, source) (sink_id, sink))) in
-  Set.Poly.filter_map candidate_definitions ~f:(function
-    | None -> None
-    | Some source_id ->
-        if is_possible_source source_id then Some source_id else None)
+  Set.Poly.filter_map (LabelMap.find sink_id info.reaching_definitions)
+    ~f:(fun ((source, source_label) : reaching_definition) ->
+      match source_label with
+      | Some source_id
+        when String.equal source.var var
+             && ((not is_sink_reading)
+                || List.exists sink_accesses ~f:(fun sink ->
+                    is_flow_dependence info (source_id, source) (sink_id, sink))
+                ) ->
+          Some source_id
+      | Some _ | None -> None)
 
 type kind = Data of label | Control of label
 

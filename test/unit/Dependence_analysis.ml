@@ -24,21 +24,20 @@ open Analysis_and_optimization.Dataflow_types
    dependency is a direct data or control dependency. A transitive dependency is
    a dependency of a dependency.
 
-   A definition is a write, recorded as the variable name and the label of the
-   statement that writes the variable. A definition reaches a read when the
+   A definition is a write, recorded as the access of the write and the label of
+   the statement that writes the variable. A definition reaches a read when the
    program can run the write before the read, and no write between them replaces
    the same element. These definitions are the reaching definitions of the read.
    Each statement records the reaching definitions at entry, before the
-   statement runs, and at exit, after the statement runs. A later write kills an
-   earlier write when the later write always replaces the element of the earlier
-   write. The later write is the killer. A killed write no longer reaches later
-   reads. A query then drops each reaching write that selects a different
-   element than the read, or that runs after the read
-   ({!Analysis_and_optimization.Dependence}).
+   statement runs. A later write kills an earlier write when the later write
+   always replaces the element of the earlier write. The later write is the
+   killer. A killed write no longer reaches later reads. A query then drops each
+   reaching write that selects a different element than the read, or that runs
+   after the read ({!Analysis_and_optimization.Dependence}).
 
    A definition from outside the analyzed statement, for example data, has no
-   label and prints as [()] in a reaching definition. Dependency results contain
-   statement labels only, so these definitions do not appear in them.
+   label and prints as [W N None]. Dependency results contain statement labels
+   only, so these definitions do not appear in them.
 
    Most later tests print [label: statement // labels]. The labels after // are
    the immediate dependencies, which are the writes that the statement reads and
@@ -93,19 +92,73 @@ let%expect_test "Dependency graph example" =
        (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
     |}]
 
+module Accesses = Analysis_and_optimization.Accesses
+
+(** Prints a set of definitions as [W N None, W a 2, W s [7, 12]]: each entry is
+    the access, then the labels of the definitions with that access. The outside
+    definitions come first. *)
+let pp_definitions (info : dependence_info) ppf
+    (definitions : reaching_definition Set.Poly.t) =
+  let pp_access =
+    Test_utils.one_line
+      (Accesses.pp_access ~loop_name:(Test_utils.loop_name info)) in
+  let entries =
+    List.map (Set.Poly.to_list definitions) ~f:(fun (access, label) ->
+        (Fmt.str "%a" pp_access access, label)) in
+  let outside =
+    List.filter_map entries ~f:(function
+      | text, None -> Some (text ^ " None")
+      | _, Some _ -> None) in
+  (* The distinct access texts with a label, in set order. *)
+  let texts =
+    List.rev
+      (List.fold_left entries ~init:[] ~f:(fun texts (text, label) ->
+           match label with
+           | Some _ when not (List.mem text ~set:texts) -> text :: texts
+           | Some _ | None -> texts)) in
+  let inside =
+    List.map texts ~f:(fun text ->
+        match
+          List.filter_map entries ~f:(function
+            | entry_text, Some label when String.equal entry_text text ->
+                Some label
+            | _, Some _ | _, None -> None)
+        with
+        | [label] -> Fmt.str "%s %d" text label
+        | labels -> Fmt.str "%s [%a]" text Fmt.(list ~sep:(any ", ") int) labels)
+  in
+  Fmt.(list ~sep:(any ", ") string) ppf (outside @ inside)
+
 (* The loop variable [j] of the loop at label 9 is not a definition: no
    statement writes a loop variable. *)
 let%expect_test "Reaching definition records at statement entry" =
-  let deps =
-    (build_log_prob_dependence_info example1_program).reaching_definitions in
-  print_s [%sexp (deps : reaching_definition Set.Poly.t LabelMap.t)];
+  let info = build_log_prob_dependence_info example1_program in
+  LabelMap.iter info.reaching_definitions ~f:(fun ~key ~data ->
+      Fmt.pr "%d: [%a]@." key (pp_definitions info) data);
   [%expect
     {|
-    ((1 ()) (2 ((i (4)))) (3 ()) (4 ((i (3)))) (5 ((i (4)))) (6 ((i (4))))
-     (7 ((i (4)))) (8 ((i (4)))) (9 ((i (4)))) (10 ((i (4)))) (11 ((i (4))))
-     (12 ((i (4)))) (13 ((i (4)))) (14 ((i (4)))) (15 ((i (4)))) (16 ((i (4))))
-     (17 ((i (4)))) (18 ((i (4)))) (19 ((i (4)))) (20 ((i (4)))) (21 ((i (4))))
-     (22 ((i (4)))))
+    1: []
+    2: [W i 4]
+    3: []
+    4: [W i 3]
+    5: [W i 4]
+    6: [W i 4]
+    7: [W i 4]
+    8: [W i 4]
+    9: [W i 4]
+    10: [W i 4]
+    11: [W i 4]
+    12: [W i 4]
+    13: [W i 4]
+    14: [W i 4]
+    15: [W i 4]
+    16: [W i 4]
+    17: [W i 4]
+    18: [W i 4]
+    19: [W i 4]
+    20: [W i 4]
+    21: [W i 4]
+    22: [W i 4]
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -119,8 +172,10 @@ let%expect_test "Variable dependency example" =
     |}]
 
 let%expect_test "External definitions are distinct from statement label 1" =
+  let write var : Accesses.access = {var; path= []; kind= Accesses.Write} in
   let definitions =
-    Set.Poly.of_list [("x", None); ("x", Some 1); ("y", Some 2)] in
+    Set.Poly.of_list
+      [(write "x", None); (write "x", Some 1); (write "y", Some 2)] in
   print_s [%sexp (definition_ids definitions "x" : label option Set.Poly.t)];
   [%expect {| (() (1)) |}]
 
@@ -557,55 +612,29 @@ let%expect_test "Running example: the statement map" =
 
 let%expect_test "Running example: the reaching definitions" =
   let info = running_example_info () in
-  (* The pairs of the set grouped by variable: the outside definitions first, as
-     [(N, None)], then one entry per variable with the labels of the writes, as
-     [(a, Some 2)] or [(s, Some [7, 12])]. *)
-  let pp_definitions ppf (definitions : reaching_definition Set.Poly.t) =
-    let pairs = Set.Poly.to_list definitions in
-    let vars = List.sort_uniq ~cmp:String.compare (List.map pairs ~f:fst) in
-    let outside_entries =
-      List.filter_map vars ~f:(fun var ->
-          if Set.Poly.mem (var, None) definitions then
-            Some (Fmt.str "(%s, None)" var)
-          else None) in
-    let inside_entries =
-      List.filter_map vars ~f:(fun var ->
-          match
-            List.filter_map pairs ~f:(fun (defined, label) ->
-                if String.equal defined var then label else None)
-          with
-          | [] -> None
-          | [label] -> Some (Fmt.str "(%s, Some %d)" var label)
-          | labels ->
-              Some
-                (Fmt.str "(%s, Some [%a])" var
-                   Fmt.(list ~sep:(any ", ") int)
-                   labels)) in
-    Fmt.(list ~sep:(any " ") string) ppf (outside_entries @ inside_entries)
-  in
   let row statement_id (statement : stmt_info) =
     if is_block statement then None
     else
       Some
         [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
-        ; Fmt.str "%a" pp_definitions
+        ; Fmt.str "%a" (pp_definitions info)
             (LabelMap.find statement_id info.reaching_definitions) ] in
   Fmt.pr "%a" pp_table
     (["label"; "pattern"; "reaching definitions"] :: table_rows info ~row);
   [%expect
     {|
     label  pattern                             reaching definitions
-    2      real a;                             (N, None) (a, None) (x, None)
-    4      FnValidateSize__("theta", "N", N);  (N, None) (x, None) (a, Some 2)
-    5      matrix[N, 2] theta;                 (N, None) (x, None) (a, Some 2)
-    6      real s;                             (N, None) (x, None) (a, Some 2) (theta, Some 5)
-    7      s = promote(0, real, var);          (N, None) (x, None) (a, Some 2) (s, Some 6) (theta, Some 5)
-    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
-    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
-    15     target += 1;                        (N, None) (x, None) (a, Some 2) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    2      real a;                             W N None, W a None, W x None
+    4      FnValidateSize__("theta", "N", N);  W N None, W x None, W a 2
+    5      matrix[N, 2] theta;                 W N None, W x None, W a 2
+    6      real s;                             W N None, W x None, W a 2, W theta 5
+    7      s = promote(0, real, var);          W N None, W x None, W a 2, W s 6, W theta 5
+    8      for(n in 1:N) #9                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    10     theta[n, 1] = a;                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    11     theta[n, 2] = x[n];                 W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    12     s = (s + theta[n, 2]);              W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    13     if((s > 0)) #14                     W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    15     target += 1;                        W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
