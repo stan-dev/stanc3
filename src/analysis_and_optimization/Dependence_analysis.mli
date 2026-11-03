@@ -7,13 +7,15 @@ open Dataflow_types
     Dependence analysis finds the statements that each statement of a program
     depends on. A statement depends on another statement through the values that
     the two statements read and write, or through the statements that decide
-    whether the statement runs. Knowing these dependences allows correctness
-    checks on a program, and optimizations that reorder statements.
+    whether the statement runs. Knowing these dependencies allows for nice
+    language specific correctness checks on a program and optimizations that
+    reorder statements.
 
-    Pedantic mode ({!Pedantic_analysis}) uses dependences to warn when the
-    condition of an [if] or the bounds of a loop depend on a parameter. The
-    factor graph ({!Factor_graph}) uses dependences to connect each [target +=]
-    term to the parameters and data that the term uses.
+    In the stanc compiler, dependency analysis has two consumers. Pedantic mode
+    ({!Pedantic_analysis}) uses dependency analysis to warn when the condition
+    of an [if] or the bounds of a loop depend on a parameter. The factor graph
+    ({!Factor_graph}) uses the same analysis to connect each [target +=] term to
+    the parameters and data that the term uses.
 
     This documentation describes how dependency analysis works in stanc. Each
     section uses the running example below.
@@ -39,61 +41,59 @@ open Dataflow_types
       17  }
     ]}
 
-    The [if] on line 13 of the running example reads the value that line 12
-    writes, and the [if] runs only when the loop on line 10 runs. In dependency
-    analysis, we focus on two main forms of dependency from reads and writes.
-    Each form describes when a statement depends on another statement.
+    The idea of dependency analysis is pretty simple on its own. Given we are
+    looking at some statement in a program which statements does this statement
+    depend on either via reads/writes or conditional execution. We call these
+    dependence forms {e data dependence} or {e control dependence}.
 
     - A {e data dependence} exists when a write in the other statement can
       supply a value that this statement reads. The write runs before the read
-      when the program runs. > example here
+      when the program runs.
+
+    {@text[
+      12      theta[n, 2] = x[n];       writes theta[n, 2]
+      13      if (theta[n, 2] > 0) {    reads theta[n, 2]: data dependence on line 12
+    ]}
 
     - A statement can also depend on another statement without reading a value
       from the other statement. A {e control dependence} exists when the other
       statement decides whether this statement runs. The other statement is
       control dependence if it is an [if] or a loop around this statement, or a
-      [break], [continue], or [return] that can skip this statement. > example
-      here
+      [break], [continue], or [return] that can skip this statement.
+
+    {@text[
+      10    for (n in 1:N) {            decides whether lines 11 to 13 run
+      11      theta[n, 1] = a;          control dependence on line 10
+      12      theta[n, 2] = x[n];       control dependence on line 10
+      13      if (theta[n, 2] > 0) {    control dependence on line 10; decides whether line 14 runs
+      14        target += 1;            control dependence on line 13
+    ]}
 
     A statement has a direct control dependence only on the innermost [if] or
     loop around the statement, and on the jumps that can skip the statement.
     These statements are the {e control parents} of the statement
     ({!Dataflow_utils.control_parent_ids}). The outer [if]s and loops around a
-    statement are dependences of the control parent. They are therefore
-    transitive control dependences of the statement.
+    statement are dependencies of the control parent. They are therefore
+    transitive control dependencies of the statement.
+    {@text[
+      13      if (theta[n, 2] > 0) {    control parent of line 14
+      14        target += 1;            direct: line 13   transitive: line 10, through line 13
+    ]}
 
-    > example here
-
-    The rest of this section shows how the analysis finds these dependences for
+    The rest of this section shows how the analysis finds these dependencies for
     the running example. Dependence analysis reads a large group of statements
-    at once, the {e analyzed code}, and then finds the dependences between the
+    at once, the {e analyzed code}, and then finds the dependencies between the
     statements in that group. For the log density, the analyzed code is the
     parameters, transformed parameters, and model blocks, which are lines 5 to
-    17 in the running example. The analysis puts the analyzed code under one
-    {e root}, which gets label [1], and gives each statement inside the root an
-    integer {e label} that offsets it from root. The dependencies between the
-    labeled statements form a graph whose nodes are the labels
-    ({!dependence_graph}). Statements outside the analyzed code, such as the
-    data block on lines 1 to 4, do not get a label.
+    17 in the running example.
 
-    To build this graph, the analysis first records the statement at each label.
-    The [statements] field of {!dependence_info} maps each label to the
-    statement at that label. A statement that holds other statements refers to
-    each nested statement by its label. For example, the [if] at label [13]
-    holds the label [11] in place of its body [target += 1].
+    The analysis puts the analyzed code under one {e root}, which gets label
+    [1], and gives each statement inside the root an integer {e label} that
+    offsets it from root. The dependencies between the labeled statements form a
+    graph whose nodes are the labels ({!dependence_graph}). Statements outside
+    the analyzed code, such as the data block on lines 1 to 4, do not get a
+    label.
 
-    The table below shows what the analysis builds for the running example. The
-    analysis builds the table by walking the root depth first. The root gets
-    label [1]. Each statement that the walk visits gets the next label, and the
-    walk labels the statements nested inside a statement before it moves on to
-    the next statement at the same level. For example, the loop on line 10 gets
-    label [6], the braces of its body get label [7], and the three statements in
-    the body get labels [8], [9], and [10]. While labeling, the analysis
-    replaces each nested statement with its label, which gives the statement
-    column. Label [4] is a size check that the MIR adds before the declaration
-    on line 9. The Stan lines column gives the lines of the running example that
-    each statement comes from, and the direct dependences column gives the
-    labels that each statement directly depends on.
     {@text[
      5  parameters {
      6    real a;
@@ -109,8 +109,29 @@ open Dataflow_types
     16    }
     17  }
     ]}
+
+    To build this graph, the analysis first records the statement at each label.
+    The [statements] field of {!dependence_info} maps each label to the
+    statement at that label. A statement that holds other statements refers to
+    each nested statement by its label. For example, the [if] at label [13]
+    holds the label [11] in place of its body [target += 1].
+
+    The table below shows what the analysis builds for the running example. The
+    analysis builds the table by walking the root depth first. The root gets
+    label [1]. Each statement that the walk visits gets the next label, and the
+    walk labels the statements nested inside a statement before it moves on to
+    the next statement at the same level. For example, the loop on line 10 gets
+    label [6], the braces of its body get label [7], and the three statements in
+    the body get labels [8], [9], and [10]. So after running the initial
+    labeling pass we can see that line 6 covers the for loop which holds the
+    statements at labels 8, 9, and 10.
+
+    The Stan lines column gives the lines of the running example that each
+    statement comes from. The two dependency columns give the direct
+    dependencies that {!direct_dependence_ids} returns: the [Data] labels, then
+    the [Control] labels.
     {@text[
-      label  Stan lines  statement                           data dependences  conditional dependences
+      label  Stan lines  statement                           data dependencies  control dependencies
       1      5-17        root { #2 #3 }                      -                 -
       2      6           real a;                             -                 -
       3      8-17        model { #4 #5 #6 }                  -                 -
@@ -121,34 +142,34 @@ open Dataflow_types
       8      11          theta[n, 1] = a;                    2                 6
       9      12          theta[n, 2] = x[n];                 -                 6
       10     13-15       if (theta[n, 2] > 0) #11            5, 9              6
-      11     13-15       if body { #12 }                     -                 10
+      11     13-15       Block { #12 }                       -                 10
       12     14          target += 1;                        -                 10
     ]}
 
-    The [if] statement at label [10] has three direct dependences.
-    - Labels [5] and [9] are data dependences. The condition [theta[n, 2] > 0]
+    The [if] statement at label [10] has three direct dependencies.
+    - Labels [5] and [9] are data dependencies. The condition [theta[n, 2] > 0]
       reads [theta[n, 2]]. The declaration [matrix[N, 2] theta] at label [5] and
       the assignment [theta[n, 2] = x[n]] at label [9] write values that this
       read can use.
     - Label [6] is a control dependence. The loop at label [6] is the innermost
       loop around the [if], and the loop decides whether the [if] runs.
 
-    {1 Using the dependences}
+    {1 Using the dependencies}
 
     The factor graph and pedantic mode both start at one statement and follow
-    the dependences in the table, then the dependences of those statements. The
-    tree below shows this walk from [target += 1] at label [12]. The right
+    the dependencies in the table, then the dependencies of those statements.
+    The tree below shows this walk from [target += 1] at label [12]. The right
     column lists the variables that each statement reads, leaving out loop
-    variables.
+    variables. Note the numbers in the below are the {e label} and not the
+    original stan program line numbers.
     {@text[
-      12  target += 1;
-      `-- conditional: 10  if (theta[n, 2] > 0)         reads theta
-          |-- data: 5  matrix[N, 2] theta;              reads N
-          |-- data: 9  theta[n, 2] = x[n];              reads x
-          |   `-- conditional: 6  for (n in 1:N)        reads N
-          `-- conditional: 6  for (n in 1:N)            reads N
-
-      8  theta[n, 1] = a;                               reads a (not reached)
+      label: 12  target += 1;
+      `-- label: 10  if (theta[n, 2] > 0)     control
+          |-- label: 9  theta[n, 2] = x[n];   data
+          |   `-- label: 6  for (n in 1:N)    control
+          |-- label: 5  matrix[N, 2] theta;   data
+          `-- label: 6  for (n in 1:N)        control
+          label: 8  theta[n, 1] = a;          reads a (not reached)
     ]}
 
     The factor graph ({!Factor_graph}) starts the walk at each factor, a term
@@ -258,8 +279,8 @@ val direct_dependence_ids :
     the value of [vars] used there. *)
 
 val transitive_dependence_ids : dependence_info -> label -> label Set.Poly.t
-(** Returns the labels of the direct and transitive dependences of the statement
-    at the label. The result also includes the label. *)
+(** Returns the labels of the direct and transitive dependencies of the
+    statement at the label. The result also includes the label. *)
 
 val var_dependence_ids :
      dependence_info
@@ -272,7 +293,7 @@ val var_dependence_ids :
     the result leaves out the label. *)
 
 val dependence_graph : dependence_info -> label Set.Poly.t LabelMap.t
-(** Returns the direct and transitive dependences of each statement. Unlike in
+(** Returns the direct and transitive dependencies of each statement. Unlike in
     {!transitive_dependence_ids}, the set of a statement leaves out that label.
 *)
 
