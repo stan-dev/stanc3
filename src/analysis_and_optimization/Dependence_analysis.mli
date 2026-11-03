@@ -199,21 +199,24 @@ open Dataflow_types
 
     The table leaves out the four block labels. The node of a block comes after
     the statements of the block, so the set of a block holds what reaches the
-    end of the block, which no query asks for. The unit test "Running example:
-    the reaching definitions" prints this table.
+    end of the block, which no query asks for. The column groups the pairs of
+    the set by variable: the outside definitions come first, and a variable with
+    several writes shows the labels in one entry, so [(s, Some [7, 12])] stands
+    for the pairs [(s, Some 7)] and [(s, Some 12)]. The unit test "Running
+    example: the reaching definitions" prints this table.
     {@text[
     label  pattern                             reaching definitions
     2      real a;                             (N, None) (a, None) (x, None)
-    4      FnValidateSize__("theta", "N", N);  (N, None) (a, Some 2) (x, None)
-    5      matrix[N, 2] theta;                 (N, None) (a, Some 2) (x, None)
-    6      real s;                             (N, None) (a, Some 2) (theta, Some 5) (x, None)
-    7      s = promote(0, real, var);          (N, None) (a, Some 2) (s, Some 6) (theta, Some 5) (x, None)
-    8      for(n in 1:N) #9                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    10     theta[n, 1] = a;                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    11     theta[n, 2] = x[n];                 (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    12     s = (s + theta[n, 2]);              (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    13     if((s > 0)) #14                     (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    15     target += 1;                        (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    4      FnValidateSize__("theta", "N", N);  (N, None) (x, None) (a, Some 2)
+    5      matrix[N, 2] theta;                 (N, None) (x, None) (a, Some 2)
+    6      real s;                             (N, None) (x, None) (a, Some 2) (theta, Some 5)
+    7      s = promote(0, real, var);          (N, None) (x, None) (a, Some 2) (s, Some 6) (theta, Some 5)
+    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    15     target += 1;                        (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
     ]}
 
     Four things in the table are worth reading closely.

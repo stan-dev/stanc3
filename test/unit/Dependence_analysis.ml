@@ -570,35 +570,55 @@ let%expect_test "Running example: the statement map" =
 
 let%expect_test "Running example: the reaching definitions" =
   let info = running_example_info () in
-  let pp_definition ppf ((var, label) : reaching_definition) =
-    Fmt.pf ppf "(%s, %a)" var
-      Fmt.(option ~none:(any "None") (fun ppf label -> pf ppf "Some %d" label))
-      label in
+  (* The pairs of the set grouped by variable: the outside definitions first, as
+     [(N, None)], then one entry per variable with the labels of the writes, as
+     [(a, Some 2)] or [(s, Some [7, 12])]. *)
+  let pp_definitions ppf (definitions : reaching_definition Set.Poly.t) =
+    let pairs = Set.Poly.to_list definitions in
+    let vars = List.sort_uniq ~cmp:String.compare (List.map pairs ~f:fst) in
+    let outside_entries =
+      List.filter_map vars ~f:(fun var ->
+          if Set.Poly.mem (var, None) definitions then
+            Some (Fmt.str "(%s, None)" var)
+          else None) in
+    let inside_entries =
+      List.filter_map vars ~f:(fun var ->
+          match
+            List.filter_map pairs ~f:(fun (defined, label) ->
+                if String.equal defined var then label else None)
+          with
+          | [] -> None
+          | [label] -> Some (Fmt.str "(%s, Some %d)" var label)
+          | labels ->
+              Some
+                (Fmt.str "(%s, Some [%a])" var
+                   Fmt.(list ~sep:(any ", ") int)
+                   labels)) in
+    Fmt.(list ~sep:(any " ") string) ppf (outside_entries @ inside_entries)
+  in
   let row statement_id (statement : stmt_info) =
     if is_block statement then None
     else
       Some
         [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
-        ; Fmt.str "%a"
-            Fmt.(list ~sep:(any " ") pp_definition)
-            (Set.Poly.to_list
-               (LabelMap.find statement_id info.reaching_definitions)) ] in
+        ; Fmt.str "%a" pp_definitions
+            (LabelMap.find statement_id info.reaching_definitions) ] in
   Fmt.pr "%a" pp_table
     (["label"; "pattern"; "reaching definitions"] :: table_rows info ~row);
   [%expect
     {|
     label  pattern                             reaching definitions
     2      real a;                             (N, None) (a, None) (x, None)
-    4      FnValidateSize__("theta", "N", N);  (N, None) (a, Some 2) (x, None)
-    5      matrix[N, 2] theta;                 (N, None) (a, Some 2) (x, None)
-    6      real s;                             (N, None) (a, Some 2) (theta, Some 5) (x, None)
-    7      s = promote(0, real, var);          (N, None) (a, Some 2) (s, Some 6) (theta, Some 5) (x, None)
-    8      for(n in 1:N) #9                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    10     theta[n, 1] = a;                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    11     theta[n, 2] = x[n];                 (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    12     s = (s + theta[n, 2]);              (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    13     if((s > 0)) #14                     (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    15     target += 1;                        (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    4      FnValidateSize__("theta", "N", N);  (N, None) (x, None) (a, Some 2)
+    5      matrix[N, 2] theta;                 (N, None) (x, None) (a, Some 2)
+    6      real s;                             (N, None) (x, None) (a, Some 2) (theta, Some 5)
+    7      s = promote(0, real, var);          (N, None) (x, None) (a, Some 2) (s, Some 6) (theta, Some 5)
+    8      for(n in 1:N) #9                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    10     theta[n, 1] = a;                    (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    11     theta[n, 2] = x[n];                 (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    12     s = (s + theta[n, 2]);              (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some [7, 12]) (target, Some 15) (theta, Some [5, 10, 11])
+    13     if((s > 0)) #14                     (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
+    15     target += 1;                        (N, None) (x, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some [5, 10, 11])
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
