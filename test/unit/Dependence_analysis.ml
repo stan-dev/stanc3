@@ -517,6 +517,17 @@ let is_block (statement : stmt_info) =
   | Stmt.Pattern.SList _ | Stmt.Pattern.Block _ -> true
   | _ -> false
 
+(** Prints a pattern with [#] before each nested label, and the constructor name
+    of a block: [Block { #10 #11 }], [SList { #2 #3 }], [if((s > 0)) #14]. *)
+let pp_pattern ppf (pattern : (Expr.Typed.t, label) Stmt.Pattern.t) =
+  let pp_label ppf label = Fmt.pf ppf "#%d" label in
+  let pp_labels = Fmt.(list ~sep:(any " ") pp_label) in
+  match pattern with
+  | Stmt.Pattern.SList labels -> Fmt.pf ppf "SList { %a }" pp_labels labels
+  | Stmt.Pattern.Block labels -> Fmt.pf ppf "Block { %a }" pp_labels labels
+  | _ ->
+      Test_utils.one_line (Stmt.Pattern.pp Expr.Typed.pp pp_label) ppf pattern
+
 let%expect_test "Running example: the statement map" =
   let info = running_example_info () in
   let stan_lines (meta : Location_span.t) =
@@ -527,7 +538,7 @@ let%expect_test "Running example: the statement map" =
   let row statement_id (statement : stmt_info) =
     Some
       [ Int.to_string statement_id; stan_lines statement.meta
-      ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern
+      ; Fmt.str "%a" pp_pattern statement.pattern
       ; Fmt.str "[%a]" (pp_controls info) statement.controls
       ; Fmt.str "%a"
           (Test_utils.one_line
@@ -540,20 +551,20 @@ let%expect_test "Running example: the statement map" =
   [%expect
     {|
     label  Stan lines  pattern                             controls                  accesses
-    1      -           2 3                                 []
+    1      -           SList { #2 #3 }                     []
     2      6           real a;                             []                        W a
-    3      9           { 4 5 6 7 8 }                       []
+    3      9           Block { #4 #5 #6 #7 #8 }            []
     4      9           FnValidateSize__("theta", "N", N);  []                        R N
     5      9           matrix[N, 2] theta;                 []                        R N, W theta
     6      10          real s;                             []                        W s
     7      10          s = promote(0, real, var);          []                        W s
-    8      11-18       for(n in 1:N) 9                     []                        R N
-    9      11-18       { 10 11 12 13 }                     [loop 8 (n)]
+    8      11-18       for(n in 1:N) #9                    []                        R N
+    9      11-18       Block { #10 #11 #12 #13 }           [loop 8 (n)]
     10     12          theta[n, 1] = a;                    [loop 8 (n)]              R a, W theta[n, 1]
     11     13          theta[n, 2] = x[n];                 [loop 8 (n)]              R x[n], W theta[n, 2]
     12     14          s = (s + theta[n, 2]);              [loop 8 (n)]              R s, R theta[n, 2], W s
-    13     15-17       if((s > 0)) 14                      [loop 8 (n)]              R s
-    14     15-17       { 15 }                              [loop 8 (n); if 13 then]
+    13     15-17       if((s > 0)) #14                     [loop 8 (n)]              R s
+    14     15-17       Block { #15 }                       [loop 8 (n); if 13 then]
     15     16          target += 1;                        [loop 8 (n); if 13 then]  += target
     |}]
 
@@ -563,26 +574,15 @@ let%expect_test "Running example: the reaching definitions" =
     Fmt.pf ppf "(%s, %a)" var
       Fmt.(option ~none:(any "None") (fun ppf label -> pf ppf "Some %d" label))
       label in
-  (* A row whose set equals the set of the row above prints [same as <label>] in
-     place of the set. *)
-  let previous = ref None in
   let row statement_id (statement : stmt_info) =
     if is_block statement then None
     else
-      let definitions = LabelMap.find statement_id info.reaching_definitions in
-      let cell =
-        match !previous with
-        | Some (previous_id, previous_definitions)
-          when Set.Poly.equal definitions previous_definitions ->
-            Fmt.str "same as %d" previous_id
-        | _ ->
-            Fmt.str "%a"
-              Fmt.(list ~sep:(any " ") pp_definition)
-              (Set.Poly.to_list definitions) in
-      previous := Some (statement_id, definitions);
       Some
-        [ Int.to_string statement_id
-        ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern; cell ] in
+        [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
+        ; Fmt.str "%a"
+            Fmt.(list ~sep:(any " ") pp_definition)
+            (Set.Poly.to_list
+               (LabelMap.find statement_id info.reaching_definitions)) ] in
   Fmt.pr "%a" pp_table
     (["label"; "pattern"; "reaching definitions"] :: table_rows info ~row);
   [%expect
@@ -590,44 +590,50 @@ let%expect_test "Running example: the reaching definitions" =
     label  pattern                             reaching definitions
     2      real a;                             (N, None) (a, None) (x, None)
     4      FnValidateSize__("theta", "N", N);  (N, None) (a, Some 2) (x, None)
-    5      matrix[N, 2] theta;                 same as 4
+    5      matrix[N, 2] theta;                 (N, None) (a, Some 2) (x, None)
     6      real s;                             (N, None) (a, Some 2) (theta, Some 5) (x, None)
     7      s = promote(0, real, var);          (N, None) (a, Some 2) (s, Some 6) (theta, Some 5) (x, None)
-    8      for(n in 1:N) 9                     (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    10     theta[n, 1] = a;                    same as 8
-    11     theta[n, 2] = x[n];                 same as 10
-    12     s = (s + theta[n, 2]);              same as 11
-    13     if((s > 0)) 14                      (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    15     target += 1;                        same as 13
+    8      for(n in 1:N) #9                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    10     theta[n, 1] = a;                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    11     theta[n, 2] = x[n];                 (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    12     s = (s + theta[n, 2]);              (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    13     if((s > 0)) #14                     (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    15     target += 1;                        (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
   let info = running_example_info () in
-  let pp_kind ppf = function
-    | Data id -> Fmt.pf ppf "Data %d" id
-    | Control id -> Fmt.pf ppf "Control %d" id in
+  (* The Data labels and the Control labels of the set, as two columns. An empty
+     column prints [-]. *)
+  let labels_of_kind dependences ~f =
+    let labels = Set.Poly.filter_map dependences ~f in
+    if Set.Poly.is_empty labels then "-"
+    else Fmt.str "%a" Test_utils.pp_labels labels in
   let row statement_id (statement : stmt_info) =
     let dependences = direct_dependence_ids info statement_id in
     if Set.Poly.is_empty dependences then None
     else
       Some
-        [ Int.to_string statement_id
-        ; Fmt.str "%a" Test_utils.pp_stmt statement.pattern
-        ; Fmt.str "{%a}"
-            Fmt.(list ~sep:(any "; ") pp_kind)
-            (Set.Poly.to_list dependences) ] in
+        [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
+        ; labels_of_kind dependences ~f:(function
+            | Data id -> Some id
+            | Control _ -> None)
+        ; labels_of_kind dependences ~f:(function
+            | Control id -> Some id
+            | Data _ -> None) ] in
   Fmt.pr "%a" pp_table
-    (["label"; "pattern"; "direct dependencies"] :: table_rows info ~row);
+    (["label"; "pattern"; "data dependencies"; "control dependencies"]
+    :: table_rows info ~row);
   [%expect
     {|
-    label  pattern                 direct dependencies
-    9      { 10 11 12 13 }         {Control 8}
-    10     theta[n, 1] = a;        {Data 2; Control 8}
-    11     theta[n, 2] = x[n];     {Control 8}
-    12     s = (s + theta[n, 2]);  {Data 5; Data 7; Data 11; Data 12; Control 8}
-    13     if((s > 0)) 14          {Data 12; Control 8}
-    14     { 15 }                  {Control 13}
-    15     target += 1;            {Control 13}
+    label  pattern                    data dependencies  control dependencies
+    9      Block { #10 #11 #12 #13 }  -                  8
+    10     theta[n, 1] = a;           2                  8
+    11     theta[n, 2] = x[n];        -                  8
+    12     s = (s + theta[n, 2]);     5 7 11 12          8
+    13     if((s > 0)) #14            12                 8
+    14     Block { #15 }              -                  13
+    15     target += 1;               -                  13
     |}]
 
 let%expect_test "Running example: the walk from target += 1" =

@@ -148,20 +148,20 @@ open Dataflow_types
     prints this table.
     {@text[
     label  Stan lines  pattern                             controls                  accesses
-    1      -           2 3                                 []
+    1      -           SList { #2 #3 }                     []
     2      6           real a;                             []                        W a
-    3      9           { 4 5 6 7 8 }                       []
+    3      9           Block { #4 #5 #6 #7 #8 }            []
     4      9           FnValidateSize__("theta", "N", N);  []                        R N
     5      9           matrix[N, 2] theta;                 []                        R N, W theta
     6      10          real s;                             []                        W s
     7      10          s = promote(0, real, var);          []                        W s
-    8      11-18       for(n in 1:N) 9                     []                        R N
-    9      11-18       { 10 11 12 13 }                     [loop 8 (n)]
+    8      11-18       for(n in 1:N) #9                    []                        R N
+    9      11-18       Block { #10 #11 #12 #13 }           [loop 8 (n)]
     10     12          theta[n, 1] = a;                    [loop 8 (n)]              R a, W theta[n, 1]
     11     13          theta[n, 2] = x[n];                 [loop 8 (n)]              R x[n], W theta[n, 2]
     12     14          s = (s + theta[n, 2]);              [loop 8 (n)]              R s, R theta[n, 2], W s
-    13     15-17       if((s > 0)) 14                      [loop 8 (n)]              R s
-    14     15-17       { 15 }                              [loop 8 (n); if 13 then]
+    13     15-17       if((s > 0)) #14                     [loop 8 (n)]              R s
+    14     15-17       Block { #15 }                       [loop 8 (n); if 13 then]
     15     16          target += 1;                        [loop 8 (n); if 13 then]  += target
     ]}
 
@@ -198,22 +198,21 @@ open Dataflow_types
 
     The table leaves out the four block labels. The node of a block comes after
     the statements of the block, so the set of a block holds what reaches the
-    end of the block, which no query asks for. A row whose set equals the set of
-    the row above says so. The unit test "Running example: the reaching
-    definitions" prints this table.
+    end of the block, which no query asks for. The unit test "Running example:
+    the reaching definitions" prints this table.
     {@text[
     label  pattern                             reaching definitions
     2      real a;                             (N, None) (a, None) (x, None)
     4      FnValidateSize__("theta", "N", N);  (N, None) (a, Some 2) (x, None)
-    5      matrix[N, 2] theta;                 same as 4
+    5      matrix[N, 2] theta;                 (N, None) (a, Some 2) (x, None)
     6      real s;                             (N, None) (a, Some 2) (theta, Some 5) (x, None)
     7      s = promote(0, real, var);          (N, None) (a, Some 2) (s, Some 6) (theta, Some 5) (x, None)
-    8      for(n in 1:N) 9                     (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    10     theta[n, 1] = a;                    same as 8
-    11     theta[n, 2] = x[n];                 same as 10
-    12     s = (s + theta[n, 2]);              same as 11
-    13     if((s > 0)) 14                      (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
-    15     target += 1;                        same as 13
+    8      for(n in 1:N) #9                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    10     theta[n, 1] = a;                    (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    11     theta[n, 2] = x[n];                 (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    12     s = (s + theta[n, 2]);              (N, None) (a, Some 2) (n, Some 8) (s, Some 7) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    13     if((s > 0)) #14                     (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
+    15     target += 1;                        (N, None) (a, Some 2) (n, Some 8) (s, Some 12) (target, Some 15) (theta, Some 5) (theta, Some 10) (theta, Some 11) (x, None)
     ]}
 
     Four things in the table are worth reading closely.
@@ -254,17 +253,19 @@ open Dataflow_types
     increments of the same variable are never dependent.
 
     The table shows the set that {!direct_dependence_ids} returns for each label
-    with a dependence; labels [1] to [8] return the empty set. The unit test
-    "Running example: the direct dependencies" prints this table.
+    with a dependence; labels [1] to [8] return the empty set. The two columns
+    are the [Data] labels and the [Control] labels of the set, and [-] is an
+    empty column. The unit test "Running example: the direct dependencies"
+    prints this table.
     {@text[
-    label  pattern                 direct dependencies
-    9      { 10 11 12 13 }         {Control 8}
-    10     theta[n, 1] = a;        {Data 2; Control 8}
-    11     theta[n, 2] = x[n];     {Control 8}
-    12     s = (s + theta[n, 2]);  {Data 5; Data 7; Data 11; Data 12; Control 8}
-    13     if((s > 0)) 14          {Data 12; Control 8}
-    14     { 15 }                  {Control 13}
-    15     target += 1;            {Control 13}
+    label  pattern                    data dependencies  control dependencies
+    9      Block { #10 #11 #12 #13 }  -                  8
+    10     theta[n, 1] = a;           2                  8
+    11     theta[n, 2] = x[n];        -                  8
+    12     s = (s + theta[n, 2]);     5 7 11 12          8
+    13     if((s > 0)) #14            12                 8
+    14     Block { #15 }              -                  13
+    15     target += 1;               -                  13
     ]}
 
     Label [12] shows the join in full. The statement map says that the
@@ -326,7 +327,7 @@ open Dataflow_types
     The example record below is for the condition (label [13]) of the running
     example.
     {@text[
-      pattern:   if((s > 0)) 14
+      pattern:   if((s > 0)) #14
       controls:  {enclosing = [{id = 8; side = None}]; jump_ids = {}}
       accesses:  R s
     ]} *)
