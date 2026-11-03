@@ -138,14 +138,15 @@ open Dataflow_types
     The table has one row per label and one column per field of {!stmt_info}.
     The Stan lines column is the location recorded for the statement; the root
     has none, and a block records the line of the first statement in the block.
-    The pattern column is the statement with each nested statement replaced by a
-    label. The controls column lists the [if]s and loops around the statement,
-    outermost first. The accesses column lists what the expressions of the
-    statement read ([R]), write ([W]) and increment ([+=]), with the element
-    when the access has a subscript. Reads of the loop variable [n] are dropped,
-    so label [10] shows [R a] and not [R n], and the loop at label [8] reads
-    only the bound [N]. The unit test "Running example: the statement map"
-    prints this table.
+    The pattern column is the statement with each nested statement replaced by
+    [#] and the label, and a block shows the constructor name, [Block] or
+    [SList], before the labels of the statements in the block. The controls
+    column lists the [if]s and loops around the statement, outermost first. The
+    accesses column lists what the expressions of the statement read ([R]),
+    write ([W]) and increment ([+=]), with the element when the access has a
+    subscript. Reads of the loop variable [n] are dropped, so label [10] shows
+    [R a] and not [R n], and the loop at label [8] reads only the bound [N]. The
+    unit test "Running example: the statement map" prints this table.
     {@text[
     label  Stan lines  pattern                             controls                  accesses
     1      -           SList { #2 #3 }                     []
@@ -298,16 +299,16 @@ open Dataflow_types
     [N s target theta x].
     {@text[
       label: 15  target += 1;
-      `-- label: 13  if (s > 0)                   control
-          |-- label: 12  s = s + theta[n, 2];     data
-          |   |-- label: 5  matrix[N, 2] theta;   data
-          |   |-- label: 7  s = 0;                data
-          |   |-- label: 11  theta[n, 2] = x[n];  data
-          |   |   `-- label: 8  for (n in 1:N)    control
-          |   |-- label: 12  (visited)            data
-          |   `-- label: 8  (visited)             control
-          `-- label: 8  (visited)                 control
-      label: 10  theta[n, 1] = a;                 reads a (not reached)
+      `-- label: 13  if((s > 0)) #14                  control
+          |-- label: 12  s = (s + theta[n, 2]);       data
+          |   |-- label: 5  matrix[N, 2] theta;       data
+          |   |-- label: 7  s = promote(0, real, var);  data
+          |   |-- label: 11  theta[n, 2] = x[n];      data
+          |   |   `-- label: 8  for(n in 1:N) #9      control
+          |   |-- label: 12  (visited)                data
+          |   `-- label: 8  (visited)                 control
+          `-- label: 8  (visited)                     control
+      label: 10  theta[n, 1] = a;                     reads a (not reached)
     ]}
 
     One goal of the pedantic analysis is to warn users about parameters that are
