@@ -184,31 +184,36 @@ open Dataflow_types
 
     A write of a whole variable {e kills} every earlier definition of that
     variable, and a write of one element kills an earlier definition only when
-    the earlier write must have written the same element. A killed definition
-    leaves the set, so the set is not cumulative.
+    the earlier write must have written the same element. The access of a
+    whole-variable write has an empty path, and an empty path overwrites every
+    path. A killed definition leaves the set, so the set is not cumulative.
 
-    The table shows each set in a short form, grouped by variable. The reaching
-    definitions show that, for each variable, where could it have been written
-    to before the statement executes. In a for loop, previous iterations of the
-    loop can contribute a write in the current loop. For label [#10] you can see
-    that [s] has reaching definitions at both [#7] and [#12]. This is because
-    the loop follows the flowgraph of the program order, so the previous
-    iterations write at label [#12] needs to be accounted for in the reaching
-    definition. The unit test "Running example: the reaching definitions" prints
-    the same sets in full.
+    Each entry in the table is one definition: the access of the write in the
+    form of the accesses column, then the label of the writing statement, as
+    [W theta[n, 1] 10]. Several labels in brackets, as [W s [7, 12]], are
+    definitions with the same access at different statements. [None] in place of
+    the label is a write from outside the analyzed code, and those entries come
+    first. The reaching definitions show, for each variable, where the value
+    could have been written before the statement runs. In a for loop, previous
+    iterations of the loop can contribute a write in the current iteration. For
+    label [10] you can see that [s] has reaching definitions at both [7] and
+    [12]. This is because the analysis follows the flowgraph of the program, so
+    the write at label [12] in the previous iteration needs to be accounted for
+    in the reaching definitions. The table leaves out the four block labels. The
+    unit test "Running example: the reaching definitions" prints this table.
     {@text[
-    label  pattern                    reaching definitions
-    2      real a;                    None
-    4      validate_size("theta", N); (a, 2)
-    5      matrix[N, 2] theta;        (a, 2)
-    6      real s;                    (a, 2) (theta, 5)
-    7      s = promote(0, real, var); (a, 2) (s, 6) (theta, 5)
-    8      for(n in 1:N) #9           (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    10     theta[n, 1] = a;           (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    11     theta[n, 2] = x[n];        (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    12     s = (s + theta[n, 2]);     (a, 2) (s, [7, 12]) (target, 15) (theta, [5, 10, 11])
-    13     if((s > 0)) #14            (a, 2) (s, 12) (target, 15) (theta, [5, 10, 11])
-    15     target += 1;               (a, 2) (s, 12) (target, 15) (theta, [5, 10, 11])
+    label  pattern                             reaching definitions
+    2      real a;                             W N None, W a None, W x None
+    4      FnValidateSize__("theta", "N", N);  W N None, W x None, W a 2
+    5      matrix[N, 2] theta;                 W N None, W x None, W a 2
+    6      real s;                             W N None, W x None, W a 2, W theta 5
+    7      s = promote(0, real, var);          W N None, W x None, W a 2, W s 6, W theta 5
+    8      for(n in 1:N) #9                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    10     theta[n, 1] = a;                    W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    11     theta[n, 2] = x[n];                 W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    12     s = (s + theta[n, 2]);              W N None, W x None, W a 2, W s [7, 12], += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    13     if((s > 0)) #14                     W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
+    15     target += 1;                        W N None, W x None, W a 2, W s 12, += target 15, W theta 5, W theta[n, 1] 10, W theta[n, 2] 11
     ]}
 
     A few things in the table are worth reading closely.
@@ -216,8 +221,11 @@ open Dataflow_types
       the only definition is the declaration at [6]. At label [8], the loop
       header, we see [s] with reaching definitions for [7] and [12]. Both labels
       stay in the entry through label [12]. The assignment at [12] writes the
-      whole of [s], so the write at [7] ends and only [(s, 12)] reaches the [if]
-      at label [13].
+      whole of [s], so the write at [7] ends and only [W s 12] reaches the [if]
+      at label [13]. The data [N] and [x] keep the [None] definition at every
+      label, because nothing in the analyzed code writes them. The parameter [a]
+      starts as [W a None] too, but the declaration at label [2] writes the
+      whole of [a], so from label [4] on the entry is [W a 2].
     - Inside the loop, all three writes of [theta] reach every statement. Label
       [5] reaches from the first iteration, and labels [10] and [11] reach from
       an earlier iteration through the back edge. None of the three kills
@@ -233,7 +241,7 @@ open Dataflow_types
     [if] or loop, and the jumps. The data dependencies come from the two maps in
     turn. The accesses of the statement say which variables the statement reads.
     The reaching definitions of the statement name the candidate writers of each
-    such variable. The accesses of each candidate then say which element the
+    such variable. The access in each definition says which element the
     candidate writes, and a candidate that can never write the element that is
     read is dropped ({!is_flow_dependence}). A [None] definition never becomes a
     dependence, because the queries return labels only. An increment, such as
@@ -260,13 +268,13 @@ open Dataflow_types
     assignment reads [s] and [theta[n, 2]], and that the innermost control is
     the loop at label [8]. The reaching definitions of label [12] give two
     candidate writers of [s], labels [7] and [12], and three of [theta], labels
-    [5], [10] and [11]. Back in the statement map, both writers of [s] write the
-    whole variable, so both stay, and label [12] depends on the value of [s]
-    from the previous iteration. Label [10] writes [theta[n, 1]], never the
-    element [theta[n, 2]], so label [10] is dropped. The result is
-    [{Data 5; Data 7; Data 11; Data 12; Control 8}]. The statement map is read
-    for the sink and for every candidate, and the reaching map once, for the
-    sink.
+    [5], [10] and [11]. The access in each definition says what the candidate
+    writes: both writers of [s] write the whole variable, so both stay, and
+    label [12] depends on the value of [s] from the previous iteration. Label
+    [10] writes [theta[n, 1]], never the element [theta[n, 2]], so label [10] is
+    dropped. The result is [{Data 5; Data 7; Data 11; Data 12; Control 8}]. The
+    query reads the statement map once, for the sink, and the reaching map once,
+    for the sink; every candidate brings the write along.
 
     Label [13] shows a kill in the result. The [if] reads [s], and the only
     reaching definition of [s] at label [13] is label [12], so the initializer
