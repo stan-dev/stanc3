@@ -220,16 +220,16 @@ open Dataflow_types
     [target += 1], does not use the value of an earlier increment, so two
     increments of the same variable are never dependent.
 
-    The table shows the result for each label with a dependence; labels [1] to
-    [6] have none. The last column gives the derivation.
+    The table shows the set that {!direct_dependence_ids} returns for each label
+    with a dependence; labels [1] to [6] return the empty set.
     {@text[
-    label  pattern                   Data  Control  from
-    7      Block { #8 #9 #10 }       -     6        the innermost control is loop 6
-    8      theta[n, 1] = a;          2     6        reads a; the reaching definitions give (a, Some 2)
-    9      theta[n, 2] = x[n];       -     6        reads x[n]; the reaching definitions give (x, None), and a write from outside is never a dependence
-    10     if (theta[n, 2] > 0) #11  5, 9  6        reads theta[n, 2]; the reaching definitions give 5, 8, 9; label 8 writes theta[n, 1], another element, so 8 is dropped
-    11     Block { #12 }             -     10       the innermost control is if 10
-    12     target += 1;              -     10       increments target; the reaching (target, Some 12) is this same increment, and an increment does not use an earlier increment
+    label  pattern                   direct dependencies
+    7      Block { #8 #9 #10 }       {Control 6}
+    8      theta[n, 1] = a;          {Data 2; Control 6}
+    9      theta[n, 2] = x[n];       {Control 6}
+    10     if (theta[n, 2] > 0) #11  {Data 5; Data 9; Control 6}
+    11     Block { #12 }             {Control 10}
+    12     target += 1;              {Control 10}
     ]}
 
     Label [10] shows the join in full. The statement map says that the [if]
