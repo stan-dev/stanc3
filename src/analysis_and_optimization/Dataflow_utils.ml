@@ -11,7 +11,6 @@ let merge_set_maps (module M : Map.S) m1 m2 =
 
 let root_statement_id : label = 1
 
-(** See interface file *)
 let build_statement_map (stmt : Stmt.Located.t) =
   let rec label_statement (next_label, map) (stmt : Stmt.Located.t) =
     let (next_unused_label, nested_map), pattern =
@@ -29,7 +28,6 @@ let build_statement_map (stmt : Stmt.Located.t) =
 (* TODO: this currently does not seem to be labelling inside function bodies.
    Could we also do that? *)
 
-(** See interface file *)
 let rec build_recursive_statement rebuild statement_map label =
   let stmt_ints, meta = LabelMap.find label statement_map in
   let build_stmt = build_recursive_statement rebuild statement_map in
@@ -226,7 +224,6 @@ let enclosing_loop_ids (statement_id : label)
     | {side= Some _; _} -> None)
   @ match pattern with For _ | While _ -> [statement_id] | _ -> []
 
-(** See interface file *)
 let build_controls statement_map =
   let _, _, controls = build_control_flow statement_map in
   controls
@@ -234,7 +231,6 @@ let build_controls statement_map =
 let build_cf_graph statement_map =
   LabelMap.map (build_controls statement_map) ~f:control_parent_ids
 
-(** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) =

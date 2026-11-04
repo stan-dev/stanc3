@@ -501,7 +501,7 @@ let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
     type labels = int
     type properties = d Set.Poly.t
 
-    let transfer_function l p =
+    let transfer_function (l : labels) (p : properties) =
       Set.Poly.union (gen l)
         (Set.Poly.filter p ~f:(fun definition ->
              not (is_killed ~killer:l definition)))

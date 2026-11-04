@@ -212,7 +212,6 @@ let var_name_of_expr_exn Expr.{pattern; _} =
       Common.ICE.internal_error "Non-var expression found, but var expected"
       [@coverage off]
 
-(** See interface file *)
 let rec expr_var_set Expr.{pattern; meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match pattern with
@@ -258,7 +257,6 @@ let stmt_rhs stmt =
 let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
 let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
-(** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
   match pattern with
   | FunApp (Operator Plus, [e1; e2]) ->
