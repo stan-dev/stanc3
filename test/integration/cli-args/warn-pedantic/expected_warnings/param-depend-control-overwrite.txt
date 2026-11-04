@@ -1,0 +1,5 @@
+/* $ stanc --warn-pedantic ../param-depend-control-overwrite.stan : [exit 0] */
+../param-depend-control-overwrite.stan:7:3: warning: The parameter a has 4 priors.
+../param-depend-control-overwrite.stan:15:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-overwrite.stan:22:5: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-overwrite.stan:31:5: warning: A control flow statement depends on parameter(s): a.

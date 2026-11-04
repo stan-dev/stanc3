@@ -1,0 +1,6 @@
+/* $ stanc --warn-pedantic ../param-depend-control-loop-order.stan : [exit 0] */
+../param-depend-control-loop-order.stan:7:3: warning: The parameter a has 3 priors.
+../param-depend-control-loop-order.stan:15:12: warning: The variable b may not have been assigned a value before its first use.
+../param-depend-control-loop-order.stan:20:5: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-loop-order.stan:24:5: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-loop-order.stan:28:5: warning: A control flow statement depends on parameter(s): a.
