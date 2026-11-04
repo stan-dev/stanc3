@@ -1,4 +1,4 @@
 /* $ stanc --warn-pedantic ../param-depend-control-indexed.stan : [exit 0] */
-../param-depend-control-indexed.stan:12:3: warning: The parameter a has 3 priors.
-../param-depend-control-indexed.stan:19:3: warning: A control flow statement depends on parameter(s): a.
-../param-depend-control-indexed.stan:23:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-indexed.stan:4:3: warning: The parameter a has 3 priors.
+../param-depend-control-indexed.stan:11:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-indexed.stan:15:3: warning: A control flow statement depends on parameter(s): a.
