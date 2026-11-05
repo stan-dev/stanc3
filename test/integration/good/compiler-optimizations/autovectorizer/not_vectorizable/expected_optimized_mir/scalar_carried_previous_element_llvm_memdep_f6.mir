@@ -1,0 +1,47 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../scalar_carried_previous_element_llvm_memdep_f6.stan : [exit 0] */
+input_vars {
+  int N; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1); }
+
+log_prob {
+  {
+    FnValidateSize__("a4", "N", N);
+    vector[N] a4;
+    FnValidateSize__("b4", "N", N);
+    vector[N] b4;
+    real prev4;
+    prev4 = promote(0, real, var);
+    for(n in 1:N) {
+      b4[n] = prev4;
+      prev4 = a4[n];
+    }
+    target += (sum(b4) + prev4);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a4", "N", N);
+    vector[N] a4;
+    FnValidateSize__("b4", "N", N);
+    vector[N] b4;
+    real prev4;
+    prev4 = promote(0, real, var);
+    for(n in 1:N) {
+      b4[n] = prev4;
+      prev4 = a4[n];
+    }
+    target += (sum(b4) + prev4);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

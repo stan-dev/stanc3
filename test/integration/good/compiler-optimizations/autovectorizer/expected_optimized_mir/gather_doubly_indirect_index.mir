@@ -1,0 +1,84 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../gather_doubly_indirect_index.stan : [exit 0] */
+input_vars {
+  int N;
+  int J;
+  array[int, N] site;
+  array[int, N] county;
+  vector[N] y; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  data int J;
+  FnReadData__(J, context__, "J");
+  (FnCheck(trans(Lower 1))(var_name J)(var J))__(1);
+  FnValidateSize__("site", "N", N);
+  data array[int, N] site;
+  FnReadData__(site, context__, "site");
+  (FnCheck(trans(Lower 1))(var_name site)(var site))__(1);
+  (FnCheck(trans(Upper N))(var_name site)(var site))__(N);
+  FnValidateSize__("county", "N", N);
+  data array[int, N] county;
+  FnReadData__(county, context__, "county");
+  (FnCheck(trans(Lower 1))(var_name county)(var county))__(1);
+  (FnCheck(trans(Upper J))(var_name county)(var county))__(J);
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  FnReadData__(y, context__, "y");
+  FnValidateSize__("alpha", "J", J); }
+
+log_prob {
+  vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lpdf(y[1:N], alpha[county[site[1:N]]], sigma);
+  } }
+
+rev_log_prob {
+  vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lpdf(y[1:N], alpha[county[site[1:N]]], sigma);
+  } }
+
+generate_quantities {
+  data vector[J]
+    alpha = (FnReadParam(constrain Identity)(dims(J))(mem_pattern AoS))__(
+    );
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var alpha))__();
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[J] alpha;
+  FnReadData__(alpha, context__, "alpha");
+  (FnWriteParam(unconstrain_opt(Identity))(var alpha))__();
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+
+output_vars {
+  parameters vector[J] alpha; //vector[J]
+  parameters real sigma; //real
+}

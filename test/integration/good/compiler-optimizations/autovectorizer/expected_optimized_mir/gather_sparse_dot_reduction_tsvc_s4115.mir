@@ -1,0 +1,60 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../gather_sparse_dot_reduction_tsvc_s4115.stan : [exit 0] */
+input_vars {
+  int N;
+  array[int, N] ip;
+  vector[N] b;
+  vector[N] a_data; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("ip", "N", N);
+  data array[int, N] ip;
+  FnReadData__(ip, context__, "ip");
+  (FnCheck(trans(Lower 1))(var_name ip)(var ip))__(1);
+  (FnCheck(trans(Upper N))(var_name ip)(var ip))__(N);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("a_data", "N", N);
+  data vector[N] a_data;
+  FnReadData__(a_data, context__, "a_data"); }
+
+log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
+  } }
+
+rev_log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
+  } }
+
+generate_quantities {
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real sigma;
+  FnReadData__(sigma, context__, "sigma");
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+output_vars {
+  parameters real sigma; //real
+}

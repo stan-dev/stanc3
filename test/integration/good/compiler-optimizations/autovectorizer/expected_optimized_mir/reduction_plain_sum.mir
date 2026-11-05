@@ -1,0 +1,43 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../reduction_plain_sum.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("a", "N", N);
+  data vector[N] a;
+  FnReadData__(a, context__, "a"); }
+
+log_prob {
+  {
+    real total3;
+    total3 = promote(0, real, var);
+    for(n in 1:N) {
+      total3 = (total3 + a[n]);
+    }
+    target += total3;
+  } }
+
+rev_log_prob {
+  {
+    real total3;
+    total3 = promote(0, real, var);
+    for(n in 1:N) {
+      total3 = (total3 + a[n]);
+    }
+    target += total3;
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

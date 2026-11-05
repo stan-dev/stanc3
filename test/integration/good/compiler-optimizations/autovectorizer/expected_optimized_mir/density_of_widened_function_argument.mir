@@ -1,0 +1,47 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../density_of_widened_function_argument.stan : [exit 0] */
+input_vars {
+  int M; }
+
+prepare_data {
+  data int M;
+  FnReadData__(M, context__, "M");
+  (FnCheck(trans(Lower 0))(var_name M)(var M))__(0);
+  FnValidateSize__("g", "M", M); }
+
+log_prob {
+  vector[M]
+    g = (FnReadParam(constrain Identity)(dims(M))(mem_pattern AoS))__(
+    );
+  {
+    target += std_normal_lupdf(exp(g[1:M]));
+  } }
+
+rev_log_prob {
+  vector[M]
+    g = (FnReadParam(constrain Identity)(dims(M))(mem_pattern AoS))__(
+    );
+  {
+    target += std_normal_lupdf(exp(g[1:M]));
+  } }
+
+generate_quantities {
+  data vector[M]
+    g = (FnReadParam(constrain Identity)(dims(M))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var g))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[M] g;
+  FnReadData__(g, context__, "g");
+  (FnWriteParam(unconstrain_opt(Identity))(var g))__(); }
+output_vars {
+  parameters vector[M] g; //vector[M]
+}

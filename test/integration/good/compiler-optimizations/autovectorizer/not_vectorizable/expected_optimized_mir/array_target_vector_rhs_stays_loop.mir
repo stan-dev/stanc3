@@ -1,0 +1,57 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../array_target_vector_rhs_stays_loop.stan : [exit 0] */
+input_vars {
+  int N; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("logit_p", "N", N); }
+
+log_prob {
+  vector[N]
+    logit_p = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("p", "N", N);
+    array[real, N] p;
+    for(n in 1:N) {
+      p[n] = inv_logit(logit_p[n]);
+    }
+    target += normal_lpdf(p, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  vector[N]
+    logit_p = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("p", "N", N);
+    array[real, N] p;
+    for(n in 1:N) {
+      p[n] = inv_logit(logit_p[n]);
+    }
+    target += normal_lpdf(p, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data vector[N]
+    logit_p = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var logit_p))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[N] logit_p;
+  FnReadData__(logit_p, context__, "logit_p");
+  (FnWriteParam(unconstrain_opt(Identity))(var logit_p))__(); }
+output_vars {
+  parameters vector[N] logit_p; //vector[N]
+}

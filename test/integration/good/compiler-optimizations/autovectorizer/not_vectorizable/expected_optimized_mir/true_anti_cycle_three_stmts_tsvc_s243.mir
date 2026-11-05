@@ -1,0 +1,83 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../true_anti_cycle_three_stmts_tsvc_s243.stan : [exit 0] */
+
+input_vars {
+  int N;
+  vector[(N + 1)] a0;
+  vector[N] b0;
+  vector[N] d0;
+  vector[N] c;
+  vector[N] e; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int a0_1dim__ = (N + 1);
+  FnValidateSize__("a0", "N + 1", a0_1dim__);
+  data vector[a0_1dim__] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  FnReadData__(b0, context__, "b0");
+  FnValidateSize__("d0", "N", N);
+  data vector[N] d0;
+  FnReadData__(d0, context__, "d0");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c");
+  FnValidateSize__("e", "N", N);
+  data vector[N] e;
+  FnReadData__(e, context__, "e"); }
+
+log_prob {
+  {
+    data int a3_1dim__ = (N + 1);
+    FnValidateSize__("a3", "N + 1", a3_1dim__);
+    vector[a3_1dim__] a3;
+    a3 = a0;
+    FnValidateSize__("b3", "N", N);
+    vector[N] b3;
+    b3 = b0;
+    FnValidateSize__("d3", "N", N);
+    vector[N] d3;
+    d3 = d0;
+    for(n in 1:N) {
+      a3[n] = (b3[n] + (c[n] .* d3[n]));
+      b3[n] = (a3[n] + (d3[n] .* e[n]));
+      a3[n] = (b3[n] + (a3[(n + 1)] .* d3[n]));
+    }
+    target += sum(a3);
+    target += sum(b3);
+  } }
+
+rev_log_prob {
+  {
+    data int a3_1dim__ = (N + 1);
+    FnValidateSize__("a3", "N + 1", a3_1dim__);
+    vector[a3_1dim__] a3;
+    a3 = a0;
+    FnValidateSize__("b3", "N", N);
+    vector[N] b3;
+    b3 = b0;
+    FnValidateSize__("d3", "N", N);
+    vector[N] d3;
+    d3 = d0;
+    for(n in 1:N) {
+      a3[n] = (b3[n] + (c[n] .* d3[n]));
+      b3[n] = (a3[n] + (d3[n] .* e[n]));
+      a3[n] = (b3[n] + (a3[(n + 1)] .* d3[n]));
+    }
+    target += sum(a3);
+    target += sum(b3);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

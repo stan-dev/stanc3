@@ -1,0 +1,52 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../reduction_over_recurrence_output.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] w; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  FnValidateSize__("w", "N", N);
+  data vector[N] w;
+  FnReadData__(w, context__, "w");
+  (FnCheck(trans(Lower 0))(var_name w)(var w))__(0); }
+
+log_prob {
+  {
+    FnValidateSize__("v8", "N", N);
+    vector[N] v8;
+    v8 = w;
+    real s8;
+    s8 = promote(0, real, var);
+    for(n in 2:N) {
+      v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + v8[n]);
+    }
+    target += (sum(v8) + s8);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("v8", "N", N);
+    vector[N] v8;
+    v8 = w;
+    real s8;
+    s8 = promote(0, real, var);
+    for(n in 2:N) {
+      v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + v8[n]);
+    }
+    target += (sum(v8) + s8);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

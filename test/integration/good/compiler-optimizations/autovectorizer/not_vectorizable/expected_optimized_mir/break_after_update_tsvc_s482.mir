@@ -1,0 +1,59 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../break_after_update_tsvc_s482.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b0;
+  vector[N] c; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  FnReadData__(b0, context__, "b0");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c"); }
+
+log_prob {
+  {
+    FnValidateSize__("a6", "N", N);
+    vector[N] a6;
+    a6 = a0;
+    for(n in 1:N) {
+      a6[n] = (a6[n] + (b0[n] .* c[n]));
+      if((c[n] > b0[n])) {
+        break;
+      }
+    }
+    target += sum(a6);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a6", "N", N);
+    vector[N] a6;
+    a6 = a0;
+    for(n in 1:N) {
+      a6[n] = (a6[n] + (b0[n] .* c[n]));
+      if((c[n] > b0[n])) {
+        break;
+      }
+    }
+    target += sum(a6);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

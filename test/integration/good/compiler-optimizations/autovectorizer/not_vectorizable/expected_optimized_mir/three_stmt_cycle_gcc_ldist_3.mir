@@ -1,0 +1,62 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../three_stmt_cycle_gcc_ldist_3.stan : [exit 0] */
+input_vars {
+  int N;
+  int k; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  data int k;
+  FnReadData__(k, context__, "k"); }
+
+log_prob {
+  {
+    data int a3_1dim__ = (N + 1);
+    FnValidateSize__("a3", "N + 1", a3_1dim__);
+    vector[a3_1dim__] a3;
+    FnValidateSize__("b3", "N", N);
+    vector[N] b3;
+    FnValidateSize__("cc3", "N", N);
+    vector[N] cc3;
+    FnValidateSize__("d3", "N", N);
+    vector[N] d3;
+    for(n in 3:N) {
+      a3[n] = promote((k * n), real, var);
+      b3[n] = (a3[(n - 2)] + promote(k, real, data));
+      cc3[n] = (b3[n] + a3[(n + 1)]);
+      d3[n] = ((cc3[(n - 1)] + promote(k, real, data)) + promote(n, real,
+                                                                 data));
+    }
+    target += (((sum(a3) + sum(b3)) + sum(cc3)) + sum(d3));
+  } }
+
+rev_log_prob {
+  {
+    data int a3_1dim__ = (N + 1);
+    FnValidateSize__("a3", "N + 1", a3_1dim__);
+    vector[a3_1dim__] a3;
+    FnValidateSize__("b3", "N", N);
+    vector[N] b3;
+    FnValidateSize__("cc3", "N", N);
+    vector[N] cc3;
+    FnValidateSize__("d3", "N", N);
+    vector[N] d3;
+    for(n in 3:N) {
+      a3[n] = promote((k * n), real, var);
+      b3[n] = (a3[(n - 2)] + promote(k, real, data));
+      cc3[n] = (b3[n] + a3[(n + 1)]);
+      d3[n] = ((cc3[(n - 1)] + promote(k, real, data)) + promote(n, real,
+                                                                 data));
+    }
+    target += (((sum(a3) + sum(b3)) + sum(cc3)) + sum(d3));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
