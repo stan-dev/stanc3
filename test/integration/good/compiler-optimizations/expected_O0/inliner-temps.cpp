@@ -390,6 +390,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"a\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(d) + ",\"cols\":" + std::to_string(d) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

@@ -352,6 +352,10 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"no_init\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"init_from_param\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dependent_no_init\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"used_on_lhs\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"no_init_if\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"for_loop_var\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

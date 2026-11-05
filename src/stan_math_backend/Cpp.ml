@@ -290,6 +290,8 @@ module Statement_syntax = struct
 
   (** Shorthand for assignment *)
   let ( := ) a b = Expression (Assign (Var a, b))
+
+  let ( <<: ) a b = Expression (StreamInsertion (a, [b]))
 end
 
 (**/**)

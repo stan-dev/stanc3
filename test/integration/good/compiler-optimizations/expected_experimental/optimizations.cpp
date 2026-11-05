@@ -1538,6 +1538,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

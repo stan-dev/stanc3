@@ -567,6 +567,10 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

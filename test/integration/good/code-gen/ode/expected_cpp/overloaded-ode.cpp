@@ -934,6 +934,18 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    stan::json::write_key(json_stream__, "t0");
+    stan::json::write_json_value(json_stream__, t0);
+    *(json_stream__) << ",\n";
+    stan::json::write_key(json_stream__, "kappa");
+    stan::json::write_json_value(json_stream__, kappa);
+    *(json_stream__) << ",\n";
+    stan::json::write_key(json_stream__, "unused");
+    stan::json::write_json_value(json_stream__, unused);
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

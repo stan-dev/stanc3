@@ -337,6 +337,10 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
