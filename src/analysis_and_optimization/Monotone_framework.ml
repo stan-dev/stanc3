@@ -78,16 +78,14 @@ let top_free_vars_stmt
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Profile _ | Block _ | SList _ -> Set.Poly.empty
 
-(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt ?(flatten_loops = false)
-    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+(** The inverse flowgraph of a statement map. A caller that already has the
+    statement map passes the map here, so the flowgraph uses the same labels. *)
+let inverse_flowgraph_of_statement_map ?(flatten_loops = false)
+    ?(blocks_after_body = true)
+    (flowgraph_to_mir :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t) :
     (module FLOWGRAPH with type labels = int)
     * Stmt.Located.Non_recursive.t LabelMap.t =
-  let flowgraph_to_mir =
-    Dataflow_utils.build_statement_map
-      (fun Stmt.{pattern; _} -> pattern)
-      (fun Stmt.{meta; _} -> meta)
-      stmt in
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
       flowgraph_to_mir in
@@ -101,6 +99,14 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
   , LabelMap.map
       ~f:(fun (pattern, meta) -> Stmt.Located.Non_recursive.{pattern; meta})
       flowgraph_to_mir )
+
+(** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
+let inverse_flowgraph_of_stmt ?(flatten_loops = false)
+    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
+    (module FLOWGRAPH with type labels = int)
+    * Stmt.Located.Non_recursive.t LabelMap.t =
+  stmt |> Dataflow_utils.build_statement_map
+  |> inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
 
 (** Reverse flowgraphs to be used for reverse analyses. Observe that this
     respects the invariants listed for a FLOWGRAPH *)
@@ -154,6 +160,12 @@ let forward_flowgraph_of_stmt ?(flatten_loops = false)
   let inv_flowgraph =
     inverse_flowgraph_of_stmt ~flatten_loops ~blocks_after_body stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
+
+(** The forward flowgraph of a statement map, with the labels of that map. *)
+let forward_flowgraph_of_statement_map statement_map =
+  let inv_flowgraph, flowgraph_to_mir =
+    inverse_flowgraph_of_statement_map statement_map in
+  (reverse inv_flowgraph, flowgraph_to_mir)
 
 (** The lattice of sets of some values, with the inclusion order, set union and
     the empty set *)
@@ -272,17 +284,6 @@ let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
       type vals = T.vals
 
       let initial = Set.Poly.empty
-    end)
-
-(** The specific powerset lattice we use for reaching definitions analysis *)
-let reaching_definitions_lattice (type v l)
-    (module Variables : INITIALTYPE with type vals = v)
-    (module Labels : TYPE with type vals = l) =
-  powerset_lattice
-    (module struct
-      type vals = Variables.vals * Labels.vals option
-
-      let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end)
 
 (** Lattice for finding the smallest set that satisfies some criterion *)
@@ -442,26 +443,40 @@ let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
 (* TODO: from here *)
 
-(** Calculate the set of variables that a statement can assign to *)
+(** True if an expression in the statement calls a function that adds to
+    [target], for example [x = foo_lp(y)]. *)
+let is_target_incremented_in_exprs (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+  Stmt.Pattern.fold
+    (fun is_incremented_earlier expr ->
+      is_incremented_earlier
+      || expr_any
+           (fun (subexpr : Expr.Typed.t) ->
+             match subexpr.pattern with
+             | FunApp (kind, _) -> is_target_increment kind
+             | _ -> false)
+           expr)
+    Fun.const false s
+
+(** Variables the statement assigns. An update to [target] is an assignment. *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
-  match s with
-  | Assignment (lhs, _, _) ->
-      Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
-  | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
-  | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
-  | NRFunApp
-      ( ( UserDefined (_, (FnTarget | FnJacobian))
-        | StanLib (_, (FnTarget | FnJacobian)) )
-      , _ ) ->
-      Set.Poly.singleton "target"
-  | For {loopvar= x; _} -> Set.Poly.singleton x
-  | Decl {decl_id= _; _}
-   |NRFunApp (_, _)
-   |Break | Continue | Return _ | Skip
-   |IfElse (_, _, _)
-   |While (_, _)
-   |Profile _ | Block _ | SList _ ->
-      Set.Poly.empty
+  let assigned =
+    match s with
+    | Assignment (lhs, _, _) ->
+        Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
+    | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
+    | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
+    | NRFunApp (kind, _) when is_target_increment kind ->
+        Set.Poly.singleton "target"
+    | For {loopvar= x; _} -> Set.Poly.singleton x
+    | Decl {decl_id= _; _}
+     |NRFunApp (_, _)
+     |Break | Continue | Return _ | Skip
+     |IfElse (_, _, _)
+     |While (_, _)
+     |Profile _ | Block _ | SList _ ->
+        Set.Poly.empty in
+  if is_target_incremented_in_exprs s then Set.Poly.add "target" assigned
+  else assigned
 
 (** Calculate the set of variables that a statement can declare *)
 let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
@@ -469,46 +484,30 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
-(** Calculate the set of variables that a statement can assign to or declare *)
-let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+(** Variables the statement assigns or declares. A declaration without a value
+    is a reaching definition, but the declaration does not initialize the
+    variable. *)
+let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** The transfer function for a reaching definitions analysis *)
-let reaching_definitions_transfer
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
+(** Transfer function for reaching definitions. The definitions that leave
+    statement [l] are [gen l], the definitions that [l] adds, together with the
+    definitions that reach [l] and that [is_killed ~killer:l] rejects.
+    [is_killed] must be true only if [l] overwrites, on every path to [l], every
+    value that the definition can leave. *)
+let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
+    ~(is_killed : killer:int -> d -> bool) =
   (module struct
     type labels = int
-    type properties = (string * labels option) Set.Poly.t
+    type properties = d Set.Poly.t
 
-    let transfer_function l p =
-      let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let gen =
-        Set.Poly.map
-          ~f:(fun x -> (x, Some l))
-          (assigned_or_declared_vars_stmt mir_node) in
-      let kill =
-        match mir_node with
-        | Decl {decl_id= x; _}
-         |Assignment ((LVariable x, []), _, _)
-         |For {loopvar= x; _} ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ | JacobianPE _ ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp
-            ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian)) )
-            , _ ) ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp (_, _)
-         |Break | Continue | Return _ | Skip
-         |IfElse (_, _, _)
-         |While (_, _)
-         |Profile _ | Block _ | SList _ | Assignment _ ->
-            Set.Poly.empty in
-      transfer_gen_kill p gen kill
+    let transfer_function (l : labels) (p : properties) =
+      Set.Poly.union (gen l)
+        (Set.Poly.filter p ~f:(fun definition ->
+             not (is_killed ~killer:l definition)))
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string * int option) Set.Poly.t)
+     and type properties = d Set.Poly.t)
 
 (** The transfer function for an initialized variables analysis *)
 let initialized_vars_transfer
@@ -661,7 +660,7 @@ let killed_expressions_stmt (p : ExprSet.t)
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here, but it
          would require us to duplicate some code. *)
-      let assigned_vars = assigned_or_declared_vars_stmt s in
+      let assigned_vars = assigned_or_declared_vars s in
       not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)))
 
 (** Calculate the set of subexpressions that needs to be computed at each node
@@ -919,27 +918,23 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-let reaching_definitions_mfp (mir : Program.Typed.t)
+(** Computes the definitions that reach each statement of the flowgraph, for any
+    definition type. [initial] holds the definitions from outside the analyzed
+    code, which reach the entry; [gen] and [is_killed] are the arguments of
+    {!reaching_definitions_transfer}. *)
+let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
+    ~(gen : int -> d Set.Poly.t) ~(is_killed : killer:int -> d -> bool)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
-  let variables =
-    (module struct
-      type vals = string
+      with type labels = int) =
+  let (module Lattice) =
+    powerset_lattice
+      (module struct
+        type vals = d
 
-      let initial =
-        Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ]
-    end : INITIALTYPE
-      with type vals = string) in
-  let labels =
-    (module struct
-      type vals = int
-    end : TYPE
-      with type vals = int) in
-  let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+        let initial = initial
+      end : INITIALTYPE
+        with type vals = d) in
+  let (module Transfer) = reaching_definitions_transfer ~gen ~is_killed in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in
