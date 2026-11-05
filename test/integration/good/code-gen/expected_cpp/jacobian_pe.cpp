@@ -538,7 +538,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_raw_recovered\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

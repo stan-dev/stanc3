@@ -277,7 +277,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

@@ -671,7 +671,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(R) + "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(R) + ",\"cols\":" + std::to_string(T) + "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(R) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(R) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "sum_y");
     stan::json::write_json_value(json_stream__, sum_y);

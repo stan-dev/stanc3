@@ -397,7 +397,7 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_raw_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"beta_recovered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_recovered_1dim__) + "},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

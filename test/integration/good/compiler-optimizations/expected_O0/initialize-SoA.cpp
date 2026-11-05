@@ -376,7 +376,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"arr_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

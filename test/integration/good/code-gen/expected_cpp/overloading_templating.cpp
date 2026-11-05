@@ -766,7 +766,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "a");
     stan::json::write_json_value(json_stream__, a);

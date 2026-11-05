@@ -284,7 +284,7 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
          (intro @ Stmts.rethrow_located (lower_statements generate_quantities))
        ~cv_qualifiers:[Const] ())
 
-let gen_tdata_json {Program.prepare_data; input_vars; _} =
+let write_tdata_json {Program.prepare_data; input_vars; _} =
   let data_ids = String.Set.of_list (List.map ~f:fst3 input_vars) in
   let tdata_ids =
     List.filter_map prepare_data ~f:(fun s ->
@@ -311,7 +311,7 @@ let gen_tdata_json {Program.prepare_data; input_vars; _} =
     @ [stream <<: literal_string "}"] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void
-       ~name:"get_transformed_data_json"
+       ~name:"write_transformed_data_json"
        ~args:[(Pointer Types.ostream, stream_name)]
        ~body:(write_object tdata_ids) ~cv_qualifiers:[Const] ())
 
@@ -809,7 +809,7 @@ let lower_model_public p =
     ; (* Begin metadata methods *) gen_get_param_names p
     ; (* Post-data metadata methods *) gen_get_dims p
     ; gen_constrained_param_names p; gen_unconstrained_param_names p
-    ; gen_constrained_types p; gen_unconstrained_types p; gen_tdata_json p ]
+    ; gen_constrained_types p; gen_unconstrained_types p; write_tdata_json p ]
   (* Boilerplate *)
   @ gen_overloads p
 

@@ -496,7 +496,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "sum_y");
     stan::json::write_json_value(json_stream__, sum_y);

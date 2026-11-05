@@ -564,7 +564,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

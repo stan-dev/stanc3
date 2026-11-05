@@ -417,7 +417,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

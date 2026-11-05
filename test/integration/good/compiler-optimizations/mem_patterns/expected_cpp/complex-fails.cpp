@@ -316,7 +316,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"A_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"A_complex_tp\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

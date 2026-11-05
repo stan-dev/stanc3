@@ -392,7 +392,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "}]}]},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

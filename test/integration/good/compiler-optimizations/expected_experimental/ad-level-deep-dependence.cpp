@@ -546,7 +546,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

@@ -401,7 +401,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"aos_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"soa_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

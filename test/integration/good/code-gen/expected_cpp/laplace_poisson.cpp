@@ -617,7 +617,7 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(P) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigmaz\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log_lik_sum\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "tolerance");
     stan::json::write_json_value(json_stream__, tolerance);

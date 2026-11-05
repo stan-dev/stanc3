@@ -444,7 +444,7 @@ class operators_model final : public model_base_crtp<operators_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"A\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"drv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"dv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

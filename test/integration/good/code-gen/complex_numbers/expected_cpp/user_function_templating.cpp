@@ -581,7 +581,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "N");
     stan::json::write_json_value(json_stream__, N);

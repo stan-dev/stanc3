@@ -734,7 +734,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "n");
     stan::json::write_json_value(json_stream__, n);

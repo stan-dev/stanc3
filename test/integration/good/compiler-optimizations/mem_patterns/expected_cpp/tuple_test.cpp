@@ -457,7 +457,7 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"xx\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(2) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(3) + "}]},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

@@ -270,7 +270,7 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"int\"}]},\"block\":\"generated_quantities\"},{\"name\":\"r\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(20) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

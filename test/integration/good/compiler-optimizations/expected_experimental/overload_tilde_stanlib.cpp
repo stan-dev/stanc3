@@ -367,7 +367,7 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

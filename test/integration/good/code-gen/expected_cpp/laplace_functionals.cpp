@@ -939,7 +939,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"mean_chol\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(n_obs) + ",\"cols\":" + std::to_string(n_obs) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"mean_chol_tol\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(n_obs) + ",\"cols\":" + std::to_string(n_obs) + "}]},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "log_ye");
     stan::json::write_json_value(json_stream__, log_ye);

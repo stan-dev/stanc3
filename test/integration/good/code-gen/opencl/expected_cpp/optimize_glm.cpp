@@ -2210,7 +2210,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "k_td");
     stan::json::write_json_value(json_stream__, k_td);

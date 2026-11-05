@@ -324,7 +324,7 @@ class promotion_model final : public model_base_crtp<promotion_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"zs\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

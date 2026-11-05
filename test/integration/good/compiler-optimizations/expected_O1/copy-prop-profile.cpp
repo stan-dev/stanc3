@@ -365,7 +365,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

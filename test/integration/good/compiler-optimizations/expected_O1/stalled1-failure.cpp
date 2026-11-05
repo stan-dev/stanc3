@@ -596,7 +596,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "K");
     stan::json::write_json_value(json_stream__, K);

@@ -1093,7 +1093,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(max_age) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     stan::json::write_key(json_stream__, "n_occ_minus_1");
     stan::json::write_json_value(json_stream__, n_occ_minus_1);

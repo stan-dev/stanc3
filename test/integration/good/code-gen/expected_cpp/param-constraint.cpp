@@ -367,7 +367,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(nt) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((2 * (2 - 1)) /2)) + "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(NS) + "},\"block\":\"parameters\"}]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }

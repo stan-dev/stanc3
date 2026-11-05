@@ -219,7 +219,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
-  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+  inline void write_transformed_data_json(std::ostream* json_stream__) const {
     *(json_stream__) << "{";
     *(json_stream__) << "}";
   }
