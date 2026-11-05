@@ -2233,6 +2233,20 @@ let () =
   add_unqualified
     ("sort_indices_desc", ReturnType (UArray UInt), [URowVector], AoS);
   List.iter
+    ~f:(fun t1 ->
+      List.iter
+        ~f:(fun t2 ->
+          List.iter
+            ~f:(fun t3 ->
+              add_unqualified
+                ( "solve_sylvester"
+                , ReturnType UComplexMatrix
+                , [t1; t2; t3]
+                , AoS ))
+            [UnsizedType.UMatrix; UComplexMatrix])
+        [UnsizedType.UMatrix; UComplexMatrix])
+    [UnsizedType.UMatrix; UComplexMatrix];
+  List.iter
     ~f:(fun i ->
       let t = bare_array_type (UMatrix, i) in
       add_unqualified ("stochastic_column_jacobian", ReturnType t, [t], SoA);

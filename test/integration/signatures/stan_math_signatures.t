@@ -19824,6 +19824,14 @@ Display all Stan math signatures exposed in the language
   softmax(row_vector) => row_vector
   softmax(array[] vector) => array[] vector
   softmax(array[] row_vector) => array[] row_vector
+  solve_sylvester(matrix, matrix, matrix) => complex_matrix
+  solve_sylvester(matrix, matrix, complex_matrix) => complex_matrix
+  solve_sylvester(matrix, complex_matrix, matrix) => complex_matrix
+  solve_sylvester(matrix, complex_matrix, complex_matrix) => complex_matrix
+  solve_sylvester(complex_matrix, matrix, matrix) => complex_matrix
+  solve_sylvester(complex_matrix, matrix, complex_matrix) => complex_matrix
+  solve_sylvester(complex_matrix, complex_matrix, matrix) => complex_matrix
+  solve_sylvester(complex_matrix, complex_matrix, complex_matrix) => complex_matrix
   sort_asc(vector) => vector
   sort_asc(row_vector) => row_vector
   sort_asc(array[] int) => array[] int
