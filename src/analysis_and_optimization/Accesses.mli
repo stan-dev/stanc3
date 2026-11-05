@@ -82,10 +82,6 @@ val of_statement :
     - An addition to the log density gives an increment of [target]. [target()]
       gives a read of [target]. *)
 
-val filter_var : string -> t -> t
-(** Keeps the accesses to the named variable, in their original order. In the
-    running example, ["v"] gives [R v[n+1], R v[k]]. *)
-
 val used_vars : t -> string Set.Poly.t
 (** Returns the names of the variables that the accesses use, which means read
     or increment. In the running example, the result is [{"n"; "v"; "k"}]. *)

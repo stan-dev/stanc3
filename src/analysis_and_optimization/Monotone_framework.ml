@@ -105,8 +105,8 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
     ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
     * Stmt.Located.Non_recursive.t LabelMap.t =
-  inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
-    (Dataflow_utils.build_statement_map stmt)
+  stmt |> Dataflow_utils.build_statement_map
+  |> inverse_flowgraph_of_statement_map ~flatten_loops ~blocks_after_body
 
 (** Reverse flowgraphs to be used for reverse analyses. Observe that this
     respects the invariants listed for a FLOWGRAPH *)

@@ -62,10 +62,12 @@ let pp_labels ppf (labels : int Set.Poly.t) =
 (** The loop variable of the [for] statement at a label, or [while] for a
     [while] statement. The printers take this function as [loop_name]. *)
 let loop_name
-    (info : Analysis_and_optimization.Dependence_analysis.dependence_info)
-    (loop : int) : string =
+    (statements :
+      Analysis_and_optimization.Dependence_analysis.stmt_info
+      Analysis_and_optimization.Dataflow_types.LabelMap.t) (loop : int) : string
+    =
   match
-    (Analysis_and_optimization.Dataflow_types.LabelMap.find loop info.statements)
+    (Analysis_and_optimization.Dataflow_types.LabelMap.find loop statements)
       .pattern
   with
   | For {loopvar; _} -> loopvar

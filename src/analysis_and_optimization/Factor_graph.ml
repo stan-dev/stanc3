@@ -52,11 +52,12 @@ let factor_rhs (term : factor) : string Set.Poly.t =
   | Reject -> Set.Poly.empty
   | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:var_name_of_expr_exn)
 
-let factor_var_dependencies info blockers (label, factor) =
+let factor_var_dependencies (statements : stmt_info LabelMap.t) blockers
+    (label, factor) =
   let term_read_names = factor_rhs factor in
   let dependency_labels =
-    var_dependence_ids info ~blockers term_read_names label in
-  let dependency_read_names = used_vars_at info dependency_labels in
+    var_dependence_ids statements ~blockers term_read_names label in
+  let dependency_read_names = used_vars_at statements dependency_labels in
   (* The dependency traversal can leave out the statement where the traversal
      starts. The union adds the names that the factor itself reads, such as [mu]
      in [normal_lpdf(mu | 0, 1)]. *)
@@ -104,8 +105,8 @@ let remove_touching vars fg =
 
 (** Build a factor graph from prog.log_prob using dependency analysis *)
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
-  let info = build_log_prob_dependence_info prog in
-  let factors = extract_factors info.statements root_statement_id in
+  let statements = build_log_prob_dependence_info prog in
+  let factors = extract_factors statements root_statement_id in
   let data_vars = data_set prog in
   let vars =
     Set.Poly.union data_vars
@@ -114,8 +115,8 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
     List.map factors ~f:(fun (l, fac) ->
         ( l
         , fac
-        , Set.Poly.inter vars (factor_var_dependencies info vars (l, fac)) ))
-  in
+        , Set.Poly.inter vars (factor_var_dependencies statements vars (l, fac))
+        )) in
   let fg = build_adjacency_maps factor_list in
   if exclude_data_facs then remove_touching data_vars fg else fg
 

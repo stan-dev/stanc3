@@ -107,18 +107,15 @@ let of_statement ~(classify : Expr.Typed.t -> Affine_subscript.t)
    |SList _ | Break | Continue | Skip ->
       of_children ()
 
-let filter_var (var : string) (accesses : t) : t =
-  List.filter accesses ~f:(fun access -> String.equal access.var var)
-
 let used_vars (accesses : t) : string Set.Poly.t =
-  Set.Poly.of_list
-    (List.filter_map accesses ~f:(fun {var; kind; _} ->
-         match kind with Read | Increment -> Some var | Write -> None))
+  let used_var {var; kind; _} =
+    match kind with Read | Increment -> Some var | Write -> None in
+  accesses |> List.filter_map ~f:used_var |> Set.Poly.of_list
 
 let defined_vars (accesses : t) : string Set.Poly.t =
-  Set.Poly.of_list
-    (List.filter_map accesses ~f:(fun {var; kind; _} ->
-         match kind with Write | Increment -> Some var | Read -> None))
+  let defined_var {var; kind; _} =
+    match kind with Write | Increment -> Some var | Read -> None in
+  accesses |> List.filter_map ~f:defined_var |> Set.Poly.of_list
 
 (** The printers of the running example notation. *)
 module Printing = struct

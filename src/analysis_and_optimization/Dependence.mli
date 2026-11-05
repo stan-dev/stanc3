@@ -49,10 +49,11 @@ open Dataflow_types
      "Optimizing Compilers for Modern Architectures"} (2001, chapters 2 and 3),
     describe the same tests, and LLVM's
     {{:https://github.com/llvm/llvm-project/blob/main/llvm/lib/Analysis/DependenceAnalysis.cpp}
-     [DependenceAnalysis]} implements them. LLVM calls the source [Src] and the
-    sink [Dst]. A vector with no known distance is what LLVM calls a confused
-    dependence, and GCC [chrec_dont_know]. The [is_loop_independent_possible]
-    flag has the role of the [PossiblyLoopIndependent] flag of LLVM's
+     [DependenceAnalysis]} implements them. LLVM calls the writer [Src] and the
+    reader [Dst]. A vector with no known distance is what LLVM calls a confused
+    dependence, and GCC [chrec_dont_know]. The [is_writer_first] flag of
+    {!is_lexicographically_positive} has the role of the
+    [PossiblyLoopIndependent] flag of LLVM's
     {{:https://github.com/llvm/llvm-project/blob/main/llvm/include/llvm/Analysis/DependenceAnalysis.h}
      [FullDependence]}. *)
 
@@ -77,19 +78,28 @@ type t =
       *)
 
 val test_dependence :
-  common_loop_ids:label list -> Accesses.access -> Accesses.access -> t
-(** Whether the first access (the source) and the second access (the sink) of
-    one variable can select the same element, and if so, at which distance in
-    each loop around both. [common_loop_ids] holds the labels of those loops,
-    outermost first. *)
+     label list
+  -> Affine_subscript.t Accesses.step list
+  -> Affine_subscript.t Accesses.step list
+  -> t
+(** Whether the first path (the write) and the second path (the read) of one
+    variable can select the same element, and if so, at which distance in each
+    loop around both. The label list holds the labels of those loops, outermost
+    first. *)
 
 val is_lexicographically_positive :
-  is_loop_independent_possible:bool -> t -> bool
-(** Whether the source can run before the sink, given a result of
-    {!test_dependence}. The first distance that is not zero decides, outermost
-    loop first: positive or unknown gives true, and negative gives false. When
-    every distance is zero, the result is [is_loop_independent_possible], which
-    is true when the source statement comes before the sink statement. *)
+     label list
+  -> bool
+  -> Affine_subscript.t Accesses.step list
+  -> Affine_subscript.t Accesses.step list
+  -> bool
+(** Whether the write to the first path can run before the read of the second
+    path and select the same element. The arguments are those of
+    {!test_dependence}, after the flag that says whether the writer comes before
+    the reader in the program. The first distance that is not zero decides,
+    outermost loop first: positive or unknown gives true, and negative gives
+    false. When every distance is zero, the result is the flag. [Independent]
+    gives false. *)
 
 val pp : loop_name:(label -> string) -> common_loop_ids:label list -> t Fmt.t
 (** Prints [independent], [unknown] when no distance is known, or [distances]

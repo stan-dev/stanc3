@@ -41,25 +41,26 @@ type t = Independent | Distance_vector of int option list
     element together. *)
 let set_distance ~(loop_ids : label list) (distances : int option list)
     ~(loop_id : label) ~(distance : int) : int option list option =
-  Option.all
-    (List.map2 loop_ids distances ~f:(fun common_loop_id known_distance ->
-         match known_distance with
-         | _ when common_loop_id <> loop_id -> Some known_distance
-         | Some known when known <> distance -> None
-         | Some _ | None -> Some (Some distance)))
+  let updated_distance common_loop_id known_distance =
+    match known_distance with
+    | _ when common_loop_id <> loop_id -> Some known_distance
+    | Some known when known <> distance -> None
+    | Some _ | None -> Some (Some distance) in
+  Option.all (List.map2 loop_ids distances ~f:updated_distance)
 
-let test_dependence ~(common_loop_ids : label list) (source : access)
-    (sink : access) : t =
+let test_dependence (common_loop_ids : label list)
+    (write_path : Affine_subscript.t step list)
+    (read_path : Affine_subscript.t step list) : t =
   let all_unknown =
     Distance_vector (List.map common_loop_ids ~f:(fun _ -> None)) in
-  if List.compare_lengths source.path sink.path <> 0 then all_unknown
+  if List.compare_lengths write_path read_path <> 0 then all_unknown
   else
-    List.fold_left2 source.path sink.path ~init:all_unknown
-      ~f:(fun dependence source_step sink_step ->
+    List.fold_left2 write_path read_path ~init:all_unknown
+      ~f:(fun dependence write_step read_step ->
         match dependence with
         | Independent -> Independent
         | Distance_vector distances -> (
-            match compare_steps source_step sink_step with
+            match compare_steps write_step read_step with
             | Never_same -> Independent
             | Always_same | Cannot_tell -> dependence
             | Same_at_distance {loop_id; distance} -> (
@@ -70,9 +71,10 @@ let test_dependence ~(common_loop_ids : label list) (source : access)
                 | Some distances -> Distance_vector distances
                 | None -> Independent)))
 
-let is_lexicographically_positive ~(is_loop_independent_possible : bool)
-    (dependence : t) : bool =
-  match dependence with
+let is_lexicographically_positive (common_loop_ids : label list)
+    (is_writer_first : bool) (write_path : Affine_subscript.t step list)
+    (read_path : Affine_subscript.t step list) : bool =
+  match test_dependence common_loop_ids write_path read_path with
   | Independent -> false
   | Distance_vector distances -> (
       (* The first distance that is not zero decides. An unknown distance allows
@@ -82,7 +84,7 @@ let is_lexicographically_positive ~(is_loop_independent_possible : bool)
           | Some 0 -> None
           | distance -> Some distance)
       with
-      | None -> is_loop_independent_possible
+      | None -> is_writer_first
       | Some (Some distance) -> distance > 0
       | Some None -> true)
 

@@ -59,12 +59,11 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   let data_vars = data_set ~exclude_transformed:true mir in
   let globals =
     Set.Poly.union function_names (Set.Poly.of_list flag_variables) in
+  let is_parameter (_, _, Program.{out_block; _}) = out_block = Parameters in
   let parameters =
-    Set.Poly.of_list
-      (List.map ~f:fst3
-         (List.filter
-            ~f:(fun (_, _, Program.{out_block; _}) -> out_block = Parameters)
-            mir.output_vars)) in
+    mir.output_vars
+    |> List.filter ~f:is_parameter
+    |> List.map ~f:fst3 |> Set.Poly.of_list in
   let globals_data = Set.Poly.union globals data_vars in
   let check_against_data b =
     stmt_uninitialized_variables globals_data

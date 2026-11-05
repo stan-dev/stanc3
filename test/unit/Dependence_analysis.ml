@@ -24,16 +24,17 @@ open Analysis_and_optimization.Dataflow_types
    dependency is a direct data or control dependency. A transitive dependency is
    a dependency of a dependency.
 
-   A definition is a write, recorded as the access of the write and the label of
-   the statement that writes the variable. A definition reaches a read when the
-   program can run the write before the read, and no write between them replaces
-   the same element. These definitions are the reaching definitions of the read.
-   Each statement records the reaching definitions at entry, before the
-   statement runs. A later write kills an earlier write when the later write
-   always replaces the element of the earlier write. The later write is the
-   killer. A killed write no longer reaches later reads. A query then drops each
-   reaching write that selects a different element than the read, or that runs
-   after the read ({!Analysis_and_optimization.Dependence}).
+   A definition is a write, recorded as the access of the write, the label of
+   the statement that writes the variable and the loops around that statement. A
+   definition reaches a read when the program can run the write before the read,
+   and no write between them replaces the same element. These definitions are
+   the reaching definitions of the read. Each statement records the reaching
+   definitions at entry, before the statement runs. A later write kills an
+   earlier write when the later write always replaces the element of the earlier
+   write. The later write is the killer. A killed write no longer reaches later
+   reads. A query then drops each reaching write that selects a different
+   element than the read, or that runs after the read
+   ({!Analysis_and_optimization.Dependence}).
 
    A definition from outside the analyzed statement, for example data, has no
    label and prints as [W N None]. Dependency results contain statement labels
@@ -79,8 +80,13 @@ let example1_program =
       |}
 
 let%expect_test "Dependency graph example" =
+  let statements = build_log_prob_dependence_info example1_program in
+  (* The direct and transitive dependencies of each statement, without the
+     statement itself. *)
   let deps =
-    dependence_graph (build_log_prob_dependence_info example1_program) in
+    LabelMap.mapi statements ~f:(fun label _ ->
+        Set.Poly.remove label (transitive_dependence_ids statements label))
+  in
   print_s [%sexp (deps : label Set.Poly.t LabelMap.t)];
   [%expect
     {|
@@ -94,20 +100,30 @@ let%expect_test "Dependency graph example" =
 
 module Accesses = Analysis_and_optimization.Accesses
 
+(** The labels of the definitions of [var], [None] for a definition from outside
+    the analyzed code. *)
+let definition_labels_of_var (var : string)
+    (definitions : reaching_definition Set.Poly.t) : label option Set.Poly.t =
+  Set.Poly.filter_map definitions ~f:(fun definition ->
+      if String.equal definition.access.var var then
+        Some definition.statement_id
+      else None)
+
 (** Prints a set of definitions as [W N None, W a 2, W s [7, 12]]: each entry is
     the access, then the labels of the definitions with that access. The outside
     definitions come first. *)
-let pp_definitions (info : dependence_info) ppf
+let pp_definitions (statements : stmt_info LabelMap.t) ppf
     (definitions : reaching_definition Set.Poly.t) =
-  let loop_name = Test_utils.loop_name info in
+  let loop_name = Test_utils.loop_name statements in
   (* The variable and the path of a write, without the kind. *)
   let pp_access ppf ({var; path; _} : Accesses.access) =
     Fmt.pf ppf "%s%a" var
       (Test_utils.one_line (Accesses.pp_path ~loop_name))
       path in
   let entries =
-    List.map (Set.Poly.to_list definitions) ~f:(fun (access, label) ->
-        (Fmt.str "%a" pp_access access, label)) in
+    List.map (Set.Poly.to_list definitions) ~f:(fun definition ->
+        (Fmt.str "%a" pp_access definition.access, definition.statement_id))
+  in
   (* The distinct access texts with a label, in set order. *)
   let texts =
     List.rev
@@ -135,9 +151,11 @@ let pp_definitions (info : dependence_info) ppf
 (* The loop variable [j] of the loop at label 9 is not a definition: no
    statement writes a loop variable. *)
 let%expect_test "Reaching definition records at statement entry" =
-  let info = build_log_prob_dependence_info example1_program in
-  LabelMap.iter info.reaching_definitions ~f:(fun ~key ~data ->
-      Fmt.pr "%d: [%a]@." key (pp_definitions info) data);
+  let statements = build_log_prob_dependence_info example1_program in
+  LabelMap.iter statements ~f:(fun ~key ~data:statement ->
+      Fmt.pr "%d: [%a]@." key
+        (pp_definitions statements)
+        statement.reaching_definitions);
   [%expect
     {|
     1: []
@@ -175,27 +193,25 @@ let%expect_test "Variable dependency example" =
     |}]
 
 let%expect_test "External definitions are distinct from statement label 1" =
-  let write var : Accesses.access = {var; path= []; kind= Accesses.Write} in
+  let definition var statement_id : reaching_definition =
+    {access= {var; path= []; kind= Accesses.Write}; statement_id; loop_ids= []}
+  in
   let definitions =
     Set.Poly.of_list
-      [(write "x", None); (write "x", Some 1); (write "y", Some 2)] in
-  print_s [%sexp (definition_ids definitions "x" : label option Set.Poly.t)];
+      [definition "x" None; definition "x" (Some 1); definition "y" (Some 2)]
+  in
+  print_s
+    [%sexp (definition_labels_of_var "x" definitions : label option Set.Poly.t)];
   [%expect {| (() (1)) |}]
 
-(** Prints the data labels, then the control labels, of a set of direct
-    dependences, as [data 5 9  control 6]. A missing kind prints nothing. *)
-let pp_dependences ppf (dependences : kind Set.Poly.t) =
+(** Prints the writer labels, then the control parents, of a statement, as
+    [data 5 9  control 6]. An empty half prints nothing. *)
+let pp_dependences ppf (statement : stmt_info) =
   let labels_of kind_name labels =
     if Set.Poly.is_empty labels then None
     else Some (Fmt.str "%s %a" kind_name Test_utils.pp_labels labels) in
-  let data_ids =
-    Set.Poly.filter_map dependences ~f:(function
-      | Data id -> Some id
-      | Control _ -> None) in
-  let control_ids =
-    Set.Poly.filter_map dependences ~f:(function
-      | Control id -> Some id
-      | Data _ -> None) in
+  let data_ids = Set.Poly.map statement.writers ~f:snd in
+  let control_ids = control_parent_ids statement.controls in
   Fmt.(list ~sep:(any "  ") string)
     ppf
     (List.filter_map ~f:Fun.id
@@ -213,17 +229,14 @@ let%expect_test "External inputs reach a statement but are not dependencies" =
            model { if (N > 0) target += mu; }
          |})
   in
-  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+  LabelMap.iter map ~f:(fun ~key:_ ~data:statement ->
       match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
           print_s
             [%sexp
-              (definition_ids
-                 (LabelMap.find statement_id map.reaching_definitions)
-                 "N"
+              (definition_labels_of_var "N" statement.reaching_definitions
                 : label option Set.Poly.t)];
-          Fmt.pr "dependencies: %a@." pp_dependences
-            (direct_dependence_ids map statement_id)
+          Fmt.pr "dependencies: %a@." pp_dependences statement
       | _ -> ());
   [%expect {|
     (())
@@ -231,11 +244,10 @@ let%expect_test "External inputs reach a statement but are not dependencies" =
     |}]
 
 (** Prints each statement and the immediate dependences of the statement. *)
-let pp_immediate_dependencies ppf (map : dependence_info) =
-  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+let pp_immediate_dependencies ppf (statements : stmt_info LabelMap.t) =
+  LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
-        statement.pattern pp_dependences
-        (direct_dependence_ids map statement_id))
+        statement.pattern pp_dependences statement)
 
 let print_immediate_dependencies prog =
   Fmt.pr "%a" pp_immediate_dependencies
@@ -257,7 +269,7 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     |})
   in
   let if_id =
-    LabelMap.fold map.statements ~init:0
+    LabelMap.fold map ~init:0
       ~f:(fun ~key:statement_id ~data:statement found_id ->
         match statement.pattern with
         | Stmt.Pattern.IfElse _ -> statement_id
@@ -279,8 +291,8 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     Test_utils.pp_labels
     (var_dependence_ids map ~blockers:(Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_id);
-  (* The condition does not read c. Thus a query for c keeps each write of c
-     that reaches the condition. *)
+  (* The condition does not read c, so a query for c finds no writer, although
+     two writes of c reach the condition. *)
   Fmt.pr "var_dependence_ids {c} %d: %a@." if_id Test_utils.pp_labels
     (var_dependence_ids map (Set.Poly.singleton "c") if_id);
   [%expect
@@ -302,7 +314,7 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     var_dependence_ids ~blockers:{b} {b} 11:
     var_dependence_ids ~blockers:{a} {b} 11: 8
     var_dependence_ids ~blockers:{mu} {b} 11: 6 8
-    var_dependence_ids {c} 11: 3 10
+    var_dependence_ids {c} 11:
     |}]
 
 let%expect_test
@@ -320,11 +332,10 @@ let%expect_test
            }
          |})
   in
-  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:statement ->
       match statement.pattern with
       | Stmt.Pattern.IfElse _ ->
-          Fmt.pr "%d: %a@." statement_id pp_dependences
-            (direct_dependence_ids map statement_id)
+          Fmt.pr "%d: %a@." statement_id pp_dependences statement
       | _ -> ());
   [%expect {| 6: data 5 |}]
 
@@ -463,7 +474,7 @@ let%expect_test "Variables read at a set of labels" =
       }
     |})
   in
-  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a  // %a@." statement_id Test_utils.pp_stmt statement.pattern
         Fmt.(list ~sep:(any " ") string)
         (Set.Poly.to_list (used_vars_at map (Set.Poly.singleton statement_id))));
@@ -481,13 +492,13 @@ let%expect_test "Variables read at a set of labels" =
     |}]
 
 (** Prints the controls of a statement as [loop 8 (n); if 13 then; jump 9]. *)
-let pp_controls (info : dependence_info) ppf ({enclosing; jump_ids} : controls)
-    =
+let pp_controls (statements : stmt_info LabelMap.t) ppf
+    ({enclosing; jump_ids} : controls) =
   let pp_enclosing ppf = function
     | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
     | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
     | {id; side= None} ->
-        Fmt.pf ppf "loop %d (%s)" id (Test_utils.loop_name info id) in
+        Fmt.pf ppf "loop %d (%s)" id (Test_utils.loop_name statements id) in
   Fmt.(list ~sep:(any "; ") string)
     ppf
     (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
@@ -520,10 +531,10 @@ let pp_table ppf (rows : string list list) =
 
 (** The rows of a table, one per label of the statement map in ascending order,
     leaving out the labels for which [row] returns [None]. *)
-let table_rows (info : dependence_info)
+let table_rows (statements : stmt_info LabelMap.t)
     ~(row : label -> stmt_info -> string list option) : string list list =
   List.rev
-    (LabelMap.fold info.statements ~init:[] ~f:(fun ~key ~data rows ->
+    (LabelMap.fold statements ~init:[] ~f:(fun ~key ~data rows ->
          match row key data with Some cells -> cells :: rows | None -> rows))
 
 (* The running example of the Dependence_analysis interface. The tests below
@@ -552,7 +563,7 @@ model {
   }
 }|}
 
-let running_example_info () =
+let running_example_statements () =
   build_log_prob_dependence_info (Test_utils.mir_of_string running_example)
 
 (** Whether the statement at a label is the root or a block, which hold other
@@ -574,7 +585,7 @@ let pp_pattern ppf (pattern : (Expr.Typed.t, label) Stmt.Pattern.t) =
       Test_utils.one_line (Stmt.Pattern.pp Expr.Typed.pp pp_label) ppf pattern
 
 let%expect_test "Running example: the statement map" =
-  let info = running_example_info () in
+  let statements = running_example_statements () in
   let stan_lines (meta : Location_span.t) =
     let first = meta.begin_loc.line_num and last = meta.end_loc.line_num in
     if first < 0 then "-"
@@ -584,15 +595,15 @@ let%expect_test "Running example: the statement map" =
     Some
       [ Int.to_string statement_id; stan_lines statement.meta
       ; Fmt.str "%a" pp_pattern statement.pattern
-      ; Fmt.str "[%a]" (pp_controls info) statement.controls
+      ; Fmt.str "[%a]" (pp_controls statements) statement.controls
       ; Fmt.str "%a"
           (Test_utils.one_line
              (Analysis_and_optimization.Accesses.pp
-                ~loop_name:(Test_utils.loop_name info)))
+                ~loop_name:(Test_utils.loop_name statements)))
           statement.accesses ] in
   Fmt.pr "%a" pp_table
     (["label"; "Stan lines"; "pattern"; "controls"; "accesses"]
-    :: table_rows info ~row);
+    :: table_rows statements ~row);
   [%expect
     {|
     label  Stan lines  pattern                             controls                  accesses
@@ -614,16 +625,17 @@ let%expect_test "Running example: the statement map" =
     |}]
 
 let%expect_test "Running example: the reaching definitions" =
-  let info = running_example_info () in
+  let statements = running_example_statements () in
   let row statement_id (statement : stmt_info) =
     if is_block statement then None
     else
       Some
         [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
-        ; Fmt.str "%a" (pp_definitions info)
-            (LabelMap.find statement_id info.reaching_definitions) ] in
+        ; Fmt.str "%a"
+            (pp_definitions statements)
+            statement.reaching_definitions ] in
   Fmt.pr "%a" pp_table
-    (["label"; "pattern"; "reaching definitions"] :: table_rows info ~row);
+    (["label"; "pattern"; "reaching definitions"] :: table_rows statements ~row);
   [%expect
     {|
     label  pattern                             reaching definitions
@@ -641,28 +653,23 @@ let%expect_test "Running example: the reaching definitions" =
     |}]
 
 let%expect_test "Running example: the direct dependencies" =
-  let info = running_example_info () in
-  (* The Data labels and the Control labels of the set, as two columns. An empty
-     column prints [-]. *)
-  let labels_of_kind dependences ~f =
-    let labels = Set.Poly.filter_map dependences ~f in
+  let statements = running_example_statements () in
+  (* The writer labels and the control parents, as two columns. An empty column
+     prints [-]. *)
+  let column labels =
     if Set.Poly.is_empty labels then "-"
     else Fmt.str "%a" Test_utils.pp_labels labels in
   let row statement_id (statement : stmt_info) =
-    let dependences = direct_dependence_ids info statement_id in
-    if Set.Poly.is_empty dependences then None
+    let data_ids = Set.Poly.map statement.writers ~f:snd in
+    let control_ids = control_parent_ids statement.controls in
+    if Set.Poly.is_empty data_ids && Set.Poly.is_empty control_ids then None
     else
       Some
         [ Int.to_string statement_id; Fmt.str "%a" pp_pattern statement.pattern
-        ; labels_of_kind dependences ~f:(function
-            | Data id -> Some id
-            | Control _ -> None)
-        ; labels_of_kind dependences ~f:(function
-            | Control id -> Some id
-            | Data _ -> None) ] in
+        ; column data_ids; column control_ids ] in
   Fmt.pr "%a" pp_table
     (["label"; "pattern"; "data dependencies"; "control dependencies"]
-    :: table_rows info ~row);
+    :: table_rows statements ~row);
   [%expect
     {|
     label  pattern                    data dependencies  control dependencies
@@ -676,12 +683,12 @@ let%expect_test "Running example: the direct dependencies" =
     |}]
 
 let%expect_test "Running example: the walk from target += 1" =
-  let info = running_example_info () in
-  let dependency_labels = transitive_dependence_ids info 15 in
+  let statements = running_example_statements () in
+  let dependency_labels = transitive_dependence_ids statements 15 in
   Fmt.pr "dependencies of 15: %a@.read: %a@." Test_utils.pp_labels
     dependency_labels
     Fmt.(list ~sep:(any " ") string)
-    (Set.Poly.to_list (used_vars_at info dependency_labels));
+    (Set.Poly.to_list (used_vars_at statements dependency_labels));
   [%expect
     {|
     dependencies of 15: 5 7 8 11 12 13 15
@@ -967,7 +974,7 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
 (* Each statement prints the controls, then the two views that queries use. The
    controls list the enclosing ifs and loops, outermost first, then the jumps.
    [control_parent_ids] keeps the nearest enclosing if or loop and the jumps.
-   [enclosing_loop_ids] keeps the loops, and a loop statement adds itself. *)
+   The [loop_ids] field keeps the loops, and a loop statement adds itself. *)
 let%expect_test "Controls and the two views derived from them" =
   let map =
     build_log_prob_dependence_info
@@ -987,13 +994,13 @@ let%expect_test "Controls and the two views derived from them" =
     |})
   in
   let pp_loop = Fmt.int in
-  LabelMap.iter map.statements ~f:(fun ~key:statement_id ~data:statement ->
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
         statement_id Test_utils.pp_stmt statement.pattern (pp_controls map)
         statement.controls Test_utils.pp_labels
         (control_parent_ids statement.controls)
         Fmt.(list ~sep:(any "; ") pp_loop)
-        (enclosing_loop_ids statement_id statement.pattern statement.controls));
+        statement.loop_ids);
   [%expect
     {|
     1: 2 3

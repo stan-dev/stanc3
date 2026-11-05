@@ -95,9 +95,8 @@ open Dataflow_types
     The analysis puts the analyzed code under one {e root}, which gets label
     [1], and gives each statement inside the root an integer {e label} that
     offsets it from root. The dependencies between the labeled statements form a
-    graph whose nodes are the labels ({!dependence_graph}). Statements outside
-    the analyzed code, such as the data block on lines 1 to 4, do not get a
-    label.
+    graph whose nodes are the labels. Statements outside the analyzed code, such
+    as the data block on lines 1 to 4, do not get a label.
 
     {@text[
      5  parameters {
@@ -118,10 +117,10 @@ open Dataflow_types
     ]}
 
     To build this graph, the analysis first records the statement at each label.
-    The [statements] field of {!dependence_info} maps each label to the
-    {!stmt_info} record of that statement. A statement that holds other
-    statements refers to each nested statement by label. For example, the [if]
-    at label [13] holds the label [14] in place of the braces of the body.
+    The result of the analysis maps each label to the {!stmt_info} record of
+    that statement. A statement that holds other statements refers to each
+    nested statement by label. For example, the [if] at label [13] holds the
+    label [14] in place of the braces of the body.
 
     The table below shows what the analysis builds for the running example. The
     analysis builds the table by walking the root depth first. The root gets
@@ -237,23 +236,24 @@ open Dataflow_types
 
     {1 Direct dependencies}
 
-    {!direct_dependence_ids} joins the two maps. The control dependencies of a
-    statement come from the controls column of the statement map: the innermost
-    [if] or loop, and the jumps. The data dependencies come from the two maps in
-    turn. The accesses of the statement say which variables the statement reads.
-    The reaching definitions of the statement name the candidate writers of each
-    such variable. The access in each definition says which element the
-    candidate writes, and a candidate that can never write the element that is
-    read is dropped ({!is_flow_dependence}). A [None] definition never becomes a
+    Both halves of a direct dependence are stored on the record of the
+    statement. The control dependencies come from the controls column, through
+    {!Dataflow_utils.control_parent_ids}: the innermost [if] or loop, and the
+    jumps. The data dependencies, the [writers] field, are computed when the
+    record is built, from the accesses and the reaching definitions in turn. The
+    accesses say which variables the statement reads. The reaching definitions
+    of the statement name the candidate writers of each such variable. The
+    access in each definition says which element the candidate writes, and a
+    candidate that can never write the element that is read is dropped
+    ({!Dependence.test_dependence}). A [None] definition never becomes a
     dependence, because the queries return labels only. An increment, such as
     [target += 1], does not use the value of an earlier increment, so two
     increments of the same variable are never dependent.
 
-    The table shows the set that {!direct_dependence_ids} returns for each label
-    with a dependence; labels [1] to [8] return the empty set. The two columns
-    are the [Data] labels and the [Control] labels of the set, and [-] is an
-    empty column. The unit test "Running example: the direct dependencies"
-    prints this table.
+    The table shows the two halves for each label with a dependence; labels [1]
+    to [8] have none. The two columns are the writer labels and the control
+    parents, and [-] is an empty column. The unit test "Running example: the
+    direct dependencies" prints this table.
     {@text[
     label  pattern                    data dependencies  control dependencies
     9      Block { #10 #11 #12 #13 }  -                  8
@@ -273,13 +273,14 @@ open Dataflow_types
     writes: both writers of [s] write the whole variable, so both stay, and
     label [12] depends on the value of [s] from the previous iteration. Label
     [10] writes [theta[n, 1]], never the element [theta[n, 2]], so label [10] is
-    dropped. The result is [{Data 5; Data 7; Data 11; Data 12; Control 8}]. The
-    query reads the statement map once, for the sink, and the reaching map once,
-    for the sink; every candidate brings the write along.
+    dropped. The writers are labels [5], [7], [11] and [12], and the control
+    parent is label [8]. The subscript tests run once, when the record is built;
+    every definition brings the write, the label and the loops of the writer
+    along, so no other record is read.
 
     Label [13] shows a kill in the result. The [if] reads [s], and the only
     reaching definition of [s] at label [13] is label [12], so the initializer
-    at label [7] is never a candidate and the result is [{Data 12; Control 8}].
+    at label [7] is never a candidate and the only writer is label [12].
 
     {1 Using the dependencies}
 
@@ -318,18 +319,39 @@ open Dataflow_types
     store all parameters. Then at the end we would report which parameters go
     unused. *)
 
-(** What a dependence query needs to know about one statement, apart from the
-    reaching definitions.
+(** One write that can still hold the value of a variable when a statement runs:
+    the access ({!Accesses.access}, a [Write] or an [Increment]), the label of
+    the statement that makes the access and the loops around that statement,
+    outermost first. A [None] label is a write from outside the analyzed code,
+    such as data or a parameter; the access of such a write is the whole
+    variable and the loop list is empty.
+
+    The set at label [12] of the running example holds eight definitions. Two of
+    them are
+    {@text[
+      {access = {var = "theta"; path = [n, 1]; kind = Write}; statement_id = Some 10; loop_ids = [8]}
+      {access = {var = "N"; path = []; kind = Write}; statement_id = None; loop_ids = []}
+    ]} *)
+type reaching_definition =
+  {access: Accesses.access; statement_id: label option; loop_ids: label list}
+
+(** What a dependence query needs to know about one statement. Every query reads
+    the record of the statement the query starts at; the transitive queries then
+    follow labels to other records.
 
     The example record below is for the condition (label [13]) of the running
     example.
     {@text[
-      pattern:   if((s > 0)) #14
-      controls:  {enclosing = [{id = 8; side = None}]; jump_ids = {}}
-      accesses:  R s
+      id:                    13
+      pattern:               if((s > 0)) #14
+      controls:              {enclosing = [{id = 8; side = None}]; jump_ids = {}}
+      loop_ids:              [8]
+      accesses:              R s
+      reaching_definitions:  a 2, s 12, target 15, theta 5, theta[n, 1] 10, theta[n, 2] 11
     ]} *)
 type stmt_info =
-  { pattern: (Expr.Typed.t, label) Stmt.Pattern.t
+  { id: label  (** The label of this statement. *)
+  ; pattern: (Expr.Typed.t, label) Stmt.Pattern.t
         (** The statement, with each nested statement replaced by the label of
             the nested statement. *)
   ; meta: Location_span.t  (** The source location for pedantic warnings. *)
@@ -337,103 +359,46 @@ type stmt_info =
         (** The enclosing ifs and loops of this statement, outermost first, and
             the jumps that can skip the statement ({!Dataflow_types.controls}).
             A loop statement does not list itself.
-            {!Dataflow_utils.control_parent_ids} and
-            {!Dataflow_utils.enclosing_loop_ids} give the two views that queries
-            use. *)
+            {!Dataflow_utils.control_parent_ids} gives the controls that decide
+            whether the statement runs. *)
+  ; loop_ids: label list
+        (** The loops around this statement, outermost first
+            ({!Dataflow_utils.enclosing_loop_ids}). A loop statement counts as
+            inside the loop that the statement starts. *)
   ; accesses: Accesses.t
         (** The reads, writes and increments in the expressions of this
-            statement. Each nested statement has a separate record. *) }
-
-(** One write that can still hold the value of a variable when a statement runs:
-    the access of the write ({!Accesses.access}, a [Write] or an [Increment])
-    and the label of the writing statement. [None] is a write from outside the
-    analyzed code, such as data or a parameter, and the access of such a write
-    is the whole variable.
-
-    The set at label [12] of the running example holds eight definitions. Two of
-    them are
-    {@text[
-      ({var = "theta"; path = [n, 1]; kind = Write}, Some 10)
-      ({var = "N"; path = []; kind = Write}, None)
-    ]} *)
-type reaching_definition = Accesses.access * label option
-
-(** The statements of the analyzed code and the definitions that reach each
-    statement. Every query and the kill rule inside the reaching-definitions
-    dataflow, reads [statements]. Only the data half of {!direct_dependence_ids}
-    reads [reaching_definitions]. *)
-type dependence_info =
-  { statements: stmt_info LabelMap.t
-        (** What each statement does by itself: the pattern, the enclosing
-            controls and the accesses ({!stmt_info}). *)
-  ; reaching_definitions: reaching_definition Set.Poly.t LabelMap.t
-        (** The writes that can reach the node of each statement in the
+            statement. Each nested statement has a separate record. *)
+  ; reaching_definitions: reaching_definition Set.Poly.t
+        (** The writes that can reach the node of this statement in the
             flowgraph with no overwrite in between, one definition per write.
             The node of a block comes after the statements of the block, so the
-            set of a block holds what reaches the end of the block. *) }
+            set of a block holds what reaches the end of the block. *)
+  ; writers: (string * label) Set.Poly.t
+        (** The data dependencies of this statement: each variable the statement
+            reads, paired with the label of a statement whose write of that
+            variable can supply the value read. The reaching definitions name
+            the candidates, and the subscript test of {!Dependence} keeps the
+            writes that can select the element read. For label [12] of the
+            running example the set is
+            [{(s, 7); (s, 12); (theta, 5); (theta, 11)}]. *) }
 
-val build_dependence_info : Program.Typed.t -> Stmt.Located.t -> dependence_info
-(** Builds the statement records and the reaching definitions for the statement
-    (label [1]) and the statements nested in the statement. *)
+val build_dependence_info :
+  Program.Typed.t -> Stmt.Located.t -> stmt_info LabelMap.t
+(** Builds the statement records, with the reaching definitions and the writers,
+    for the statement (label [1]) and the statements nested in the statement. *)
 
-val build_log_prob_dependence_info : Program.Typed.t -> dependence_info
-(** Builds the {!dependence_info} for the statements of the log density. These
+val build_log_prob_dependence_info : Program.Typed.t -> stmt_info LabelMap.t
+(** Builds the statement records for the statements of the log density. These
     statements are in the parameters, transformed parameters and model blocks.
 *)
 
-val definition_ids :
-  reaching_definition Set.Poly.t -> string -> label option Set.Poly.t
-(** Returns the labels of the definitions of the named variable, whichever
-    element each definition writes. *)
-
-val is_flow_kind : Accesses.access -> Accesses.access -> bool
-(** Whether the first access (the source) can pass a value to the second (the
-    sink) by the rules in step 1, comparing only variable names and kinds. *)
-
-val common_loop_ids : stmt_info LabelMap.t -> label -> label -> label list
-(** Returns the labels of the {e common loops} of two statements, the loops that
-    contain both statements, outermost first. A loop statement counts as inside
-    its own loop. *)
-
-val dependence_between :
-     dependence_info
-  -> label * Accesses.access
-  -> label * Accesses.access
-  -> Dependence.t
-(** Compares the elements that the first access (the source) and the second
-    access (the sink) select, over the common loops of both statements. Each
-    access comes paired with the label of the statement that makes the access.
-*)
-
-val is_flow_dependence :
-  dependence_info -> label * Accesses.access -> label * Accesses.access -> bool
-(** Whether a flow dependence can exist from the first access (the source) to
-    the second (the sink), which means that the source can supply the value that
-    the sink uses: {!is_flow_kind}, then
-    {!Dependence.is_lexicographically_positive} on {!dependence_between}. *)
-
-(** One direct dependence of a statement ({!direct_dependence_ids}). The label
-    is the statement depended on. For the assignment at label [12] of the
-    running example the set is [{Data 5; Data 7; Data 11; Data 12; Control 8}].
-*)
-type kind = Data of label | Control of label
-
-val direct_dependence_ids :
-     dependence_info
-  -> ?blockers:string Set.Poly.t
-  -> ?vars:string Set.Poly.t
-  -> label
-  -> kind Set.Poly.t
-(** Returns the direct dependences of the statement at the label: [Control] for
-    each control parent, and [Data] for each statement whose write can supply
-    the value of [vars] used there. *)
-
-val transitive_dependence_ids : dependence_info -> label -> label Set.Poly.t
+val transitive_dependence_ids :
+  stmt_info LabelMap.t -> label -> label Set.Poly.t
 (** Returns the labels of the direct and transitive dependencies of the
     statement at the label. The result also includes the label. *)
 
 val var_dependence_ids :
-     dependence_info
+     stmt_info LabelMap.t
   -> ?blockers:string Set.Poly.t
   -> string Set.Poly.t
   -> label
@@ -442,11 +407,6 @@ val var_dependence_ids :
     control parents and the definitions of the variables in the given set, and
     the result leaves out the label. *)
 
-val dependence_graph : dependence_info -> label Set.Poly.t LabelMap.t
-(** Returns the direct and transitive dependencies of each statement. Unlike in
-    {!transitive_dependence_ids}, the set of a statement leaves out that label.
-*)
-
-val used_vars_at : dependence_info -> label Set.Poly.t -> string Set.Poly.t
+val used_vars_at : stmt_info LabelMap.t -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)

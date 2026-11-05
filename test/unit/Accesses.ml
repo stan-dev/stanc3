@@ -27,13 +27,13 @@ open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Dataflow_types
 module Accesses = Analysis_and_optimization.Accesses
 
-let pp_node_accesses ppf (info : dependence_info) =
-  LabelMap.iter info.statements ~f:(fun ~key:statement_id ~data:statement ->
+let pp_node_accesses ppf (statements : stmt_info LabelMap.t) =
+  LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
       if not (List.is_empty statement.accesses) then
         Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
           statement.pattern
           (Test_utils.one_line
-             (Accesses.pp ~loop_name:(Test_utils.loop_name info)))
+             (Accesses.pp ~loop_name:(Test_utils.loop_name statements)))
           statement.accesses)
 
 let print_node_accesses prog =

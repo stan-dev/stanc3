@@ -15,14 +15,15 @@
 
    A write reaches a read when the program can run the write before the read,
    and no write between them replaces the same element. Each write that reaches
-   a read is a candidate source, and the read is the sink. Each test asks
-   whether a candidate source can supply the value of the sink.
+   a read is a candidate writer, and the statement that reads is the reader.
+   Each test asks whether a candidate writer can supply the value that the
+   reader uses.
 
-   A common loop is a loop around both the source and the sink. The distance at
-   a common loop is the iteration of the sink minus the iteration of the source.
-   In [b[n] = a; c[n] = b[n - 1];] the read of [b[n - 1]] uses the write to
-   [b[n]] from one iteration earlier, so the distance is 1. A dependence with a
-   nonzero distance at some loop is loop-carried. A dependence with distance 0
+   A common loop is a loop around both the writer and the reader. The distance
+   at a common loop is the iteration of the reader minus the iteration of the
+   writer. In [b[n] = a; c[n] = b[n - 1];] the read of [b[n - 1]] uses the write
+   to [b[n]] from one iteration earlier, so the distance is 1. A dependence with
+   a nonzero distance at some loop is loop-carried. A dependence with distance 0
    at each loop is loop-independent.
 
    The test names refer to two standard dependence tests. The ZIV test (zero
@@ -32,7 +33,7 @@
    1]], and finds the distance.
 
    Each test prints the reads of one variable, with the label of each read.
-   Under a read, each line compares the read with one candidate source. A line
+   Under a read, each line compares the read with one candidate writer. A line
    holds the label of the write, the access of the write, [-->], the access of
    the read, the result and a last word. The result is independent, unknown, or
    one distance for each common loop, outermost first. [distances [n:1]] means
@@ -57,43 +58,57 @@ module Accesses = Analysis_and_optimization.Accesses
 module Dependence = Analysis_and_optimization.Dependence
 
 let print_verdicts ~var prog =
-  let info = build_log_prob_dependence_info (Test_utils.mir_of_string prog) in
-  let accesses_of statement_id =
-    Accesses.filter_var var
-      (LabelMap.find statement_id info.statements).accesses in
-  let loop_name = Test_utils.loop_name info in
+  let statements =
+    build_log_prob_dependence_info (Test_utils.mir_of_string prog) in
+  let accesses_of (statement : stmt_info) =
+    List.filter statement.accesses ~f:(fun (access : Accesses.access) ->
+        String.equal access.var var) in
+  (* The kinds that can form a flow dependence: a write or an increment, then a
+     read, or a write then an increment. *)
+  let is_flow_kind (write : Accesses.access) (read : Accesses.access) =
+    match (write.kind, read.kind) with
+    | (Write | Increment), Read | Write, Increment -> true
+    | Read, _ | Increment, Increment | _, Write -> false in
+  let loop_name = Test_utils.loop_name statements in
   let pp_access = Test_utils.one_line (Accesses.pp_access ~loop_name) in
-  LabelMap.iter info.statements ~f:(fun ~key:sink_id ~data:sink_statement ->
-      let sinks =
-        List.filter (accesses_of sink_id) ~f:(fun sink ->
-            match sink.Accesses.kind with
+  LabelMap.iter statements ~f:(fun ~key:reader_id ~data:reader ->
+      let reads =
+        List.filter (accesses_of reader) ~f:(fun read ->
+            match read.Accesses.kind with
             | Accesses.Read | Increment -> true
             | Write -> false) in
-      if not (List.is_empty sinks) then (
-        Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt sink_statement.pattern;
+      if not (List.is_empty reads) then (
+        Fmt.pr "%d: %a@." reader_id Test_utils.pp_stmt reader.pattern;
         let reaching_ids =
-          definition_ids (LabelMap.find sink_id info.reaching_definitions) var
-        in
-        LabelMap.iter info.statements ~f:(fun ~key:source_id ~data:_ ->
-            if Set.Poly.mem (Some source_id) reaching_ids then
-              List.iter (accesses_of source_id) ~f:(fun source ->
-                  List.iter sinks ~f:(fun sink ->
-                      if is_flow_kind source sink then
-                        let source = (source_id, source) in
-                        let sink = (sink_id, sink) in
-                        let dependence = dependence_between info source sink in
+          Set.Poly.filter_map reader.reaching_definitions ~f:(fun definition ->
+              if String.equal definition.access.var var then
+                definition.statement_id
+              else None) in
+        LabelMap.iter statements ~f:(fun ~key:writer_id ~data:writer ->
+            if Set.Poly.mem writer_id reaching_ids then
+              (* Loops nest, so the loops around both statements are the loops
+                 of the writer that are also loops of the reader. *)
+              let common_loop_ids =
+                List.filter writer.loop_ids ~f:(fun loop_id ->
+                    List.mem loop_id ~set:reader.loop_ids) in
+              List.iter (accesses_of writer) ~f:(fun write ->
+                  List.iter reads ~f:(fun read ->
+                      if is_flow_kind write read then
+                        let dependence =
+                          Dependence.test_dependence common_loop_ids write.path
+                            read.path in
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
                           | Distance_vector _ ->
-                              if is_flow_dependence info source sink then
-                                "  flows"
+                              if
+                                Dependence.is_lexicographically_positive
+                                  common_loop_ids (writer_id < reader_id)
+                                  write.path read.path
+                              then "  flows"
                               else "  cannot flow" in
-                        let common_loop_ids =
-                          common_loop_ids info.statements source_id sink_id
-                        in
-                        Fmt.pr "  %d %a --> %a: %a%s@." source_id pp_access
-                          (snd source) pp_access (snd sink)
+                        Fmt.pr "  %d %a --> %a: %a%s@." writer_id pp_access
+                          write pp_access read
                           (Dependence.pp ~loop_name ~common_loop_ids)
                           dependence outcome)))))
 
@@ -103,7 +118,7 @@ let print_verdicts ~var prog =
    1]] overwrites itself only within one iteration of the loop over [n]. A slice
    write never overwrites, because a slice is not affine. *)
 let%expect_test "Comparing write paths" =
-  let info =
+  let statements =
     build_log_prob_dependence_info
       (Test_utils.mir_of_string
          {|
@@ -124,10 +139,9 @@ let%expect_test "Comparing write paths" =
   in
   let pp_access =
     Test_utils.one_line
-      (Accesses.pp_access ~loop_name:(Test_utils.loop_name info)) in
+      (Accesses.pp_access ~loop_name:(Test_utils.loop_name statements)) in
   let path_of printed =
-    LabelMap.fold info.statements ~init:None
-      ~f:(fun ~key:_ ~data:statement found ->
+    LabelMap.fold statements ~init:None ~f:(fun ~key:_ ~data:statement found ->
         match found with
         | Some _ -> found
         | None ->
