@@ -287,11 +287,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(J) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
   }
-  inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream__;
-    json_stream__ << "{";
-    json_stream__ << "}";
-    return json_stream__.str();
+  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

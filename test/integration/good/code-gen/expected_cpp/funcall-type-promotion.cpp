@@ -323,13 +323,11 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
-  inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream__;
-    json_stream__ << "{";
-    stan::json::write_key(&json_stream__, "x");
-    stan::json::write_json_value(&json_stream__, x);
-    json_stream__ << "}";
-    return json_stream__.str();
+  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    stan::json::write_key(json_stream__, "x");
+    stan::json::write_json_value(json_stream__, x);
+    *(json_stream__) << "}";
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

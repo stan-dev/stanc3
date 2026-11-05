@@ -786,19 +786,17 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"}]");
   }
-  inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream__;
-    json_stream__ << "{";
-    stan::json::write_key(&json_stream__, "M");
-    stan::json::write_json_value(&json_stream__, M);
-    json_stream__ << ",\n";
-    stan::json::write_key(&json_stream__, "copied");
-    stan::json::write_json_value(&json_stream__, copied);
-    json_stream__ << ",\n";
-    stan::json::write_key(&json_stream__, "shorter");
-    stan::json::write_json_value(&json_stream__, shorter);
-    json_stream__ << "}";
-    return json_stream__.str();
+  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    stan::json::write_key(json_stream__, "M");
+    stan::json::write_json_value(json_stream__, M);
+    *(json_stream__) << ",\n";
+    stan::json::write_key(json_stream__, "copied");
+    stan::json::write_json_value(json_stream__, copied);
+    *(json_stream__) << ",\n";
+    stan::json::write_key(json_stream__, "shorter");
+    stan::json::write_json_value(json_stream__, shorter);
+    *(json_stream__) << "}";
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

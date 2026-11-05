@@ -602,11 +602,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(J) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"generated_quantities\"}]");
   }
-  inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream__;
-    json_stream__ << "{";
-    json_stream__ << "}";
-    return json_stream__.str();
+  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

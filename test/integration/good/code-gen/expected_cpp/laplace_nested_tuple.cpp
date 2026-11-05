@@ -881,11 +881,9 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
-  inline std::string get_transformed_data_json() const {
-    std::stringstream json_stream__;
-    json_stream__ << "{";
-    json_stream__ << "}";
-    return json_stream__.str();
+  inline void get_transformed_data_json(std::ostream* json_stream__) const {
+    *(json_stream__) << "{";
+    *(json_stream__) << "}";
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
