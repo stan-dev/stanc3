@@ -2239,10 +2239,7 @@ let () =
           List.iter
             ~f:(fun t3 ->
               add_unqualified
-                ( "solve_sylvester"
-                , ReturnType UComplexMatrix
-                , [t1; t2; t3]
-                , AoS ))
+                ("solve_sylvester", ReturnType UComplexMatrix, [t1; t2; t3], AoS))
             [UnsizedType.UMatrix; UComplexMatrix])
         [UnsizedType.UMatrix; UComplexMatrix])
     [UnsizedType.UMatrix; UComplexMatrix];
