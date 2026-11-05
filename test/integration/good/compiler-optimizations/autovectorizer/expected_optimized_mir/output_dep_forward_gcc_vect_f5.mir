@@ -22,10 +22,8 @@ log_prob {
     data int ia3_1dim__ = (N + 1);
     FnValidateSize__("ia3", "N + 1", ia3_1dim__);
     vector[ia3_1dim__] ia3;
-    for(n in 1:N) {
-      ia3[(n + 1)] = x[n];
-      ia3[n] = z[n];
-    }
+    ia3[(1 + 1):(N + 1)] = x[1:N];
+    ia3[1:N] = z[1:N];
     target += sum(ia3);
   } }
 
@@ -34,10 +32,8 @@ rev_log_prob {
     data int ia3_1dim__ = (N + 1);
     FnValidateSize__("ia3", "N + 1", ia3_1dim__);
     vector[ia3_1dim__] ia3;
-    for(n in 1:N) {
-      ia3[(n + 1)] = x[n];
-      ia3[n] = z[n];
-    }
+    ia3[(1 + 1):(N + 1)] = x[1:N];
+    ia3[1:N] = z[1:N];
     target += sum(ia3);
   } }
 

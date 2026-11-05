@@ -1,22 +1,13 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../deep_dependence.stan : [exit 0] */
-matrix[10, 10] X_p: AoS
-matrix[10, 10] X_tp1: AoS
-matrix[10, 10] X_tp2: AoS
-matrix[10, 10] X_tp3: AoS
-matrix[10, 10] X_tp4: AoS
-matrix[10, 10] X_tp5: AoS
-matrix[10, 10] X_tp6: AoS
-matrix[10, 10] X_tp7: AoS
-Optimization hazard warning (Line 6): SoA warning: Right hand side contains only AoS expressions: X_p
-Optimization hazard warning (Line 10): SoA warning: Right hand side contains only AoS expressions: X_tp1
-Optimization hazard warning (Line 11): SoA warning: Right hand side contains only AoS expressions: X_tp2
-Optimization hazard warning (Line 12): SoA warning: Right hand side contains only AoS expressions: X_tp3
-Optimization hazard warning (Line 13): SoA warning: Right hand side contains only AoS expressions: X_tp4
-Optimization hazard warning (Line 14): SoA warning: Right hand side contains only AoS expressions: X_tp5
-Optimization hazard warning (Line 15): SoA warning: Right hand side contains only AoS expressions: X_tp6
-Optimization hazard warning (Line 16): SoA warning: Right hand side contains only AoS expressions: X_tp7
-Optimization hazard warning (Line 19): SoA warning: Accessed by element in a for loop: X_tp7
-Optimization hazard warning (Line 19): SoA warning: Right hand side contains only AoS expressions: X_tp7
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../deep_dependence.stan : [exit 0] */
+matrix[10, 10] X_p: SoA
+matrix[10, 10] X_tp1: SoA
+matrix[10, 10] X_tp2: SoA
+matrix[10, 10] X_tp3: SoA
+matrix[10, 10] X_tp4: SoA
+matrix[10, 10] X_tp5: SoA
+matrix[10, 10] X_tp6: SoA
+matrix[10, 10] X_tp7: SoA
+
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -170,43 +161,33 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        ((pattern
          (Block
           (((pattern
-             (For (loopvar j)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment
-                      ((LVariable X_tp7)
-                       ((Single
-                         ((pattern (Var i))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (Single
-                         ((pattern (Var j))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                      UMatrix
-                      ((pattern
-                        (FunApp (StanLib exp FnPlain)
-                         (((pattern
-                            (Indexed
-                             ((pattern (Var X_tp7))
-                              (meta
-                               ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
-                             ((Single
-                               ((pattern (Var i))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                              (Single
-                               ((pattern (Var j))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
+             (Assignment
+              ((LVariable X_tp7)
+               ((Single
+                 ((pattern (Var i))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (Between
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 5))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UMatrix
+              ((pattern
+                (FunApp (StanLib exp FnPlain)
+                 (((pattern
+                    (Indexed
+                     ((pattern (Var X_tp7))
+                      (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                     ((Single
+                       ((pattern (Var i))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                      (Between
+                       ((pattern (Lit Int 1))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Int 5))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
@@ -215,7 +196,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_p)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize
@@ -229,7 +210,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Lit Int 10))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
+             (mem_pattern SoA)))
            ()))
          (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
@@ -237,7 +218,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp1)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -254,7 +235,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp2)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -271,7 +252,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp3)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -288,7 +269,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp4)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -305,7 +286,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp5)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -322,7 +303,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp6)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -339,7 +320,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
      (Decl (decl_adtype AutoDiffable) (decl_id X_tp7)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize Default)))
@@ -362,43 +343,33 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        ((pattern
          (Block
           (((pattern
-             (For (loopvar j)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment
-                      ((LVariable X_tp7)
-                       ((Single
-                         ((pattern (Var i))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (Single
-                         ((pattern (Var j))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                      UMatrix
-                      ((pattern
-                        (FunApp (StanLib exp FnPlain)
-                         (((pattern
-                            (Indexed
-                             ((pattern (Var X_tp7))
-                              (meta
-                               ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
-                             ((Single
-                               ((pattern (Var i))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                              (Single
-                               ((pattern (Var j))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
+             (Assignment
+              ((LVariable X_tp7)
+               ((Single
+                 ((pattern (Var i))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (Between
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 5))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UMatrix
+              ((pattern
+                (FunApp (StanLib exp FnPlain)
+                 (((pattern
+                    (Indexed
+                     ((pattern (Var X_tp7))
+                      (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                     ((Single
+                       ((pattern (Var i))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                      (Between
+                       ((pattern (Lit Int 1))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Int 5))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
@@ -576,43 +547,33 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
        ((pattern
          (Block
           (((pattern
-             (For (loopvar j)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment
-                      ((LVariable X_tp7)
-                       ((Single
-                         ((pattern (Var i))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (Single
-                         ((pattern (Var j))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                      UMatrix
-                      ((pattern
-                        (FunApp (StanLib exp FnPlain)
-                         (((pattern
-                            (Indexed
-                             ((pattern (Var X_tp7))
-                              (meta
-                               ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
-                             ((Single
-                               ((pattern (Var i))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                              (Single
-                               ((pattern (Var j))
-                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
+             (Assignment
+              ((LVariable X_tp7)
+               ((Single
+                 ((pattern (Var i))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (Between
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 5))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UMatrix
+              ((pattern
+                (FunApp (StanLib exp FnPlain)
+                 (((pattern
+                    (Indexed
+                     ((pattern (Var X_tp7))
+                      (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                     ((Single
+                       ((pattern (Var i))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                      (Between
+                       ((pattern (Lit Int 1))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Int 5))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))

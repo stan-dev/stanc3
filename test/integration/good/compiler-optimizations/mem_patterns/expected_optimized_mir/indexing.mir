@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../indexing.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../indexing.stan : [exit 0] */
 vector[M] p_soa_vec_v: SoA
 matrix[N, M] p_soa_mat: SoA
 array[vector[N], 10] p_soa_arr_vec_v: SoA

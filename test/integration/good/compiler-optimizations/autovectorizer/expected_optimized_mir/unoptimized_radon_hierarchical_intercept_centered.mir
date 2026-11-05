@@ -63,11 +63,9 @@ log_prob {
     target += normal_lupdf(beta, promote(0, real, data),
                            promote(10, real, data));
     target += normal_lupdf(alpha, mu_alpha, sigma_alpha);
-    for(n in 1:N) {
-      muj[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));
-      mu[n] = (muj[n] + (floor_measure[n] * beta[2]));
-      target += normal_lpdf(log_radon[n], mu[n], sigma_y);
-    }
+    muj[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
+    mu[1:N] = (muj[1:N] + (floor_measure[1:N] * beta[2]));
+    target += normal_lpdf(log_radon[1:N], mu[1:N], sigma_y);
   } }
 
 rev_log_prob {
@@ -100,11 +98,9 @@ rev_log_prob {
     target += normal_lupdf(beta, promote(0, real, data),
                            promote(10, real, data));
     target += normal_lupdf(alpha, mu_alpha, sigma_alpha);
-    for(n in 1:N) {
-      muj[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));
-      mu[n] = (muj[n] + (floor_measure[n] * beta[2]));
-      target += normal_lpdf(log_radon[n], mu[n], sigma_y);
-    }
+    muj[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
+    mu[1:N] = (muj[1:N] + (floor_measure[1:N] * beta[2]));
+    target += normal_lpdf(log_radon[1:N], mu[1:N], sigma_y);
   } }
 
 generate_quantities {

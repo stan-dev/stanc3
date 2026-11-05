@@ -410,3 +410,45 @@ val var_dependence_ids :
 val used_vars_at : stmt_info LabelMap.t -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)
+
+(** {2 The loop dependence graph of one [For]} *)
+
+(** The leaves of one [For]'s body and the flow, anti, output and effects edges
+    between them; the implementation documents the fields. *)
+type loop_graph
+
+val subtree_accesses : stmt_info LabelMap.t -> label -> Accesses.t
+(** The accesses of the statement at the label and of every statement below. *)
+
+val statement_at : stmt_info LabelMap.t -> label -> Stmt.Located.t
+(** The statement at the label, children rebuilt from the map. *)
+
+val has_effects : stmt_info LabelMap.t -> label -> bool
+(** Whether the statement at the label, or one below, prints, rejects, draws
+    random numbers or calls a user function. *)
+
+val build_loop_graph : stmt_info LabelMap.t -> loop:label -> loop_graph
+(** The flow, anti, output and effects edges between the leaves of the [For] at
+    [loop], at that loop's level; the implementation documents the rules. *)
+
+val pi_blocks : loop_graph -> label list list
+(** The strongly connected components (Tarjan 1972) in emission order (Allen and
+    Kennedy 1987, section 5.2): a topological order of the condensation, ties to
+    the earliest leaf. *)
+
+val is_cyclic : loop_graph -> label list -> bool
+(** Whether a pi-block must stay a sequential loop; a write-only scatter's self
+    output dependence does not count, since indexed assignment stores in order.
+*)
+
+val edge_between : loop_graph -> from:label list -> into:label list -> bool
+(** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
+
+val pp_graph :
+     stmt_info LabelMap.t
+  -> (label * string) list
+  -> Format.formatter
+  -> loop_graph
+  -> unit
+(** One indented line per leaf, with the leaf's outcome after it when the list
+    has one, then the edges and the pi-blocks in emission order. *)

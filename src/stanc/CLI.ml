@@ -292,6 +292,15 @@ module Debug_Options = struct
        on." in
     Arg.(value & flag & info ["debug-mem-patterns"] ~doc ~docs)
 
+  let debug_loop_vectorization =
+    let doc =
+      "For debugging purposes: for every loop, print the dependence graph of \
+       the loop body and the strongly connected components (pi-blocks) in \
+       emission order. Only has an effect when the loop vectorization pass \
+       runs ($(b,-fvectorize-loops) or an optimization level that enables it)."
+    in
+    Arg.(value & flag & info ["debug-loop-vectorization"] ~doc ~docs)
+
   (** helper for paired args like --debug-mir and --debug-mir-pretty *)
   let debug_basic_or_pretty ~doc flag_name : Driver.Flags.debug_options Term.t =
     let doc_pretty = String.replace_all ~sub:"print" ~by:"pretty-print" doc in
@@ -379,6 +388,7 @@ module Conversion = struct
     and+ print_optimized_mir = debug_optimized_mir
     and+ print_mem_patterns = debug_mem_patterns
     and+ optimization_overrides
+    and+ print_loop_vectorization = debug_loop_vectorization
     and+ print_lir = debug_lir
     and+ debug_generate_data
     and+ debug_generate_inits
@@ -392,6 +402,7 @@ module Conversion = struct
       ; print_optimized_mir
       ; print_mem_patterns
       ; optimization_overrides
+      ; print_loop_vectorization
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits
