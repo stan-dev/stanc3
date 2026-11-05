@@ -1,0 +1,66 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../two_independent_assignments_both_widen.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x;
+  vector[N] y; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x");
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  FnReadData__(y, context__, "y"); }
+
+log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    v[1:N] = (x[1:N] + alpha);
+    w[1:N] = (y[1:N] * promote(2, real, data));
+    target += normal_lpdf(v, w, promote(1, real, data));
+  } }
+
+rev_log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("v", "N", N);
+    vector[N] v;
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    v[1:N] = (x[1:N] + alpha);
+    w[1:N] = (y[1:N] * promote(2, real, data));
+    target += normal_lpdf(v, w, promote(1, real, data));
+  } }
+
+generate_quantities {
+  data real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var alpha))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real alpha;
+  FnReadData__(alpha, context__, "alpha");
+  (FnWriteParam(unconstrain_opt(Identity))(var alpha))__(); }
+output_vars {
+  parameters real alpha; //real
+}

@@ -1,0 +1,43 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../upper_bound_reads_written_container_stays_loop.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("a", "N", N);
+  data vector[N] a;
+  FnReadData__(a, context__, "a"); }
+
+log_prob {
+  {
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    for(i in 1:size(w)) {
+      w[i] = a[i];
+    }
+    FnPrint__(w);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    for(i in 1:size(w)) {
+      w[i] = a[i];
+    }
+    FnPrint__(w);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

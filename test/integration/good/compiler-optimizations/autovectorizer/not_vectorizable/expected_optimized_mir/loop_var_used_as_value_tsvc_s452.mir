@@ -1,0 +1,53 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../loop_var_used_as_value_tsvc_s452.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b0;
+  vector[N] c; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  FnReadData__(a0, context__, "a0");
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  FnReadData__(b0, context__, "b0");
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  FnReadData__(c, context__, "c"); }
+
+log_prob {
+  {
+    FnValidateSize__("a5", "N", N);
+    vector[N] a5;
+    a5 = a0;
+    for(n in 1:N) {
+      a5[n] = (b0[n] + (c[n] * promote((n + 1), real, data)));
+    }
+    target += sum(a5);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a5", "N", N);
+    vector[N] a5;
+    a5 = a0;
+    for(n in 1:N) {
+      a5[n] = (b0[n] + (c[n] * promote((n + 1), real, data)));
+    }
+    target += sum(a5);
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

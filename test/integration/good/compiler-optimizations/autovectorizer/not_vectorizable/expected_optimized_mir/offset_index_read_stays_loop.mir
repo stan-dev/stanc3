@@ -1,0 +1,43 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../offset_index_read_stays_loop.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    for(n in 2:N) {
+      w[n] = x[(n - 1)];
+    }
+    target += normal_lpdf(w, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("w", "N", N);
+    vector[N] w;
+    for(n in 2:N) {
+      w[n] = x[(n - 1)];
+    }
+    target += normal_lpdf(w, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

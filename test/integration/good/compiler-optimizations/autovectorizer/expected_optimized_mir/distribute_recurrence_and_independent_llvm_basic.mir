@@ -1,0 +1,59 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../distribute_recurrence_and_independent_llvm_basic.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] b;
+  vector[N] d;
+  vector[N] e; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  FnReadData__(b, context__, "b");
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  FnReadData__(d, context__, "d");
+  FnValidateSize__("e", "N", N);
+  data vector[N] e;
+  FnReadData__(e, context__, "e"); }
+
+log_prob {
+  {
+    data int a2_1dim__ = (N + 1);
+    FnValidateSize__("a2", "N + 1", a2_1dim__);
+    vector[a2_1dim__] a2;
+    FnValidateSize__("c2", "N", N);
+    vector[N] c2;
+    c2[1:N] = (d[1:N] .* e[1:N]);
+    for(n in 1:N) {
+      a2[(n + 1)] = (a2[n] * b[n]);
+    }
+    target += (sum(a2) + sum(c2));
+  } }
+
+rev_log_prob {
+  {
+    data int a2_1dim__ = (N + 1);
+    FnValidateSize__("a2", "N + 1", a2_1dim__);
+    vector[a2_1dim__] a2;
+    FnValidateSize__("c2", "N", N);
+    vector[N] c2;
+    c2[1:N] = (d[1:N] .* e[1:N]);
+    for(n in 1:N) {
+      a2[(n + 1)] = (a2[n] * b[n]);
+    }
+    target += (sum(a2) + sum(c2));
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

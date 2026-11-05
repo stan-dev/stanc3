@@ -1,0 +1,55 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../two_densities_in_one_loop_both_widen.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] y; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  FnReadData__(y, context__, "y");
+  FnValidateSize__("x", "N", N); }
+
+log_prob {
+  vector[N]
+    x = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    target += std_normal_lupdf(x[1:N]);
+    target += normal_lupdf(y[1:N], x[1:N], promote(1, real, data));
+  } }
+
+rev_log_prob {
+  vector[N]
+    x = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  {
+    target += std_normal_lupdf(x[1:N]);
+    target += normal_lupdf(y[1:N], x[1:N], promote(1, real, data));
+  } }
+
+generate_quantities {
+  data vector[N]
+    x = (FnReadParam(constrain Identity)(dims(N))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var x))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[N] x;
+  FnReadData__(x, context__, "x");
+  (FnWriteParam(unconstrain_opt(Identity))(var x))__(); }
+output_vars {
+  parameters vector[N] x; //vector[N]
+}

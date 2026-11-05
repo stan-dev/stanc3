@@ -1,0 +1,35 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../multi_index_lane_with_invariant_trailing_indices.stan : [exit 0] */
+input_vars {
+  int N;
+  array[int, N] x; }
+
+prepare_data {
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data array[int, N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    array[array[array[int, 2], 2], N] a;
+    a[1:N, 1, 1] = x[1:N];
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    array[array[array[int, 2], 2], N] a;
+    a[1:N, 1, 1] = x[1:N];
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+

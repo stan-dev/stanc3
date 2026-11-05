@@ -1,0 +1,47 @@
+/* $ stanc -fvectorize-loops --debug-optimized-mir-pretty ../break_inside_nested_while_does_not_block.stan : [exit 0] */
+input_vars {
+  int N;
+  vector[N] x; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  FnReadData__(N, context__, "N");
+  (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  FnReadData__(x, context__, "x"); }
+
+log_prob {
+  {
+    FnValidateSize__("b", "N", N);
+    vector[N] b;
+    b[1:N] = exp(x[1:N]);
+    for(i in 1:N) {
+      while(1) {
+        break;
+      }
+    }
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("b", "N", N);
+    vector[N] b;
+    b[1:N] = exp(x[1:N]);
+    for(i in 1:N) {
+      while(1) {
+        break;
+      }
+    }
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
