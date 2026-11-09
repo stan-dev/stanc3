@@ -524,8 +524,15 @@ module TypeError = struct
           "Function %a has already been declared. A definition is expected."
           quoted name
     | FunDeclNoDefn name ->
-        make_error "Function %a is declared without specifying a definition."
-          quoted name
+        let notes =
+          [ Message.createf
+              "If this function will be supplied elsewhere after compilation,@ \
+               (e.g., it is being manually implemented in C++)@ consider \
+               marking it with '%a' to silence this error."
+              Fmt.(styled `Bold string)
+              "@extern" ] in
+        make_error ~notes
+          "Function %a is declared without specifying a definition." quoted name
     | NonRealProbFunDef Void ->
         make_error
           "%a return type required for probability functions ending in _lpdf, \
