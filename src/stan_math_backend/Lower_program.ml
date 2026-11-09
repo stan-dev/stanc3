@@ -289,7 +289,7 @@ let write_tdata_json {Program.prepare_data; input_vars; _} =
   let tdata_ids =
     List.filter_map prepare_data ~f:(fun s ->
         match s.Stmt.pattern with
-        | Decl {decl_id; decl_type= Sized s; _}
+        | Decl {decl_id; _}
           when Utils.is_user_ident decl_id
                && not (String.Set.mem decl_id data_ids) ->
             Some decl_id
