@@ -5,3 +5,6 @@ error: Function "barfoo" is declared without specifying a definition.
   8 │    real barfoo(real x);
     │         ^^^^^^ Function "barfoo" is declared without specifying a definition.
   9 │    // error not defining barfoo
+    = If this function will be supplied elsewhere after compilation,
+      (e.g., it is being manually implemented in C++)
+      consider marking it with '@extern' to silence this error.
