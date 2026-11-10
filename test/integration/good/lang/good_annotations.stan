@@ -1,12 +1,11 @@
 functions {
-  @extern real foo(int x, int y);
-
   @foo @biz void bar(int x, int y, int z, int w, int a, int b, int d, int e, int f){
     print(x);
   }
 }
 parameters {
   @baz matrix[3,3] A;
+  @extern real theta;
 }
 
 
