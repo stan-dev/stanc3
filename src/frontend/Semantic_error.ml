@@ -197,7 +197,7 @@ module TypeError = struct
         (Message.createf "Ill-typed arguments supplied to %a." quoted name)
       ~notes:[note]
       "@[<v>The valid signature of this function is@ @[<hov 2>%s(%t,@ data \
-       int,@ (T_k%t) => matrix,@ tuple(T_k%t)%t)@]%t@@]"
+       int,@ (T_k%t) => matrix,@ tuple(T_k%t)%t)@]%t@]"
       name pp_lik_args ellipsis ellipsis pp_laplace_tols pp_supplied_tys
 
   let to_grace = function

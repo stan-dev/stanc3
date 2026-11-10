@@ -5,9 +5,7 @@ functions {
 }
 parameters {
   @baz matrix[3,3] A;
-  @extern real theta;
 }
-
 
 generated quantities {
   @bar @baz @flux /* comment in an odd place */ @really_extra_long_now matrix[34, 10000] a_bit_too_long = rep_matrix(1, 34, 10000);
