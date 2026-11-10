@@ -291,13 +291,13 @@ let check_id cf tenv id =
       Semantic_error.non_data_variable_size_decl loc origin prev |> error
   | {kind= `Variable {origin; _}; type_; _} ->
       (calculate_autodifftype cf origin type_, type_)
-  | { kind= `UserDefined _ | `UserExtern _ | `UserDeclared _
+  | { kind= `UserDefined _ | `UserDeclared _
     ; type_= UFun (args, rt, FnDist _, mem_pattern) } ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       (calculate_autodifftype cf Functions type_, type_)
-  | {kind= `UserDefined _ | `UserExtern _ | `UserDeclared _; type_} ->
+  | {kind= `UserDefined _ | `UserDeclared _; type_} ->
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
@@ -1469,10 +1469,7 @@ let verify_assignable_id loc cf tenv assign_id =
     | {kind= `Variable {origin; global; readonly; location}; _} :: _ ->
         (origin, global, readonly, Some location)
     | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false, None)
-    | { kind=
-          `UserDefined location | `UserDeclared location | `UserExtern location
-      ; _ }
-      :: _ ->
+    | {kind= `UserDefined location | `UserDeclared location; _} :: _ ->
         (Functions, true, false, Some location)
     | _ ->
         Semantic_error.ident_not_in_scope loc assign_id.name
@@ -2044,10 +2041,7 @@ and verify_unique_signature tenv loc id arg_tys rt =
         (UnsizedType.UFun (arg_tys, rt, Fun_kind.suffix_from_name id.name, AoS))
       |> error
   | { kind=
-        ( `UserExtern prev
-        | `UserDeclared prev
-        | `UserDefined prev
-        | `Variable {location= prev; _} )
+        `UserDeclared prev | `UserDefined prev | `Variable {location= prev; _}
     ; _ }
     :: _ ->
       Semantic_error.fn_decl_redefined loc id.name
@@ -2071,7 +2065,7 @@ and get_fn_decl_or_defn loc tenv id arg_tys rt body annotations =
       | Some prev -> Semantic_error.fn_decl_exists loc id.name prev |> error
       | None ->
           if List.exists annotations ~f:(fun {name; _} -> name = "extern") then
-            `UserExtern id.id_loc
+            `UserDefined id.id_loc
           else `UserDeclared id.id_loc)
   | _ -> `UserDefined id.id_loc
 
