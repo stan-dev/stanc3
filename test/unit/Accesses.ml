@@ -1,23 +1,23 @@
-(* These tests check {!Analysis_and_optimization.Accesses}. The module records
-   the accesses of each statement. An access is one read, write or increment of
-   a variable. The dependence analysis uses the accesses to find the earlier
-   statements that a statement depends on.
+(* These tests check {!Analysis_and_optimization.Dependence.Accesses}. The
+   module records the accesses of each statement. An access is one read, write
+   or read-write of a variable. The dependence analysis uses the accesses to
+   find the earlier statements that a statement depends on.
 
    The tests build a map of statements with [build_log_prob_dependence_info]. A
    label is the integer that identifies a statement in this map. The map covers
    the log density, which contains the statements of the parameters, transformed
    parameters and model blocks.
 
-   The tests print [label: statement // accesses]. R marks a read, and W marks a
-   write. += marks an increment of target, the log density accumulator. Each
-   access prints the variable and the indices. An affine index
-   ({!Analysis_and_optimization.Affine_subscript}) is a sum of a loop variable,
-   a symbol and a constant, and prints as that sum, as in [n+k-1]. A symbol is
-   an expression that has the same value in every iteration. An index without a
-   loop variable, as in [v[k]] or [v[3]], selects the same element in every
-   iteration. Every other index is not affine and prints as ?, such as an index
-   that reads a variable that a statement in the log density writes, or a loop
-   variable in an expression other than a sum.
+   The tests print [label: statement // accesses]. R marks a read, W marks a
+   write, and RW marks a read and a write of the same element, as [x += 1] and
+   [target += 1] make. Each access prints the variable and the indices. An
+   affine index ({!Analysis_and_optimization.Dependence.Affine_subscript}) is a
+   sum of a loop variable, a symbol and a constant, and prints as that sum, as
+   in [n+k-1]. A symbol is an expression that has the same value in every
+   iteration. An index without a loop variable, as in [v[k]] or [v[3]], selects
+   the same element in every iteration. Every other index is not affine and
+   prints as ?, such as an index that reads a variable that a statement in the
+   log density writes, or a loop variable in an expression other than a sum.
 
    The path of an access lists the subscripts and tuple fields that select the
    element. Each subscript or tuple field is one step of the path. *)
@@ -25,7 +25,7 @@
 open Std
 open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Dataflow_types
-module Accesses = Analysis_and_optimization.Accesses
+module Accesses = Analysis_and_optimization.Dependence.Accesses
 
 let pp_node_accesses ppf (statements : stmt_info LabelMap.t) =
   LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
@@ -56,6 +56,10 @@ let%expect_test
           y[n] = v[n + 1] + v[n - 2] + v[1 + n] + v[k] + v[3];
           y[n] = v[idx[n]] + v[2 * n] + v[n + k] + v[m];
           y[n] = v[k + n - 1] + v[n - k] + v[n + k + k] + v[n + k - k] + v[k + 1] + v[N - n] + v[n * k] + v[(n + 1) * 2];
+          y[n] = v[(N - 1) - n] + v[n + (k + k)] + v[k + k + n];
+          m *= 2;
+          y[idx[n]] = y[2 * n];
+          y[idx[n]] = y[idx[n]] + 1;
           m = n;
           for (j in 1:J) y[n] = v[j];
         }
@@ -70,10 +74,14 @@ let%expect_test
     7: for(n in 1:N) 8  // R N
     9: y[n] = ((((v[(n + 1)] + v[(n - 2)]) + v[(1 + n)]) + v[k]) + v[3]);  // R v[n+1], R v[n-2], R v[n+1], R v[k], R k, R v[3], W y[n]
     10: y[n] = (((v[idx[n]] + v[(2 * n)]) + v[(n + k)]) + v[m]);  // R v[?], R idx[n], R v[?], R v[n+k], R k, R v[?], R m, W y[n]
-    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[?], R k, R v[?], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[?], R k, R v[?], W y[n]
-    12: m = n;  // W m
-    13: for(j in 1:J) 14  // R J
-    15: y[n] = v[j];  // R v[j], W y[n]
+    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[n-k], R k, R v[n+(k + k)], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[?], R k, R v[?], W y[n]
+    12: y[n] = ((v[((N - 1) - n)] + v[(n + (k + k))]) + v[((k + k) + n)]);  // R v[-n+N-1], R N, R v[n+(k + k)], R k, R k, R v[n+(k + k)], R k, R k, W y[n]
+    13: m = (m * 2);  // RW m
+    14: y[idx[n]] = y[(2 * n)];  // R idx[n], R y[?], W y[?]
+    15: y[idx[n]] = (y[idx[n]] + promote(1, real, data));  // R idx[n], R idx[n], RW y[?]
+    16: m = n;  // W m
+    17: for(j in 1:J) 18  // R J
+    19: y[n] = v[j];  // R v[j], W y[n]
     |}]
 
 let%expect_test "Every index kind of the language" =
@@ -147,8 +155,8 @@ let%expect_test "Statement kinds: declarations, target, effects and nesting" =
     11: t = (promote(2, real, data) * x[n]);  // R x[n], W t
     12: vector[2] u;  // W u
     13: v[n] = (t + w[n]);  // R t, R w[n], W v[n]
-    14: acc = (acc + (x[n] * w[n]));  // R acc, R x[n], R w[n], W acc
-    15: target += normal_lpdf(x[n], v[n], mu);  // R x[n], R v[n], R mu, += target
+    14: acc = (acc + (x[n] * w[n]));  // R x[n], R w[n], RW acc
+    15: target += normal_lpdf(x[n], v[n], mu);  // R x[n], R v[n], R mu, RW target
     16: if((v[n] > 0)) 17 else 18  // R v[n]
     17: FnPrint__(v[n]);  // R v[n]
     18: v[n] = sum(v);  // R v, W v[n]
@@ -199,10 +207,10 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     12: for(n in 1:N) 13  // R N
     14: v[n] = (((x[(n + 1)] + theta[1]) + v[idx[n]]) + v[m]);  // R x[n+1], R theta[1], R v[?], R idx[n], R v[?], R m, W v[n]
     17: theta[j] = ((v[n] + v[k]) + sum(v[n:N]));  // R v[n], R v[k], R k, R v[n:N], R N, W theta[j]
-    18: target += normal_lpdf(x, v, theta[2]);  // R x, R v, R theta[2], += target
+    18: target += normal_lpdf(x, v, theta[2]);  // R x, R v, R theta[2], RW target
     |}]
 
-let%expect_test "Accesses: _lp calls increment target, target() reads it" =
+let%expect_test "Accesses: _lp calls read and write target, target() reads it" =
   print_node_accesses
     {|
       functions {
@@ -219,11 +227,11 @@ let%expect_test "Accesses: _lp calls increment target, target() reads it" =
   [%expect
     {|
     2: real mu;  // W mu
-    4: add_lp(mu);  // R mu, += target
+    4: add_lp(mu);  // R mu, RW target
     5: real t;  // W t
-    6: t = twice_lp(mu);  // R mu, += target, W t
+    6: t = twice_lp(mu);  // R mu, RW target, W t
     7: if((target() > 0)) 8  // R target
-    8: target += 1;  // += target
+    8: target += 1;  // RW target
     |}]
 
 let%expect_test "Accesses: nested indexing is one reference" =
@@ -245,7 +253,7 @@ let%expect_test "Accesses: nested indexing is one reference" =
     7: y[1] = (((a[n][1] + a[n, 2]) + b[n][1]) + a[1:2][1][1]);  // R a[n, 1], R a[n, 2], R b[n, 1], R a[1:2], W y[1]
     |}]
 
-let%expect_test "Accesses: a Stan Math _jacobian call increments target" =
+let%expect_test "Accesses: a Stan Math _jacobian call reads and writes target" =
   print_node_accesses
     {|
       parameters { real y; }
@@ -258,11 +266,11 @@ let%expect_test "Accesses: a Stan Math _jacobian call increments target" =
     {|
     2: real y;  // W y
     3: real x;  // W x
-    4: x = lower_bound_jacobian(y, promote(0, real, data));  // R y, += target, W x
+    4: x = lower_bound_jacobian(y, promote(0, real, data));  // R y, RW target, W x
     |}]
 
 let%expect_test
-    "Accesses: a user _jacobian call and jacobian += increment target" =
+    "Accesses: a user _jacobian call and jacobian += read and write target" =
   print_node_accesses
     {|
       functions {
@@ -278,8 +286,8 @@ let%expect_test
     {|
     2: real y;  // W y
     3: real x;  // W x
-    4: x = shift_jacobian(y);  // R y, += target, W x
-    5: jacobian += y;  // R y, += target
+    4: x = shift_jacobian(y);  // R y, RW target, W x
+    5: jacobian += y;  // R y, RW target
     |}]
 
 let%expect_test "Accesses: a declaration reads the sizes in its type" =

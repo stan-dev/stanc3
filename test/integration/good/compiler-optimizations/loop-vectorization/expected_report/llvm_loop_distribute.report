@@ -24,9 +24,9 @@ loop at '../llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  
 
 loop at '../llvm_loop_distribute.stan', line 88, column 4 to line 91, column 5  (n in 1:N)
   S0  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence
-  S1  total4 = (total4 + d[n]);   sequential: recurrence
-  edges: S0 -> S0 a4 d=1 (flow); S1 -> S1 total4 d=* (flow); S1 -> S1 total4 d=* (output)
-  blocks: [S0]cyclic [S1]cyclic
+  S1  total4 = (total4 + d[n]);   sequential: a reduction into total4
+  edges: S0 -> S0 a4 d=1 (flow)
+  blocks: [S0]cyclic [S1]
 
 loop at '../llvm_loop_distribute.stan', line 107, column 4 to line 111, column 5  (n in 1:N)
   S0  real dd5;   sequential: in a dependence cycle

@@ -150,6 +150,36 @@ let%expect_test "Loop vectorization: a scalar written every iteration stays" =
       blocks: [S0]
     |}]
 
+(* A sum into a scalar is an accumulator, so the graph has no edge, but the
+   statement is refused until the reductions PR emits the sum. *)
+let%expect_test "Loop vectorization: a scalar sum is refused as a reduction" =
+  print_vectorized
+    {|
+      data { int N; vector[N] x; }
+      model {
+        real s = 0;
+        for (n in 1:N) {
+          s += x[n];
+        }
+        target += s;
+      }
+    |};
+  [%expect
+    {|
+    {
+      real s;
+      s = promote(0, real, var);
+      for(n in 1:N) {
+        s = (s + x[n]);
+      }
+      target += s;
+    }
+    loop at 'string', line 5, column 8 to line 7, column 9  (n in 1:N)
+      S0  s = (s + x[n]);   sequential: a reduction into s
+      edges: none
+      blocks: [S0]
+    |}]
+
 let%expect_test "Loop vectorization: no report is kept unless requested" =
   Loop_vectorize.reporting := false;
   let (_ : Program.Typed.t) =

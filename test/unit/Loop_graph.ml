@@ -135,10 +135,10 @@ let%expect_test
     {|
       data { int N; int M; }
       model {
-        vector[M] a = rep_vector(0, M);
+        vector[M] a = rep_vector(1, M);
         for (n in 1:N) {
           for (m in 1:M) {
-            a[m] = a[m] + 1;
+            a[m] = a[m] * 2;
           }
         }
       }
@@ -146,11 +146,11 @@ let%expect_test
   [%expect
     {|
     loop (n in 1:N)
-      S0  for(m in 1:M) { a[m] = (a[m] + promote(1, real, data)); }
+      S0  for(m in 1:M) { a[m] = (a[m] * promote(2, real, data)); }
       edges: S0 -> S0 a d=* (flow); S0 -> S0 a d=* (output)
       blocks: [S0]cyclic
     loop (m in 1:M)
-      S0  a[m] = (a[m] + promote(1, real, data));
+      S0  a[m] = (a[m] * promote(2, real, data));
       edges: none
       blocks: [S0]
     |}]
@@ -188,7 +188,9 @@ let%expect_test "Loop graph: sibling inner loops share no dependence" =
       blocks: [S0]
     |}]
 
-let%expect_test "Loop graph: two increments of target commute" =
+(* target is an accumulator of the body: every statement that touches it only
+   adds to it, so the additions can run in any order and have no edges. *)
+let%expect_test "Loop graph: accumulations into target commute" =
   print_loop_graphs
     {|
       data { int N; vector[N] a; vector[N] b; }
@@ -206,6 +208,53 @@ let%expect_test "Loop graph: two increments of target commute" =
       S1  target += b[n];
       edges: none
       blocks: [S0] [S1]
+    |}]
+
+(* A read of the accumulator needs the sum so far, so the order is fixed and
+   every edge on target stays. *)
+let%expect_test "Loop graph: a read of the accumulator keeps the edges" =
+  print_loop_graphs
+    {|
+      data { int N; vector[N] a; }
+      model {
+        vector[N] t;
+        for (n in 1:N) {
+          target += a[n];
+          t[n] = target();
+        }
+      }
+    |};
+  [%expect
+    {|
+    loop (n in 1:N)
+      S0  target += a[n];
+      S1  t[n] = target();
+      edges: S0 -> S0 target d=* (flow); S0 -> S0 target d=* (output); S0 -> S1 target d=* (flow); S1 -> S0 target d=* (anti)
+      blocks: [S0 S1]cyclic
+    |}]
+
+(* A scalar sum is an accumulator too, so the self dependence through s is not
+   an edge; t is not, because t = a[n] - t is not a sum into t. *)
+let%expect_test "Loop graph: a scalar sum is an accumulator" =
+  print_loop_graphs
+    {|
+      data { int N; vector[N] a; }
+      model {
+        real s = 0;
+        real t = 1;
+        for (n in 1:N) {
+          s = s + a[n];
+          t = a[n] - t;
+        }
+      }
+    |};
+  [%expect
+    {|
+    loop (n in 1:N)
+      S0  s = (s + a[n]);
+      S1  t = (a[n] - t);
+      edges: S1 -> S1 t d=* (flow); S1 -> S1 t d=* (output)
+      blocks: [S0] [S1]cyclic
     |}]
 
 let%expect_test "Loop graph: two effectful statements depend on each other" =

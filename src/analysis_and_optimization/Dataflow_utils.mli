@@ -3,36 +3,28 @@
     A {e statement map} ({!build_statement_map}) gives each statement in a tree
     of statements an integer {e label}. The map takes each label to the
     statement, with each nested statement replaced by the label of the nested
-    statement. One traversal of a statement map computes three items.
-    {!build_predecessor_graph} returns the first two, and {!build_controls} the
-    third.
-    - The {e predecessor graph} maps each label to the labels of the statements
-      that can run immediately before that statement.
-    - The {e exit set} holds the labels of the statements that can run last.
-    - The {e controls} of a statement ({!Dataflow_types.controls}) are the
-      statements that decide whether, or how often, the statement runs. They are
-      the ifs and loops around the statement, outermost first, called the
-      {e enclosing} ifs and loops, and the {e jumps}, which are the [break],
-      [continue] and [return] statements that can skip the statement. A loop
-      statement does not list itself.
+    statement. A loop is identified by the label of the loop statement, and the
+    statement at that label holds the loop variable.
 
-    The {e control parents} of a statement are the controls that directly decide
-    whether the statement runs. These are the nearest enclosing [if] or loop,
-    and each jump.
+    {!build_predecessor_graph} returns two results, both properties of the whole
+    statement. The {e predecessor graph} maps each label to the labels of the
+    statements that can run immediately before that statement. The {e exit set}
+    holds the labels at which a run of the whole statement can end: the last
+    statement of each path through the statement, and every [return].
+    {!Monotone_framework} uses the exit set as the start set of the backward
+    flowgraph.
 
-    {!enclosing_loop_ids} counts a loop statement as inside the loop that the
-    statement forms. The loop checks the condition, or the upper bound, again
-    after each iteration, so writes in the body can reach the loop statement.
-    LLVM also puts the loop header inside the loop.
-
-    A loop is identified by the label of the loop statement. The statement at
-    that label holds the loop variable.
-
-    The running example is [for (n in 1:N) if (c) x = 1;], where the [for]
-    statement has label [6] and the [if] has label [8]. The controls of [x = 1]
-    are [{id = 6; side = None}] for the loop and [{id = 8; side = Some Then}]
-    for the [if], and the control parents of [x = 1] hold only [8]. For both
-    [x = 1] and the [for] statement, {!enclosing_loop_ids} gives [[6]]. *)
+    {!build_controls} returns the {e controls} of each statement
+    ({!Dataflow_types.controls}), a property of one statement: the statements
+    that decide whether, or how often, the statement runs. These are the ifs and
+    loops around the statement, outermost first, called the {e enclosing} ifs
+    and loops, and the {e jumps}, the [break], [continue] and [return]
+    statements that can skip the statement. In
+    [for (n in 1:N) { if (c) break; x = 1; }] the [break] can skip [x = 1], so
+    the [break] is a jump of [x = 1], and the loop is the one enclosing control
+    of [x = 1]. A loop statement does not list itself. The {e control parents}
+    of a statement are the controls that directly decide whether the statement
+    runs: the nearest enclosing [if] or loop, and each jump. *)
 
 open Std
 open Middle
@@ -56,11 +48,9 @@ val enclosing_loop_ids :
 (** Returns the labels of the loops around a statement, outermost first: the
     loops in the controls of the statement, without the ifs, and for a loop
     statement the label of the statement itself last, since the loop header runs
-    in every iteration of the loop. In the running example of
-    {!Dependence_analysis}, label [15] has the controls [loop 8; if 13] and the
-    loops [[8]], and the loop at label [8] has the loops [[8]]. The common
-    prefix of two such lists is the loops around both statements, and the
-    dependence distance vector has one entry per such loop. *)
+    in every iteration of the loop. For [for (n in 1:N) x[n] = 1;] the loop
+    statement and the assignment both have the loop list [[loop]]. The common
+    prefix of two such lists is the loops around both statements. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t

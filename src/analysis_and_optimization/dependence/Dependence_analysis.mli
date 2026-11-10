@@ -17,8 +17,10 @@ open Dataflow_types
     ({!Factor_graph}) uses the same analysis to connect each [target +=] term to
     the parameters and data that the term uses.
 
-    This documentation describes how dependency analysis works in stanc. Each
-    section uses the running example below.
+    {!Dependence} describes one access of a statement and compares two accesses
+    of one variable. This module builds the record of each statement and answers
+    the queries. This documentation describes how dependency analysis works in
+    stanc. Each section uses the running example below.
 
     {1 Running example}
     {@text[
@@ -142,8 +144,8 @@ open Dataflow_types
     [SList], before the labels of the statements in the block. The controls
     column lists the [if]s and loops around the statement, outermost first. The
     accesses column lists what the expressions of the statement read ([R]),
-    write ([W]) and increment ([+=]), with the element when the access has a
-    subscript. Reads of the loop variable [n] are dropped, so label [10] shows
+    write ([W]) and read and write ([RW]), with the element when the access has
+    a subscript. Reads of the loop variable [n] are dropped, so label [10] shows
     [R a] and not [R n], and the loop at label [8] reads only the bound [N]. The
     unit test "Running example: the statement map" prints this table.
     {@text[
@@ -159,10 +161,10 @@ open Dataflow_types
     9      11-18       Block { #10 #11 #12 #13 }           [loop 8 (n)]
     10     12          theta[n, 1] = a;                    [loop 8 (n)]              R a, W theta[n, 1]
     11     13          theta[n, 2] = x[n];                 [loop 8 (n)]              R x[n], W theta[n, 2]
-    12     14          s = (s + theta[n, 2]);              [loop 8 (n)]              R s, R theta[n, 2], W s
+    12     14          s = (s + theta[n, 2]);              [loop 8 (n)]              R theta[n, 2], RW s
     13     15-17       if((s > 0)) #14                     [loop 8 (n)]              R s
     14     15-17       Block { #15 }                       [loop 8 (n); if 13 then]
-    15     16          target += 1;                        [loop 8 (n); if 13 then]  += target
+    15     16          target += 1;                        [loop 8 (n); if 13 then]  RW target
     ]}
 
     Each row describes one statement by itself. The pattern comes from the text
@@ -246,9 +248,7 @@ open Dataflow_types
     access in each definition says which element the candidate writes, and a
     candidate that can never write the element that is read is dropped
     ({!Dependence.test_dependence}). A [None] definition never becomes a
-    dependence, because the queries return labels only. An increment, such as
-    [target += 1], does not use the value of an earlier increment, so two
-    increments of the same variable are never dependent.
+    dependence, because the queries return labels only.
 
     The table shows the two halves for each label with a dependence; labels [1]
     to [8] have none. The two columns are the writer labels and the control
@@ -262,7 +262,7 @@ open Dataflow_types
     12     s = (s + theta[n, 2]);     5 7 11 12          8
     13     if((s > 0)) #14            12                 8
     14     Block { #15 }              -                  13
-    15     target += 1;               -                  13
+    15     target += 1;               15                 13
     ]}
 
     Label [12] shows the join in full. The statement map says that the
@@ -282,6 +282,10 @@ open Dataflow_types
     reaching definition of [s] at label [13] is label [12], so the initializer
     at label [7] is never a candidate and the only writer is label [12].
 
+    Label [15] reads and writes [target], and the one definition of [target]
+    that reaches label [15] is label [15] from the previous iteration, so the
+    statement depends on itself.
+
     {1 Using the dependencies}
 
     The factor graph and pedantic mode both start at one statement and follow
@@ -296,6 +300,7 @@ open Dataflow_types
     [N s target theta x].
     {@text[
       label: 15  target += 1;
+      |-- label: 15  (visited)                    data
       `-- label: 13  if((s > 0)) #14                  control
           |-- label: 12  s = (s + theta[n, 2]);       data
           |   |-- label: 5  matrix[N, 2] theta;       data
@@ -320,7 +325,7 @@ open Dataflow_types
     unused. *)
 
 (** One write that can still hold the value of a variable when a statement runs:
-    the access ({!Accesses.access}, a [Write] or an [Increment]), the label of
+    the access ({!Dependence.Accesses.access}, a [Write] or a [ReadWrite]), the label of
     the statement that makes the access and the loops around that statement,
     outermost first. A [None] label is a write from outside the analyzed code,
     such as data or a parameter; the access of such a write is the whole
@@ -333,7 +338,9 @@ open Dataflow_types
       {access = {var = "N"; path = []; kind = Write}; statement_id = None; loop_ids = []}
     ]} *)
 type reaching_definition =
-  {access: Accesses.access; statement_id: label option; loop_ids: label list}
+  { access: Dependence.Accesses.access
+  ; statement_id: label option
+  ; loop_ids: label list }
 
 (** What a dependence query needs to know about one statement. Every query reads
     the record of the statement the query starts at; the transitive queries then
@@ -365,8 +372,8 @@ type stmt_info =
         (** The loops around this statement, outermost first
             ({!Dataflow_utils.enclosing_loop_ids}). A loop statement counts as
             inside the loop that the statement starts. *)
-  ; accesses: Accesses.t
-        (** The reads, writes and increments in the expressions of this
+  ; accesses: Dependence.Accesses.t
+        (** The reads, writes and read-writes in the expressions of this
             statement. Each nested statement has a separate record. *)
   ; reaching_definitions: reaching_definition Set.Poly.t
         (** The writes that can reach the node of this statement in the
@@ -411,13 +418,38 @@ val used_vars_at : stmt_info LabelMap.t -> label Set.Poly.t -> string Set.Poly.t
 (** Returns the variables that the statements at the labels use, without loop
     variables. For a loop or [if], only the bounds or condition count. *)
 
-(** {2 The loop dependence graph of one [For]} *)
+(** {1 Printing}
+
+    The printers below give the notation of the tables in this file. The unit
+    tests print the tables with them. *)
+
+val pp_pattern : (Expr.Typed.t, label) Stmt.Pattern.t Fmt.t
+(** Prints a pattern on one line, with [#] before each nested label and the
+    constructor name of a block: [Block { #10 #11 }], [SList { #2 #3 }],
+    [if((s > 0)) #14]. *)
+
+val pp_controls : loop_name:(label -> string) -> controls Fmt.t
+(** Prints the controls of a statement as [loop 8 (n); if 13 then; jump 9].
+    [loop_name] gives the loop variable of a loop label. *)
+
+val pp_definitions :
+  loop_name:(label -> string) -> reaching_definition Set.Poly.t Fmt.t
+(** Prints a set of definitions as [a 2, s [7, 12], theta[n, 1] 10]: each entry
+    is the variable and the path of a write, then the labels of the definitions
+    with that write. Definitions from outside the analyzed code are left out,
+    and a set with only such definitions prints [None]. *)
+
+val pp_dependences : stmt_info Fmt.t
+(** Prints the direct dependencies of a statement as [data 5 9  control 6]: the
+    writer labels, then the control parents. An empty half prints nothing. *)
+
+(** {1 The loop dependence graph of one [For]} *)
 
 (** The leaves of one [For]'s body and the flow, anti, output and effects edges
     between them; the implementation documents the fields. *)
 type loop_graph
 
-val subtree_accesses : stmt_info LabelMap.t -> label -> Accesses.t
+val subtree_accesses : stmt_info LabelMap.t -> label -> Dependence.Accesses.t
 (** The accesses of the statement at the label and of every statement below. *)
 
 val statement_at : stmt_info LabelMap.t -> label -> Stmt.Located.t

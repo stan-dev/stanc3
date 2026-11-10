@@ -13,6 +13,8 @@ open Middle
 open Mir_utils
 open Dataflow_types
 open Dependence_analysis
+module Affine_subscript = Dependence.Affine_subscript
+module Accesses = Dependence.Accesses
 
 (* ---- Widening one statement over the loop (design section 7.6) ---- *)
 
@@ -187,6 +189,13 @@ let widen_assignment (ctx : context) (var : string)
     || List.exists indices ~f:(idx_any cannot_duplicate_expr)
   then refused "the assignment has side effects or draws random numbers";
   if is_invariant ctx rhs then refused "the right-hand side is loop-invariant";
+  (* [s = s + x[n]] with every index invariant sums into one element; the sum
+     needs its own code generation, which the reductions PR adds. *)
+  if
+    Set.Poly.mem var (expr_names rhs)
+    && List.for_all indices ~f:(fun index ->
+        List.for_all (Index.bounds index) ~f:(is_invariant ctx))
+  then refused "a reduction into %s" var;
   let indices = widen_indices ctx indices in
   let rhs = widen ctx rhs in
   let slice = Expr.Helpers.infer_type_of_indexed var_type indices in
