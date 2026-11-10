@@ -264,7 +264,7 @@ rule token = parse
       lexer_logger ("annotation " ^ ann);
       lexer_pos_logger (lexeme_start_p lexbuf);
       add_separator lexbuf;
-      Parser.ANNOTATION (lexeme lexbuf |> Std.String.chop_prefix_exn ~prefix:"@")
+      Parser.ANNOTATION (lexeme lexbuf)
     }
   (* End of file *)
   | eof
