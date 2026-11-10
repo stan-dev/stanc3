@@ -343,7 +343,8 @@ constrained_matrix:
     { rt, name, args }
 
 %inline annotation:
-  | a = ANNOTATION { build_id a $loc }
+  | a = ANNOTATION
+    { build_id (String.chop_prefix_exn ~prefix:"@" a) $loc }
 
 function_def:
   | annotations = list(annotation) fn = function_start

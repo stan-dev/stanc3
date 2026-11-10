@@ -2058,16 +2058,22 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
     verify_unique_signature tenv loc id arg_tys rt;
   verify_name_fresh tenv id ~is_udf:true
 
-and get_fn_decl_or_defn loc tenv id arg_tys rt body annotations =
+and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
+    annotations =
+  let is_extern {name; _} = name = "extern" in
   match body with
   | {stmt= Skip; _} -> (
       match exists_matching_fn_declared tenv id arg_tys rt with
       | Some prev -> Semantic_error.fn_decl_exists loc id.name prev |> error
       | None ->
-          if List.exists annotations ~f:(fun {name; _} -> name = "extern") then
-            `UserDefined id.id_loc
+          if List.exists annotations ~f:is_extern then `UserDefined id.id_loc
           else `UserDeclared id.id_loc)
-  | _ -> `UserDefined id.id_loc
+  | _ -> (
+      match List.find_opt annotations ~f:is_extern with
+      | Some annotation ->
+          Semantic_error.fn_extern_defined body.smeta.loc id.name annotation
+          |> error
+      | _ -> `UserDefined id.id_loc)
 
 and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
