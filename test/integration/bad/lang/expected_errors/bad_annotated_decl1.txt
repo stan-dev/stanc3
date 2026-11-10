@@ -1,0 +1,8 @@
+/* $ stanc ../bad_annotated_decl1.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_annotated_decl1.stan:2:12
+  1 │  parameters {
+  2 │   @gpuified theta;
+    │             ^^^^^ here.
+  3 │  }
+    = Expected a type or more annotations following the annotation.
