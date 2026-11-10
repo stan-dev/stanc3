@@ -11,6 +11,6 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
     │                                                                     tuple(T_k...), vector,
     │                                                                     data real, data int,
     │                                                                     data int, data int,
-    │                                                                     data int)@]
+    │                                                                     data int)
   3 │  }
     = Missing the hessian block size (data-only int) and remaining arguments.

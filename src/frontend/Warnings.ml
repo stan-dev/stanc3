@@ -49,6 +49,9 @@ let unsupported_annotation (span, ann, ty) =
 
 let pedantic_warning (span, msg) = Pedantic (span, msg)
 
+let ignored_annotation =
+  Grace.Diagnostic.Message.create "This will be ignored by the compiler."
+
 let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
     "This can be automatically changed using the canonicalize flag for stanc."
@@ -197,13 +200,16 @@ let to_grace ?printed_filename ?code warn =
           name major minor rename in
       make_warning ~notes ~summary loc "Use %s instead." rename
   | UnknownAnnotation (loc, a) ->
-      make_warning loc
-        "Unknown annotation '%s' will be ignored by the compiler." a
+      let summary = Message.createf "Unknown annotation '%@%s'." a in
+      make_warning ~summary ~notes:[ignored_annotation] loc
+        "Unknown annotation."
   | UnsupportedAnnotation (loc, a, ty) ->
-      make_warning loc
-        "Unsupported annotation '%s' for type %a. This will be ignored by the \
-         compiler."
-        a UnsizedType.pp ty
+      let summary =
+        Message.createf "Unsupported annotation '%@%s' for type %a." a
+          (SignatureMismatch.actual_style UnsizedType.pp)
+          ty in
+      make_warning loc ~summary ~notes:[ignored_annotation]
+        "Unsupported annotation."
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in

@@ -15,7 +15,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
     │                                                                       However, we received the types:
     │                                                                       (data array[] int,
     │                                                                         data array[] int,
-    │                                                                         data vector, data int)@]
+    │                                                                         data vector, data int)
   3 │  }
     = Typechecking failed after checking the first 4 arguments.
       Please ensure you are passing enough arguments and that the 5th is a function.

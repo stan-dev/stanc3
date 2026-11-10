@@ -13,7 +13,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                             ((vector, real, vector, array[] int) => real,
     │                                                                               tuple(real, vector,
     │                                                                                     array[] int),
-    │                                                                               data int)@]
+    │                                                                               data int)
  41 │  
     = Typechecking failed after checking the first 3 arguments.
       Please ensure you are passing enough arguments and that the 4th is a function.
