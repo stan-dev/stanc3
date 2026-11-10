@@ -1,29 +1,6 @@
-(* The interface file describes the analysis and the running example. This file
-   uses the terms below.
-
-   An access is one read, write or increment of a variable. The path of an
-   access lists the subscripts and tuple fields that select an element of the
-   variable ({!Accesses}).
-
-   A definition records a write as the access of the write, the label of the
-   writing statement and the loops around that statement. A definition reaches a
-   statement if the program can go from the write to the statement with no write
-   between them that overwrites the same element. Reaching definitions
-   ({!Monotone_framework.reaching_definitions_mfp}) finds these definitions.
-
-   A later write kills an earlier definition when the later write overwrites
-   each element that the earlier write wrote. The killed definition no longer
-   reaches later statements. An element kill compares the paths of two writes to
-   single elements, such as [theta[n, 1]], to decide this.
-
-   The controls of a statement are the ifs and loops around the statement, and
-   the jumps ([break], [continue] and [return]) that can skip the statement
-   ({!Dataflow_types.controls}).
-
-   Each reaching definition of a variable that a statement reads is a candidate
-   writer for the read, and the statement that reads is the reader.
-   {!Dependence} rejects a candidate writer that can never supply the value that
-   the reader uses. *)
+(* The interface file describes the analysis, defines the terms (access,
+   definition, kill, control, writer and reader) and walks through the running
+   example that the unit tests print. *)
 
 open Std
 open Middle
@@ -31,6 +8,7 @@ open Dataflow_types
 open Dataflow_utils
 open Monotone_framework_sigs
 open Monotone_framework
+open Dependence
 
 type reaching_definition =
   {access: Accesses.access; statement_id: label option; loop_ids: label list}
@@ -47,17 +25,16 @@ type stmt_info =
 
 (** The [is_killed] callback for reaching definitions. A write at [killer] kills
     a definition when the write must overwrite the element that the definition
-    wrote, by one of two rules. An increment of a variable kills every earlier
-    definition of the variable, so the definition of [target] is always the
-    latest increment. *)
+    wrote, by rule A (every iteration) or rule B (same iteration) below. *)
 let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
     (killed : reaching_definition) : bool =
   let killer_statement = LabelMap.find killer statements in
-  (* Rule B of 2: [killer] writes the element of [killed] in the same iteration
-     of the innermost loop around [killed]. [killer] comes later in source order
-     and has the same loops. Each control of [killer], and of the innermost
-     loop, is also a control of [killed]. The loops are found last, after the
-     cheaper checks. A definition from outside has no label and no iteration. *)
+  (* Rule B, same iteration: [killer] writes the element of [killed] in the same
+     iteration of the innermost loop around [killed]. [killer] comes later in
+     source order and has the same loops. Each control of [killer], and of the
+     innermost loop, is also a control of [killed]. The loops are found last,
+     after the cheaper checks. A definition from outside has no label and no
+     iteration. *)
   let is_killed_in_same_iteration
       (killer_path : Affine_subscript.t Accesses.step list) : bool =
     match killed.statement_id with
@@ -87,20 +64,16 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
       &&
       match access.kind with
       | Read -> false
-      | Increment -> true
-      | Write ->
-          (* Rule A of 2: [killer] writes the element of [killed] in every
-             iteration. A write of the whole variable has an empty path and
-             overwrites every element, including an outside definition. *)
+      | Write | ReadWrite ->
+          (* Rule A, every iteration: [killer] writes the element of [killed] in
+             every iteration. A write of the whole variable has an empty path
+             and overwrites every element, including an outside definition. *)
           Dependence.is_overwritten ~is_same_iteration:false access.path
             killed.access.path
           || is_killed_in_same_iteration access.path)
 
-(** Runs reaching definitions on the forward flowgraph of [statements]. The
-    definitions from outside are the input and output variables of [mir], each
-    statement adds a definition for each write or increment in the accesses of
-    the statement, and {!is_killed} removes definitions. Returns the definitions
-    that reach the node of each label. *)
+(** The definitions from outside are the input and output variables of [mir].
+    Returns the definitions at the entry of each node. *)
 let compute_reaching_definitions (mir : Program.Typed.t)
     (statements : stmt_info LabelMap.t) :
     reaching_definition Set.Poly.t LabelMap.t =
@@ -121,7 +94,7 @@ let compute_reaching_definitions (mir : Program.Typed.t)
     let statement = LabelMap.find statement_id statements in
     let definition_of_access (access : Accesses.access) =
       match access.kind with
-      | Write | Increment ->
+      | Write | ReadWrite ->
           Some
             { access
             ; statement_id= Some statement.id
@@ -137,19 +110,22 @@ let compute_reaching_definitions (mir : Program.Typed.t)
   LabelMap.map definitions_at_entry_and_exit ~f:(fun definitions ->
       definitions.entry)
 
+(** Whether [write] can supply the value that [read] uses. The two must name one
+    variable, [write] must write (a [Write] or a [ReadWrite]), [read] must read
+    (a [Read] or a [ReadWrite]), and the write must be able to run before the
+    read ({!Dependence.is_lexicographically_positive}). *)
 let is_flow_dependence (common_loop_ids : label list) (is_writer_first : bool)
     (write : Accesses.access) (read : Accesses.access) : bool =
   String.equal write.var read.var
-  && (match (write.kind, read.kind) with
-    | (Write | Increment), Read | Write, Increment -> true
-    | Read, _ | Increment, Increment | _, Write -> false)
+  && (match write.kind with Write | ReadWrite -> true | Read -> false)
+  && (match read.kind with Read | ReadWrite -> true | Write -> false)
   && Dependence.is_lexicographically_positive common_loop_ids is_writer_first
        write.path read.path
 
 let writers_of_statement (statement : stmt_info) : (string * label) Set.Poly.t =
   let reads =
     List.filter statement.accesses ~f:(fun (access : Accesses.access) ->
-        match access.kind with Read | Increment -> true | Write -> false) in
+        match access.kind with Read | ReadWrite -> true | Write -> false) in
   Set.Poly.union_map statement.reaching_definitions ~f:(fun definition ->
       match definition.statement_id with
       | None -> Set.Poly.empty
@@ -243,7 +219,7 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
           | Read ->
               List.exists for_loops ~f:(fun (loopvar, _) ->
                   String.equal loopvar access.var)
-          | Write | Increment -> false in
+          | Write | ReadWrite -> false in
         let accesses =
           pattern
           |> Accesses.of_statement
@@ -274,3 +250,81 @@ let build_log_prob_dependence_info (mir : Program.Typed.t) :
   let log_prob_stmt =
     Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dependence_info mir log_prob_stmt
+
+(* Printing *)
+
+(** Prints the output of [pp] on one line: each line of the output is trimmed,
+    and the lines are joined by one space. *)
+let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
+ fun ppf x ->
+  let buffer = Buffer.create 128 in
+  let line_ppf = Format.formatter_of_buffer buffer in
+  Format.pp_set_margin line_ppf 1_000_000;
+  Fmt.pf line_ppf "%a@?" pp x;
+  Buffer.contents buffer |> String.split_lines |> List.map ~f:String.trim
+  |> String.concat ~sep:" " |> Fmt.string ppf
+
+let pp_pattern ppf (pattern : (Expr.Typed.t, label) Stmt.Pattern.t) =
+  let pp_label ppf label = Fmt.pf ppf "#%d" label in
+  let pp_labels = Fmt.(list ~sep:(any " ") pp_label) in
+  match pattern with
+  | SList labels -> Fmt.pf ppf "SList { %a }" pp_labels labels
+  | Block labels -> Fmt.pf ppf "Block { %a }" pp_labels labels
+  | _ -> one_line (Stmt.Pattern.pp Expr.Typed.pp pp_label) ppf pattern
+
+let pp_controls ~(loop_name : label -> string) ppf
+    ({enclosing; jump_ids} : controls) =
+  let pp_enclosing ppf = function
+    | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
+    | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
+    | {id; side= None} -> Fmt.pf ppf "loop %d (%s)" id (loop_name id) in
+  Fmt.(list ~sep:(any "; ") string)
+    ppf
+    (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
+    @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d"))
+
+let pp_definitions ~(loop_name : label -> string) ppf
+    (definitions : reaching_definition Set.Poly.t) =
+  (* The variable and the path of a write, without the kind. *)
+  let pp_access ppf ({var; path; _} : Accesses.access) =
+    Fmt.pf ppf "%s%a" var (one_line (Accesses.pp_path ~loop_name)) path in
+  let entries =
+    List.map (Set.Poly.to_list definitions) ~f:(fun definition ->
+        (Fmt.str "%a" pp_access definition.access, definition.statement_id))
+  in
+  (* The distinct access texts with a label, in set order. *)
+  let texts =
+    List.rev
+      (List.fold_left entries ~init:[] ~f:(fun texts (text, label) ->
+           match label with
+           | Some _ when not (List.mem text ~set:texts) -> text :: texts
+           | Some _ | None -> texts)) in
+  let inside =
+    List.map texts ~f:(fun text ->
+        match
+          List.filter_map entries ~f:(function
+            | entry_text, Some label when String.equal entry_text text ->
+                Some label
+            | _, Some _ | _, None -> None)
+        with
+        | [label] -> Fmt.str "%s %d" text label
+        | labels -> Fmt.str "%s [%a]" text Fmt.(list ~sep:(any ", ") int) labels)
+  in
+  (* A set with only definitions from outside the analyzed code prints
+     [None]. *)
+  if List.is_empty inside && not (Set.Poly.is_empty definitions) then
+    Fmt.string ppf "None"
+  else Fmt.(list ~sep:(any ", ") string) ppf inside
+
+let pp_dependences ppf (statement : stmt_info) =
+  let pp_ids ppf ids =
+    Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list ids) in
+  let labels_of kind_name labels =
+    if Set.Poly.is_empty labels then None
+    else Some (Fmt.str "%s %a" kind_name pp_ids labels) in
+  let data_ids = Set.Poly.map statement.writers ~f:snd in
+  let control_ids = control_parent_ids statement.controls in
+  Fmt.(list ~sep:(any "  ") string)
+    ppf
+    (List.filter_map ~f:Fun.id
+       [labels_of "data" data_ids; labels_of "control" control_ids])

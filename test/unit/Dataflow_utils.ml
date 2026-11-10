@@ -636,3 +636,71 @@ let%expect_test "Predecessor graph example 5" =
     {|
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
+
+(* Each statement prints the controls, then the two views that queries use. The
+   controls list the enclosing ifs and loops, outermost first, then the jumps.
+   [control_parent_ids] keeps the nearest enclosing if or loop and the jumps.
+   [enclosing_loop_ids] keeps the loops, and a loop statement adds itself. *)
+let%expect_test "Controls and the two views derived from them" =
+  let mir =
+    Test_utils.mir_of_string
+      {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] v;
+        for (n in 1:N) {
+          if (c > 0) continue;
+          while (v[n] < 0) {
+            if (c > 1) v[n] = a;
+          }
+        }
+      }
+    |}
+  in
+  let statement_map =
+    build_statement_map
+      Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
+  let controls_map = build_controls statement_map in
+  let loop_name loop_id =
+    match fst (LabelMap.find loop_id statement_map) with
+    | For {loopvar; _} -> loopvar
+    | _ -> "while" in
+  LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
+      let controls = LabelMap.find statement_id controls_map in
+      Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
+        statement_id Test_utils.pp_stmt pattern
+        (Analysis_and_optimization.Dependence_analysis.pp_controls ~loop_name)
+        controls Test_utils.pp_labels
+        (control_parent_ids controls)
+        Fmt.(list ~sep:(any "; ") int)
+        (enclosing_loop_ids statement_id pattern controls));
+  [%expect
+    {|
+    1: 2 3
+       controls []  dependencies   loops []
+    2: real a;
+       controls []  dependencies   loops []
+    3: { 4 5 6 }
+       controls []  dependencies   loops []
+    4: FnValidateSize__("v", "N", N);
+       controls []  dependencies   loops []
+    5: vector[N] v;
+       controls []  dependencies   loops []
+    6: for(n in 1:N) 7
+       controls []  dependencies   loops [6]
+    7: { 8 10 }
+       controls [loop 6 (n)]  dependencies 6  loops [6]
+    8: if((c > 0)) 9
+       controls [loop 6 (n)]  dependencies 6  loops [6]
+    9: continue;
+       controls [loop 6 (n); if 8 then]  dependencies 8  loops [6]
+    10: while((v[n] < 0)) 11
+       controls [loop 6 (n); jump 9]  dependencies 6 9  loops [6; 10]
+    11: { 12 }
+       controls [loop 6 (n); loop 10 (while); jump 9]  dependencies 9 10  loops [6; 10]
+    12: if((c > 1)) 13
+       controls [loop 6 (n); loop 10 (while); jump 9]  dependencies 9 10  loops [6; 10]
+    13: v[n] = a;
+       controls [loop 6 (n); loop 10 (while); if 12 then; jump 9]  dependencies 9 12  loops [6; 10]
+    |}]
