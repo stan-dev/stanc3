@@ -203,29 +203,6 @@ module Accesses = struct
   let pp = Printing.pp
 end
 
-module Checked_int = struct
-  let add (left : int) (right : int) : int option =
-    let sum = left + right in
-    if
-      Bool.equal (left >= 0) (right >= 0)
-      && not (Bool.equal (sum >= 0) (left >= 0))
-    then None
-    else Some sum
-
-  let negate (value : int) : int option =
-    if value = Int.min_int then None else Some (-value)
-
-  let subtract (left : int) (right : int) : int option =
-    Option.bind (negate right) ~f:(add left)
-
-  let multiply (left : int) (right : int) : int option =
-    if left = 0 || right = 0 then Some 0
-    else if left = Int.min_int || right = Int.min_int then None
-    else
-      let product = left * right in
-      if product / right = left then Some product else None
-end
-
 module Access_function = struct
   type 'key term = {key: 'key; coefficient: int}
   type loop = {loop_id: label; lower: int option; upper: int option}
@@ -241,65 +218,46 @@ module Access_function = struct
   type t = {expr: Expr.Typed.t; view: affine option}
 
   let rec add_terms ~(compare : 'key -> 'key -> int) (left : 'key term list)
-      (right : 'key term list) : 'key term list option =
+      (right : 'key term list) : 'key term list =
     match (left, right) with
-    | [], terms | terms, [] -> Some terms
-    | left_term :: left_rest, right_term :: right_rest -> (
+    | [], terms | terms, [] -> terms
+    | left_term :: left_rest, right_term :: right_rest ->
         let order = compare left_term.key right_term.key in
-        if order < 0 then
-          Option.map
-            (add_terms ~compare left_rest right)
-            ~f:(List.cons left_term)
-        else if order > 0 then
-          Option.map
-            (add_terms ~compare left right_rest)
-            ~f:(List.cons right_term)
+        let coefficient = left_term.coefficient + right_term.coefficient in
+        if order < 0 then left_term :: add_terms ~compare left_rest right
+        else if order > 0 then right_term :: add_terms ~compare left right_rest
+        else if coefficient = 0 then add_terms ~compare left_rest right_rest
         else
-          match
-            ( Checked_int.add left_term.coefficient right_term.coefficient
-            , add_terms ~compare left_rest right_rest )
-          with
-          | Some 0, Some rest -> Some rest
-          | Some coefficient, Some rest ->
-              Some ({left_term with coefficient} :: rest)
-          | None, _ | _, None -> None)
+          {left_term with coefficient}
+          :: add_terms ~compare left_rest right_rest
 
-  let scale_terms (factor : int) (terms : 'key term list) :
-      'key term list option =
-    let scale_term term =
-      Option.map (Checked_int.multiply factor term.coefficient)
-        ~f:(fun coefficient -> {term with coefficient}) in
-    if factor = 0 then Some [] else Option.all (List.map terms ~f:scale_term)
+  let scale_terms (factor : int) (terms : 'key term list) : 'key term list =
+    if factor = 0 then []
+    else
+      List.map terms ~f:(fun term ->
+          {term with coefficient= factor * term.coefficient})
 
-  let add (left : affine) (right : affine) : affine option =
-    match
-      ( Checked_int.add left.constant right.constant
-      , add_terms ~compare:compare_loops left.loop_terms right.loop_terms
-      , add_terms ~compare:Expr.Helpers.compare_ignore_meta left.invariant_terms
-          right.invariant_terms )
-    with
-    | Some constant, Some loop_terms, Some invariant_terms ->
-        Some {constant; loop_terms; invariant_terms}
-    | None, _, _ | _, None, _ | _, _, None -> None
+  let add (left : affine) (right : affine) : affine =
+    { constant= left.constant + right.constant
+    ; loop_terms=
+        add_terms ~compare:compare_loops left.loop_terms right.loop_terms
+    ; invariant_terms=
+        add_terms ~compare:Expr.Helpers.compare_ignore_meta left.invariant_terms
+          right.invariant_terms }
 
-  let scale (factor : int) (view : affine) : affine option =
-    match
-      ( Checked_int.multiply factor view.constant
-      , scale_terms factor view.loop_terms
-      , scale_terms factor view.invariant_terms )
-    with
-    | Some constant, Some loop_terms, Some invariant_terms ->
-        Some {constant; loop_terms; invariant_terms}
-    | None, _, _ | _, None, _ | _, _, None -> None
+  let scale (factor : int) (view : affine) : affine =
+    { constant= factor * view.constant
+    ; loop_terms= scale_terms factor view.loop_terms
+    ; invariant_terms= scale_terms factor view.invariant_terms }
 
-  let subtract (left : affine) (right : affine) : affine option =
-    Option.bind (scale (-1) right) ~f:(add left)
+  let subtract (left : affine) (right : affine) : affine =
+    add left (scale (-1) right)
 
   let multiply (left : affine) (right : affine) : affine option =
     let is_constant (view : affine) =
       List.is_empty view.loop_terms && List.is_empty view.invariant_terms in
-    if is_constant left then scale left.constant right
-    else if is_constant right then scale right.constant left
+    if is_constant left then Some (scale left.constant right)
+    else if is_constant right then Some (scale right.constant left)
     else None
 
   let is_stable (context : Loop_context.t) ~(loop_ids : label list)
@@ -334,9 +292,8 @@ module Access_function = struct
         match view with Some _ -> view | None -> of_atom subexpr in
       let combine operation lhs rhs =
         match (of_linear lhs, of_linear rhs) with
-        | Some left_view, Some right_view ->
-            or_atom (operation left_view right_view)
-        | None, _ | _, None -> of_atom subexpr in
+        | Some left_view, Some right_view -> operation left_view right_view
+        | None, _ | _, None -> None in
       match subexpr.pattern with
       | Var name -> (
           match Loop_context.for_loop_id context ~loop_ids name with
@@ -349,11 +306,15 @@ module Access_function = struct
       | Lit (Int, digits) ->
           Option.map (Int.of_string_opt digits) ~f:(fun constant ->
               {constant; loop_terms= []; invariant_terms= []})
-      | FunApp (Operator Plus, [lhs; rhs]) -> combine add lhs rhs
-      | FunApp (Operator Minus, [lhs; rhs]) -> combine subtract lhs rhs
-      | FunApp (Operator Times, [lhs; rhs]) -> combine multiply lhs rhs
+      | FunApp (Operator Plus, [lhs; rhs]) ->
+          or_atom (combine (fun left right -> Some (add left right)) lhs rhs)
+      | FunApp (Operator Minus, [lhs; rhs]) ->
+          or_atom
+            (combine (fun left right -> Some (subtract left right)) lhs rhs)
+      | FunApp (Operator Times, [lhs; rhs]) ->
+          or_atom (combine multiply lhs rhs)
       | FunApp (Operator PMinus, [operand]) ->
-          or_atom (Option.bind (of_linear operand) ~f:(scale (-1)))
+          or_atom (Option.map (of_linear operand) ~f:(scale (-1)))
       | FunApp (Operator PPlus, [operand]) -> or_atom (of_linear operand)
       | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
        |TupleProjection _ | Promotion _ ->
@@ -483,10 +444,7 @@ let test_constant_subscripts (write : Access_function.affine)
 
 let is_longer_than_loop (loop : Access_function.loop) (distance : int) : bool =
   match (loop.lower, loop.upper) with
-  | Some lower, Some upper -> (
-      match Checked_int.subtract upper lower with
-      | Some last_distance -> abs distance > last_distance
-      | None -> false)
+  | Some lower, Some upper -> abs distance > upper - lower
   | None, _ | _, None -> false
 
 let test_equal_stride_subscripts
@@ -494,14 +452,11 @@ let test_equal_stride_subscripts
       Access_function.loop Access_function.term)
     (write : Access_function.affine) (read : Access_function.affine) :
     subscript_constraint =
-  match Checked_int.subtract write.constant read.constant with
-  | None -> No_information
-  | Some difference when difference = Int.min_int -> No_information
-  | Some difference when difference mod stride <> 0 -> Disjoint
-  | Some difference when is_longer_than_loop loop (difference / stride) ->
-      Disjoint
-  | Some difference ->
-      Distance {loop_id= loop.loop_id; distance= difference / stride}
+  let difference = write.constant - read.constant in
+  let distance = difference / stride in
+  if difference mod stride <> 0 || is_longer_than_loop loop distance then
+    Disjoint
+  else Distance {loop_id= loop.loop_id; distance}
 
 let test_weak_zero_subscripts ~(is_writer_varying : bool)
     ({key= loop; coefficient= stride} :
@@ -512,31 +467,26 @@ let test_weak_zero_subscripts ~(is_writer_varying : bool)
     match bound with Some bound -> iteration < bound | None -> false in
   let is_after_bound bound iteration =
     match bound with Some bound -> iteration > bound | None -> false in
-  match Checked_int.subtract fixed.constant varying.constant with
-  | None -> No_information
-  | Some difference when difference = Int.min_int -> No_information
-  | Some difference when difference mod stride <> 0 -> Disjoint
-  | Some difference ->
-      let iteration = difference / stride in
-      if
-        is_before_bound loop.lower iteration
-        || is_after_bound loop.upper iteration
-      then Disjoint
-      else
-        let is_earlier_possible =
-          not (is_before_bound loop.lower (iteration - 1)) in
-        let is_later_possible =
-          not (is_after_bound loop.upper (iteration + 1)) in
-        Directions
-          { loop_id= loop.loop_id
-          ; directions=
-              { is_writer_before=
-                  (if is_writer_varying then is_later_possible
-                   else is_earlier_possible)
-              ; is_same_iteration= true
-              ; is_writer_after=
-                  (if is_writer_varying then is_earlier_possible
-                   else is_later_possible) } }
+  let difference = fixed.constant - varying.constant in
+  let iteration = difference / stride in
+  if
+    difference mod stride <> 0
+    || is_before_bound loop.lower iteration
+    || is_after_bound loop.upper iteration
+  then Disjoint
+  else
+    let is_earlier_possible = not (is_before_bound loop.lower (iteration - 1)) in
+    let is_later_possible = not (is_after_bound loop.upper (iteration + 1)) in
+    Directions
+      { loop_id= loop.loop_id
+      ; directions=
+          { is_writer_before=
+              (if is_writer_varying then is_later_possible
+               else is_earlier_possible)
+          ; is_same_iteration= true
+          ; is_writer_after=
+              (if is_writer_varying then is_earlier_possible
+               else is_later_possible) } }
 
 let rec greatest_common_divisor (left : int) (right : int) : int =
   if right = 0 then abs left else greatest_common_divisor right (left mod right)
@@ -547,9 +497,9 @@ let test_gcd_subscripts (write : Access_function.affine)
     List.fold_left (write.loop_terms @ read.loop_terms) ~init:0
       ~f:(fun divisor (term : Access_function.loop Access_function.term) ->
         greatest_common_divisor divisor term.coefficient) in
-  match Checked_int.subtract read.constant write.constant with
-  | Some difference when divisor > 0 && difference mod divisor <> 0 -> Disjoint
-  | Some _ | None -> No_information
+  if divisor > 0 && (read.constant - write.constant) mod divisor <> 0 then
+    Disjoint
+  else No_information
 
 let test_subscripts (write : Access_function.t Index.t)
     (read : Access_function.t Index.t) : subscript_constraint =
