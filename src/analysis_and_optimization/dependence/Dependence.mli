@@ -5,182 +5,77 @@ open Dataflow_types
 (** {1 Purpose}
 
     This module describes the accesses of one statement and compares two
-    accesses of one variable. The three parts build on each other, in the order
-    below.
-    - {!Affine_subscript} describes one subscript, such as the [n + 1] in
-      [v[n + 1]].
+    accesses of one variable. The parts build on each other, in the order below,
+    which is also the order to read them in.
+    - {!Loop_context} holds the loops of the analyzed statement and the
+      variables that the analyzed statement defines.
     - {!Accesses} collects the reads, writes and read-writes of one statement,
-      each with a path of subscripts.
-    - The functions after the two submodules compare two paths of one variable
-      across the loops around both and give a distance per loop.
+      each with a path of subscripts and tuple fields. Collection only looks at
+      syntax.
+    - {!Access_function} explains one subscript expression of a path in a loop
+      context. An access function keeps the expression and adds what the
+      analysis can prove about the expression.
+    - The functions after the submodules compare two paths of one variable. Two
+      questions are kept apart: whether two accesses {e may} select the same
+      element ({!test_dependence}), and whether a write {e must} replace the
+      element of an earlier write ({!is_overwritten}).
 
-    {!Dependence_analysis} collects these accesses for each statement of the
-    analyzed code and answers the dependence queries. *)
+    {!Dependence_analysis} collects the accesses of each statement of the
+    analyzed code and answers the dependence queries.
 
-module Affine_subscript : sig
+    {1 Three different questions about two subscripts}
+
+    The code keeps these three questions apart, because an answer to one is not
+    an answer to another.
+    - {e Same syntax}: the two subscripts are written as the same expression
+      ([Accesses] uses this to join [x = x + 1] into one read-write). The same
+      syntax does not prove the same value: [v[categorical_rng(theta)]] selects
+      a new element at each evaluation.
+    - {e Proven equal value}: the two subscripts have the same value under a
+      stated condition, such as "in every iteration" or "in the same iteration".
+      Only this proof lets a write overwrite an earlier write.
+    - {e Possible overlap}: no test has proven that the two subscripts differ.
+      An overlap that is only possible proves nothing about an overwrite.
+
+    {1 Assumptions about arithmetic}
+
+    A subscript is a Stan [int] expression. The generated C++ evaluates [+], [-]
+    and [*] on [int] with the built-in operators, and an overflow there is
+    undefined behavior. The tests below reason over the mathematical integers,
+    which agrees with every execution that has defined behavior. This justifies
+    a dependence verdict. This alone does not justify emitting a rewritten
+    expression whose intermediate values differ from the original expression. *)
+
+module Loop_context : sig
   (** {1 Purpose}
 
-      This module exists to describe one subscript, such as the [n + 1] in
-      [v[n + 1]], in a form that shows how the selected element moves from one
-      loop iteration to the next. The dependence analysis compares two
-      subscripts in this form to learn whether the two can ever select the same
-      element, and if so, how many iterations apart. The module knows nothing
-      beyond a single subscript position: tuple fields, whole access paths and
-      nested loops are the business of the comparison functions of
-      {!Dependence}.
+      A loop context holds what the analysis needs to know about the code around
+      an access: the loops of the analyzed statement, and the variables that the
+      analyzed statement defines. A loop is identified by the label of the loop
+      statement. Two loops with the same variable name and the same bounds are
+      still two loops.
 
-      A subscript, such as the [n + 1] in [v[n + 1]], selects one element of a
-      variable. An affine subscript is a sum of three parts, and a missing part
-      counts as zero.
-      - {e constant}: every integer literal in the sum, wherever the literal
-        appears, added up, such as the [1] in [n + 1].
-      - {e symbol}: the terms of the sum that do not change inside the loops,
-        such as [N], [k + k] or [-k], kept as one expression. These terms can
-        only be based on fixed values such as data [N].
-      - {e loop term}: the variable of an enclosing [for] loop, added or
-        subtracted, such as the [n] in [n + 1] or the [-n] in [N - n].
+      A context is built for one analyzed statement and is valid only for that
+      statement. After a transformation, the context and every access function
+      made with the context must be rebuilt. *)
 
-      With a {e loop term}, consecutive iterations select consecutive elements,
-      up or down. Without a loop term, as in [v[k]] or [v[3]], the subscript
-      selects the same element in every iteration. A subscript that is not a sum
-      of these parts, such as [idx[n]] or [2 * n], is not affine and so we do
-      not analyze it.
+  (** The context keeps the [For] or [While] statement of each loop label. The
+      [for] statement owns the loop variable and the bound expressions. The
+      bounds alone do not prove which iterations run: a bound can change between
+      runs of the loop, and a [break] can end the loop early. *)
+  type t
 
-      {1 Comparing two subscripts}
-
-      {!compare_subscripts} uses the two standard subscript tests of Goff,
-      Kennedy and Tseng (1991).
-
-      The ZIV test (zero index variables) compares two affine subscripts without
-      a loop term. Equal subscripts always select the same element, and
-      subscripts with different constants never do. The loop below has two pairs
-      to compare.
-      {@stan[
-       1 for (n in 1:N) {
-       2   v[1] = a;
-       3   v[2] = b;
-       4   w[n] = v[1];
-       5 }
-      ]}
-      - The write [v[1]] on line 2 and the read [v[1]] on line 4 select the same
-        element in every iteration. The result is {!Always_same}.
-      - The write [v[2]] on line 3 and the read [v[1]] on line 4 never select
-        the same element, and neither subscript has a loop term. The result is
-        {!Never_same}.
-
-      Each result allows a transformation of the loop. The write on line 3 does
-      not touch the element that lines 2 and 4 use and so their comparisons will
-      be {!Never_same}. A pass can therefore move that write before the loop.
-      {@stan[
-       1 v[2] = b;
-       2 for (n in 1:N) {
-       3   v[1] = a;
-       4   w[n] = v[1];
-       5 }
-      ]}
-      {!Always_same} shows that the write of [v[1]] fills the same element in
-      every iteration and that the read of [v[1]] takes the same element back.
-      Since [a] does not change in the loop, every iteration stores the same
-      value. A pass can therefore move the write of [v[1]] before the loop as
-      well and replace the loop with one fill of [w].
-      {@stan[
-       1 v[2] = b;
-       2 v[1] = a;
-       3 w = rep_vector(v[1], N);
-      ]}
-
-      The strong SIV test (single index variable) compares two affine subscripts
-      with the same loop term and the same symbol, such as [n + 1] and [n - 1].
-      These select the same element only when the two accesses run a fixed
-      number of iterations apart. That number is the {e distance}: the iteration
-      of the second subscript minus the iteration of the first. For [n + 1]
-      against [n - 1], the distance is [2].
-      {@stan[
-        for (n in 2:N) {
-          b[n] = a;
-          c[n] = b[n - 1];
-        }
-      ]}
-      Iteration [n] reads the element that iteration [n - 1] wrote. The write
-      [b[n]] and the read [b[n - 1]] select the same element when the read runs
-      one iteration after the write, so the distance is [1], which is
-      {!Same_at_distance}.
-
-      What the comparison functions of {!Dependence} do with a distance:
-      - A positive distance keeps the pair as a {e loop-carried} dependence: the
-        read in one iteration uses the value that the write left [distance]
-        iterations earlier. In the loop above, [c[n]] depends on [a] through
-        [b[n - 1]]. The distance also tells a later loop transformation which
-        iterations must keep their order.
-      - A distance of [0] means the same iteration only. The pair is a
-        {e loop-independent} dependence, kept when the write comes before the
-        read in the loop body. For kills in the monotone framework, a write to
-        [b[n]] overwrites an earlier write to [b[n]] only within one iteration,
-        so the earlier write still reaches the reads of other iterations.
-      - A negative distance proves that the write runs after the read, so the
-        pair is dropped ({!Dependence.is_lexicographically_positive}).
-
-      Every other pair gives {!Cannot_tell}. The analysis then assumes that the
-      two accesses may select the same element: the pair is kept as a possible
-      dependence with an unknown distance, and the write kills nothing. *)
-
-  (** {1 API reference} *)
-
-  (** A loop variable in a subscript. [loop_id] is the label of the [for] loop,
-      and [is_negated] is true for [-n], as in [N - n]. *)
-  type loop_term = {loop_id: label; is_negated: bool}
-
-  (** An affine subscript [loop_term + symbol + const]. These examples are in a
-      loop over [n], and [N] and [k] are not defined in the analyzed statement.
-      - [n + k - 1] has the loop term [n], the symbol [k] and the constant [-1].
-      - [N - n + 1] has the loop term [-n], the symbol [N] and the constant [1].
-      - [(N - 1) - n] has the loop term [-n], the symbol [N] and the constant
-        [-1].
-
-      The invariant terms of a sum join into one symbol, so [n + k + j] has the
-      symbol [k + j] and [n - k] has the symbol [-k]. Symbols are compared as
-      expressions, so [k + j] and [j + k] are different symbols. *)
-  type affine =
-    {const: int; symbol: Expr.Typed.t option; loop_term: loop_term option}
-
-  (** A classified subscript. [None] means that the subscript is not affine. *)
-  type t = affine option
-
-  val of_expr :
-       for_loops:(string * label) list
+  val create :
+       ((Expr.Typed.t, label) Stmt.Pattern.t * 'meta) LabelMap.t
     -> defined_vars:string Set.Poly.t
-    -> Expr.Typed.t
     -> t
-  (** Returns the affine subscript of an expression, or [None]. [for_loops]
-      pairs the loop variable and the label of each [for] loop around the
-      statement, and [defined_vars] holds each variable that the analyzed
-      statement writes. The grouping of a sum does not matter: [n + k + k],
-      [k + k + n] and [n + (k + k)] all have the loop term [n] and the symbol
-      [k + k]. *)
+  (** Builds the context of the statement map of the analyzed statement.
+      [defined_vars] holds each variable that the analyzed statement writes. *)
 
-  (** The result of {!compare_subscripts}. *)
-  type comparison =
-    | Always_same
-        (** The subscripts select the same element whichever iterations the two
-            accesses run in, because neither has a loop term, as [[1]] and
-            [[1]], or [[N + 1]] and [[N + 1]], do. *)
-    | Never_same
-        (** The subscripts never select the same element, as [[1]] and [[2]] do.
-        *)
-    | Same_at_distance of {loop_id: label; distance: int}
-        (** The subscript selects the same element within an interation. Ex:
-            [[n]] and [[n]] give [0], so they select the same element only in
-            the same iteration. [[n + 1]] and [[n]] give [1]. *)
-    | Cannot_tell  (** Any other pair, as [[idx[n]]] and [[1]]. *)
-
-  val compare_subscripts : t Index.t -> t Index.t -> comparison
-  (** Compares the first subscript with the second, at the same position of two
-      paths. A slice or a multi-index gives {!Cannot_tell}. *)
-
-  val pp : loop_name:(label -> string) -> t Fmt.t
-  (** Prints an affine subscript as [n], [n+1], [n+k-1], [-n+N+1], [3] or [k+1],
-      and a subscript that is not affine as [?]. [loop_name] gives the loop
-      variable of a loop label. *)
+  val for_loop_id : t -> loop_ids:label list -> string -> label option
+  (** Returns the label of the [for] loop in [loop_ids] whose loop variable has
+      the given name, or [None]. [loop_ids] holds the loops around one
+      statement, so the same name in a sibling loop is a different loop. *)
 end
 
 module Accesses : sig
@@ -191,13 +86,11 @@ module Accesses : sig
       path lists the subscripts and tuple fields that select an element of the
       variable.
 
-      {!Dependence_analysis} finds the earlier statements that each statement
-      {e depends} on. A statement has a {e data dependence} on an earlier write
-      when the write can supply a value that the statement reads. To find these,
-      the analysis compares the paths of a write and a read of one variable with
-      the comparison functions of {!Dependence}. Two accesses whose paths never
-      select the same element, such as [theta[1]] and [theta[2]], do not depend
-      on each other.
+      Collection looks only at the syntax of the statement. The path of a
+      collected access holds the subscript expressions as written, including
+      slices, multi-indices and expressions that no test can analyze, such as
+      [idx[n]] or [n * n]. {!Access_function} later explains each expression,
+      and nothing is thrown away when an expression has no explanation.
 
       {1 Example}
 
@@ -217,21 +110,20 @@ module Accesses : sig
       Each access prints as the kind of access, then the variable and the path.
       [R] is a read, [W] is a write and [RW] is a read-write. Consecutive
       subscripts share one pair of brackets, as in [[i, j]]. A slice prints as
-      [[1:k]], a multi-index as [[{idx}]], and a tuple field as [.2]. Each
-      subscript prints in the notation of {!Affine_subscript.pp}, so [n+1] is
-      the loop variable [n] plus the constant [1]. The two reads of [n] come
-      from the subscripts of [y[n]] and [v[n + 1]]. *)
+      [[1:k]], a multi-index as [[{idx}]], and a tuple field as [.2]. The two
+      reads of [n] come from the subscripts of [y[n]] and [v[n + 1]]. *)
 
   (** {1 API reference} *)
 
   (** One position in a path. A step is a subscript or a tuple field. The path
-      of [x[i].2[j]] has the three steps [i], [.2] and [j]. ['e] is the type of
-      a subscript: an expression while the path is collected, and an
-      {!Affine_subscript.t} once classified. *)
-  type 'e step =
-    | Subscript of 'e Index.t
-        (** One subscript, such as [n + 1], with the affine subscript of each
-            index, or [None]. *)
+      of [x[i].2[j]] has the three steps [i], [.2] and [j]. ['scalar] is the
+      type of a subscript: an expression in a collected path, and an
+      {!Access_function.t} in an analyzed path. The path has the same shape
+      before and after the analysis. *)
+  type 'scalar step =
+    | Subscript of 'scalar Index.t
+        (** One subscript: a single index such as [n + 1], a slice or a
+            multi-index. *)
     | Field of int  (** One tuple field, such as [.2] in [t.2]. *)
 
   (** A statement reads a variable, writes a variable, or reads and writes the
@@ -239,75 +131,146 @@ module Accesses : sig
       is one definition and one use. *)
   type kind = Read | Write | ReadWrite [@@deriving equal]
 
-  (** One access by a statement. [var] is the variable, [kind] tells how the
-      statement uses the variable, and [path] selects the element. An empty path
-      means the whole variable, as in [sum(v)] or the declaration of [v]. *)
-  type access = {var: string; path: Affine_subscript.t step list; kind: kind}
+  (** One access by a statement. [var] is the variable, [path] selects the
+      element and [kind] tells how the statement uses the variable. An empty
+      path means the whole variable, as in [sum(v)] or the declaration of [v].
+  *)
+  type 'scalar access = {var: string; path: 'scalar step list; kind: kind}
 
   (** The accesses of one statement. *)
-  type t = access list
+  type 'scalar t = 'scalar access list
 
   val of_statement :
-       classify:(Expr.Typed.t -> Affine_subscript.t)
-    -> (Expr.Typed.t, 'substatement) Stmt.Pattern.t
-    -> t
-  (** Collects the accesses in the expressions of a statement, and gives each
-      subscript the result of [classify]. Nested statements are collected
-      separately. The accesses come in this order, which is not the run-time
-      order.
+    (Expr.Typed.t, 'substatement) Stmt.Pattern.t -> Expr.Typed.t t
+  (** Collects the accesses in the expressions of a statement. Nested statements
+      are collected separately. The accesses come in this order, which is not
+      the run-time order.
       - An assignment gives the reads in the left-hand indices, then the
         accesses in the right-hand side, then a write to the left-hand side.
-        When the right-hand side reads the written element, as [x = x + 1] does,
-        that read and the write are one read-write, [RW x].
+        When the right-hand side reads the written element with the same syntax,
+        as [x = x + 1] does, that read and the write are one read-write, [RW x].
       - A declaration gives the reads in the sizes and the initial value, then a
         write to the whole variable. [vector[N] y;] gives [R N, W y].
       - A [for] loop gives the accesses in the loop bounds. An [if] or a [while]
         gives the accesses in the condition.
       - [target += e], [jacobian += e], a [~] statement and a call of an [_lp]
         or [_jacobian] function give a read-write of [target]. [target()] gives
-        a read of [target]. *)
+        a read of [target].
+      - A subscript after a slice, as the [[2]] in [v[1:k][2]], selects from the
+        result of the slice. The path stops at the slice, and the later
+        subscripts only give their reads. *)
 
-  val used_vars : t -> string Set.Poly.t
+  val map_scalars : f:('scalar -> 'mapped) -> 'scalar access -> 'mapped access
+  (** Applies [f] to each subscript expression of the path and keeps the shape
+      of the path. *)
+
+  val used_vars : 'scalar t -> string Set.Poly.t
   (** Returns the names of the variables that the accesses use, which means read
       or read-write. In the example above, the result is [{"n"; "v"; "k"}]. *)
 
-  val defined_vars : t -> string Set.Poly.t
+  val defined_vars : 'scalar t -> string Set.Poly.t
   (** Returns the names of the variables that the accesses define, which means
       write or read-write. In the example above, the result is [{"y"}]. *)
 
-  val pp_path :
-    loop_name:(label -> string) -> Affine_subscript.t step list Fmt.t
-  (** Prints a path, as in [[n+1]], [[n, 1]] or [.2]. An empty path prints
-      nothing. *)
+  val pp_path : 'scalar Fmt.t -> 'scalar step list Fmt.t
+  (** Prints a path, as in [[n+1]], [[n, 1]] or [.2], with the given printer for
+      each subscript expression. An empty path prints nothing. *)
 
-  val pp_access : loop_name:(label -> string) -> access Fmt.t
+  val pp_access : 'scalar Fmt.t -> 'scalar access Fmt.t
   (** Prints the kind, the variable and the path in the notation of the example
-      above, as in [W v[n+1]], [R k], [RW target] or [W t.2]. [loop_name] gives
-      the loop variable of a loop label. *)
+      above, as in [W v[n+1]], [R k], [RW target] or [W t.2]. *)
 
-  val pp : loop_name:(label -> string) -> t Fmt.t
+  val pp : 'scalar Fmt.t -> 'scalar t Fmt.t
   (** Prints the reads, then the read-writes, then the writes, each group in the
       original order, as in [R v[n+1], R k, RW target, W y[n]]. *)
 end
 
+module Access_function : sig
+  (** {1 Purpose}
+
+      An access function explains one subscript expression, such as the [n + 1]
+      in [v[n + 1]], in the loop context of the access. The access function
+      keeps the expression and adds a {e view}: a restricted form that the
+      subscript tests can calculate with. An expression without a view is still
+      an access function. A missing view means that no present test can use the
+      expression, and a later analysis can look at the same expression.
+
+      {1 The unit-stride view}
+
+      The one view today has three parts, and a missing part counts as zero.
+      - {e constant}: every integer literal in the sum, added up, such as the
+        [1] in [n + 1].
+      - {e invariant part}: the terms of the sum that are stable, such as [N],
+        [k + k] or [-k], kept as one expression.
+      - {e loop term}: the variable of one enclosing [for] loop, added or
+        subtracted once, such as the [n] in [n + 1] or the [-n] in [N - n].
+
+      This view is narrower than an affine expression. [2 * n] is affine and has
+      no view. The invariant parts of two views are compared as expressions, so
+      [k + j] and [j + k] are different invariant parts.
+
+      {1 Stability}
+
+      A term is {e stable} when the term has the same value at every evaluation
+      in the analyzed statement. A stable term names no variable that the
+      analyzed statement defines and no loop variable, and does not draw a
+      random number, read the target or have a side effect. Only a stable term
+      can be the invariant part of a view. For example [categorical_rng(theta)]
+      names no defined variable but is not stable, so
+      [v[categorical_rng(theta)]] has no view. *)
+
+  type t
+
+  val of_expr : Loop_context.t -> loop_ids:label list -> Expr.Typed.t -> t
+  (** Returns the access function of a subscript expression. [loop_ids] holds
+      the labels of the loops around the statement of the access, outermost
+      first. The grouping of a sum does not matter: [n + k + k], [k + k + n] and
+      [n + (k + k)] all have the loop term [n] and the invariant part [k + k].
+  *)
+
+  val pp : loop_name:(label -> string) -> t Fmt.t
+  (** Prints the view as [n], [n+1], [n+k-1], [-n+N+1], [3] or [k+1], and an
+      access function without a view as the source expression, such as [idx[n]]
+      or [(2 * n)]. [loop_name] gives the loop variable of a loop label. *)
+end
+
 (** {1 Comparing two accesses}
 
-    The functions below are a layer on top of {!Affine_subscript} that exists to
-    compare two whole accesses of one variable, such as a write to [m[n, 1]] and
-    a read of [m[n - 1, 1]], across every loop around both. The per-position
-    answers of {!Affine_subscript} combine into one distance per common loop,
-    which tells the dependence analysis:
-    - whether a write to one element of a variable can supply the value that a
-      later read of that variable uses, and whether a later write replaces the
-      earlier one
-    - how many loop iterations apart the write and the read can run, and so
-      whether the write can run first.
+    The functions below compare two whole accesses of one variable, such as a
+    write to [m[n, 1]] and a read of [m[n - 1, 1]].
 
-    Knowing these dependences per element lets the compiler warn about a
-    parameter only when the parameter really reaches a statement, and tells a
-    loop transformation which statements must keep their order.
+    {2 Possible overlap}
 
-    {1 Example}
+    {!test_dependence} asks in which pairs of iterations the write and the read
+    can select the same element. Each position of the two paths is tested alone,
+    and a test gives one of three answers.
+    - {e Disjoint}: the two steps never select the same element, so the accesses
+      are independent.
+    - {e A distance at a loop}: the two steps select the same element only when
+      the read runs a fixed number of iterations of that loop after the write.
+    - {e No information}: the test proves nothing, and the result stays as
+      before.
+
+    The answers of all positions must hold together. Two different distances at
+    one loop therefore prove independence. The result is a summary that holds
+    every real overlap. The result does not prove that an overlap exists.
+
+    Two subscript tests exist, from Goff, Kennedy and Tseng,
+    {{:https://doi.org/10.1145/113445.113448} "Practical Dependence Testing"}
+    (PLDI 1991).
+
+    The ZIV test (zero index variables) compares two subscripts without a loop
+    term and with the same invariant part. Different constants are disjoint, as
+    [v[1]] and [v[2]], or [v[k]] and [v[k + 1]], are.
+
+    The strong SIV test (single index variable) compares two subscripts with the
+    same loop term and the same invariant part, such as [n + 1] and [n - 2].
+    With the write in iteration [i] and the read in iteration [j], the equation
+    is [i + 1 = j - 2], so the distance [j - i] is [3]: [v[n + 1]] in iteration
+    2 and [v[n - 2]] in iteration 5 both select [v[3]]. The write iteration and
+    the read iteration are two unknowns, and the test never treats them as one.
+    For a negated loop variable, as in [N - n], the sign of the distance flips.
+
     {@stan[
       for (i in 1:I) {
         for (j in 2:J) {
@@ -316,89 +279,99 @@ end
         }
       }
     ]}
-    {!Affine_subscript} answers for one position at a time. At the first
-    position, [[i]] against [[i]] selects the same element only in the same
-    iteration of [i], a distance of [0]. At the second position, [[j]] against
-    [[j - 1]] selects the same element when the read runs one iteration of [j]
-    after the write, a distance of [1]. Neither answer alone says whether the
-    write reaches the read.
-
-    {!test_dependence} combines the two answers into one distance per loop,
-    [distances [i:0][j:1]], and reads the vector from the outer loop inward. The
-    first distance that is not zero is positive, so the write runs before the
-    read, and the pair is a loop-carried dependence at [j]. The combination can
-    also reject a pair that every position allows. For [a[i, i]] against
+    At the first position, [[i]] against [[i]] gives the distance [0] at [i]. At
+    the second position, [[j]] against [[j - 1]] gives the distance [1] at [j].
+    The result prints as [distances [i:0][j:1]]. For [a[i, i]] against
     [a[i - 1, i]], the first position needs a distance of [1] at [i] and the
-    second needs [0], so the two never select the same element and the result is
-    [independent].
+    second needs [0], so the result is [independent].
 
-    These tests are a small subset of the tests in Goff, Kennedy and Tseng,
-    {{:https://doi.org/10.1145/113445.113448} "Practical Dependence Testing"}
-    (PLDI 1991). Allen and Kennedy,
+    A path can be shorter than the other, as a write to [m] and a read of
+    [m[1]]. The whole object holds the element, so the result is a possible
+    overlap with no known distance.
+
+    {2 Execution order}
+
+    A possible overlap does not say which access runs first.
+    {!is_writer_possibly_first} reads the distances from the outermost loop
+    inward. The first distance that is not zero decides: a positive distance
+    means that the write runs in an earlier iteration, and a negative distance
+    that the write runs in a later one. An unknown distance allows an earlier
+    iteration. When every distance is zero, both run in the same iteration and
+    the order of the two statements in the loop body decides.
+
+    {2 Overwrite}
+
+    {!is_overwritten} is a separate proof with separate rules. A possible
+    overlap, an unknown result or a distance of zero does not prove that a write
+    replaces an element. An overwrite needs a proven equal value at each
+    position of the killer path. {!Dependence_analysis} adds the conditions on
+    control flow.
+
+    {2 Related work}
+
+    Allen and Kennedy,
     {{:https://shop.elsevier.com/books/optimizing-compilers-for-modern-architectures/allen/978-0-08-051324-9}
      "Optimizing Compilers for Modern Architectures"} (2001, chapters 2 and 3),
-    describe the same tests, and LLVM's
+    describe the tests, and LLVM's
     {{:https://github.com/llvm/llvm-project/blob/main/llvm/lib/Analysis/DependenceAnalysis.cpp}
      [DependenceAnalysis]} implements them. LLVM calls the writer [Src] and the
-    reader [Dst]. A vector with no known distance is what LLVM calls a confused
+    reader [Dst]. A result with no known distance is what LLVM calls a confused
     dependence, and GCC [chrec_dont_know]. The [is_writer_first] flag of
-    {!is_lexicographically_positive} has the role of the
-    [PossiblyLoopIndependent] flag of LLVM's
+    {!is_writer_possibly_first} has the role of the [PossiblyLoopIndependent]
+    flag of LLVM's
     {{:https://github.com/llvm/llvm-project/blob/main/llvm/include/llvm/Analysis/DependenceAnalysis.h}
-     [FullDependence]}. *)
+     [FullDependence]}. Both compilers have far more tests than this module. *)
 
 (** {1 API reference} *)
 
-val is_overwritten :
-     is_same_iteration:bool
-  -> Affine_subscript.t Accesses.step list
-  -> Affine_subscript.t Accesses.step list
-  -> bool
-(** Whether a later write to the first path (the killer) overwrites each element
-    that an earlier write to the second path (the killed write) wrote.
-    [is_same_iteration] tells whether both writes run in the same loop
-    iteration. *)
+(** An analyzed path: each subscript is an access function. *)
+type path = Access_function.t Accesses.step list
 
-(** The result of {!test_dependence}. *)
-type t =
-  | Independent  (** The accesses never select the same element. *)
-  | Distance_vector of int option list
-      (** The accesses may select the same element. The list holds one distance
-          per common loop, outermost first. [None] at a loop means that the
-          distance at that loop is unknown, as at [i] for [a[n]] inside
-          [for (i) for (n)]: [distances [i:*][n:0]]. *)
+val is_overwritten : is_same_iteration:bool -> path -> path -> bool
+(** Whether a later write to the first path (the killer) is proven to overwrite
+    each element that an earlier write to the second path (the killed write)
+    wrote. The killer path can be shorter, so [m[1]] overwrites [m[1, 2]]. At
+    each position of the killer path, the two steps must have a proven equal
+    value. Steps without a loop term, as [[1]] and [[1]] or [[k]] and [[k]], are
+    equal in any two iterations. Steps with a loop term, as [[n]] and [[n]], are
+    equal only when [is_same_iteration] says that both writes run in the same
+    iteration. A slice, a multi-index and a subscript without a view prove
+    nothing. *)
 
-val test_dependence :
-     label list
-  -> Affine_subscript.t Accesses.step list
-  -> Affine_subscript.t Accesses.step list
-  -> t
-(** Whether the first path (the write) and the second path (the read) of one
-    variable can select the same element, and if so, at which distance in each
-    loop around both. The label list holds the labels of those loops, outermost
-    first. *)
+(** The result of {!test_dependence}: independent, or a possible overlap with
+    one distance per common loop. The result holds the labels of the common
+    loops, outermost first, so that a distance cannot be read against the wrong
+    loop. *)
+type t
 
-val is_lexicographically_positive :
-     label list
-  -> bool
-  -> Affine_subscript.t Accesses.step list
-  -> Affine_subscript.t Accesses.step list
-  -> bool
-(** Whether the write to the first path can run before the read of the second
-    path and select the same element. The arguments are those of
-    {!test_dependence}, with the flag in between that says whether the writer
-    comes before the reader in the loop body.
+val test_dependence : label list * path -> label list * path -> t
+(** Tests whether the first path (the write) and the second path (the read) of
+    one variable can select the same element, and if so, at which distance in
+    each loop around both. Each path comes with the labels of the loops around
+    the statement of the access, outermost first. *)
+
+val is_overlap_possible : t -> bool
+(** Whether the result is a possible overlap. False means that the two accesses
+    are proven independent. True does not prove that an overlap exists. *)
+
+val is_writer_possibly_first : is_writer_first:bool -> t -> bool
+(** Whether the write can run before the read and select the same element.
+    [is_writer_first] says whether the writer comes before the reader in the
+    loop body, which decides when every distance is zero.
 
     For [b[n] = a; c[n] = b[n - 1];] the distance is [1]: the read runs one
     iteration after the write, so the result is true. For a read of [b[n + 1]]
     the distance is [-1]: the element is written one iteration later, so the
-    result is false. When every distance is [0], the two run in the same
-    iteration and the flag decides. The first distance that is not zero counts,
-    outermost loop first, and an unknown distance counts as positive.
-    [Independent] gives false. *)
+    result is false. An independent result gives false. *)
 
-val pp : loop_name:(label -> string) -> common_loop_ids:label list -> t Fmt.t
+val known_distance : loop_id:label -> t -> int option
+(** Returns the distance at a common loop: the iteration of the read minus the
+    iteration of the write. [None] means that no distance is known at that loop.
+    [None] does not mean independence, and [Some 0] says nothing about the other
+    loops. *)
+
+val pp : loop_name:(label -> string) -> t Fmt.t
 (** Prints [independent], [unknown] when no distance is known, or [distances]
-    with one [[loop:distance]] per common loop in [common_loop_ids], as in
-    [distances [n:1][m:*]]. [loop_name] gives the loop variable of a loop label,
-    or [while] for a [while] loop. *)
+    with one [[loop:distance]] per common loop, as in [distances [n:1][m:*]].
+    [loop_name] gives the loop variable of a loop label, or [while] for a
+    [while] loop. *)

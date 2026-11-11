@@ -10,14 +10,15 @@
 
    The tests print [label: statement // accesses]. R marks a read, W marks a
    write, and RW marks a read and a write of the same element, as [x += 1] and
-   [target += 1] make. Each access prints the variable and the indices. An
-   affine index ({!Analysis_and_optimization.Dependence.Affine_subscript}) is a
-   sum of a loop variable, a symbol and a constant, and prints as that sum, as
-   in [n+k-1]. A symbol is an expression that has the same value in every
-   iteration. An index without a loop variable, as in [v[k]] or [v[3]], selects
-   the same element in every iteration. Every other index is not affine and
-   prints as ?, such as an index that reads a variable that a statement in the
-   log density writes, or a loop variable in an expression other than a sum.
+   [target += 1] make. Each access prints the variable and the indices. An index
+   with a view ({!Analysis_and_optimization.Dependence.Access_function}) is a
+   sum of a loop variable, an invariant part and a constant, and prints as that
+   sum, as in [n+k-1]. The invariant part is an expression that has the same
+   value at every evaluation. An index without a loop variable, as in [v[k]] or
+   [v[3]], selects the same element in every iteration. Every other index has no
+   view and prints as the source expression in parentheses, as in [v[(2 * n)]]
+   or [v[idx[n]]]: an index that reads a variable that a statement in the log
+   density writes, or a loop variable in an expression other than a sum.
 
    The path of an access lists the subscripts and tuple fields that select the
    element. Each subscript or tuple field is one step of the path. *)
@@ -33,7 +34,9 @@ let pp_node_accesses ppf (statements : stmt_info LabelMap.t) =
         Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
           statement.pattern
           (Test_utils.one_line
-             (Accesses.pp ~loop_name:(Test_utils.loop_name statements)))
+             (Accesses.pp
+                (Analysis_and_optimization.Dependence.Access_function.pp
+                   ~loop_name:(Test_utils.loop_name statements))))
           statement.accesses)
 
 let print_node_accesses prog =
@@ -41,7 +44,7 @@ let print_node_accesses prog =
     (build_log_prob_dependence_info (Test_utils.mir_of_string prog))
 
 let%expect_test
-    "Single indices: with a loop variable, without one, and not affine" =
+    "Single indices: with a loop variable, without one, and without a view" =
   print_node_accesses
     {|
       data {
@@ -73,12 +76,12 @@ let%expect_test
     6: m = 1;  // W m
     7: for(n in 1:N) 8  // R N
     9: y[n] = ((((v[(n + 1)] + v[(n - 2)]) + v[(1 + n)]) + v[k]) + v[3]);  // R v[n+1], R v[n-2], R v[n+1], R v[k], R k, R v[3], W y[n]
-    10: y[n] = (((v[idx[n]] + v[(2 * n)]) + v[(n + k)]) + v[m]);  // R v[?], R idx[n], R v[?], R v[n+k], R k, R v[?], R m, W y[n]
-    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[n-k], R k, R v[n+(k + k)], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[?], R k, R v[?], W y[n]
+    10: y[n] = (((v[idx[n]] + v[(2 * n)]) + v[(n + k)]) + v[m]);  // R v[idx[n]], R idx[n], R v[(2 * n)], R v[n+k], R k, R v[m], R m, W y[n]
+    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[n-k], R k, R v[n+(k + k)], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[(n * k)], R k, R v[((n + 1) * 2)], W y[n]
     12: y[n] = ((v[((N - 1) - n)] + v[(n + (k + k))]) + v[((k + k) + n)]);  // R v[-n+N-1], R N, R v[n+(k + k)], R k, R k, R v[n+(k + k)], R k, R k, W y[n]
     13: m = (m * 2);  // RW m
-    14: y[idx[n]] = y[(2 * n)];  // R idx[n], R y[?], W y[?]
-    15: y[idx[n]] = (y[idx[n]] + promote(1, real, data));  // R idx[n], R idx[n], RW y[?]
+    14: y[idx[n]] = y[(2 * n)];  // R idx[n], R y[(2 * n)], W y[idx[n]]
+    15: y[idx[n]] = (y[idx[n]] + promote(1, real, data));  // R idx[n], R idx[n], RW y[idx[n]]
     16: m = n;  // W m
     17: for(j in 1:J) 18  // R J
     19: y[n] = v[j];  // R v[j], W y[n]
@@ -116,7 +119,7 @@ let%expect_test "Every index kind of the language" =
     8: vector[N] c;  // R N, W c
     9: for(n in 1:N) 10  // R N
     11: y[n] = ((((sum(v[:]) + sum(v[a:])) + sum(v[a:b])) + sum(v[1:b])) + sum(v[idx]));  // R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[n]
-    12: y[n] = (((sum(v[n:]) + sum(v[n:(n + 1)])) + sum(v[idx[n]:N])) + sum(v[pairs[n]]));  // R v[n:], R v[n:n+1], R v[?:N], R idx[n], R N, R v[{?}], R pairs[n], W y[n]
+    12: y[n] = (((sum(v[n:]) + sum(v[n:(n + 1)])) + sum(v[idx[n]:N])) + sum(v[pairs[n]]));  // R v[n:], R v[n:n+1], R v[idx[n]:N], R idx[n], R N, R v[{pairs[n]}], R pairs[n], W y[n]
     13: r = m[n, :];  // R m[n, :], W r
     14: r = m[n, 1:K];  // R m[n, 1:K], R K, W r
     15: c = m[:, 1];  // R m[:, 1], W c
@@ -203,9 +206,9 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     8: m = 1;  // W m
     9: theta[1] = mu;  // R mu, W theta[1]
     10: theta[2] = x[k];  // R x[k], R k, W theta[2]
-    11: v[m] = x[m];  // R m, R x[?], R m, W v[?]
+    11: v[m] = x[m];  // R m, R x[m], R m, W v[m]
     12: for(n in 1:N) 13  // R N
-    14: v[n] = (((x[(n + 1)] + theta[1]) + v[idx[n]]) + v[m]);  // R x[n+1], R theta[1], R v[?], R idx[n], R v[?], R m, W v[n]
+    14: v[n] = (((x[(n + 1)] + theta[1]) + v[idx[n]]) + v[m]);  // R x[n+1], R theta[1], R v[idx[n]], R idx[n], R v[m], R m, W v[n]
     17: theta[j] = ((v[n] + v[k]) + sum(v[n:N]));  // R v[n], R v[k], R k, R v[n:N], R N, W theta[j]
     18: target += normal_lpdf(x, v, theta[2]);  // R x, R v, R theta[2], RW target
     |}]
@@ -339,8 +342,8 @@ let%expect_test "Accesses: the remaining index, base and statement forms" =
     3: FnValidateSize__("y", "N", N);  // R N
     4: vector[N] y;  // R N, W y
     5: for(n in 1:N) 6  // R N
-    7: y[n] = ((v[(n + idx[n])] + v[((k > 0) ? 1 : 2)]) + v[k && k]);  // R v[?], R idx[n], R v[((k > 0) ? 1 : 2)], R k, R v[k && k], R k, R k, W y[n]
-    8: y[n] = (((v[k || k] + v[t.1]) + v[(n + n)]) + v[((n + 2) - n)]);  // R v[k || k], R k, R k, R v[t.1], R t.1, R v[?], R v[2], W y[n]
+    7: y[n] = ((v[(n + idx[n])] + v[((k > 0) ? 1 : 2)]) + v[k && k]);  // R v[(n + idx[n])], R idx[n], R v[((k > 0) ? 1 : 2)], R k, R v[k && k], R k, R k, W y[n]
+    8: y[n] = (((v[k || k] + v[t.1]) + v[(n + n)]) + v[((n + 2) - n)]);  // R v[k || k], R k, R k, R v[t.1], R t.1, R v[(n + n)], R v[2], W y[n]
     9: y[n] = ((tv.1[n] + rep_vector(promote(0, real, data), N)[n]) + ((k > 0) ? v : w)[n]);  // R tv.1[n], R N, R k, R v, R w, W y[n]
     10: y[n] = promote(((k > 0) || (k < 0) ? 1 : 2), real, var);  // R k, R k, W y[n]
     12: y[n] = promote(0, real, var);  // W y[n]

@@ -10,8 +10,10 @@ open Monotone_framework_sigs
 open Monotone_framework
 open Dependence
 
+type access = Access_function.t Accesses.access
+
 type reaching_definition =
-  {access: Accesses.access; statement_id: label option; loop_ids: label list}
+  {access: access; statement_id: label option; loop_ids: label list}
 
 type stmt_info =
   { id: label
@@ -19,7 +21,7 @@ type stmt_info =
   ; meta: Location_span.t
   ; controls: controls
   ; loop_ids: label list
-  ; accesses: Accesses.t
+  ; accesses: access list
   ; reaching_definitions: reaching_definition Set.Poly.t
   ; writers: (string * label) Set.Poly.t }
 
@@ -35,8 +37,7 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
      innermost loop, is also a control of [killed]. The loops are found last,
      after the cheaper checks. A definition from outside has no label and no
      iteration. *)
-  let is_killed_in_same_iteration
-      (killer_path : Affine_subscript.t Accesses.step list) : bool =
+  let is_killed_in_same_iteration (killer_path : Dependence.path) : bool =
     match killed.statement_id with
     | None -> false
     | Some killed_id -> (
@@ -59,7 +60,7 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
             && is_covered_by_killed killer
             && is_covered_by_killed innermost
         | [] -> false) in
-  List.exists killer_statement.accesses ~f:(fun (access : Accesses.access) ->
+  List.exists killer_statement.accesses ~f:(fun (access : access) ->
       String.equal access.var killed.access.var
       &&
       match access.kind with
@@ -92,7 +93,7 @@ let compute_reaching_definitions (mir : Program.Typed.t)
       @ List.map mir.output_vars ~f:outside_definition) in
   let definitions_of (statement_id : label) : reaching_definition Set.Poly.t =
     let statement = LabelMap.find statement_id statements in
-    let definition_of_access (access : Accesses.access) =
+    let definition_of_access (access : access) =
       match access.kind with
       | Write | ReadWrite ->
           Some
@@ -110,36 +111,30 @@ let compute_reaching_definitions (mir : Program.Typed.t)
   LabelMap.map definitions_at_entry_and_exit ~f:(fun definitions ->
       definitions.entry)
 
-(** Whether [write] can supply the value that [read] uses. The two must name one
-    variable, [write] must write (a [Write] or a [ReadWrite]), [read] must read
-    (a [Read] or a [ReadWrite]), and the write must be able to run before the
-    read ({!Dependence.is_lexicographically_positive}). *)
-let is_flow_dependence (common_loop_ids : label list) (is_writer_first : bool)
-    (write : Accesses.access) (read : Accesses.access) : bool =
-  String.equal write.var read.var
-  && (match write.kind with Write | ReadWrite -> true | Read -> false)
-  && (match read.kind with Read | ReadWrite -> true | Write -> false)
-  && Dependence.is_lexicographically_positive common_loop_ids is_writer_first
-       write.path read.path
+(** Whether the write of [definition] can supply the value that [read] of
+    [statement] uses. The two must name one variable, the write must be able to
+    select the element read ({!Dependence.test_dependence}), and the write must
+    be able to run before the read ({!Dependence.is_writer_possibly_first}). *)
+let is_flow_dependence (writer_id : label) (definition : reaching_definition)
+    (statement : stmt_info) (read : access) : bool =
+  String.equal definition.access.var read.var
+  && Dependence.is_writer_possibly_first
+       ~is_writer_first:(writer_id < statement.id)
+       (Dependence.test_dependence
+          (definition.loop_ids, definition.access.path)
+          (statement.loop_ids, read.path))
 
 let writers_of_statement (statement : stmt_info) : (string * label) Set.Poly.t =
   let reads =
-    List.filter statement.accesses ~f:(fun (access : Accesses.access) ->
+    List.filter statement.accesses ~f:(fun (access : access) ->
         match access.kind with Read | ReadWrite -> true | Write -> false) in
   Set.Poly.union_map statement.reaching_definitions ~f:(fun definition ->
       match definition.statement_id with
       | None -> Set.Poly.empty
       | Some writer_id ->
-          let common_loop_ids =
-            List.filter definition.loop_ids ~f:(fun loop_id ->
-                List.mem loop_id ~set:statement.loop_ids) in
-          let is_writer_first = writer_id < statement.id in
-          let filter_flow_dependence =
-            is_flow_dependence common_loop_ids is_writer_first definition.access
-          in
           reads
-          |> List.filter ~f:filter_flow_dependence
-          |> List.map ~f:(fun (read : Accesses.access) -> (read.var, writer_id))
+          |> List.filter ~f:(is_flow_dependence writer_id definition statement)
+          |> List.map ~f:(fun (read : access) -> (read.var, writer_id))
           |> Set.Poly.of_list)
 
 (** Returns the labels of the direct dependences of the statement, the control
@@ -198,33 +193,36 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     stmt_info LabelMap.t =
   let statement_map = build_statement_map stmt in
   let control_ids = build_controls statement_map in
-  let add_defined_vars ~key:_ ~data:(pattern, _) running_defined_vars =
-    pattern
-    |> Accesses.of_statement ~classify:(fun _ -> None)
-    |> Accesses.defined_vars
-    |> Set.Poly.union running_defined_vars in
+  (* The accesses are collected once, with the subscript expressions as written.
+     The variables that the analyzed statement defines come from the collected
+     accesses, and the loop context needs those variables before any subscript
+     can be analyzed. *)
+  let collected_accesses =
+    LabelMap.map statement_map ~f:(fun (pattern, _) ->
+        Accesses.of_statement pattern) in
   let defined_vars =
-    LabelMap.fold statement_map ~init:Set.Poly.empty ~f:add_defined_vars in
+    LabelMap.fold collected_accesses ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:accesses running_defined_vars ->
+        Set.Poly.union running_defined_vars (Accesses.defined_vars accesses))
+  in
+  let context = Loop_context.create statement_map ~defined_vars in
   let statements_without_definitions =
     LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
         let controls = LabelMap.find statement_id control_ids in
-        let loopvar_and_id loop_id =
-          match fst (LabelMap.find loop_id statement_map) with
-          | For {loopvar; _} -> Some (loopvar, loop_id)
-          | _ -> None in
         let loop_ids = enclosing_loop_ids statement_id pattern controls in
-        let for_loops = List.filter_map loop_ids ~f:loopvar_and_id in
-        let is_loop_var_read (access : Accesses.access) =
-          match access.kind with
+        let is_loop_var_read (collected : Expr.Typed.t Accesses.access) =
+          match collected.kind with
           | Read ->
-              List.exists for_loops ~f:(fun (loopvar, _) ->
-                  String.equal loopvar access.var)
+              Option.is_some
+                (Loop_context.for_loop_id context ~loop_ids collected.var)
           | Write | ReadWrite -> false in
         let accesses =
-          pattern
-          |> Accesses.of_statement
-               ~classify:(Affine_subscript.of_expr ~for_loops ~defined_vars)
-          |> List.filter ~f:(fun access -> not (is_loop_var_read access)) in
+          LabelMap.find statement_id collected_accesses
+          |> List.filter ~f:(fun collected -> not (is_loop_var_read collected))
+          |> List.map
+               ~f:
+                 (Accesses.map_scalars
+                    ~f:(Access_function.of_expr context ~loop_ids)) in
         { id= statement_id
         ; pattern
         ; meta
@@ -233,7 +231,7 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; accesses
         ; reaching_definitions= Set.Poly.empty
         ; writers= Set.Poly.empty }) in
-  (* The definitions and the kills use the classified accesses, so the records
+  (* The definitions and the kills use the analyzed accesses, so the records
      come first, with empty definition and writer sets. The dataflow fills the
      definitions, and the writers come from the definitions. *)
   let reaching_definitions =
@@ -286,8 +284,10 @@ let pp_controls ~(loop_name : label -> string) ppf
 let pp_definitions ~(loop_name : label -> string) ppf
     (definitions : reaching_definition Set.Poly.t) =
   (* The variable and the path of a write, without the kind. *)
-  let pp_access ppf ({var; path; _} : Accesses.access) =
-    Fmt.pf ppf "%s%a" var (one_line (Accesses.pp_path ~loop_name)) path in
+  let pp_access ppf ({var; path; _} : access) =
+    Fmt.pf ppf "%s%a" var
+      (one_line (Accesses.pp_path (Access_function.pp ~loop_name)))
+      path in
   let entries =
     List.map (Set.Poly.to_list definitions) ~f:(fun definition ->
         (Fmt.str "%a" pp_access definition.access, definition.statement_id))

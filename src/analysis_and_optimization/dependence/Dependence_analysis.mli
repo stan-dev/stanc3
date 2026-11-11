@@ -324,8 +324,12 @@ open Dataflow_types
     store all parameters. Then at the end we would report which parameters go
     unused. *)
 
+(** One analyzed access of a statement: the path of {!Dependence.Accesses} with
+    each subscript expression explained as a {!Dependence.Access_function}. *)
+type access = Dependence.Access_function.t Dependence.Accesses.access
+
 (** One write that can still hold the value of a variable when a statement runs:
-    the access ({!Dependence.Accesses.access}, a [Write] or a [ReadWrite]), the label of
+    the access ({!access}, a [Write] or a [ReadWrite]), the label of
     the statement that makes the access and the loops around that statement,
     outermost first. A [None] label is a write from outside the analyzed code,
     such as data or a parameter; the access of such a write is the whole
@@ -338,9 +342,7 @@ open Dataflow_types
       {access = {var = "N"; path = []; kind = Write}; statement_id = None; loop_ids = []}
     ]} *)
 type reaching_definition =
-  { access: Dependence.Accesses.access
-  ; statement_id: label option
-  ; loop_ids: label list }
+  {access: access; statement_id: label option; loop_ids: label list}
 
 (** What a dependence query needs to know about one statement. Every query reads
     the record of the statement the query starts at; the transitive queries then
@@ -372,7 +374,7 @@ type stmt_info =
         (** The loops around this statement, outermost first
             ({!Dataflow_utils.enclosing_loop_ids}). A loop statement counts as
             inside the loop that the statement starts. *)
-  ; accesses: Dependence.Accesses.t
+  ; accesses: access list
         (** The reads, writes and read-writes in the expressions of this
             statement. Each nested statement has a separate record. *)
   ; reaching_definitions: reaching_definition Set.Poly.t

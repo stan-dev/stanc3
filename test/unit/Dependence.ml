@@ -4,7 +4,7 @@ open Analysis_and_optimization.Dataflow_utils
 open Analysis_and_optimization.Dataflow_types
 module Dependence = Analysis_and_optimization.Dependence
 module Accesses = Dependence.Accesses
-module Affine_subscript = Dependence.Affine_subscript
+module Access_function = Dependence.Access_function
 
 (* Prints, under each read of [var], one line per reaching write of [var]: {v 12
    W b[n] --> R b[n-1]: distances [n:1] flows ^writer ^write ^read
@@ -15,15 +15,17 @@ let print_verdicts ~var prog =
   let statements =
     build_log_prob_dependence_info (Test_utils.mir_of_string prog) in
   let accesses_of (statement : stmt_info) =
-    List.filter statement.accesses ~f:(fun (access : Accesses.access) ->
+    List.filter statement.accesses ~f:(fun (access : access) ->
         String.equal access.var var) in
   (* The kinds that can form a flow dependence: the write side writes and the
      read side reads. *)
-  let is_flow_kind (write : Accesses.access) (read : Accesses.access) =
+  let is_flow_kind (write : access) (read : access) =
     (match write.kind with Write | ReadWrite -> true | Read -> false)
     && match read.kind with Read | ReadWrite -> true | Write -> false in
   let loop_name = Test_utils.loop_name statements in
-  let pp_access = Test_utils.one_line (Accesses.pp_access ~loop_name) in
+  let pp_access =
+    Test_utils.one_line (Accesses.pp_access (Access_function.pp ~loop_name))
+  in
   LabelMap.iter statements ~f:(fun ~key:reader_id ~data:reader ->
       let reads =
         List.filter (accesses_of reader) ~f:(fun read ->
@@ -39,30 +41,24 @@ let print_verdicts ~var prog =
               else None) in
         LabelMap.iter statements ~f:(fun ~key:writer_id ~data:writer ->
             if Set.Poly.mem writer_id reaching_ids then
-              (* Loops nest, so the loops around both statements are the loops
-                 of the writer that are also loops of the reader. *)
-              let common_loop_ids =
-                List.filter writer.loop_ids ~f:(fun loop_id ->
-                    List.mem loop_id ~set:reader.loop_ids) in
               List.iter (accesses_of writer) ~f:(fun write ->
                   List.iter reads ~f:(fun read ->
                       if is_flow_kind write read then
                         let dependence =
-                          Dependence.test_dependence common_loop_ids write.path
-                            read.path in
+                          Dependence.test_dependence
+                            (writer.loop_ids, write.path)
+                            (reader.loop_ids, read.path) in
                         let outcome =
-                          match dependence with
-                          | Dependence.Independent -> ""
-                          | Distance_vector _ ->
-                              if
-                                Dependence.is_lexicographically_positive
-                                  common_loop_ids (writer_id < reader_id)
-                                  write.path read.path
-                              then "  flows"
-                              else "  cannot flow" in
+                          if not (Dependence.is_overlap_possible dependence)
+                          then ""
+                          else if
+                            Dependence.is_writer_possibly_first
+                              ~is_writer_first:(writer_id < reader_id)
+                              dependence
+                          then "  flows"
+                          else "  cannot flow" in
                         Fmt.pr "  %d %a --> %a: %a%s@." writer_id pp_access
-                          write pp_access read
-                          (Dependence.pp ~loop_name ~common_loop_ids)
+                          write pp_access read (Dependence.pp ~loop_name)
                           dependence outcome)))))
 
 (* [is_overwritten] decides whether a later write kills an earlier one. A write
@@ -70,35 +66,68 @@ let print_verdicts ~var prog =
    [m[1, 2]]. A write to [m[n, 1]] overwrites itself only within one iteration
    of the loop over [n]. The comparison does not analyze slices, so a slice
    write kills nothing. *)
-let%test "Comparing write paths" =
-  let affine ?(const = 0) ?symbol ?loop_term () : Affine_subscript.t =
-    Some {const; symbol; loop_term} in
-  let single affine = Accesses.Subscript (Middle.Index.Single affine) in
-  let one = single (affine ~const:1 ()) in
-  let two = single (affine ~const:2 ()) in
-  let symbol_k = single (affine ~symbol:(Middle.Expr.Helpers.variable "k") ()) in
-  let loop_n ?(const = 0) () =
-    single (affine ~const ~loop_term:{loop_id= 8; is_negated= false} ()) in
-  let slice_1_2 =
-    Accesses.Subscript
-      (Middle.Index.Between (affine ~const:1 (), affine ~const:2 ())) in
-  let is_overwritten = Dependence.is_overwritten in
-  List.for_all ~f:Fun.id
-    [ is_overwritten ~is_same_iteration:false [one] [one; two]
-    ; not (is_overwritten ~is_same_iteration:false [one; two] [one])
-    ; is_overwritten ~is_same_iteration:false [symbol_k; one] [symbol_k; one]
-    ; not
-        (is_overwritten ~is_same_iteration:false
-           [loop_n (); one]
-           [loop_n (); one])
-    ; is_overwritten ~is_same_iteration:true [loop_n (); one] [loop_n (); one]
-    ; not
-        (is_overwritten ~is_same_iteration:true
-           [loop_n (); one]
-           [loop_n ~const:(-1) (); one])
-    ; not
-        (is_overwritten ~is_same_iteration:true [slice_1_2; one] [slice_1_2; one])
-    ]
+let%expect_test "Comparing write paths" =
+  let statements =
+    build_log_prob_dependence_info
+      (Test_utils.mir_of_string
+         {|
+        data {
+          int N;
+          int k;
+        }
+        parameters {
+          matrix[N, N] m;
+        }
+        model {
+          matrix[N, N] w;
+          for (n in 2:N) {
+            w[1] = m[1];
+            w[1, 2] = m[1, 2];
+            w[k, 1] = m[k, 1];
+            w[n, 1] = m[n, 1];
+            w[n - 1, 1] = m[n - 1, 1];
+            w[1:2, 1] = m[1:2, 1];
+          }
+        }
+      |})
+  in
+  let loop_name = Test_utils.loop_name statements in
+  let pp_path =
+    Test_utils.one_line (Accesses.pp_path (Access_function.pp ~loop_name)) in
+  (* The paths of the writes to [w], without the declaration, in source
+     order. *)
+  let write_paths =
+    List.concat_map (LabelMap.bindings statements) ~f:(fun (_, statement) ->
+        List.filter_map statement.accesses ~f:(fun (access : access) ->
+            match (access.var, access.kind, access.path) with
+            | "w", Write, _ :: _ -> Some access.path
+            | _ -> None)) in
+  let print_overwrite ~is_same_iteration killer killed =
+    Fmt.pr "w%a overwrites w%a%s: %b@." pp_path
+      (List.nth write_paths killer)
+      pp_path
+      (List.nth write_paths killed)
+      (if is_same_iteration then " in the same iteration" else "")
+      (Dependence.is_overwritten ~is_same_iteration
+         (List.nth write_paths killer)
+         (List.nth write_paths killed)) in
+  print_overwrite ~is_same_iteration:false 0 1;
+  print_overwrite ~is_same_iteration:false 1 0;
+  print_overwrite ~is_same_iteration:false 2 2;
+  print_overwrite ~is_same_iteration:false 3 3;
+  print_overwrite ~is_same_iteration:true 3 3;
+  print_overwrite ~is_same_iteration:true 3 4;
+  print_overwrite ~is_same_iteration:true 5 5;
+  [%expect
+    {|
+    w[1] overwrites w[1, 2]: true
+    w[1, 2] overwrites w[1]: false
+    w[k, 1] overwrites w[k, 1]: true
+    w[n, 1] overwrites w[n, 1]: false
+    w[n, 1] overwrites w[n, 1] in the same iteration: true
+    w[n, 1] overwrites w[n-1, 1] in the same iteration: false
+    w[1:2, 1] overwrites w[1:2, 1] in the same iteration: false
+    |}]
 
 let%expect_test "Strong SIV: loop-carried and loop-independent" =
   print_verdicts ~var:"b"
@@ -300,7 +329,7 @@ let%expect_test "Indices the test cannot compare" =
         for (n in 1:N) {
           for (m in 1:N) {
             b[n] = a;
-            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] is not affine
+            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] has no view
           }
         }
         b[1:2] = c[1:2];                  // the analysis does not compare slices
@@ -318,13 +347,13 @@ let%expect_test "Indices the test cannot compare" =
       16 W b[n] --> R b[n]: unknown  flows
     25: d[n, m] = (b[m] + b[idx[n]]);
       5 W b --> R b[m]: unknown  flows
-      5 W b --> R b[?]: unknown  flows
+      5 W b --> R b[idx[n]]: unknown  flows
       11 W b[k] --> R b[m]: unknown  flows
-      11 W b[k] --> R b[?]: unknown  flows
+      11 W b[k] --> R b[idx[n]]: unknown  flows
       16 W b[n] --> R b[m]: unknown  flows
-      16 W b[n] --> R b[?]: unknown  flows
+      16 W b[n] --> R b[idx[n]]: unknown  flows
       24 W b[n] --> R b[m]: unknown  flows
-      24 W b[n] --> R b[?]: unknown  flows
+      24 W b[n] --> R b[idx[n]]: unknown  flows
     27: if((b[k] > 0)) 28
       5 W b --> R b[k]: unknown  flows
       11 W b[k] --> R b[k]: unknown  flows
@@ -350,9 +379,9 @@ let%expect_test "Indices that read a variable assigned in the block" =
   [%expect
     {|
     11: v[n] = (v[m] + x[n]);
-      5 W v --> R v[?]: unknown  flows
-      8 W v[?] --> R v[?]: unknown  flows
-      11 W v[n] --> R v[?]: unknown  flows
+      5 W v --> R v[m]: unknown  flows
+      8 W v[m] --> R v[m]: unknown  flows
+      11 W v[n] --> R v[m]: unknown  flows
     |}]
 
 let%expect_test "A loop that walks down" =
@@ -380,15 +409,15 @@ let%expect_test "A loop that walks down" =
   [%expect
     {|
     16: c[n] = b[(n + 1)];
-      5 W b --> R b[?]: unknown  flows
-      17 W b[?] --> R b[?]: unknown  flows
+      5 W b --> R b[(n + 1)]: unknown  flows
+      17 W b[n] --> R b[(n + 1)]: unknown  flows
     20: d[(N - m)] = b[((N - m) + 1)];
       5 W b --> R b[-m+N+1]: unknown  flows
-      17 W b[?] --> R b[-m+N+1]: unknown  flows
+      17 W b[n] --> R b[-m+N+1]: unknown  flows
       21 W b[-m+N] --> R b[-m+N+1]: distances [m:1]  flows
     24: e[((N - m) + 1)] = b[(N - m)];
       5 W b --> R b[-m+N]: unknown  flows
-      17 W b[?] --> R b[-m+N]: unknown  flows
+      17 W b[n] --> R b[-m+N]: unknown  flows
       21 W b[-m+N] --> R b[-m+N]: unknown  flows
       25 W b[-m+N+1] --> R b[-m+N]: distances [m:-1]  cannot flow
     |}]
@@ -450,7 +479,7 @@ let%expect_test "Two index positions of one pair of accesses" =
         }
         for (n in 2:N) {
           m[n, 1] = a;
-          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] is not affine
+          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] has no view
         }
         for (n in 2:N) {
           m[n, n] = a;
@@ -468,9 +497,9 @@ let%expect_test "Two index positions of one pair of accesses" =
       6 W m --> R m[2, n]: unknown  flows
       17 W m[1, n] --> R m[2, n]: independent
     22: e[n] = m[n, idx[n]];
-      6 W m --> R m[n, ?]: unknown  flows
-      17 W m[1, n] --> R m[n, ?]: unknown  flows
-      21 W m[n, 1] --> R m[n, ?]: distances [n:0]  flows
+      6 W m --> R m[n, idx[n]]: unknown  flows
+      17 W m[1, n] --> R m[n, idx[n]]: unknown  flows
+      21 W m[n, 1] --> R m[n, idx[n]]: distances [n:0]  flows
     26: f[n] = m[(n - 1), n];
       6 W m --> R m[n-1, n]: unknown  flows
       17 W m[1, n] --> R m[n-1, n]: unknown  flows
@@ -538,4 +567,27 @@ let%expect_test "Loop headers run in every iteration of their own loop" =
     17: k[n] = (k[n] - 1);
       8 W k --> RW k[n]: unknown  flows
       17 RW k[n] --> RW k[n]: distances [n:0][i:*]  flows
+    |}]
+
+(* A loop is identified by the label of the loop statement, not by the name of
+   the loop variable. The two sibling loops both use [n], and no loop is around
+   both the write and the read. The write of [b[n]] and the read of [b[n - 1]]
+   thus have no distance, and the write of the first loop can supply any element
+   that the second loop reads. *)
+let%expect_test "Loop identity: the same variable name in sibling loops" =
+  print_verdicts ~var:"b"
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c;
+        for (n in 1:N) b[n] = a;
+        for (n in 2:N) c[n] = b[n - 1];
+      }
+    |};
+  [%expect
+    {|
+    13: c[n] = b[(n - 1)];
+      5 W b --> R b[n-1]: unknown  flows
+      10 W b[n] --> R b[n-1]: unknown  flows
     |}]

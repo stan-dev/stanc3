@@ -90,7 +90,9 @@ let%expect_test "Running example: the statement map" =
       ; Fmt.str "[%a]" (pp_controls ~loop_name) statement.controls
       ; Fmt.str "%a"
           (Test_utils.one_line
-             (Analysis_and_optimization.Dependence.Accesses.pp ~loop_name))
+             (Analysis_and_optimization.Dependence.Accesses.pp
+                (Analysis_and_optimization.Dependence.Access_function.pp
+                   ~loop_name)))
           statement.accesses ] in
   Fmt.pr "%a" pp_table
     (["label"; "Stan lines"; "pattern"; "controls"; "accesses"]
