@@ -363,6 +363,15 @@ module Access_function = struct
     if constant <> 0 || is_first then
       Fmt.pf ppf "%s%d" (sign ~is_first constant) (abs constant)
 
+  let stride ~(loop_id : label) (access_function : t) : int option =
+    Option.map access_function.view ~f:(fun view ->
+        match
+          List.find_opt view.loop_terms ~f:(fun term ->
+              term.key.loop_id = loop_id)
+        with
+        | Some term -> term.coefficient
+        | None -> 0)
+
   let pp ~loop_name ppf ({expr; view} : t) =
     match view with
     | Some affine -> pp_affine ~loop_name ppf affine
@@ -582,16 +591,31 @@ let is_overlap_possible : t -> bool = function
   | Independent -> false
   | Possible_overlap _ -> true
 
+let rec is_writer_first_possible ~(is_writer_first : bool) :
+    (label * loop_relation) list -> bool = function
+  | [] -> is_writer_first
+  | (_, {directions; _}) :: inner_relations ->
+      directions.is_writer_before
+      || directions.is_same_iteration
+         && is_writer_first_possible ~is_writer_first inner_relations
+
 let is_writer_possibly_first ~(is_writer_first : bool) : t -> bool = function
   | Independent -> false
   | Possible_overlap relations ->
-      let rec is_possible = function
-        | [] -> is_writer_first
+      is_writer_first_possible ~is_writer_first relations
+
+let is_writer_possibly_first_at_loop ~(loop_id : label)
+    ~(is_writer_first : bool) : t -> bool = function
+  | Independent -> false
+  | Possible_overlap relations ->
+      let rec is_possible_from = function
+        | [] -> false
+        | (common_loop_id, _) :: _ as relations when common_loop_id = loop_id ->
+            is_writer_first_possible ~is_writer_first relations
         | (_, {directions; _}) :: inner_relations ->
-            directions.Direction_set.is_writer_before
-            || (directions.is_same_iteration && is_possible inner_relations)
+            directions.is_same_iteration && is_possible_from inner_relations
       in
-      is_possible relations
+      is_possible_from relations
 
 let known_distance ~(loop_id : label) : t -> int option = function
   | Independent -> None

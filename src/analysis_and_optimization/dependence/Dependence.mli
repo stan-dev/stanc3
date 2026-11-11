@@ -34,6 +34,7 @@ module Access_function : sig
   type t
 
   val of_expr : Loop_context.t -> loop_ids:label list -> Expr.Typed.t -> t
+  val stride : loop_id:label -> t -> int option
   val pp : loop_name:(label -> string) -> t Fmt.t
 end
 
@@ -46,5 +47,9 @@ type t
 val test_dependence : label list * path -> label list * path -> t
 val is_overlap_possible : t -> bool
 val is_writer_possibly_first : is_writer_first:bool -> t -> bool
+
+val is_writer_possibly_first_at_loop :
+  loop_id:label -> is_writer_first:bool -> t -> bool
+
 val known_distance : loop_id:label -> t -> int option
 val pp : loop_name:(label -> string) -> t Fmt.t
