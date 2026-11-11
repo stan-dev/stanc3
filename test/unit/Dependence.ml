@@ -80,6 +80,7 @@ let%expect_test "Comparing write paths" =
         }
         model {
           matrix[N, N] w;
+          int j = k;
           for (n in 2:N) {
             w[1] = m[1];
             w[1, 2] = m[1, 2];
@@ -87,6 +88,13 @@ let%expect_test "Comparing write paths" =
             w[n, 1] = m[n, 1];
             w[n - 1, 1] = m[n - 1, 1];
             w[1:2, 1] = m[1:2, 1];
+            w[k + k, 1] = m[1, 1];
+            w[2 * k, 1] = m[1, 1];
+            w[n + n, 1] = m[1, 1];
+            w[2 * n, 1] = m[1, 1];
+            w[j + j, 1] = m[1, 1];
+            w[2 * j, 1] = m[1, 1];
+            j = j + 1;
           }
         }
       |})
@@ -118,6 +126,10 @@ let%expect_test "Comparing write paths" =
   print_overwrite ~is_same_iteration:true 3 3;
   print_overwrite ~is_same_iteration:true 3 4;
   print_overwrite ~is_same_iteration:true 5 5;
+  print_overwrite ~is_same_iteration:false 7 6;
+  print_overwrite ~is_same_iteration:false 9 8;
+  print_overwrite ~is_same_iteration:true 9 8;
+  print_overwrite ~is_same_iteration:true 11 10;
   [%expect
     {|
     w[1] overwrites w[1, 2]: true
@@ -127,6 +139,10 @@ let%expect_test "Comparing write paths" =
     w[n, 1] overwrites w[n, 1] in the same iteration: true
     w[n, 1] overwrites w[n-1, 1] in the same iteration: false
     w[1:2, 1] overwrites w[1:2, 1] in the same iteration: false
+    w[2*k, 1] overwrites w[2*k, 1]: true
+    w[2*n, 1] overwrites w[2*n, 1]: false
+    w[2*n, 1] overwrites w[2*n, 1] in the same iteration: true
+    w[(2 * j), 1] overwrites w[(j + j), 1] in the same iteration: false
     |}]
 
 let%expect_test "Strong SIV: loop-carried and loop-independent" =
@@ -590,4 +606,37 @@ let%expect_test "Loop identity: the same variable name in sibling loops" =
     13: c[n] = b[(n - 1)];
       5 W b --> R b[n-1]: unknown  flows
       10 W b[n] --> R b[n-1]: unknown  flows
+    |}]
+
+let%expect_test "Normalized sums: equal values written differently" =
+  print_verdicts ~var:"b"
+    {|
+      data { int N; int k; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c; vector[N] d;
+        for (n in 2:N) {
+          b[k + k] = a;
+          c[n] = b[2 * k] + b[2 * k + 1];
+          b[n + n - n] = a;
+          d[n] = b[1 * n - 1] + b[-(1 - n)];
+        }
+      }
+    |};
+  [%expect
+    {|
+    13: c[n] = (b[(2 * k)] + b[((2 * k) + 1)]);
+      5 W b --> R b[2*k]: unknown  flows
+      5 W b --> R b[2*k+1]: unknown  flows
+      12 W b[2*k] --> R b[2*k]: unknown  flows
+      12 W b[2*k] --> R b[2*k+1]: independent
+      14 W b[n] --> R b[2*k]: unknown  flows
+      14 W b[n] --> R b[2*k+1]: unknown  flows
+    15: d[n] = (b[((1 * n) - 1)] + b[-((1 - n))]);
+      5 W b --> R b[n-1]: unknown  flows
+      5 W b --> R b[n-1]: unknown  flows
+      12 W b[2*k] --> R b[n-1]: unknown  flows
+      12 W b[2*k] --> R b[n-1]: unknown  flows
+      14 W b[n] --> R b[n-1]: distances [n:1]  flows
+      14 W b[n] --> R b[n-1]: distances [n:1]  flows
     |}]

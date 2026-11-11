@@ -138,8 +138,8 @@ let%expect_test "One loop, linear subscripts, against enumeration" =
   List.iter [(1, 5); (-2, 2); (3, 3); (4, 2)] ~f:run_bounds;
   [%expect
     {|
-    1:5 cases 450, disjoint 255, proven independent 0, with distance 0, writer never first 0
-    -2:2 cases 450, disjoint 124, proven independent 0, with distance 0, writer never first 0
-    3:3 cases 450, disjoint 424, proven independent 0, with distance 0, writer never first 0
-    4:2 cases 450, disjoint 450, proven independent 0, with distance 0, writer never first 0
+    1:5 cases 450, disjoint 255, proven independent 16, with distance 36, writer never first 16
+    -2:2 cases 450, disjoint 124, proven independent 16, with distance 36, writer never first 16
+    3:3 cases 450, disjoint 424, proven independent 16, with distance 36, writer never first 16
+    4:2 cases 450, disjoint 450, proven independent 16, with distance 36, writer never first 16
     |}]

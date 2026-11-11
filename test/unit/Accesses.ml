@@ -76,11 +76,11 @@ let%expect_test
     6: m = 1;  // W m
     7: for(n in 1:N) 8  // R N
     9: y[n] = ((((v[(n + 1)] + v[(n - 2)]) + v[(1 + n)]) + v[k]) + v[3]);  // R v[n+1], R v[n-2], R v[n+1], R v[k], R k, R v[3], W y[n]
-    10: y[n] = (((v[idx[n]] + v[(2 * n)]) + v[(n + k)]) + v[m]);  // R v[idx[n]], R idx[n], R v[(2 * n)], R v[n+k], R k, R v[m], R m, W y[n]
-    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[n-k], R k, R v[n+(k + k)], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[(n * k)], R k, R v[((n + 1) * 2)], W y[n]
-    12: y[n] = ((v[((N - 1) - n)] + v[(n + (k + k))]) + v[((k + k) + n)]);  // R v[-n+N-1], R N, R v[n+(k + k)], R k, R k, R v[n+(k + k)], R k, R k, W y[n]
+    10: y[n] = (((v[idx[n]] + v[(2 * n)]) + v[(n + k)]) + v[m]);  // R v[idx[n]], R idx[n], R v[2*n], R v[n+k], R k, R v[m], R m, W y[n]
+    11: y[n] = (((((((v[((k + n) - 1)] + v[(n - k)]) + v[((n + k) + k)]) + v[((n + k) - k)]) + v[(k + 1)]) + v[(N - n)]) + v[(n * k)]) + v[((n + 1) * 2)]);  // R v[n+k-1], R k, R v[n-k], R k, R v[n+2*k], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[-n+N], R N, R v[(n * k)], R k, R v[2*n+2], W y[n]
+    12: y[n] = ((v[((N - 1) - n)] + v[(n + (k + k))]) + v[((k + k) + n)]);  // R v[-n+N-1], R N, R v[n+2*k], R k, R k, R v[n+2*k], R k, R k, W y[n]
     13: m = (m * 2);  // RW m
-    14: y[idx[n]] = y[(2 * n)];  // R idx[n], R y[(2 * n)], W y[idx[n]]
+    14: y[idx[n]] = y[(2 * n)];  // R idx[n], R y[2*n], W y[idx[n]]
     15: y[idx[n]] = (y[idx[n]] + promote(1, real, data));  // R idx[n], R idx[n], RW y[idx[n]]
     16: m = n;  // W m
     17: for(j in 1:J) 18  // R J
@@ -343,7 +343,7 @@ let%expect_test "Accesses: the remaining index, base and statement forms" =
     4: vector[N] y;  // R N, W y
     5: for(n in 1:N) 6  // R N
     7: y[n] = ((v[(n + idx[n])] + v[((k > 0) ? 1 : 2)]) + v[k && k]);  // R v[(n + idx[n])], R idx[n], R v[((k > 0) ? 1 : 2)], R k, R v[k && k], R k, R k, W y[n]
-    8: y[n] = (((v[k || k] + v[t.1]) + v[(n + n)]) + v[((n + 2) - n)]);  // R v[k || k], R k, R k, R v[t.1], R t.1, R v[(n + n)], R v[2], W y[n]
+    8: y[n] = (((v[k || k] + v[t.1]) + v[(n + n)]) + v[((n + 2) - n)]);  // R v[k || k], R k, R k, R v[t.1], R t.1, R v[2*n], R v[2], W y[n]
     9: y[n] = ((tv.1[n] + rep_vector(promote(0, real, data), N)[n]) + ((k > 0) ? v : w)[n]);  // R tv.1[n], R N, R k, R v, R w, W y[n]
     10: y[n] = promote(((k > 0) || (k < 0) ? 1 : 2), real, var);  // R k, R k, W y[n]
     12: y[n] = promote(0, real, var);  // W y[n]

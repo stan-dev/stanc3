@@ -197,67 +197,100 @@ module Accesses = struct
   let pp = Printing.pp
 end
 
+module Checked_int = struct
+  let add (left : int) (right : int) : int option =
+    let sum = left + right in
+    if
+      Bool.equal (left >= 0) (right >= 0)
+      && not (Bool.equal (sum >= 0) (left >= 0))
+    then None
+    else Some sum
+
+  let negate (value : int) : int option =
+    if value = Int.min_int then None else Some (-value)
+
+  let subtract (left : int) (right : int) : int option =
+    Option.bind (negate right) ~f:(add left)
+
+  let multiply (left : int) (right : int) : int option =
+    if left = 0 || right = 0 then Some 0
+    else if left = Int.min_int || right = Int.min_int then None
+    else
+      let product = left * right in
+      if product / right = left then Some product else None
+end
+
 module Access_function = struct
-  type loop_term = {loop_id: label; is_negated: bool}
+  type 'key term = {key: 'key; coefficient: int}
 
-  type unit_stride =
-    {constant: int; invariant: Expr.Typed.t option; loop_term: loop_term option}
+  type affine =
+    { constant: int
+    ; loop_terms: label term list
+    ; invariant_terms: Expr.Typed.t term list }
 
-  type t = {expr: Expr.Typed.t; view: unit_stride option}
+  type t = {expr: Expr.Typed.t; view: affine option}
 
-  let equal_loop_terms (first : loop_term option) (second : loop_term option) :
-      bool =
-    Option.equal
-      (fun (first_term : loop_term) (second_term : loop_term) ->
-        first_term.loop_id = second_term.loop_id
-        && Bool.equal first_term.is_negated second_term.is_negated)
-      first second
+  let rec add_terms ~(compare : 'key -> 'key -> int) (left : 'key term list)
+      (right : 'key term list) : 'key term list option =
+    match (left, right) with
+    | [], terms | terms, [] -> Some terms
+    | left_term :: left_rest, right_term :: right_rest -> (
+        let order = compare left_term.key right_term.key in
+        if order < 0 then
+          Option.map
+            (add_terms ~compare left_rest right)
+            ~f:(List.cons left_term)
+        else if order > 0 then
+          Option.map
+            (add_terms ~compare left right_rest)
+            ~f:(List.cons right_term)
+        else
+          match
+            ( Checked_int.add left_term.coefficient right_term.coefficient
+            , add_terms ~compare left_rest right_rest )
+          with
+          | Some 0, Some rest -> Some rest
+          | Some coefficient, Some rest ->
+              Some ({left_term with coefficient} :: rest)
+          | None, _ | _, None -> None)
 
-  let equal_invariants (first : Expr.Typed.t option)
-      (second : Expr.Typed.t option) : bool =
-    Option.equal
-      (fun first_invariant second_invariant ->
-        Expr.Helpers.compare_ignore_meta first_invariant second_invariant = 0)
-      first second
+  let scale_terms (factor : int) (terms : 'key term list) :
+      'key term list option =
+    let scale_term term =
+      Option.map (Checked_int.multiply factor term.coefficient)
+        ~f:(fun coefficient -> {term with coefficient}) in
+    if factor = 0 then Some [] else Option.all (List.map terms ~f:scale_term)
 
-  let has_same_terms (first : unit_stride) (second : unit_stride) : bool =
-    equal_loop_terms first.loop_term second.loop_term
-    && equal_invariants first.invariant second.invariant
+  let add (left : affine) (right : affine) : affine option =
+    match
+      ( Checked_int.add left.constant right.constant
+      , add_terms ~compare:Int.compare left.loop_terms right.loop_terms
+      , add_terms ~compare:Expr.Helpers.compare_ignore_meta left.invariant_terms
+          right.invariant_terms )
+    with
+    | Some constant, Some loop_terms, Some invariant_terms ->
+        Some {constant; loop_terms; invariant_terms}
+    | None, _, _ | _, None, _ | _, _, None -> None
 
-  let add (left : unit_stride) (right : unit_stride) : unit_stride option =
-    match (left.loop_term, right.loop_term) with
-    | Some _, Some _ -> None
-    | left_loop_term, right_loop_term ->
-        let invariant =
-          match (left.invariant, right.invariant) with
-          | Some left_invariant, Some right_invariant ->
-              Some
-                (Expr.Helpers.binop left_invariant Operator.Plus right_invariant)
-          | left_invariant, right_invariant ->
-              Option.first_some left_invariant right_invariant in
-        Some
-          { constant= left.constant + right.constant
-          ; invariant
-          ; loop_term= Option.first_some left_loop_term right_loop_term }
+  let scale (factor : int) (view : affine) : affine option =
+    match
+      ( Checked_int.multiply factor view.constant
+      , scale_terms factor view.loop_terms
+      , scale_terms factor view.invariant_terms )
+    with
+    | Some constant, Some loop_terms, Some invariant_terms ->
+        Some {constant; loop_terms; invariant_terms}
+    | None, _, _ | _, None, _ | _, _, None -> None
 
-  let negate (term : unit_stride) : unit_stride =
-    { constant= -term.constant
-    ; invariant=
-        Option.map term.invariant ~f:(Expr.Helpers.unary_op Operator.PMinus)
-    ; loop_term=
-        Option.map term.loop_term ~f:(fun loop_term ->
-            {loop_term with is_negated= not loop_term.is_negated}) }
+  let subtract (left : affine) (right : affine) : affine option =
+    Option.bind (scale (-1) right) ~f:(add left)
 
-  let subtract (left : unit_stride) (right : unit_stride) : unit_stride option =
-    let drop_shared_terms (term : unit_stride) : unit_stride =
-      { term with
-        invariant=
-          (if equal_invariants left.invariant right.invariant then None
-           else term.invariant)
-      ; loop_term=
-          (if equal_loop_terms left.loop_term right.loop_term then None
-           else term.loop_term) } in
-    add (drop_shared_terms left) (negate (drop_shared_terms right))
+  let multiply (left : affine) (right : affine) : affine option =
+    let is_constant (view : affine) =
+      List.is_empty view.loop_terms && List.is_empty view.invariant_terms in
+    if is_constant left then scale left.constant right
+    else if is_constant right then scale right.constant left
+    else None
 
   let is_stable (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : bool =
@@ -268,78 +301,91 @@ module Access_function = struct
     && (not (Set.Poly.exists used_names ~f:is_loop_var))
     && not (cannot_duplicate_expr expr)
 
-  let unit_stride_of_expr (context : Loop_context.t) ~(loop_ids : label list)
-      (expr : Expr.Typed.t) : unit_stride option =
-    let of_invariant (subexpr : Expr.Typed.t) : unit_stride option =
+  let affine_of_expr (context : Loop_context.t) ~(loop_ids : label list)
+      (expr : Expr.Typed.t) : affine option =
+    let of_atom (subexpr : Expr.Typed.t) : affine option =
       if is_stable context ~loop_ids subexpr then
-        Some {constant= 0; invariant= Some subexpr; loop_term= None}
+        Some
+          { constant= 0
+          ; loop_terms= []
+          ; invariant_terms= [{key= subexpr; coefficient= 1}] }
       else None in
-    let rec of_sum (subexpr : Expr.Typed.t) : unit_stride option =
-      let combine_operands operation lhs rhs =
-        match (of_sum lhs, of_sum rhs) with
-        | Some left_view, Some right_view -> (
-            match operation left_view right_view with
-            | Some view -> Some view
-            | None -> of_invariant subexpr)
-        | None, _ | _, None -> of_invariant subexpr in
+    let rec of_linear (subexpr : Expr.Typed.t) : affine option =
+      let or_atom (view : affine option) : affine option =
+        match view with Some _ -> view | None -> of_atom subexpr in
+      let combine operation lhs rhs =
+        match (of_linear lhs, of_linear rhs) with
+        | Some left_view, Some right_view ->
+            or_atom (operation left_view right_view)
+        | None, _ | _, None -> of_atom subexpr in
       match subexpr.pattern with
       | Var name -> (
           match Loop_context.for_loop_id context ~loop_ids name with
           | Some loop_id ->
               Some
                 { constant= 0
-                ; invariant= None
-                ; loop_term= Some {loop_id; is_negated= false} }
-          | None -> of_invariant subexpr)
-      | Lit (Int, digits) -> (
-          match Int.of_string_opt digits with
-          | Some constant -> Some {constant; invariant= None; loop_term= None}
-          | None ->
-              Common.ICE.internal_error
-                ("Integer literal does not fit an int: " ^ digits)
-              [@coverage off])
-      | FunApp (Operator Plus, [lhs; rhs]) -> combine_operands add lhs rhs
-      | FunApp (Operator Minus, [lhs; rhs]) -> combine_operands subtract lhs rhs
+                ; loop_terms= [{key= loop_id; coefficient= 1}]
+                ; invariant_terms= [] }
+          | None -> of_atom subexpr)
+      | Lit (Int, digits) ->
+          Option.map (Int.of_string_opt digits) ~f:(fun constant ->
+              {constant; loop_terms= []; invariant_terms= []})
+      | FunApp (Operator Plus, [lhs; rhs]) -> combine add lhs rhs
+      | FunApp (Operator Minus, [lhs; rhs]) -> combine subtract lhs rhs
+      | FunApp (Operator Times, [lhs; rhs]) -> combine multiply lhs rhs
+      | FunApp (Operator PMinus, [operand]) ->
+          or_atom (Option.bind (of_linear operand) ~f:(scale (-1)))
+      | FunApp (Operator PPlus, [operand]) -> or_atom (of_linear operand)
       | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
        |TupleProjection _ | Promotion _ ->
-          of_invariant subexpr in
-    of_sum expr
+          of_atom subexpr in
+    of_linear expr
 
   let of_expr (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : t =
-    {expr; view= unit_stride_of_expr context ~loop_ids expr}
+    {expr; view= affine_of_expr context ~loop_ids expr}
+
+  let equal_terms ~(compare : 'key -> 'key -> int) (first : 'key term list)
+      (second : 'key term list) : bool =
+    List.equal first second ~eq:(fun first_term second_term ->
+        compare first_term.key second_term.key = 0
+        && first_term.coefficient = second_term.coefficient)
+
+  let has_same_invariant_terms (first : affine) (second : affine) : bool =
+    equal_terms ~compare:Expr.Helpers.compare_ignore_meta first.invariant_terms
+      second.invariant_terms
 
   let is_equal_value ~(is_same_iteration : bool) (first : t) (second : t) : bool
       =
     match (first.view, second.view) with
     | Some first_view, Some second_view ->
-        has_same_terms first_view second_view
-        && first_view.constant = second_view.constant
-        && (is_same_iteration || Option.is_none first_view.loop_term)
+        first_view.constant = second_view.constant
+        && has_same_invariant_terms first_view second_view
+        && equal_terms ~compare:Int.compare first_view.loop_terms
+             second_view.loop_terms
+        && (is_same_iteration || List.is_empty first_view.loop_terms)
     | None, _ | _, None -> false
 
-  let pp_unit_stride ~(loop_name : label -> string) ppf
-      ({constant; invariant; loop_term} : unit_stride) =
-    Option.iter loop_term ~f:(fun {loop_id; is_negated} ->
-        Fmt.pf ppf "%s%s" (if is_negated then "-" else "") (loop_name loop_id));
-    let is_leading = Option.is_none loop_term in
-    Option.iter invariant ~f:(fun (invariant : Expr.Typed.t) ->
-        match invariant.pattern with
-        | FunApp (Operator PMinus, [negated]) ->
-            Fmt.pf ppf "-%a" Expr.Typed.pp negated
-        | _ ->
-            Fmt.pf ppf "%s%a"
-              (if is_leading then "" else "+")
-              Expr.Typed.pp invariant);
-    let is_first = is_leading && Option.is_none invariant in
+  let pp_affine ~(loop_name : label -> string) ppf
+      ({constant; loop_terms; invariant_terms} : affine) =
+    let terms =
+      List.map loop_terms ~f:(fun {key; coefficient} ->
+          (coefficient, loop_name key))
+      @ List.map invariant_terms ~f:(fun {key; coefficient} ->
+          (coefficient, Fmt.str "%a" Expr.Typed.pp key)) in
+    let sign ~is_first value =
+      if value < 0 then "-" else if is_first then "" else "+" in
+    List.iteri terms ~f:(fun position (coefficient, text) ->
+        let sign = sign ~is_first:(position = 0) coefficient in
+        if abs coefficient = 1 then Fmt.pf ppf "%s%s" sign text
+        else Fmt.pf ppf "%s%d*%s" sign (abs coefficient) text);
+    let is_first = List.is_empty terms in
     if constant <> 0 || is_first then
-      Fmt.pf ppf "%s%d"
-        (if constant < 0 then "-" else if is_first then "" else "+")
-        (abs constant)
+      Fmt.pf ppf "%s%d" (sign ~is_first constant) (abs constant)
 
   let pp ~loop_name ppf ({expr; view} : t) =
     match view with
-    | Some unit_stride -> pp_unit_stride ~loop_name ppf unit_stride
+    | Some affine -> pp_affine ~loop_name ppf affine
     | None -> Expr.Typed.pp ppf expr
 end
 
@@ -374,29 +420,34 @@ type subscript_constraint =
   | Distance of {loop_id: label; distance: int}
   | No_information
 
-let test_constant_subscripts (write : Access_function.unit_stride)
-    (read : Access_function.unit_stride) : subscript_constraint =
+let test_constant_subscripts (write : Access_function.affine)
+    (read : Access_function.affine) : subscript_constraint =
   if write.constant = read.constant then No_information else Disjoint
 
-let test_equal_stride_subscripts (loop_term : Access_function.loop_term)
-    (write : Access_function.unit_stride) (read : Access_function.unit_stride) :
+let test_equal_stride_subscripts
+    ({key= loop_id; coefficient= stride} : label Access_function.term)
+    (write : Access_function.affine) (read : Access_function.affine) :
     subscript_constraint =
-  let constant_difference = write.constant - read.constant in
-  Distance
-    { loop_id= loop_term.loop_id
-    ; distance=
-        (if loop_term.is_negated then -constant_difference
-         else constant_difference) }
+  match (stride, Checked_int.subtract write.constant read.constant) with
+  | 1, Some distance -> Distance {loop_id; distance}
+  | -1, Some difference -> (
+      match Checked_int.negate difference with
+      | Some distance -> Distance {loop_id; distance}
+      | None -> No_information)
+  | _, (Some _ | None) -> No_information
 
 let test_subscripts (write : Access_function.t Index.t)
     (read : Access_function.t Index.t) : subscript_constraint =
   match (write, read) with
   | Single {view= Some write_view; _}, Single {view= Some read_view; _}
-    when Access_function.has_same_terms write_view read_view -> (
-      match write_view.loop_term with
-      | None -> test_constant_subscripts write_view read_view
-      | Some loop_term ->
-          test_equal_stride_subscripts loop_term write_view read_view)
+    when Access_function.has_same_invariant_terms write_view read_view -> (
+      match (write_view.loop_terms, read_view.loop_terms) with
+      | [], [] -> test_constant_subscripts write_view read_view
+      | [write_term], [read_term]
+        when write_term.key = read_term.key
+             && write_term.coefficient = read_term.coefficient ->
+          test_equal_stride_subscripts write_term write_view read_view
+      | _, _ -> No_information)
   | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> No_information
 
 let test_steps (write : Access_function.t step) (read : Access_function.t step)
