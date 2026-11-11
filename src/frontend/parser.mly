@@ -342,9 +342,29 @@ constrained_matrix:
     args = separated_list(COMMA, arg_decl) RPAREN
     { rt, name, args }
 
+(* in the design doc, also allowed for nested parens. Would be an easy extension,
+   but doesn't actually seem useful? *)
+annotation_arg:
+  | s = IDENTIFIER
+    | s = INTNUMERAL
+    | s = REALNUMERAL
+    | s = DOTNUMERAL
+    | s = IMAGNUMERAL
+    { s }
+  | TRUNCATE { "T" }
+  | r = reserved_word { fst3 r }
+
+annotation_args:
+  | LPAREN args = separated_list(COMMA, annotation_arg) RPAREN
+    { args }
+
 %inline annotation:
-  | a = ANNOTATION
-    { build_id (String.chop_prefix_exn ~prefix:"@" a) $loc }
+  | name = ANNOTATION args = option(annotation_args)
+    {
+      let args = Option.value args ~default:[] in
+      let loc = location_span_of_positions $loc in
+      Middle.Annotation.{ name; args; loc }
+    }
 
 function_def:
   | annotations = list(annotation) fn = function_start

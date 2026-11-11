@@ -233,7 +233,7 @@ val fn_decl_redefined :
 
 val stan_math_fn_redefined : Location_span.t -> string -> UnsizedType.t -> t
 val fn_decl_exists : Location_span.t -> string -> Location_span.t -> t
-val fn_extern_defined : Location_span.t -> string -> Ast.identifier -> t
+val fn_extern_defined : Location_span.t -> string -> Location_span.t -> t
 val fn_decl_without_def : Location_span.t -> string -> t
 val non_real_prob_fn_def : Location_span.t -> UnsizedType.returntype -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t

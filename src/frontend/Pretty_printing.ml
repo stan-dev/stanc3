@@ -410,9 +410,7 @@ let rec pp_transformed_type ppf (st, trans) =
 let pp_annotations ppf ann =
   (* TODO better comment handling? *)
   if List.is_empty ann then ()
-  else
-    let pp ppf s = pf ppf "%@%s" s.name in
-    pf ppf "%a@ " (list ~sep:sp pp) ann
+  else pf ppf "%a@ " (list ~sep:sp Middle.Annotation.pp) ann
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with

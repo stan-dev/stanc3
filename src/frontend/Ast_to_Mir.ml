@@ -566,7 +566,6 @@ let create_decl_with_assign decl_id declc decl_type initial_value
           Typed.Meta.create ~adlevel:decl_adtype ~loc:smeta
             ~type_:(Type.to_unsized decl_type)
             () } in
-  let decl_annotations = List.map ~f:(fun a -> a.Ast.name) decl_annotations in
   let decl =
     Stmt.
       { pattern=
@@ -827,7 +826,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
           ; fdname= funname.name
           ; fdsuffix= Fun_kind.(suffix_from_name funname.name)
           ; fdargs= List.map ~f:trans_arg arguments
-          ; fdannotations= List.map ~f:(fun a -> a.Ast.name) annotations
+          ; fdannotations= annotations
           ; fdbody=
               trans_stmt ud_dists
                 {transform_action= IgnoreTransform; dadlevel= AutoDiffable}
@@ -873,8 +872,7 @@ let trans_block ud_dists declc block prog =
                        ; out_unconstrained_st=
                            transform_sizedtype transform type_
                        ; out_block= block
-                       ; out_annotations=
-                           List.map ~f:(fun a -> a.Ast.name) annotations
+                       ; out_annotations= annotations
                        ; out_trans= transform } ) in
                  let stmts =
                    create_decl_with_assign decl_id declc (Sized type_)
