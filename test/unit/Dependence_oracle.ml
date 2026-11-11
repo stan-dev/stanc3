@@ -22,11 +22,11 @@ let pp_case ppf case =
     pp_subscript
     (case.read_stride, case.read_offset)
 
-let program ~lower ~upper =
+let program ~lower ~upper_text =
   Fmt.str
     "data { int N; } parameters { real a; } model { vector[N] x; real y; for \
-     (n in %d:%d) { %a } }"
-    lower upper
+     (n in %d:%s) { %a } }"
+    lower upper_text
     Fmt.(list ~sep:sp pp_case)
     cases
 
@@ -95,10 +95,11 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
 type tally =
   {disjoint: int; independent: int; with_distance: int; refuted_order: int}
 
-let run_bounds (lower, upper) =
+let run_bounds ?upper_text (lower, upper) =
+  let upper_text = Option.value upper_text ~default:(Int.to_string upper) in
   let statements =
     build_log_prob_dependence_info
-      (Test_utils.mir_of_string (program ~lower ~upper)) in
+      (Test_utils.mir_of_string (program ~lower ~upper_text)) in
   let writes = paths_of_x statements Write in
   let reads = paths_of_x statements Read in
   let tally =
@@ -107,7 +108,7 @@ let run_bounds (lower, upper) =
       ~init:{disjoint= 0; independent= 0; with_distance= 0; refuted_order= 0}
       ~f:(fun tally (case, (write, read)) ->
         List.iter (violations ~lower ~upper case write read) ~f:(fun name ->
-            Fmt.pr "%d:%d %a: %s@." lower upper pp_case case name);
+            Fmt.pr "%d:%s %a: %s@." lower upper_text pp_case case name);
         let dependence = Dependence.test_dependence write read in
         let count is_counted = if is_counted then 1 else 0 in
         let is_overlap_possible = Dependence.is_overlap_possible dependence in
@@ -129,9 +130,9 @@ let run_bounds (lower, upper) =
                      (Dependence.is_writer_possibly_first ~is_writer_first:true
                         dependence)) }) in
   Fmt.pr
-    "%d:%d cases %d, disjoint %d, proven independent %d, with distance %d, \
+    "%d:%s cases %d, disjoint %d, proven independent %d, with distance %d, \
      writer never first %d@."
-    lower upper (List.length cases) tally.disjoint tally.independent
+    lower upper_text (List.length cases) tally.disjoint tally.independent
     tally.with_distance tally.refuted_order
 
 let%expect_test "One loop, linear subscripts, against enumeration" =
@@ -143,3 +144,136 @@ let%expect_test "One loop, linear subscripts, against enumeration" =
     3:3 cases 450, disjoint 424, proven independent 234, with distance 8, writer never first 0
     4:2 cases 450, disjoint 450, proven independent 250, with distance 0, writer never first 0
     |}]
+
+let%expect_test "One loop, unknown upper bound, against enumeration" =
+  run_bounds ~upper_text:"N" (1, 8);
+  run_bounds ~upper_text:"N" (-2, 5);
+  run_bounds ~upper_text:"N" (3, 3);
+  [%expect
+    {|
+    1:N cases 450, disjoint 245, proven independent 150, with distance 54, writer never first 23
+    -2:N cases 450, disjoint 105, proven independent 104, with distance 54, writer never first 23
+    3:N cases 450, disjoint 424, proven independent 180, with distance 54, writer never first 23
+    |}]
+
+type nest_case =
+  {write_strides: int * int; read_strides: int * int; read_offset: int}
+
+let nest_cases : nest_case list =
+  let strides = [-1; 0; 1; 2] in
+  let stride_pairs =
+    List.concat_map strides ~f:(fun outer_stride ->
+        List.map strides ~f:(fun inner_stride -> (outer_stride, inner_stride)))
+  in
+  List.concat_map stride_pairs ~f:(fun write_strides ->
+      List.concat_map stride_pairs ~f:(fun read_strides ->
+          List.map [0; 1] ~f:(fun read_offset ->
+              {write_strides; read_strides; read_offset})))
+
+let pp_nest_subscript ppf ((outer_stride, inner_stride), offset) =
+  Fmt.pf ppf "%d * n + %d * m + %d" outer_stride inner_stride offset
+
+let pp_nest_case ppf case =
+  Fmt.pf ppf "x[%a] = a; y = x[%a];" pp_nest_subscript (case.write_strides, 0)
+    pp_nest_subscript
+    (case.read_strides, case.read_offset)
+
+let nest_program =
+  Fmt.str
+    "data { int N; } parameters { real a; } model { vector[N] x; real y; for \
+     (n in 1:3) { for (m in 1:3) { %a } } }"
+    Fmt.(list ~sep:sp pp_nest_case)
+    nest_cases
+
+let nest_overlaps case : ((int * int) * (int * int)) list =
+  let iterations =
+    List.concat_map [1; 2; 3] ~f:(fun outer_iteration ->
+        List.map [1; 2; 3] ~f:(fun inner_iteration ->
+            (outer_iteration, inner_iteration))) in
+  let element (outer_stride, inner_stride) offset
+      (outer_iteration, inner_iteration) =
+    (outer_stride * outer_iteration) + (inner_stride * inner_iteration) + offset
+  in
+  List.concat_map iterations ~f:(fun write_iteration ->
+      List.filter_map iterations ~f:(fun read_iteration ->
+          if
+            element case.write_strides 0 write_iteration
+            = element case.read_strides case.read_offset read_iteration
+          then Some (write_iteration, read_iteration)
+          else None))
+
+let nest_violations case (write : label list * Dependence.path)
+    (read : label list * Dependence.path) : string list =
+  let pairs = nest_overlaps case in
+  let outer_loop_id, inner_loop_id =
+    match fst write with
+    | [outer_loop_id; inner_loop_id] -> (outer_loop_id, inner_loop_id)
+    | _ -> failwith "expected two loops" in
+  let dependence = Dependence.test_dependence write read in
+  let has_distance ~loop_id ~f =
+    match Dependence.known_distance ~loop_id dependence with
+    | None -> true
+    | Some distance ->
+        List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
+            f read_iteration - f write_iteration = distance) in
+  let is_implied is_possible ~by =
+    is_possible || not (List.exists pairs ~f:by) in
+  let checks =
+    [ ( "independent hides an overlap"
+      , Dependence.is_overlap_possible dependence || List.is_empty pairs )
+    ; ("outer distance", has_distance ~loop_id:outer_loop_id ~f:fst)
+    ; ("inner distance", has_distance ~loop_id:inner_loop_id ~f:snd)
+    ; ( "order, writer first in the body"
+      , is_implied
+          (Dependence.is_writer_possibly_first ~is_writer_first:true dependence)
+          ~by:(fun (write_iteration, read_iteration) ->
+            compare write_iteration read_iteration <= 0) )
+    ; ( "order, reader first in the body"
+      , is_implied
+          (Dependence.is_writer_possibly_first ~is_writer_first:false dependence)
+          ~by:(fun (write_iteration, read_iteration) ->
+            compare write_iteration read_iteration < 0) )
+    ; ( "inner loop order, writer first in the body"
+      , is_implied
+          (Dependence.is_writer_possibly_first_at_loop ~loop_id:inner_loop_id
+             ~is_writer_first:true dependence)
+          ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
+            write_outer = read_outer && write_inner <= read_inner) )
+    ; ( "inner loop order, reader first in the body"
+      , is_implied
+          (Dependence.is_writer_possibly_first_at_loop ~loop_id:inner_loop_id
+             ~is_writer_first:false dependence)
+          ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
+            write_outer = read_outer && write_inner < read_inner) )
+    ; ( "outer loop order"
+      , is_implied
+          (Dependence.is_writer_possibly_first_at_loop ~loop_id:outer_loop_id
+             ~is_writer_first:false dependence)
+          ~by:(fun (write_iteration, read_iteration) ->
+            compare write_iteration read_iteration < 0) ) ] in
+  List.filter_map checks ~f:(fun (name, is_sound) ->
+      if is_sound then None else Some name)
+
+let%expect_test "Two loops, linear subscripts, against enumeration" =
+  let statements =
+    build_log_prob_dependence_info (Test_utils.mir_of_string nest_program) in
+  let writes = paths_of_x statements Write in
+  let reads = paths_of_x statements Read in
+  let independent =
+    List.fold_left
+      (List.combine nest_cases (List.combine writes reads))
+      ~init:0
+      ~f:(fun independent (case, (write, read)) ->
+        List.iter (nest_violations case write read) ~f:(fun name ->
+            Fmt.pr "%a: %s@." pp_nest_case case name);
+        if
+          Dependence.is_overlap_possible (Dependence.test_dependence write read)
+        then independent
+        else independent + 1) in
+  Fmt.pr "cases %d, disjoint %d, proven independent %d@."
+    (List.length nest_cases)
+    (List.length
+       (List.filter nest_cases ~f:(fun case ->
+            List.is_empty (nest_overlaps case))))
+    independent;
+  [%expect {| cases 512, disjoint 194, proven independent 32 |}]

@@ -25,7 +25,7 @@ module Loop_context = struct
 
   let for_loop_id (context : t) ~(loop_ids : label list) (var : string) :
       label option =
-    List.find_opt loop_ids ~f:(fun loop_id ->
+    List.find_opt (List.rev loop_ids) ~f:(fun loop_id ->
         match LabelMap.find_opt loop_id context.loops with
         | Some (For {loopvar; _}) -> String.equal loopvar var
         | Some _ | None -> false)

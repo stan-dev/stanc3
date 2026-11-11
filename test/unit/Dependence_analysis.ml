@@ -734,3 +734,36 @@ let%expect_test "Literal bounds: the condition does not depend on the parameter"
     14: target += 1;  // data 10 14  control 13
     15: v[n] = a;  // data 2  control 11
     |}]
+
+let%expect_test "Kills: equal values written differently" =
+  print_immediate_dependencies
+    {|
+      data { int N; int k; }
+      parameters { real a; real b; }
+      model {
+        vector[N] v = rep_vector(0, N);
+        v[k + k] = a;
+        v[2 * k] = b;
+        target += v[2 * k];
+        v[k + k + 1] = a;
+        if (b > 0) v[2 * k + 1] = b;
+        target += v[2 * k + 1];
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3 4  //
+    2: real a;  //
+    3: real b;  //
+    4: { 5 6 7 8 9 10 11 12 14 }  //
+    5: FnValidateSize__("v", "N", N);  //
+    6: vector[N] v;  //
+    7: v = rep_vector(promote(0, real, data), N);  //
+    8: v[(k + k)] = a;  // data 2
+    9: v[(2 * k)] = b;  // data 3
+    10: target += v[(2 * k)];  // data 7 9
+    11: v[((k + k) + 1)] = a;  // data 2
+    12: if((b > 0)) 13  // data 3
+    13: v[((2 * k) + 1)] = b;  // data 3  control 12
+    14: target += v[((2 * k) + 1)];  // data 7 10 11 13
+    |}]
