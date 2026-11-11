@@ -1,7 +1,3 @@
-(* The interface file describes the analysis, defines the terms (access,
-   definition, kill, control, writer and reader) and walks through the running
-   example that the unit tests print. *)
-
 open Std
 open Middle
 open Dataflow_types
@@ -25,25 +21,14 @@ type stmt_info =
   ; reaching_definitions: reaching_definition Set.Poly.t
   ; writers: (string * label) Set.Poly.t }
 
-(** The [is_killed] callback for reaching definitions. A write at [killer] kills
-    a definition when the write must overwrite the element that the definition
-    wrote, by rule A (every iteration) or rule B (same iteration) below. *)
 let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
     (killed : reaching_definition) : bool =
   let killer_statement = LabelMap.find killer statements in
-  (* Rule B, same iteration: [killer] writes the element of [killed] in the same
-     iteration of the innermost loop around [killed]. [killer] comes later in
-     source order and has the same loops. Each control of [killer], and of the
-     innermost loop, is also a control of [killed]. The loops are found last,
-     after the cheaper checks. A definition from outside has no label and no
-     iteration. *)
   let is_killed_in_same_iteration (killer_path : Dependence.path) : bool =
     match killed.statement_id with
     | None -> false
     | Some killed_id -> (
         let killed_statement = LabelMap.find killed_id statements in
-        (* Whether each if, loop and jump that decides if [statement_id] runs
-           also decides if [killed] runs. *)
         let is_covered_by_killed (statement_id : label) : bool =
           let covered = (LabelMap.find statement_id statements).controls in
           List.for_all covered.enclosing ~f:(fun enclosing ->
@@ -66,15 +51,10 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
       match access.kind with
       | Read -> false
       | Write | ReadWrite ->
-          (* Rule A, every iteration: [killer] writes the element of [killed] in
-             every iteration. A write of the whole variable has an empty path
-             and overwrites every element, including an outside definition. *)
           Dependence.is_overwritten ~is_same_iteration:false access.path
             killed.access.path
           || is_killed_in_same_iteration access.path)
 
-(** The definitions from outside are the input and output variables of [mir].
-    Returns the definitions at the entry of each node. *)
 let compute_reaching_definitions (mir : Program.Typed.t)
     (statements : stmt_info LabelMap.t) :
     reaching_definition Set.Poly.t LabelMap.t =
@@ -111,10 +91,6 @@ let compute_reaching_definitions (mir : Program.Typed.t)
   LabelMap.map definitions_at_entry_and_exit ~f:(fun definitions ->
       definitions.entry)
 
-(** Whether the write of [definition] can supply the value that [read] of
-    [statement] uses. The two must name one variable, the write must be able to
-    select the element read ({!Dependence.test_dependence}), and the write must
-    be able to run before the read ({!Dependence.is_writer_possibly_first}). *)
 let is_flow_dependence (writer_id : label) (definition : reaching_definition)
     (statement : stmt_info) (read : access) : bool =
   String.equal definition.access.var read.var
@@ -137,10 +113,6 @@ let writers_of_statement (statement : stmt_info) : (string * label) Set.Poly.t =
           |> List.map ~f:(fun (read : access) -> (read.var, writer_id))
           |> Set.Poly.of_list)
 
-(** Returns the labels of the direct dependences of the statement, the control
-    parents first and the writers of the variables the statement reads second.
-    [vars], when given, keeps only the writers of those variables, and the
-    writers of the variables in [blockers] are left out. *)
 let direct_dependence_ids ?(blockers : string Set.Poly.t = Set.Poly.empty)
     ?(vars : string Set.Poly.t option) (statement : stmt_info) :
     label Set.Poly.t * label Set.Poly.t =
@@ -152,16 +124,11 @@ let direct_dependence_ids ?(blockers : string Set.Poly.t = Set.Poly.empty)
         if is_followed var then Some writer_id else None) in
   (control_parent_ids statement.controls, writer_ids)
 
-(** Adds [statement_id] and the direct and transitive dependences of
-    [statement_id] to [visited_ids], without following the definitions of
-    [blockers]. *)
 let rec add_transitive_dependence_ids (statements : stmt_info LabelMap.t)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (statement_id : label)
     (visited_ids : label Set.Poly.t) : label Set.Poly.t =
   if Set.Poly.mem statement_id visited_ids then visited_ids
   else
-    (* The visited set is the result and includes the start label. Each
-       dependence is a label, so the walk looks up the record at that label. *)
     let visited_with_statement_ids = Set.Poly.add statement_id visited_ids in
     let control_ids, writer_ids =
       direct_dependence_ids ~blockers (LabelMap.find statement_id statements)
@@ -193,10 +160,6 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     stmt_info LabelMap.t =
   let statement_map = build_statement_map stmt in
   let control_ids = build_controls statement_map in
-  (* The accesses are collected once, with the subscript expressions as written.
-     The variables that the analyzed statement defines come from the collected
-     accesses, and the loop context needs those variables before any subscript
-     can be analyzed. *)
   let collected_accesses =
     LabelMap.map statement_map ~f:(fun (pattern, _) ->
         Accesses.of_statement pattern) in
@@ -231,9 +194,6 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; accesses
         ; reaching_definitions= Set.Poly.empty
         ; writers= Set.Poly.empty }) in
-  (* The definitions and the kills use the analyzed accesses, so the records
-     come first, with empty definition and writer sets. The dataflow fills the
-     definitions, and the writers come from the definitions. *)
   let reaching_definitions =
     compute_reaching_definitions mir statements_without_definitions in
   LabelMap.mapi statements_without_definitions ~f:(fun statement_id statement ->
@@ -249,10 +209,6 @@ let build_log_prob_dependence_info (mir : Program.Typed.t) :
     Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dependence_info mir log_prob_stmt
 
-(* Printing *)
-
-(** Prints the output of [pp] on one line: each line of the output is trimmed,
-    and the lines are joined by one space. *)
 let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
  fun ppf x ->
   let buffer = Buffer.create 128 in
@@ -283,7 +239,6 @@ let pp_controls ~(loop_name : label -> string) ppf
 
 let pp_definitions ~(loop_name : label -> string) ppf
     (definitions : reaching_definition Set.Poly.t) =
-  (* The variable and the path of a write, without the kind. *)
   let pp_access ppf ({var; path; _} : access) =
     Fmt.pf ppf "%s%a" var
       (one_line (Accesses.pp_path (Access_function.pp ~loop_name)))
@@ -292,7 +247,6 @@ let pp_definitions ~(loop_name : label -> string) ppf
     List.map (Set.Poly.to_list definitions) ~f:(fun definition ->
         (Fmt.str "%a" pp_access definition.access, definition.statement_id))
   in
-  (* The distinct access texts with a label, in set order. *)
   let texts =
     List.rev
       (List.fold_left entries ~init:[] ~f:(fun texts (text, label) ->
@@ -310,8 +264,6 @@ let pp_definitions ~(loop_name : label -> string) ppf
         | [label] -> Fmt.str "%s %d" text label
         | labels -> Fmt.str "%s [%a]" text Fmt.(list ~sep:(any ", ") int) labels)
   in
-  (* A set with only definitions from outside the analyzed code prints
-     [None]. *)
   if List.is_empty inside && not (Set.Poly.is_empty definitions) then
     Fmt.string ppf "None"
   else Fmt.(list ~sep:(any ", ") string) ppf inside

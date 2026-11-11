@@ -37,16 +37,10 @@ module Accesses = struct
   type 'scalar access = {var: string; path: 'scalar step list; kind: kind}
   type 'scalar t = 'scalar access list
 
-  (** Builds paths from expressions and from left-hand sides of assignments. *)
   module Path = struct
-    (** The variable and the path that [expr] selects, or [None] if [expr] is
-        not a variable with subscripts and fields, or indexes after a slice. *)
     let rec of_expr (expr : Expr.Typed.t) :
         (string * Expr.Typed.t step list) option =
       let extend_path base steps =
-        (* After a slice or a multi-index, later subscripts index the result of
-           the selection. The path of [base] and [steps] then cannot join into
-           one path of the base variable. *)
         match of_expr base with
         | Some (name, prefix)
           when List.for_all prefix ~f:(function
@@ -61,7 +55,6 @@ module Accesses = struct
       | TupleProjection (base, field) -> extend_path base [Field field]
       | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
 
-    (** The path of the left-hand side of an assignment. *)
     let rec of_lvalue ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
         Expr.Typed.t step list =
       (match lbase with
@@ -69,16 +62,12 @@ module Accesses = struct
         | LTupleProjection (inner, field) -> of_lvalue inner @ [Field field])
       @ List.map indices ~f:(fun index -> Subscript index)
 
-    (** The expressions inside the subscripts of [path]. *)
     let subscript_exprs (path : Expr.Typed.t step list) : Expr.Typed.t list =
       List.concat_map path ~f:(function
         | Subscript index -> Index.bounds index
         | Field _ -> [])
   end
 
-  (** Whether two paths are written with the same subscript expressions and
-      fields. The metadata of the expressions is ignored. Equal syntax does not
-      prove that two evaluations give equal values. *)
   let is_same_syntax (first : Expr.Typed.t step list)
       (second : Expr.Typed.t step list) : bool =
     let is_same_step first_step second_step =
@@ -91,8 +80,6 @@ module Accesses = struct
       | Field _, Subscript _ | Subscript _, Field _ -> false in
     List.equal ~eq:is_same_step first second
 
-  (** The accesses in [expr]. A subscripted variable gives one read with the
-      whole path, then the accesses in the subscripts. *)
   let rec collect_expr (expr : Expr.Typed.t) : Expr.Typed.t t =
     let of_children () =
       Expr.Pattern.fold
@@ -114,9 +101,6 @@ module Accesses = struct
     | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
         of_children ()
 
-  (** The accesses of an assignment to [path] of [var] whose indices and
-      right-hand side have the accesses [reads]. A read of the written element,
-      as in [x = x + 1], joins the write into one read-write of the element. *)
   let of_assignment (var : string) (path : Expr.Typed.t step list)
       (reads : Expr.Typed.t t) : Expr.Typed.t t =
     let is_read_of_written (read : Expr.Typed.t access) =
@@ -129,9 +113,6 @@ module Accesses = struct
 
   let of_statement (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) :
       Expr.Typed.t t =
-    (* The accesses of each nested statement are collected separately. The
-       statement fold thus visits only the expressions of [stmt] and skips
-       nested statements. *)
     let of_children () =
       Stmt.Pattern.fold
         (fun running_accesses subexpr ->
@@ -171,16 +152,12 @@ module Accesses = struct
       match kind with Write | ReadWrite -> Some var | Read -> None in
     accesses |> List.filter_map ~f:defined_var |> Set.Poly.of_list
 
-  (** The printers of the example notation. *)
   module Printing = struct
-    (** Prints one subscript, with braces around a multi-index. *)
     let pp_subscript pp_scalar ppf (index : 'scalar Index.t) =
       match index with
       | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_scalar indices
       | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_scalar ppf index
 
-    (** Prints a path. [pp_subscripts_after] continues an open bracket.
-        Consecutive subscripts thus share one pair of brackets. *)
     let rec pp_path pp_scalar ppf = function
       | [] -> ()
       | Field field :: rest -> Fmt.pf ppf ".%d%a" field (pp_path pp_scalar) rest
@@ -196,7 +173,6 @@ module Accesses = struct
             rest
       | path -> Fmt.pf ppf "]%a" (pp_path pp_scalar) path
 
-    (** Prints [R], [RW] or [W]. *)
     let pp_kind ppf kind =
       Fmt.string ppf
         (match kind with Read -> "R" | ReadWrite -> "RW" | Write -> "W")
@@ -224,16 +200,11 @@ end
 module Access_function = struct
   type loop_term = {loop_id: label; is_negated: bool}
 
-  (** The restricted unit-stride view [loop_term + invariant + constant]: at
-      most one loop variable, added or subtracted once, one optional invariant
-      expression and the sum of the integer literals. This view is narrower than
-      an affine expression: [2 * n] is affine and has no unit-stride view. *)
   type unit_stride =
     {constant: int; invariant: Expr.Typed.t option; loop_term: loop_term option}
 
   type t = {expr: Expr.Typed.t; view: unit_stride option}
 
-  (** Whether two loop terms name the same loop with the same sign. *)
   let equal_loop_terms (first : loop_term option) (second : loop_term option) :
       bool =
     Option.equal
@@ -242,10 +213,6 @@ module Access_function = struct
         && Bool.equal first_term.is_negated second_term.is_negated)
       first second
 
-  (** Whether two invariant parts are written as the same expression. The
-      comparison ignores the metadata, because an invariant that [add] builds
-      carries no type. Both parts are stable ({!is_stable}), so the same
-      expression has the same value at every evaluation. *)
   let equal_invariants (first : Expr.Typed.t option)
       (second : Expr.Typed.t option) : bool =
     Option.equal
@@ -253,15 +220,9 @@ module Access_function = struct
         Expr.Helpers.compare_ignore_meta first_invariant second_invariant = 0)
       first second
 
-  (** Whether two views have the same loop term and the same invariant part, so
-      that only the constants can differ. *)
   let has_same_terms (first : unit_stride) (second : unit_stride) : bool =
     equal_loop_terms first.loop_term second.loop_term
     && equal_invariants first.invariant second.invariant
-
-  (* Arithmetic on views. A view holds at most one loop term, so [add] returns
-     [None] when both sides have one. Two invariant parts add up to one
-     invariant part, the sum of the two expressions. *)
 
   let add (left : unit_stride) (right : unit_stride) : unit_stride option =
     match (left.loop_term, right.loop_term) with
@@ -279,8 +240,6 @@ module Access_function = struct
           ; invariant
           ; loop_term= Option.first_some left_loop_term right_loop_term }
 
-  (** Negates each part: the constant, the invariant part as [-invariant], and
-      the loop term by flipping [is_negated], as [-n] in [N - n]. *)
   let negate (term : unit_stride) : unit_stride =
     { constant= -term.constant
     ; invariant=
@@ -289,12 +248,7 @@ module Access_function = struct
         Option.map term.loop_term ~f:(fun loop_term ->
             {loop_term with is_negated= not loop_term.is_negated}) }
 
-  (** Subtracts [right] from [left]. The result is [None] when both sides keep a
-      loop term. *)
   let subtract (left : unit_stride) (right : unit_stride) : unit_stride option =
-    (* A term on both sides cancels before the negation, so that [(n + k) - k]
-       is [n] with no invariant part and [(n + 1) - n] is [1] with no loop
-       term. *)
     let drop_shared_terms (term : unit_stride) : unit_stride =
       { term with
         invariant=
@@ -305,11 +259,6 @@ module Access_function = struct
            else term.loop_term) } in
     add (drop_shared_terms left) (negate (drop_shared_terms right))
 
-  (** Whether [expr] has the same value at every evaluation in the analyzed
-      statement. The expression must name no variable that the analyzed
-      statement defines and no variable of a loop around the access, and must
-      not draw a random number, read the target or have a side effect
-      ({!Mir_utils.cannot_duplicate_expr}). *)
   let is_stable (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : bool =
     let used_names = expr_names expr in
@@ -319,13 +268,8 @@ module Access_function = struct
     && (not (Set.Poly.exists used_names ~f:is_loop_var))
     && not (cannot_duplicate_expr expr)
 
-  (** The unit-stride view of [expr], or [None]. *)
   let unit_stride_of_expr (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : unit_stride option =
-    (* This function looks at [subexpr] as one unit and does not look at the
-       sums inside [subexpr]. A stable expression becomes the invariant part of
-       a view. A loop variable in an expression other than a sum, as in [2 * n],
-       has no view. *)
     let of_invariant (subexpr : Expr.Typed.t) : unit_stride option =
       if is_stable context ~loop_ids subexpr then
         Some {constant= 0; invariant= Some subexpr; loop_term= None}
@@ -351,8 +295,6 @@ module Access_function = struct
           match Int.of_string_opt digits with
           | Some constant -> Some {constant; invariant= None; loop_term= None}
           | None ->
-              (* The frontend rejects integer literals outside the OCaml int
-                 range before the analysis runs. *)
               Common.ICE.internal_error
                 ("Integer literal does not fit an int: " ^ digits)
               [@coverage off])
@@ -367,12 +309,6 @@ module Access_function = struct
       (expr : Expr.Typed.t) : t =
     {expr; view= unit_stride_of_expr context ~loop_ids expr}
 
-  (** Whether two access functions are proven to have the same value. Two views
-      with the same parts and no loop term are equal at any two evaluations. Two
-      views with the same parts and a loop term are equal only when both are
-      evaluated in the same iteration, which the caller states with
-      [is_same_iteration]. An access function without a view is never proven
-      equal, even to an access function with the same syntax. *)
   let is_equal_value ~(is_same_iteration : bool) (first : t) (second : t) : bool
       =
     match (first.view, second.view) with
@@ -382,15 +318,12 @@ module Access_function = struct
         && (is_same_iteration || Option.is_none first_view.loop_term)
     | None, _ | _, None -> false
 
-  (** Prints the loop term, then the invariant part, then the constant, as in
-      [-n+N+1]. [loop_name] gives the loop variable of a loop label. *)
   let pp_unit_stride ~(loop_name : label -> string) ppf
       ({constant; invariant; loop_term} : unit_stride) =
     Option.iter loop_term ~f:(fun {loop_id; is_negated} ->
         Fmt.pf ppf "%s%s" (if is_negated then "-" else "") (loop_name loop_id));
     let is_leading = Option.is_none loop_term in
     Option.iter invariant ~f:(fun (invariant : Expr.Typed.t) ->
-        (* A negated invariant prints as [-k], not as [+-(k)]. *)
         match invariant.pattern with
         | FunApp (Operator PMinus, [negated]) ->
             Fmt.pf ppf "-%a" Expr.Typed.pp negated
@@ -414,14 +347,6 @@ open Accesses
 
 type path = Access_function.t step list
 
-(* Must-overwrite. The proof rules below are separate from the overlap tests
-   further down: a possible overlap, an unknown result or a distance of zero is
-   never a proof that a write replaces an element. *)
-
-(** Whether the two steps are proven to select the same element. Two tuple
-    fields are the same when the field numbers are equal. Two single subscripts
-    are the same when {!Access_function.is_equal_value} proves equal values. A
-    slice or a multi-index is never proven the same. *)
 let is_same_element ~(is_same_iteration : bool) (first : Access_function.t step)
     (second : Access_function.t step) : bool =
   match (first, second) with
@@ -435,9 +360,6 @@ let is_same_element ~(is_same_iteration : bool) (first : Access_function.t step)
    |Subscript _, Field _ ->
       false
 
-(** The killer path can be shorter than the killed path, so [m[1]] overwrites
-    [m[1, 2]]. At each position of the killer path, the two steps must be proven
-    to select the same element ({!is_same_element}). *)
 let rec is_overwritten ~(is_same_iteration : bool) (killer : path)
     (killed : path) : bool =
   match (killer, killed) with
@@ -447,32 +369,15 @@ let rec is_overwritten ~(is_same_iteration : bool) (killer : path)
       is_same_element ~is_same_iteration killer_step killed_step
       && is_overwritten ~is_same_iteration killer_rest killed_rest
 
-(* May-overlap. Each subscript test looks at one position of the two paths and
-   returns what that position proves about the pairs of iterations in which the
-   write and the read select the same element. *)
-
 type subscript_constraint =
   | Disjoint
   | Distance of {loop_id: label; distance: int}
   | No_information
 
-(** The ZIV test (zero index variables). Precondition: neither view has a loop
-    term and both have the same invariant part [s]. The write selects
-    [s + c_write] and the read [s + c_read] in every iteration, so the two
-    overlap exactly when the constants are equal. Equal constants put no
-    constraint on the iterations. *)
 let test_constant_subscripts (write : Access_function.unit_stride)
     (read : Access_function.unit_stride) : subscript_constraint =
   if write.constant = read.constant then No_information else Disjoint
 
-(** The strong SIV test (single index variable) for a stride of [1] or [-1].
-    Precondition: both views have the loop term of [loop_term] and the same
-    invariant part [s]. With the write in iteration [i] and the read in
-    iteration [j] of the loop, the two select the same element when
-    [a * i + s + c_write = a * j + s + c_read], with [a] either [1] or [-1]. The
-    distance is [j - i = (c_write - c_read) / a]. For example [v[n + 1]] in
-    iteration 2 and [v[n - 2]] in iteration 5 both select [v[3]]: the distance
-    is [1 - (-2) = 3]. *)
 let test_equal_stride_subscripts (loop_term : Access_function.loop_term)
     (write : Access_function.unit_stride) (read : Access_function.unit_stride) :
     subscript_constraint =
@@ -483,9 +388,6 @@ let test_equal_stride_subscripts (loop_term : Access_function.loop_term)
         (if loop_term.is_negated then -constant_difference
          else constant_difference) }
 
-(** Picks the subscript test whose precondition the two subscripts meet. A
-    slice, a multi-index, a subscript without a view and a pair with different
-    terms give no information. *)
 let test_subscripts (write : Access_function.t Index.t)
     (read : Access_function.t Index.t) : subscript_constraint =
   match (write, read) with
@@ -497,8 +399,6 @@ let test_subscripts (write : Access_function.t Index.t)
           test_equal_stride_subscripts loop_term write_view read_view)
   | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> No_information
 
-(** Tests the steps at one position of two paths. Two different tuple fields are
-    disjoint. A field against a subscript gives no information. *)
 let test_steps (write : Access_function.t step) (read : Access_function.t step)
     : subscript_constraint =
   match (write, read) with
@@ -510,10 +410,6 @@ let test_steps (write : Access_function.t step) (read : Access_function.t step)
 
 type t = Independent | Possible_overlap of (label * int option) list
 
-(** Adds the constraint that the distance at [loop_id] is [distance]. The result
-    is [None] when [distances] already holds a different distance at [loop_id],
-    because the two positions then never select the same element together. A
-    loop that is not a common loop has no entry and adds no constraint. *)
 let constrain_distance (distances : (label * int option) list)
     ~(loop_id : label) ~(distance : int) : (label * int option) list option =
   let constrained (common_loop_id, known_distance) =
@@ -525,15 +421,11 @@ let constrain_distance (distances : (label * int option) list)
 
 let test_dependence ((writer_loop_ids, write_path) : label list * path)
     ((reader_loop_ids, read_path) : label list * path) : t =
-  (* Loops nest, so the loops around both statements are the loops of the writer
-     that are also loops of the reader. *)
   let common_loop_ids =
     List.filter writer_loop_ids ~f:(fun loop_id ->
         List.mem loop_id ~set:reader_loop_ids) in
   let no_information =
     List.map common_loop_ids ~f:(fun loop_id -> (loop_id, None)) in
-  (* Paths of different length: a whole-object access may overlap any element
-     inside, so no position is tested. *)
   if List.compare_lengths write_path read_path <> 0 then
     Possible_overlap no_information
   else
@@ -557,8 +449,6 @@ let is_overlap_possible : t -> bool = function
 let is_writer_possibly_first ~(is_writer_first : bool) : t -> bool = function
   | Independent -> false
   | Possible_overlap distances -> (
-      (* The first distance that is not zero decides. An unknown distance allows
-         an earlier iteration of that loop. *)
       match
         List.find_map distances ~f:(function
           | _, Some 0 -> None
@@ -572,8 +462,6 @@ let known_distance ~(loop_id : label) : t -> int option = function
   | Independent -> None
   | Possible_overlap distances -> Option.join (List.assoc_opt loop_id distances)
 
-(** Prints the distance at one loop as [[n:1]], with the loop variable that
-    [loop_name] gives for the loop label. *)
 let pp_distance ~(loop_name : label -> string) ppf
     ((loop_id, distance) : label * int option) =
   Fmt.pf ppf "[%s:%a]" (loop_name loop_id)
