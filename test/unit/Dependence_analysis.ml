@@ -660,3 +660,41 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
     42: if((theta[(n - 1)] > 0)) 43  // data 5 11 20 26 30 33 38 41  control 36
     43: target += 1;  // data 13 22 35 43  control 42
     |}]
+
+(* A subscript that draws a random number selects a different element at each
+   evaluation, so two such subscripts are never known to be the same element.
+   The second write must not kill the first, and the read of
+   [v[categorical_rng(theta) + 1]] must depend on both writes. *)
+let%expect_test "Kills: a random subscript is not a fixed element" =
+  let mir =
+    Test_utils.mir_of_string
+      {|
+        functions {
+          real pick_rng(vector theta) {
+            vector[4] v = rep_vector(0, 4);
+            v[categorical_rng(theta)] = 1;
+            v[categorical_rng(theta)] = 2;
+            real same = v[categorical_rng(theta)];
+            return same + v[categorical_rng(theta) + 1];
+          }
+        }
+        model {
+        }
+      |}
+  in
+  let body =
+    Option.get
+      (List.find_map mir.functions_block
+         ~f:(fun (fun_def : _ Program.fun_def) -> fun_def.fdbody)) in
+  Fmt.pr "%a" pp_immediate_dependencies (build_dependence_info mir body);
+  [%expect
+    {|
+    1: { 2 3 4 5 6 7 8 }  //
+    2: vector[4] v;  //
+    3: v = rep_vector(promote(0, real, data), 4);  //
+    4: v[categorical_rng(theta)] = promote(1, real, var);  //
+    5: v[categorical_rng(theta)] = promote(2, real, var);  //
+    6: real same;  //
+    7: same = v[categorical_rng(theta)];  // data 3 4 5
+    8: return (same + v[(categorical_rng(theta) + 1)]);  // data 3 4 5 7
+    |}]

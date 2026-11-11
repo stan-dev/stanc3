@@ -89,7 +89,9 @@ module Affine_subscript = struct
        so a use of a defined variable is not affine. A loop variable in an
        expression other than a sum, as in [2 * n], is also not affine. Any other
        expression is constant in the loops, so the expression becomes the symbol
-       of an affine subscript. *)
+       of an affine subscript. An expression that draws a random number or reads
+       the target can give a different value at each evaluation, so such an
+       expression is not a symbol either. *)
     let of_symbol (subexpr : Expr.Typed.t) : t =
       let used_names = expr_names subexpr in
       let is_defined_var_used =
@@ -97,7 +99,9 @@ module Affine_subscript = struct
       let is_loop_var_used =
         Set.Poly.exists used_names ~f:(fun name ->
             Option.is_some (loop_id_of_var name)) in
-      if is_defined_var_used || is_loop_var_used then None
+      if
+        is_defined_var_used || is_loop_var_used || cannot_duplicate_expr subexpr
+      then None
       else Some {const= 0; symbol= Some subexpr; loop_term= None} in
     let rec of_sum (subexpr : Expr.Typed.t) : t =
       let combine_operands operation lhs rhs =
