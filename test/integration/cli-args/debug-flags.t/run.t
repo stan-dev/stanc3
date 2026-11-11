@@ -607,7 +607,7 @@ Flags not used elsewhere in the tests
     2 │  
       = Expected "functions {", "data {", "transformed data {", "parameters {",
         "transformed parameters {", "model {", or "generated quantities {".
-        (Parse error state 448)
+        (Parse error state 464)
   [1]
 <<<<<<< HEAD
 ||||||| parent of 994559f8c (dune promote)

@@ -23,7 +23,7 @@ module Pattern = struct
         ; decl_id: string
         ; decl_type: 'a Type.t
         ; initialize: 'a decl_init
-        ; decl_annotations: string list }
+        ; decl_annotations: Annotation.t list }
   [@@deriving sexp_of, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]

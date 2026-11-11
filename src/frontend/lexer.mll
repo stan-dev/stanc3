@@ -258,13 +258,12 @@ rule token = parse
       lexer_pos_logger (lexeme_start_p lexbuf);
       Parser.IDENTIFIER (lexeme lexbuf)
     }
-  (* TODO annotation proper paren lexxing *)
-  | "@" (non_space_or_newline+ as ann)
+  | "@" (identifier as ann)
     {
       lexer_logger ("annotation " ^ ann);
       lexer_pos_logger (lexeme_start_p lexbuf);
       add_separator lexbuf;
-      Parser.ANNOTATION (lexeme lexbuf)
+      Parser.ANNOTATION ann
     }
   (* End of file *)
   | eof

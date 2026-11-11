@@ -50,7 +50,7 @@ let debug_output_mir output mir = function
 
 let stan2mir
     ?(allowed_annotations : Frontend.Annotations.annotation_classifier =
-      fun _ _ -> `Unknown) model_name model (flags : Flags.t)
+      fun _ _ _ -> `Unknown) model_name model (flags : Flags.t)
     (output : other_output -> unit) : mir_compilation_result =
   let open Result.Syntax in
   reset_mutable_states model_name flags;

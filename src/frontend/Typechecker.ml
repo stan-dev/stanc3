@@ -2060,7 +2060,8 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
 
 and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
     annotations =
-  let is_extern {name; _} = name = "extern" in
+  let is_extern Middle.Annotation.{name; args; _} =
+    name = "extern" && args = [] in
   match body with
   | {stmt= Skip; _} -> (
       match exists_matching_fn_declared tenv id arg_tys rt with
@@ -2071,7 +2072,7 @@ and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
   | _ -> (
       match List.find_opt annotations ~f:is_extern with
       | Some annotation ->
-          Semantic_error.fn_extern_defined body.smeta.loc id.name annotation
+          Semantic_error.fn_extern_defined body.smeta.loc id.name annotation.loc
           |> error
       | _ -> `UserDefined id.id_loc)
 
