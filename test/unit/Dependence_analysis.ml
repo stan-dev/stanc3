@@ -730,7 +730,7 @@ let%expect_test "Literal bounds: the condition does not depend on the parameter"
     10: target += 1;  // data 10  control 9
     11: for(n in 1:5) 12  //
     12: { 13 15 }  // control 11
-    13: if((v[5] > 0)) 14  // data 5 8 15  control 11
+    13: if((v[5] > 0)) 14  // data 5  control 11
     14: target += 1;  // data 10 14  control 13
     15: v[n] = a;  // data 2  control 11
     |}]

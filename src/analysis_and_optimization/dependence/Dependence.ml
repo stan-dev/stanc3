@@ -463,7 +463,7 @@ module Direction_set = struct
   let pp ppf (directions : t) =
     if is_all directions then Fmt.string ppf "*"
     else
-      Fmt.(list ~sep:comma string)
+      Fmt.(list ~sep:(any ",") string)
         ppf
         (List.filter_map ~f:Fun.id
            [ Option.some_if directions.is_writer_before "<"
@@ -503,6 +503,41 @@ let test_equal_stride_subscripts
   | Some difference ->
       Distance {loop_id= loop.loop_id; distance= difference / stride}
 
+let test_weak_zero_subscripts ~(is_writer_varying : bool)
+    ({key= loop; coefficient= stride} :
+      Access_function.loop Access_function.term)
+    (varying : Access_function.affine) (fixed : Access_function.affine) :
+    subscript_constraint =
+  let is_before_bound bound iteration =
+    match bound with Some bound -> iteration < bound | None -> false in
+  let is_after_bound bound iteration =
+    match bound with Some bound -> iteration > bound | None -> false in
+  match Checked_int.subtract fixed.constant varying.constant with
+  | None -> No_information
+  | Some difference when difference = Int.min_int -> No_information
+  | Some difference when difference mod stride <> 0 -> Disjoint
+  | Some difference ->
+      let iteration = difference / stride in
+      if
+        is_before_bound loop.lower iteration
+        || is_after_bound loop.upper iteration
+      then Disjoint
+      else
+        let is_earlier_possible =
+          not (is_before_bound loop.lower (iteration - 1)) in
+        let is_later_possible =
+          not (is_after_bound loop.upper (iteration + 1)) in
+        Directions
+          { loop_id= loop.loop_id
+          ; directions=
+              { is_writer_before=
+                  (if is_writer_varying then is_later_possible
+                   else is_earlier_possible)
+              ; is_same_iteration= true
+              ; is_writer_after=
+                  (if is_writer_varying then is_earlier_possible
+                   else is_later_possible) } }
+
 let rec greatest_common_divisor (left : int) (right : int) : int =
   if right = 0 then abs left else greatest_common_divisor right (left mod right)
 
@@ -527,6 +562,12 @@ let test_subscripts (write : Access_function.t Index.t)
         when write_term.key.loop_id = read_term.key.loop_id
              && write_term.coefficient = read_term.coefficient ->
           test_equal_stride_subscripts write_term write_view read_view
+      | [write_term], [] ->
+          test_weak_zero_subscripts ~is_writer_varying:true write_term
+            write_view read_view
+      | [], [read_term] ->
+          test_weak_zero_subscripts ~is_writer_varying:false read_term read_view
+            write_view
       | _, _ -> test_gcd_subscripts write_view read_view)
   | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> No_information
 

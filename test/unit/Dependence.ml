@@ -514,12 +514,12 @@ let%expect_test "Two index positions of one pair of accesses" =
       17 W m[1, n] --> R m[2, n]: independent
     22: e[n] = m[n, idx[n]];
       6 W m --> R m[n, idx[n]]: unknown  flows
-      17 W m[1, n] --> R m[n, idx[n]]: unknown  flows
+      17 W m[1, n] --> R m[n, idx[n]]: independent
       21 W m[n, 1] --> R m[n, idx[n]]: distances [n:0]  flows
     26: f[n] = m[(n - 1), n];
       6 W m --> R m[n-1, n]: unknown  flows
       17 W m[1, n] --> R m[n-1, n]: unknown  flows
-      21 W m[n, 1] --> R m[n-1, n]: unknown  flows
+      21 W m[n, 1] --> R m[n-1, n]: independent
       25 W m[n, n] --> R m[n-1, n]: independent
     30: g[n] = m[(n - 1), (n - 1)];
       6 W m --> R m[n-1, n-1]: unknown  flows
@@ -761,15 +761,15 @@ let%expect_test "Weak-zero SIV: one fixed element against a loop" =
     9: x[n] = (x[1] + a);
       5 W x --> R x[1]: unknown  flows
       6 W x[1] --> R x[1]: unknown  flows
-      9 W x[n] --> R x[1]: unknown  flows
+      9 W x[n] --> R x[1]: independent
     12: if((x[5] > 0)) 13
       5 W x --> R x[5]: unknown  flows
       6 W x[1] --> R x[5]: independent
       9 W x[n] --> R x[5]: unknown  flows
-      14 W x[n] --> R x[5]: unknown  flows
+      14 W x[n] --> R x[5]: distances [n:=,>]  cannot flow
     15: if((x[1] > 0)) 16
       5 W x --> R x[1]: unknown  flows
       6 W x[1] --> R x[1]: unknown  flows
-      9 W x[n] --> R x[1]: unknown  flows
-      14 W x[n] --> R x[1]: unknown  flows
+      9 W x[n] --> R x[1]: independent
+      14 W x[n] --> R x[1]: distances [n:<,=]  flows
     |}]
