@@ -434,6 +434,19 @@ let test_equal_stride_subscripts
   | Some difference when difference mod stride <> 0 -> Disjoint
   | Some difference -> Distance {loop_id; distance= difference / stride}
 
+let rec greatest_common_divisor (left : int) (right : int) : int =
+  if right = 0 then abs left else greatest_common_divisor right (left mod right)
+
+let test_gcd_subscripts (write : Access_function.affine)
+    (read : Access_function.affine) : subscript_constraint =
+  let divisor =
+    List.fold_left (write.loop_terms @ read.loop_terms) ~init:0
+      ~f:(fun divisor (term : label Access_function.term) ->
+        greatest_common_divisor divisor term.coefficient) in
+  match Checked_int.subtract read.constant write.constant with
+  | Some difference when divisor > 0 && difference mod divisor <> 0 -> Disjoint
+  | Some _ | None -> No_information
+
 let test_subscripts (write : Access_function.t Index.t)
     (read : Access_function.t Index.t) : subscript_constraint =
   match (write, read) with
@@ -445,7 +458,7 @@ let test_subscripts (write : Access_function.t Index.t)
         when write_term.key = read_term.key
              && write_term.coefficient = read_term.coefficient ->
           test_equal_stride_subscripts write_term write_view read_view
-      | _, _ -> No_information)
+      | _, _ -> test_gcd_subscripts write_view read_view)
   | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> No_information
 
 let test_steps (write : Access_function.t step) (read : Access_function.t step)

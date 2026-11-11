@@ -676,3 +676,41 @@ let%expect_test "Strong SIV: equal strides other than one" =
       12 W b[-3*n+N] --> R b[-3*n+N+6]: distances [n:2]  flows
       12 W b[-3*n+N] --> R b[-3*n+N+1]: independent
     |}]
+
+let%expect_test "GCD: strides with a common divisor" =
+  print_verdicts ~var:"b"
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c;
+        for (n in 1:N) {
+          b[2 * n] = a;
+          c[n] = b[4 * n + 1] + b[4 * n + 2] + b[3 * n + 1];
+          for (m in 1:N) {
+            b[6 * n + 4 * m + 1] = a;
+            c[m] = b[2 * m + 4 * n] + b[2 * m + 4 * n + 1];
+          }
+        }
+      }
+    |};
+  [%expect
+    {|
+    11: c[n] = ((b[((4 * n) + 1)] + b[((4 * n) + 2)]) + b[((3 * n) + 1)]);
+      5 W b --> R b[4*n+1]: unknown  flows
+      5 W b --> R b[4*n+2]: unknown  flows
+      5 W b --> R b[3*n+1]: unknown  flows
+      10 W b[2*n] --> R b[4*n+1]: independent
+      10 W b[2*n] --> R b[4*n+2]: unknown  flows
+      10 W b[2*n] --> R b[3*n+1]: unknown  flows
+      14 W b[6*n+4*m+1] --> R b[4*n+1]: unknown  flows
+      14 W b[6*n+4*m+1] --> R b[4*n+2]: independent
+      14 W b[6*n+4*m+1] --> R b[3*n+1]: unknown  flows
+    15: c[m] = (b[((2 * m) + (4 * n))] + b[(((2 * m) + (4 * n)) + 1)]);
+      5 W b --> R b[4*n+2*m]: unknown  flows
+      5 W b --> R b[4*n+2*m+1]: unknown  flows
+      10 W b[2*n] --> R b[4*n+2*m]: unknown  flows
+      10 W b[2*n] --> R b[4*n+2*m+1]: independent
+      14 W b[6*n+4*m+1] --> R b[4*n+2*m]: independent
+      14 W b[6*n+4*m+1] --> R b[4*n+2*m+1]: unknown  flows
+    |}]
