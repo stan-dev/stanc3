@@ -640,3 +640,39 @@ let%expect_test "Normalized sums: equal values written differently" =
       14 W b[n] --> R b[n-1]: distances [n:1]  flows
       14 W b[n] --> R b[n-1]: distances [n:1]  flows
     |}]
+
+let%expect_test "Strong SIV: equal strides other than one" =
+  print_verdicts ~var:"b"
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c;
+        for (n in 2:N) {
+          b[2 * n] = a;
+          c[n] = b[2 * n - 1] + b[2 * n - 2] + b[2 * n + 4];
+          b[N - 3 * n] = a;
+          c[n] = b[N - 3 * n + 6] + b[N - 3 * n + 1];
+        }
+      }
+    |};
+  [%expect
+    {|
+    11: c[n] = ((b[((2 * n) - 1)] + b[((2 * n) - 2)]) + b[((2 * n) + 4)]);
+      5 W b --> R b[2*n-1]: unknown  flows
+      5 W b --> R b[2*n-2]: unknown  flows
+      5 W b --> R b[2*n+4]: unknown  flows
+      10 W b[2*n] --> R b[2*n-1]: independent
+      10 W b[2*n] --> R b[2*n-2]: distances [n:1]  flows
+      10 W b[2*n] --> R b[2*n+4]: distances [n:-2]  cannot flow
+      12 W b[-3*n+N] --> R b[2*n-1]: unknown  flows
+      12 W b[-3*n+N] --> R b[2*n-2]: unknown  flows
+      12 W b[-3*n+N] --> R b[2*n+4]: unknown  flows
+    13: c[n] = (b[((N - (3 * n)) + 6)] + b[((N - (3 * n)) + 1)]);
+      5 W b --> R b[-3*n+N+6]: unknown  flows
+      5 W b --> R b[-3*n+N+1]: unknown  flows
+      10 W b[2*n] --> R b[-3*n+N+6]: unknown  flows
+      10 W b[2*n] --> R b[-3*n+N+1]: unknown  flows
+      12 W b[-3*n+N] --> R b[-3*n+N+6]: distances [n:2]  flows
+      12 W b[-3*n+N] --> R b[-3*n+N+1]: independent
+    |}]

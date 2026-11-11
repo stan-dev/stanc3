@@ -428,13 +428,11 @@ let test_equal_stride_subscripts
     ({key= loop_id; coefficient= stride} : label Access_function.term)
     (write : Access_function.affine) (read : Access_function.affine) :
     subscript_constraint =
-  match (stride, Checked_int.subtract write.constant read.constant) with
-  | 1, Some distance -> Distance {loop_id; distance}
-  | -1, Some difference -> (
-      match Checked_int.negate difference with
-      | Some distance -> Distance {loop_id; distance}
-      | None -> No_information)
-  | _, (Some _ | None) -> No_information
+  match Checked_int.subtract write.constant read.constant with
+  | None -> No_information
+  | Some difference when difference = Int.min_int -> No_information
+  | Some difference when difference mod stride <> 0 -> Disjoint
+  | Some difference -> Distance {loop_id; distance= difference / stride}
 
 let test_subscripts (write : Access_function.t Index.t)
     (read : Access_function.t Index.t) : subscript_constraint =
