@@ -714,3 +714,62 @@ let%expect_test "GCD: strides with a common divisor" =
       14 W b[6*n+4*m+1] --> R b[4*n+2*m]: independent
       14 W b[6*n+4*m+1] --> R b[4*n+2*m+1]: unknown  flows
     |}]
+
+let%expect_test "Literal bounds: a distance longer than the loop" =
+  print_verdicts ~var:"v"
+    {|
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        for (n in 1:5) {
+          v[n + 5] = a;
+          if (v[n] > 0) target += 1;
+          if (v[n + 1] > 0) target += 1;
+        }
+      }
+    |};
+  [%expect
+    {|
+    9: if((v[n] > 0)) 10
+      5 W v --> R v[n]: unknown  flows
+      8 W v[n+5] --> R v[n]: independent
+    11: if((v[(n + 1)] > 0)) 12
+      5 W v --> R v[n+1]: unknown  flows
+      8 W v[n+5] --> R v[n+1]: distances [n:4]  flows
+    |}]
+
+let%expect_test "Weak-zero SIV: one fixed element against a loop" =
+  print_verdicts ~var:"x"
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] x;
+        x[1] = a;
+        for (n in 2:N) {
+          x[n] = x[1] + a;
+        }
+        for (n in 1:5) {
+          if (x[5] > 0) target += 1;
+          x[n] = a;
+          if (x[1] > 0) target += 1;
+        }
+      }
+    |};
+  [%expect
+    {|
+    9: x[n] = (x[1] + a);
+      5 W x --> R x[1]: unknown  flows
+      6 W x[1] --> R x[1]: unknown  flows
+      9 W x[n] --> R x[1]: unknown  flows
+    12: if((x[5] > 0)) 13
+      5 W x --> R x[5]: unknown  flows
+      6 W x[1] --> R x[5]: independent
+      9 W x[n] --> R x[5]: unknown  flows
+      14 W x[n] --> R x[5]: unknown  flows
+    15: if((x[1] > 0)) 16
+      5 W x --> R x[1]: unknown  flows
+      6 W x[1] --> R x[1]: unknown  flows
+      9 W x[n] --> R x[1]: unknown  flows
+      14 W x[n] --> R x[1]: unknown  flows
+    |}]

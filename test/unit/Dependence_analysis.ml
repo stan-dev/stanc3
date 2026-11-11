@@ -698,3 +698,39 @@ let%expect_test "Kills: a random subscript is not a fixed element" =
     7: same = v[categorical_rng(theta)];  // data 3 4 5
     8: return (same + v[(categorical_rng(theta) + 1)]);  // data 3 4 5 7
     |}]
+
+let%expect_test "Literal bounds: the condition does not depend on the parameter"
+    =
+  print_immediate_dependencies
+    {|
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        for (n in 1:5) {
+          v[n + 5] = a;
+          if (v[n] > 0) target += 1;
+        }
+        for (n in 1:5) {
+          if (v[5] > 0) target += 1;
+          v[n] = a;
+        }
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3  //
+    2: real a;  //
+    3: { 4 5 6 11 }  //
+    4: vector[10] v;  //
+    5: v = rep_vector(promote(0, real, data), 10);  //
+    6: for(n in 1:5) 7  //
+    7: { 8 9 }  // control 6
+    8: v[(n + 5)] = a;  // data 2  control 6
+    9: if((v[n] > 0)) 10  // data 5  control 6
+    10: target += 1;  // data 10  control 9
+    11: for(n in 1:5) 12  //
+    12: { 13 15 }  // control 11
+    13: if((v[5] > 0)) 14  // data 5 8 15  control 11
+    14: target += 1;  // data 10 14  control 13
+    15: v[n] = a;  // data 2  control 11
+    |}]
