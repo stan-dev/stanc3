@@ -11,7 +11,7 @@
     Lexing.new_line lexbuf
 
   (* Store comments *)
-  let add_line_comment (begin_pos, buffer) end_pos =
+  let add_line_comment begin_pos buffer end_pos =
     add_comment
     @@ LineComment
          (Buffer.contents buffer, location_span_of_positions (begin_pos, end_pos))
@@ -69,13 +69,13 @@ rule token = parse
   | "/*"
     {
       lexer_logger "multicomment";
-      multiline_comment ((lexbuf.lex_curr_p, []), Buffer.create 16) lexbuf;
+      multiline_comment lexbuf.lex_curr_p [] (Buffer.create 16) lexbuf;
       token lexbuf
     }
   | "//"
     {
       lexer_logger "single comment";
-      singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
+      singleline_comment lexbuf.lex_curr_p (Buffer.create 16) lexbuf;
       token lexbuf
     }
   | "#include" ((space | newline)+) ('"' ([^'"' '\r' '\n']* as fname) '"'
@@ -270,40 +270,38 @@ rule token = parse
   | _ { Syntax_error.unexpected_character (current_location ()) }
 
 (* Multi-line comment terminated by */ *)
-and multiline_comment state = parse
+and multiline_comment begin_pos lines buffer = parse
   | "*/"
     {
-      let (pos, lines), buffer = state in
       let lines = Buffer.contents buffer :: lines in
-      add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p
+      add_multi_comment begin_pos (List.rev lines) lexbuf.lex_curr_p
     }
   | eof { Syntax_error.unexpected_eof (current_location ()) }
   | newline
     {
       incr_linenum lexbuf;
-      let (pos, lines), buffer = state in
       let lines = Buffer.contents buffer :: lines in
       let newbuf = Buffer.create 16 in
-      multiline_comment ((pos, lines), newbuf) lexbuf
+      multiline_comment begin_pos lines newbuf lexbuf
     }
   | _
     {
-      Buffer.add_string (snd state) (lexeme lexbuf);
-      multiline_comment state lexbuf
+      Buffer.add_string buffer (lexeme lexbuf);
+      multiline_comment begin_pos lines buffer lexbuf
     }
 
 (* Single-line comment terminated by a newline *)
-and singleline_comment state = parse
+and singleline_comment begin_pos buffer = parse
   | newline
     {
-      add_line_comment state lexbuf.lex_curr_p;
+      add_line_comment begin_pos buffer lexbuf.lex_curr_p;
       incr_linenum lexbuf
     }
-  | eof { add_line_comment state lexbuf.lex_curr_p }
+  | eof { add_line_comment begin_pos buffer lexbuf.lex_curr_p }
   | _
     {
-      Buffer.add_string (snd state) (lexeme lexbuf);
-      singleline_comment state lexbuf
+      Buffer.add_string buffer (lexeme lexbuf);
+      singleline_comment begin_pos buffer lexbuf
     }
 
 {  }
