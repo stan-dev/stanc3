@@ -12,7 +12,7 @@
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      cpp
-     "-fsoa --print-cpp"
+     "-fvectorize-loops -fsoa --print-cpp"
      %{stanfiles}))))
  (rule
   (deps
@@ -26,7 +26,7 @@
     (run
      %{project_root}/test/integration/gen_expected_rules.exe
      mir
-     "-fsoa --debug-optimized-mir --debug-mem-patterns"
+     "-fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns"
      %{stanfiles})))))
 
 (subdir

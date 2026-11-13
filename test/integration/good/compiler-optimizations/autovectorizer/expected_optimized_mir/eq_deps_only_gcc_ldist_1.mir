@@ -35,12 +35,10 @@ log_prob {
     vector[N] oya1;
     FnValidateSize__("oyb1", "N", N);
     vector[N] oyb1;
-    for(n in 1:N) {
-      mya1[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));
-      myb1[n] = ((-(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));
-      oya1[n] = (mya1[n] / promote(1024, real, data));
-      oyb1[n] = (myb1[n] / promote(1024, real, data));
-    }
+    mya1[1:N] = ((ia[1:N] .* oxa[1:N]) + (ib[1:N] .* oxb[1:N]));
+    myb1[1:N] = ((-(ia[1:N]) .* oxb[1:N]) + (ib[1:N] .* oxa[1:N]));
+    oya1[1:N] = (mya1[1:N] / promote(1024, real, data));
+    oyb1[1:N] = (myb1[1:N] / promote(1024, real, data));
     target += (((sum(mya1) + sum(myb1)) + sum(oya1)) + sum(oyb1));
   } }
 
@@ -54,12 +52,10 @@ rev_log_prob {
     vector[N] oya1;
     FnValidateSize__("oyb1", "N", N);
     vector[N] oyb1;
-    for(n in 1:N) {
-      mya1[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));
-      myb1[n] = ((-(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));
-      oya1[n] = (mya1[n] / promote(1024, real, data));
-      oyb1[n] = (myb1[n] / promote(1024, real, data));
-    }
+    mya1[1:N] = ((ia[1:N] .* oxa[1:N]) + (ib[1:N] .* oxb[1:N]));
+    myb1[1:N] = ((-(ia[1:N]) .* oxb[1:N]) + (ib[1:N] .* oxa[1:N]));
+    oya1[1:N] = (mya1[1:N] / promote(1024, real, data));
+    oyb1[1:N] = (myb1[1:N] / promote(1024, real, data));
     target += (((sum(mya1) + sum(myb1)) + sum(oya1)) + sum(oyb1));
   } }
 

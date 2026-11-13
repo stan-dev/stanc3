@@ -26,6 +26,7 @@ and debug_settings =
   ; print_mem_patterns: bool
   ; optimization_overrides:
       (Analysis_and_optimization.Optimize.optimization_pass * bool) list
+  ; print_loop_vectorization: bool
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
@@ -34,6 +35,8 @@ and debug_settings =
 
 and debug_options = Off | Basic | Pretty
 
+(** The settings of the [--O*] level, with each [-f] override applied in order.
+*)
 let get_optimization_settings
     {optimization_level; debug_settings= {optimization_overrides; _}; _} =
   let open Analysis_and_optimization.Optimize in
@@ -59,6 +62,7 @@ let default =
       ; print_optimized_mir= Off
       ; print_mem_patterns= false
       ; optimization_overrides= []
+      ; print_loop_vectorization= false
       ; print_lir= false
       ; debug_generate_data= false
       ; debug_generate_inits= false

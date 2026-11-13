@@ -28,8 +28,8 @@ log_prob {
     vector[N] mu6;
     real s6;
     s6 = promote(0, real, var);
+    mu6[1:N] = (alpha + (beta * x[1:N]));
     for(n in 1:N) {
-      mu6[n] = (alpha + (beta * x[n]));
       s6 = (s6 + mu6[n]);
       s6 = (s6 + w[n]);
     }
@@ -46,8 +46,8 @@ rev_log_prob {
     vector[N] mu6;
     real s6;
     s6 = promote(0, real, var);
+    mu6[1:N] = (alpha + (beta * x[1:N]));
     for(n in 1:N) {
-      mu6[n] = (alpha + (beta * x[n]));
       s6 = (s6 + mu6[n]);
       s6 = (s6 + w[n]);
     }

@@ -5,18 +5,17 @@ namespace unenforce_initialize_should_fail_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 8> locations_array__ =
+static constexpr std::array<const char*, 7> locations_array__ =
   {" (found before start of program)",
   " (in '../unenforce-initialize-should-fail.stan', line 5, column 2 to column 13)",
   " (in '../unenforce-initialize-should-fail.stan', line 8, column 2 to column 36)",
   " (in '../unenforce-initialize-should-fail.stan', line 11, column 6 to column 23)",
-  " (in '../unenforce-initialize-should-fail.stan', line 10, column 4 to line 12, column 5)",
   " (in '../unenforce-initialize-should-fail.stan', line 9, column 2 to line 13, column 3)",
   " (in '../unenforce-initialize-should-fail.stan', line 16, column 2 to column 23)",
   " (in '../unenforce-initialize-should-fail.stan', line 2, column 2 to column 60)"};
 class unenforce_initialize_should_fail_model final : public model_base_crtp<unenforce_initialize_should_fail_model> {
  private:
-  std::vector<Eigen::Matrix<double,-1,1>> lcm24__;
+  std::vector<Eigen::Matrix<double,-1,1>> lcm18__;
   std::vector<Eigen::Matrix<double,-1,1>> inputs;
  public:
   ~unenforce_initialize_should_fail_model() {}
@@ -41,11 +40,11 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 7;
+      current_statement__ = 6;
       inputs = std::vector<Eigen::Matrix<double,-1,1>>(2,
                  Eigen::Matrix<double,-1,1>::Constant(5,
                    std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 7;
+      current_statement__ = 6;
       stan::model::assign(inputs,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
         "assigning variable inputs");
@@ -85,97 +84,40 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
-      std::vector<Eigen::Matrix<double,-1,1>> lcm18__;
+      Eigen::Matrix<double,-1,1> lcm17__;
+      Eigen::Matrix<double,-1,1> lcm16__;
+      double lcm15__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm14__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
-      stan::model::assign(lcm18__,
+      stan::model::assign(lcm14__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
-        "assigning variable lcm18__");
-      stan::model::assign(local, lcm18__, "assigning variable local");
+        "assigning variable lcm14__");
+      stan::model::assign(local, lcm14__, "assigning variable local");
       {
+        current_statement__ = 3;
+        stan::model::assign(local,
+          stan::math::add(
+            stan::model::rvalue(lcm14__, "lcm14__",
+              stan::model::index_uni(1), stan::model::index_min_max(1, 5)), 1),
+          "assigning variable local", stan::model::index_uni(1),
+          stan::model::index_omni());
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm18__, "lcm18__",
-               stan::model::index_uni(1), stan::model::index_uni(1)) + 1),
-            "assigning variable local", stan::model::index_uni(1),
-            stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(5));
-          }
-        }
-        {
-          current_statement__ = 3;
-          stan::model::assign(local,
-            (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-               stan::model::index_uni(1)) + 1), "assigning variable local",
-            stan::model::index_uni(2), stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(5));
-          }
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(local, "local", stan::model::index_uni(2))),
+              1), "assigning variable local", stan::model::index_uni(2),
+            stan::model::index_omni());
         }
       }
       {
-        current_statement__ = 6;
+        current_statement__ = 5;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(param));
       }
     } catch (const std::exception& e) {
@@ -208,97 +150,40 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      std::vector<Eigen::Matrix<double,-1,1>> lcm12__;
+      Eigen::Matrix<double,-1,1> lcm13__;
+      Eigen::Matrix<double,-1,1> lcm12__;
+      double lcm11__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm10__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
-      stan::model::assign(lcm12__,
+      stan::model::assign(lcm10__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
-        "assigning variable lcm12__");
-      stan::model::assign(local, lcm12__, "assigning variable local");
+        "assigning variable lcm10__");
+      stan::model::assign(local, lcm10__, "assigning variable local");
       {
+        current_statement__ = 3;
+        stan::model::assign(local,
+          stan::math::add(
+            stan::model::rvalue(lcm10__, "lcm10__",
+              stan::model::index_uni(1), stan::model::index_min_max(1, 5)), 1),
+          "assigning variable local", stan::model::index_uni(1),
+          stan::model::index_omni());
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm12__, "lcm12__",
-               stan::model::index_uni(1), stan::model::index_uni(1)) + 1),
-            "assigning variable local", stan::model::index_uni(1),
-            stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(5));
-          }
-        }
-        {
-          current_statement__ = 3;
-          stan::model::assign(local,
-            (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-               stan::model::index_uni(1)) + 1), "assigning variable local",
-            stan::model::index_uni(2), stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(5));
-          }
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(local, "local", stan::model::index_uni(2))),
+              1), "assigning variable local", stan::model::index_uni(2),
+            stan::model::index_omni());
         }
       }
       {
-        current_statement__ = 6;
+        current_statement__ = 5;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(param));
       }
     } catch (const std::exception& e) {
@@ -342,16 +227,14 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm11__;
-      double lcm10__;
       double lcm9__;
       double lcm8__;
-      int lcm7__;
-      int lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
-      double lcm2__;
+      double lcm7__;
+      double lcm6__;
+      int lcm5__;
+      int lcm4__;
+      Eigen::Matrix<double,-1,1> lcm3__;
+      Eigen::Matrix<double,-1,1> lcm2__;
       std::vector<Eigen::Matrix<double,-1,1>> lcm1__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
@@ -370,75 +253,21 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
         "assigning variable lcm1__");
       stan::model::assign(local, lcm1__, "assigning variable local");
       {
+        current_statement__ = 3;
+        stan::model::assign(local,
+          stan::math::add(
+            stan::model::rvalue(lcm1__, "lcm1__", stan::model::index_uni(1),
+              stan::model::index_min_max(1, 5)), 1),
+          "assigning variable local", stan::model::index_uni(1),
+          stan::model::index_omni());
         {
           current_statement__ = 3;
           stan::model::assign(local,
-            (stan::model::rvalue(lcm1__, "lcm1__", stan::model::index_uni(1),
-               stan::model::index_uni(1)) + 1), "assigning variable local",
-            stan::model::index_uni(1), stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(1),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(1), stan::model::index_uni(5));
-          }
-        }
-        {
-          current_statement__ = 3;
-          stan::model::assign(local,
-            (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-               stan::model::index_uni(1)) + 1), "assigning variable local",
-            stan::model::index_uni(2), stan::model::index_uni(1));
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(2)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(2));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(3)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(3));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(4)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(4));
-          }
-          {
-            current_statement__ = 3;
-            stan::model::assign(local,
-              (stan::model::rvalue(local, "local", stan::model::index_uni(2),
-                 stan::model::index_uni(5)) + 1), "assigning variable local",
-              stan::model::index_uni(2), stan::model::index_uni(5));
-          }
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(local, "local", stan::model::index_uni(2))),
+              1), "assigning variable local", stan::model::index_uni(2),
+            stan::model::index_omni());
         }
       }
       if (emit_transformed_parameters__) {

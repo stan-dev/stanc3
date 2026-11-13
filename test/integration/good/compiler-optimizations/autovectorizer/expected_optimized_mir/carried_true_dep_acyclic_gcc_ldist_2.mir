@@ -19,10 +19,8 @@ log_prob {
     vector[N] a2;
     FnValidateSize__("b2", "N", N);
     vector[N] b2;
-    for(n in 2:N) {
-      a2[n] = (a2[n] + c[n]);
-      b2[n] = (a2[(n - 1)] + promote(1, real, data));
-    }
+    a2[2:N] = (a2[2:N] + c[2:N]);
+    b2[2:N] = (a2[(2 - 1):(N - 1)] + promote(1, real, data));
     target += (sum(a2) + sum(b2));
   } }
 
@@ -32,10 +30,8 @@ rev_log_prob {
     vector[N] a2;
     FnValidateSize__("b2", "N", N);
     vector[N] b2;
-    for(n in 2:N) {
-      a2[n] = (a2[n] + c[n]);
-      b2[n] = (a2[(n - 1)] + promote(1, real, data));
-    }
+    a2[2:N] = (a2[2:N] + c[2:N]);
+    b2[2:N] = (a2[(2 - 1):(N - 1)] + promote(1, real, data));
     target += (sum(a2) + sum(b2));
   } }
 

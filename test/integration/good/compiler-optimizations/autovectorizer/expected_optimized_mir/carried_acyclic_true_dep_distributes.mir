@@ -25,10 +25,8 @@ log_prob {
     FnValidateSize__("y7", "N", N);
     vector[N] y7;
     y7 = v0;
-    for(n in 2:N) {
-      v7[n] = x[n];
-      y7[n] = v7[(n - 1)];
-    }
+    v7[2:N] = x[2:N];
+    y7[2:N] = v7[(2 - 1):(N - 1)];
     target += (sum(v7) + sum(y7));
   } }
 
@@ -40,10 +38,8 @@ rev_log_prob {
     FnValidateSize__("y7", "N", N);
     vector[N] y7;
     y7 = v0;
-    for(n in 2:N) {
-      v7[n] = x[n];
-      y7[n] = v7[(n - 1)];
-    }
+    v7[2:N] = x[2:N];
+    y7[2:N] = v7[(2 - 1):(N - 1)];
     target += (sum(v7) + sum(y7));
   } }
 

@@ -19,14 +19,12 @@ log_prob {
     sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
     );
   {
-    target += normal_lupdf(y[1:N], mu, sigma);
-    for(n in 1:N) {
-      if((y[n] < 0)) {
-        target += FnNegInf__();
-      } else {
-        target += -(normal_lccdf(promote(0, real, data), mu, sigma));
-      }
+    for(n in 1:N) if((y[n] < 0)) {
+      target += FnNegInf__();
+    } else {
+      target += -(normal_lccdf(promote(0, real, data), mu, sigma));
     }
+    target += normal_lupdf(y[1:N], mu, sigma);
   } }
 
 rev_log_prob {
@@ -35,14 +33,12 @@ rev_log_prob {
     sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
     );
   {
-    target += normal_lupdf(y[1:N], mu, sigma);
-    for(n in 1:N) {
-      if((y[n] < 0)) {
-        target += FnNegInf__();
-      } else {
-        target += -(normal_lccdf(promote(0, real, data), mu, sigma));
-      }
+    for(n in 1:N) if((y[n] < 0)) {
+      target += FnNegInf__();
+    } else {
+      target += -(normal_lccdf(promote(0, real, data), mu, sigma));
     }
+    target += normal_lupdf(y[1:N], mu, sigma);
   } }
 
 generate_quantities {
