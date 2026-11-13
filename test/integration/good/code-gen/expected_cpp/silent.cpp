@@ -206,8 +206,6 @@ class silent_model final : public model_base_crtp<silent_model> {
       Eigen::Matrix<double,-1,1> bvec =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      out__.write(unused);
-      out__.write(b_vec_raw);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -300,7 +298,7 @@ class silent_model final : public model_base_crtp<silent_model> {
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"unused", "b_vec_raw"};
+    names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {
       std::vector<std::string> temp{"bvec"};
       names__.reserve(names__.size() + temp.size());
@@ -316,8 +314,7 @@ class silent_model final : public model_base_crtp<silent_model> {
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-                std::vector<size_t>{static_cast<size_t>(N)}};
+    dimss__ = std::vector<std::vector<size_t>>{};
     if (emit_transformed_parameters__) {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(N)}};
@@ -334,11 +331,6 @@ class silent_model final : public model_base_crtp<silent_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "unused");
-    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
-      param_names__.emplace_back(std::string() + "b_vec_raw" + '.' +
-        std::to_string(idx1__));
-    }
     if (emit_transformed_parameters__) {
       for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
         param_names__.emplace_back(std::string() + "bvec" + '.' +
@@ -390,7 +382,7 @@ class silent_model final : public model_base_crtp<silent_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 1 + N;
+    const size_t num_params__ = 0 + 0;
     const size_t num_transformed = emit_transformed_parameters * (N);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -407,7 +399,7 @@ class silent_model final : public model_base_crtp<silent_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 1 + N;
+    const size_t num_params__ = 0 + 0;
     const size_t num_transformed = emit_transformed_parameters * (N);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -479,19 +471,3 @@ stan::math::profile_map& get_stan_profile_data() {
   return silent_model_namespace::profiles__;
 }
 #endif
-/*
-warning: Unknown annotation '@silent'.
-    ┌─ ../silent.stan:6:3
-  5 │  parameters {
-  6 │    @silent real unused;
-    │    ^^^^^^^ Unknown annotation.
-  7 │  
-    = This will be ignored by the compiler.
-warning: Unknown annotation '@silent'.
-    ┌─ ../silent.stan:8:3
-  7 │  
-  8 │    @silent vector[N] b_vec_raw;
-    │    ^^^^^^^ Unknown annotation.
-  9 │  }
-    = This will be ignored by the compiler.
-*/
