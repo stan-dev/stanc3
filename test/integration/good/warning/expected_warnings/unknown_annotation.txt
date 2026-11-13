@@ -1,15 +1,22 @@
 /* $ stanc ../unknown_annotation.stan : [exit 0] */
-warning: Unknown annotation '@not_a_real_annotation'.
+warning: Unsupported annotation '@silent' for type (real) => real.
     ┌─ ../unknown_annotation.stan:2:3
-  1 │  parameters {
-  2 │    @not_a_real_annotation real sigma;
+  1 │  functions {
+  2 │    @silent real foo(real theta){ return 2* theta;}
+    │    ^^^^^^^ Unsupported annotation.
+  3 │  }
+    = This will be ignored by the compiler.
+warning: Unknown annotation '@not_a_real_annotation'.
+    ┌─ ../unknown_annotation.stan:6:3
+  5 │  parameters {
+  6 │    @not_a_real_annotation real sigma;
     │    ^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation.
-  3 │  
+  7 │  
     = This will be ignored by the compiler.
 warning: Unsupported annotation '@extern' for type real.
-    ┌─ ../unknown_annotation.stan:5:3
-  4 │  
-  5 │    @extern real theta;
+    ┌─ ../unknown_annotation.stan:9:3
+  8 │  
+  9 │    @extern real theta;
     │    ^^^^^^^ Unsupported annotation.
-  6 │  }
+ 10 │  }
     = This will be ignored by the compiler.

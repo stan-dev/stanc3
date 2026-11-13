@@ -276,7 +276,8 @@ module Stmts = struct
     let incr = Increment (Var loopvar) in
     For (init, stop, incr, body)
 
-  let if_block cond stmts = IfElse (cond, block stmts, None)
+  let if_block cond stmts =
+    match stmts with [] -> [] | _ -> [IfElse (cond, block stmts, None)]
 
   (** Suppress warnings for a variable which may not be used. *)
   let unused s =
