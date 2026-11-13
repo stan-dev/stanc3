@@ -346,7 +346,7 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
        ~body:(intro @ Stmts.rethrow_located read_inits)
        ~cv_qualifiers:[Const] ())
 
-let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
+let gen_unconstrain_array_impl {Program.unconstrain_array; output_vars; _} =
   let templates =
     [ Typename "VecVar"; Typename "VecI"
     ; Require ("stan::require_vector_t", ["VecVar"])
@@ -360,7 +360,26 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out ]
-    @ Decls.current_statement @ Decls.dummy_var in
+    @ Decls.current_statement @ Decls.dummy_var
+    @
+    let pstream = Var "pstream__" in
+    Stmts.if_block pstream
+      (List.concat_map
+         ~f:(fun (name, _, outvar) ->
+           if
+             Program.(outvar.out_block == Parameters)
+             && Annotations.outvar_is_silent outvar
+           then
+             Cpp.DSL.
+               [ Deref pstream
+                 <<: literal_string
+                       (Fmt.str
+                          "Warning: Parameter '%s' was marked as @silent in \
+                           this model. If you are attempting to load outputs \
+                           from the same model again, this will not work!"
+                          name); Deref pstream <<: Var "std::endl" ]
+           else [])
+         output_vars) in
   FunDef
     (make_fun_defn ~templates_init:([templates], true) ~inline:true
        ~return_type:Void ~name:"unconstrain_array_impl" ~args
