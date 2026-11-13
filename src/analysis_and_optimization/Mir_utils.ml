@@ -14,16 +14,18 @@ and idx_any pred (i : Expr.Typed.t Index.t) =
 
 and accum_any pred b e = b || expr_any pred e
 
+let is_target_increment (kind : 'e Fun_kind.t) : bool =
+  match kind with
+  | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
+  | UserDefined _ | StanLib _ | Operator _ | CompilerInternal _ -> false
+
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   (* the only StanLib FnTarget function is target() which has no side effects
      but can return a different result every time *)
   match e.pattern with
-  | FunApp
-      ((UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian)), _)
-    ->
-      true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
+  | FunApp (kind, _) when is_target_increment kind -> true
   | _ -> false
 
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
@@ -203,70 +205,17 @@ let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
 let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
   Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p Fun.id
 
-(** See interface file *)
-let fwd_traverse_statement stmt ~init ~f =
-  Stmt.Pattern.(
-    match stmt with
-    | IfElse (pred, then_s, else_s_opt) ->
-        let s', c = f init then_s in
-        Option.value_map else_s_opt
-          ~default:(s', IfElse (pred, c, None))
-          ~f:(fun else_s ->
-            let s'', c' = f s' else_s in
-            (s'', IfElse (pred, c, Some c')))
-    | While (pred, body) ->
-        let s', c = f init body in
-        (s', While (pred, c))
-    | For vars ->
-        let s', c = f init vars.body in
-        (s', For {vars with body= c})
-    | Profile (name, stmts) ->
-        let s', ls =
-          List.fold_left stmts
-            ~f:(fun (s, l) stmt ->
-              let s', c = f s stmt in
-              (s', List.cons c l))
-            ~init:(init, []) in
-        (s', Profile (name, List.rev ls))
-    | Block stmts ->
-        let s', ls =
-          List.fold_left stmts
-            ~f:(fun (s, l) stmt ->
-              let s', c = f s stmt in
-              (s', List.cons c l))
-            ~init:(init, []) in
-        (s', Block (List.rev ls))
-    | SList stmts ->
-        let s', ls =
-          List.fold_left stmts
-            ~f:(fun (s, l) stmt ->
-              let s', c = f s stmt in
-              (s', List.cons c l))
-            ~init:(init, []) in
-        (s', SList (List.rev ls))
-    | Assignment _ as s -> (init, s)
-    | TargetPE _ as s -> (init, s)
-    | JacobianPE _ as s -> (init, s)
-    | NRFunApp _ as s -> (init, s)
-    | Break as s -> (init, s)
-    | Continue as s -> (init, s)
-    | Return _ as s -> (init, s)
-    | Skip as s -> (init, s)
-    | Decl _ as s -> (init, s))
-
-(** See interface file *)
-let vexpr_of_expr_exn Expr.{pattern; _} =
+let var_name_of_expr_exn Expr.{pattern; _} =
   match pattern with
-  | Var s -> VVar s
+  | Var s -> s
   | _ ->
       Common.ICE.internal_error "Non-var expression found, but var expected"
       [@coverage off]
 
-(** See interface file *)
 let rec expr_var_set Expr.{pattern; meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match pattern with
-  | Var s -> Set.Poly.singleton (VVar s, meta)
+  | Var s -> Set.Poly.singleton (s, meta)
   | Lit _ -> Set.Poly.empty
   | FunApp (kind, exprs) -> union_recur (exprs @ Fun_kind.collect_exprs kind)
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
@@ -276,6 +225,7 @@ let rec expr_var_set Expr.{pattern; meta} =
   | TupleProjection (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
+(** Collects [(name, metadata)] for each variable in the expressions of [ix]. *)
 and index_var_set ix =
   match ix with
   | All -> Set.Poly.empty
@@ -285,9 +235,8 @@ and index_var_set ix =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-let expr_var_names_set expr =
-  let get_names (VVar a, _) = a in
-  Set.Poly.map ~f:get_names (expr_var_set expr)
+let expr_names expr : string Set.Poly.t =
+  Set.Poly.map ~f:fst (expr_var_set expr)
 
 let stmt_rhs stmt =
   match stmt with
@@ -308,16 +257,6 @@ let stmt_rhs stmt =
 let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
 let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
-(** See interface file *)
-let expr_assigned_var Expr.{pattern; _} =
-  match pattern with
-  | Var s -> VVar s
-  | Indexed ({pattern= Var s; _}, _) -> VVar s
-  | _ ->
-      Common.ICE.internal_error
-        "Unimplemented: analysis of assigning to non-var" [@coverage off]
-
-(** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
   match pattern with
   | FunApp (Operator Plus, [e1; e2]) ->
