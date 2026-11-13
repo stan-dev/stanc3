@@ -41,7 +41,7 @@ let recognized_annotation a args target =
                    (fun ppf () ->
                      Fmt.pf ppf
                        "Annotation '%@%s' can only be to output variables, but \
-                        was here applied to a%a variable in the %a block."
+                        was here applied to a%a variable in the %a."
                        a
                        (Fmt.if' (not is_global) Fmt.string)
                        " local"
