@@ -244,6 +244,14 @@ class silent_model final : public model_base_crtp<silent_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
+    if (pstream__) {
+      *(pstream__) <<
+                     "Warning: Parameter 'unused' was marked as @silent in this model. If you are attempting to load outputs from the same model again, this will not work!";
+      *(pstream__) << std::endl;
+      *(pstream__) <<
+                     "Warning: Parameter 'b_vec_raw' was marked as @silent in this model. If you are attempting to load outputs from the same model again, this will not work!";
+      *(pstream__) << std::endl;
+    }
     try {
       local_scalar_t__ unused = DUMMY_VAR__;
       current_statement__ = 1;
