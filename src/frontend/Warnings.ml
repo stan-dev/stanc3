@@ -1,5 +1,6 @@
 module Location_span = Middle.Location_span
 module Location = Middle.Location
+module UnsizedType = Middle.UnsizedType
 
 type t =
   | StancJsInclude of string
@@ -19,6 +20,8 @@ type t =
   | FunctionDeprecation of Location_span.t * string * (int * int) * string
   | OdeDeprecation of Location_span.t * string * (int * int) * string
   | Pedantic of Location_span.t * string
+  | UnknownAnnotation of Location_span.t * string
+  | UnsupportedAnnotation of Location_span.t * string * UnsizedType.t
 
 let stancjs_bad_include msg = StancJsInclude msg
 let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
@@ -39,7 +42,15 @@ let function_deprecation loc name version rename =
 let ode_deprecation loc name version rename =
   OdeDeprecation (loc, name, version, rename)
 
+let unknown_annotation (span, ann) = UnknownAnnotation (span, ann)
+
+let unsupported_annotation (span, ann, ty) =
+  UnsupportedAnnotation (span, ann, ty)
+
 let pedantic_warning (span, msg) = Pedantic (span, msg)
+
+let ignored_annotation =
+  Grace.Diagnostic.Message.create "This will be ignored by the compiler."
 
 let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
@@ -188,6 +199,17 @@ let to_grace ?printed_filename ?code warn =
           "%s is deprecated and will be removed in Stan %d.%d. Use %s instead."
           name major minor rename in
       make_warning ~notes ~summary loc "Use %s instead." rename
+  | UnknownAnnotation (loc, a) ->
+      let summary = Message.createf "Unknown annotation '%@%s'." a in
+      make_warning ~summary ~notes:[ignored_annotation] loc
+        "Unknown annotation."
+  | UnsupportedAnnotation (loc, a, ty) ->
+      let summary =
+        Message.createf "Unsupported annotation '%@%s' for type %a." a
+          (SignatureMismatch.actual_style UnsizedType.pp)
+          ty in
+      make_warning loc ~summary ~notes:[ignored_annotation]
+        "Unsupported annotation."
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in

@@ -1,0 +1,11 @@
+/* $ stanc ../define_extern1.stan : [exit 1] */
+error: Function "foo" has already been declared for signature (int, int) => real
+    ┌─ ../define_extern1.stan:3:3
+  1 │    functions {
+  2 │      @extern real foo(int x, int y);
+    │                   --- Previous declaration here.
+  3 │ ╭    real foo(int x, int y){
+  4 │ │      return 1.0;
+  5 │ │    }
+    │ ╰────^ Function "foo" has already been declared for signature (int, int) => real
+  6 │    

@@ -2,6 +2,7 @@
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnDist Mass Normalized))
     (fdargs ((AutoDiffable x (UTuple (UInt UInt))) (AutoDiffable y UReal)))
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block

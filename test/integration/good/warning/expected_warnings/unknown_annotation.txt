@@ -1,0 +1,15 @@
+/* $ stanc ../unknown_annotation.stan : [exit 0] */
+warning: Unknown annotation '@not_a_real_annotation'.
+    ┌─ ../unknown_annotation.stan:2:3
+  1 │  parameters {
+  2 │    @not_a_real_annotation real sigma;
+    │    ^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation.
+  3 │  
+    = This will be ignored by the compiler.
+warning: Unsupported annotation '@extern' for type real.
+    ┌─ ../unknown_annotation.stan:5:3
+  4 │  
+  5 │    @extern real theta;
+    │    ^^^^^^^ Unsupported annotation.
+  6 │  }
+    = This will be ignored by the compiler.

@@ -1,0 +1,8 @@
+/* $ stanc ../bad_annotated_decl5.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_annotated_decl5.stan:2:17
+  1 │  parameters {
+  2 │    @gpu_device(1)) real theta;
+    │                  ^ here.
+  3 │  }
+    = Expected a type or more annotations following the annotation.

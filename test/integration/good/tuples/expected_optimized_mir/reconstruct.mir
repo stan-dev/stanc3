@@ -1,7 +1,8 @@
 /* $ stanc -fsoa --debug-optimized-mir ../reconstruct.stan : [exit 0] */
 ((functions_block
   (((fdrt Void) (fdname do_something_reconstruct) (fdsuffix FnPlain)
-    (fdargs ((DataOnly indices (UArray UInt)) (DataOnly mem UVector)))
+    (fdargs ((DataOnly indices (UArray UInt)) (DataOnly mem UVector))) 
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -20,7 +21,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt Void) (fdname do_something) (fdsuffix FnPlain)
-    (fdargs ((DataOnly combined (UTuple ((UArray UInt) UVector)))))
+    (fdargs ((DataOnly combined (UTuple ((UArray UInt) UVector))))) (fdannotations ())
     (fdbody (((pattern (Block ())) (meta <opaque>)))) (fdloc <opaque>))))
  (input_vars ()) (prepare_data ()) (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities

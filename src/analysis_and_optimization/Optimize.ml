@@ -82,13 +82,18 @@ let gen_inline_var (name : string) (id_var : string) =
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : string String.Map.t) = function
-    | Stmt.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
+    | Stmt.Pattern.Decl
+        {decl_adtype; decl_type; decl_id; initialize; decl_annotations} ->
         let new_name =
           match String.Map.find_opt decl_id m with
           | Some existing -> existing
           | None -> gen_inline_var fname decl_id in
         ( Stmt.Pattern.Decl
-            {decl_adtype; decl_id= new_name; decl_type; initialize}
+            { decl_adtype
+            ; decl_id= new_name
+            ; decl_type
+            ; initialize
+            ; decl_annotations }
         , String.Map.add m ~key:decl_id ~data:new_name )
     | Stmt.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
@@ -192,7 +197,8 @@ let handle_early_returns (fname : string) opt_var stmt =
                 { decl_adtype= DataOnly
                 ; decl_id= returned
                 ; decl_type= Sized SInt
-                ; initialize= Default }
+                ; initialize= Default
+                ; decl_annotations= [] }
           ; meta= Location_span.empty }
       ; Stmt.
           { pattern=
@@ -304,7 +310,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                             (Type.to_unsized decl_type)
                       ; decl_id= inline_return_name
                       ; decl_type
-                      ; initialize= Uninit } ]
+                      ; initialize= Uninit
+                      ; decl_annotations= [] } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
@@ -383,6 +390,7 @@ and inline_function_arguments fname propto adt fim args es =
                 ; decl_type=
                     Sized (unsafe_unsized_to_sized_type (Unsized e.meta.type_))
                 ; decl_id= temp
+                ; decl_annotations= []
                 ; initialize= Assign e } ]
         , stmts
         , {e with pattern= Var temp} ) in
@@ -504,10 +512,20 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
-        | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
+        | Decl
+            { decl_adtype
+            ; decl_id
+            ; decl_type
+            ; initialize= Assign expr
+            ; decl_annotations } ->
             let d, s, e = inline_expr expr in
             slist_concat_no_loc (d @ s)
-              (Decl {decl_adtype; decl_id; decl_type; initialize= Assign e})
+              (Decl
+                 { decl_adtype
+                 ; decl_id
+                 ; decl_type
+                 ; initialize= Assign e
+                 ; decl_annotations })
         | Decl r -> Decl r
         | Skip -> Skip
         | Break -> Break
@@ -651,6 +669,7 @@ let unroll_loop_one_step_statement _ =
                       { decl_adtype= DataOnly
                       ; decl_id= lower_name
                       ; decl_type= Sized SInt
+                      ; decl_annotations= []
                       ; initialize= Assign lower }
                 ; meta= lower.meta.loc } ] )
           else (lower, []) in
@@ -1251,7 +1270,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
                   { decl_adtype= Expr.Typed.adlevel_of key
                   ; decl_id= data
                   ; decl_type= Type.Unsized (Expr.Typed.type_of key)
-                  ; initialize= Default }
+                  ; initialize= Default
+                  ; decl_annotations= [] (* TODO annotations: correct? *) }
             ; meta= Location_span.empty }
           :: accum) in
     let lazy_code_motion_base i stmt =

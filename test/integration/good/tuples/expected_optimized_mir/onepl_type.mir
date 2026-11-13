@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../onepl_type.stan : [exit 0] */
 ((functions_block
   (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable x (UTuple (UReal)))))
+    (fdargs ((AutoDiffable x (UTuple (UReal))))) (fdannotations ())
     (fdbody
      (((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>))))
     (fdloc <opaque>))))

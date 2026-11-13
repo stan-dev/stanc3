@@ -11,7 +11,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -19,7 +19,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -51,7 +51,7 @@
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -72,7 +72,7 @@
        (Sized
         (SArray SInt
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -104,7 +104,7 @@
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (SVector AoS
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable td) ()) (UTuple ((UArray UInt) UVector))
@@ -149,7 +149,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta)
@@ -168,7 +169,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -186,7 +188,7 @@
            (Sized
             (SArray SReal
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -202,7 +204,7 @@
            (Sized
             (SArray SComplex
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -218,7 +220,7 @@
            (Sized
             (SComplexVector
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Block
@@ -226,7 +228,7 @@
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
               (decl_id unpack1__)
               (decl_type (Unsized (UTuple ((UArray UReal) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -279,7 +281,7 @@
               (decl_id unpack1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -358,7 +360,7 @@
               (decl_id unpack1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -449,13 +451,14 @@
                ((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               SInt))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable DataOnly))) (decl_id unpack1__)
-              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize Uninit)))
+              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize Uninit)
+              (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ()) (UTuple (UComplexVector UInt))
@@ -522,7 +525,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta)
@@ -541,7 +545,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -559,7 +564,7 @@
            (Sized
             (SArray SReal
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -575,7 +580,7 @@
            (Sized
             (SArray SComplex
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -591,7 +596,7 @@
            (Sized
             (SComplexVector
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Block
@@ -599,7 +604,7 @@
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
               (decl_id unpack1__)
               (decl_type (Unsized (UTuple ((UArray UReal) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -652,7 +657,7 @@
               (decl_id unpack1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -731,7 +736,7 @@
               (decl_id unpack1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize Uninit)))
+              (initialize Uninit) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ())
@@ -822,13 +827,14 @@
                ((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               SInt))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable DataOnly))) (decl_id unpack1__)
-              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize Uninit)))
+              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize Uninit)
+              (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable unpack1__) ()) (UTuple (UComplexVector UInt))
@@ -895,7 +901,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id theta)
@@ -914,7 +921,8 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -960,7 +968,7 @@
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -972,7 +980,7 @@
        (Sized
         (SArray SReal
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -998,7 +1006,7 @@
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1024,7 +1032,7 @@
        (Sized
         (SArray SReal
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) (UArray UReal)
@@ -1048,7 +1056,7 @@
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable theta) ()) UVector
@@ -1074,7 +1082,7 @@
      (out_constrained_st
       (SArray SReal
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (theta <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -1082,5 +1090,5 @@
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name unpack_promote_model) (prog_path ../unpack_promote.stan))

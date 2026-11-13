@@ -1,0 +1,12 @@
+/* $ stanc ../define_extern3.stan : [exit 1] */
+error: Cannot provide a body for function "foo" marked with '@extern'.
+    ┌─ ../define_extern3.stan:3:25
+  1 │    functions {
+  2 │      @extern
+    │      ------- Annotation supplied here
+  3 │      real foo(int x, int y){
+    │ ╭──────────────────────────^
+  4 │ │      return 1.0;
+  5 │ │    }
+    │ ╰────^ Cannot provide a body for function "foo" marked with '@extern'.
+  6 │    

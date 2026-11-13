@@ -8,6 +8,6 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                           tuple(T_l...),
     │                                                                           data int,
     │                                                                           (T_k...) => matrix,
-    │                                                                           tuple(T_k...))@]
+    │                                                                           tuple(T_k...))
  41 │  
     = Missing the hessian block size (data-only int) and remaining arguments.

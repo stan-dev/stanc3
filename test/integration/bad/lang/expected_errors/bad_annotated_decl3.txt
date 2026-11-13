@@ -1,0 +1,9 @@
+/* $ stanc ../bad_annotated_decl3.stan : [exit 1] */
+error: Syntax error: Ill-formed annotation.
+    ┌─ ../bad_annotated_decl3.stan:2:17
+  1 │  parameters {
+  2 │    @gpu_device(1 2) real theta;
+    │                  ^ here.
+  3 │  }
+    = Expected a comma-sepated list of symbols followed by ")".
+      Did you forget a "," before this symbol?

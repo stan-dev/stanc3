@@ -27,7 +27,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) UInt
@@ -35,7 +35,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y) ()) UInt
@@ -43,7 +43,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id z) (decl_type (Sized SComplex))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id foo)
@@ -52,7 +52,7 @@
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnPrint)
@@ -148,13 +148,13 @@
  (output_vars
   ((x <opaque>
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))
    (y <opaque>
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))
    (z <opaque>
     ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))
    (foo <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -164,5 +164,5 @@
       (SMatrix AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))))
  (prog_name tuple_exprs_model) (prog_path ../tuple_exprs.stan))

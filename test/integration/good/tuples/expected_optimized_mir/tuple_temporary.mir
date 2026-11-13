@@ -32,7 +32,7 @@
         (SMatrix AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m) ()) UMatrix
@@ -56,7 +56,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable t) ()) (UTuple (UReal UMatrix))
@@ -86,7 +86,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable s) ()) (UTuple (UReal UMatrix))
@@ -184,7 +184,7 @@
       (SMatrix AoS
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))
    (t <opaque>
     ((out_unconstrained_st
       (STuple
@@ -199,7 +199,7 @@
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block GeneratedQuantities)
-     (out_trans (TupleTransformation (Identity Identity)))))
+     (out_trans (TupleTransformation (Identity Identity))) (out_annotations ())))
    (s <opaque>
     ((out_unconstrained_st
       (STuple
@@ -214,5 +214,5 @@
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block GeneratedQuantities)
-     (out_trans (TupleTransformation (Identity Identity)))))))
+     (out_trans (TupleTransformation (Identity Identity))) (out_annotations ())))))
  (prog_name tuple_temporary_model) (prog_path ../tuple_temporary.stan))

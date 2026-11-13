@@ -22,7 +22,8 @@ module Pattern = struct
         { decl_adtype: UnsizedType.autodifftype
         ; decl_id: string
         ; decl_type: 'a Type.t
-        ; initialize: 'a decl_init }
+        ; initialize: 'a decl_init
+        ; decl_annotations: Annotation.t list }
   [@@deriving sexp_of, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]
@@ -94,7 +95,7 @@ module Pattern = struct
     | Block stmts ->
         Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
     | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
-    | Decl {decl_adtype; decl_id; decl_type; initialize} -> (
+    | Decl {decl_adtype; decl_id; decl_type; initialize; _} -> (
         match initialize with
         | Assign e ->
             Fmt.pf ppf "@[<hov 2>%a%a@ %s = %a;@]" UnsizedType.pp_autodifftype
@@ -176,7 +177,8 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= Default }
+                  ; initialize= Default
+                  ; decl_annotations= [] }
             ; meta= e.meta.loc } in
           let assign =
             { decl with

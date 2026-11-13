@@ -142,14 +142,15 @@ module TypeError = struct
         string * string * Location_span.t option list
     | NonReturningFnExpectedReturningFound of string * Location_span.t option
     | NonReturningFnExpectedNonFnFound of string * Location_span.t
-    | FuncOverloadRtOnly of
+    | FunOverloadRtOnly of
         string
         * UnsizedType.returntype
         * UnsizedType.returntype
         * Location_span.t option
-    | FuncDeclRedefined of string * UnsizedType.t * Location_span.t
+    | FunDeclRedefined of string * UnsizedType.t * Location_span.t
     | StanMathFuncRedefined of string * UnsizedType.t
     | FunDeclExists of string * Location_span.t
+    | FunExternDefined of string * Location_span.t
     | FunDeclNoDefn of string
     | NonRealProbFunDef of UnsizedType.returntype
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -196,7 +197,7 @@ module TypeError = struct
         (Message.createf "Ill-typed arguments supplied to %a." quoted name)
       ~notes:[note]
       "@[<v>The valid signature of this function is@ @[<hov 2>%s(%t,@ data \
-       int,@ (T_k%t) => matrix,@ tuple(T_k%t)%t)@]%t@@]"
+       int,@ (T_k%t) => matrix,@ tuple(T_k%t)%t)@]%t@]"
       name pp_lik_args ellipsis ellipsis pp_laplace_tols pp_supplied_tys
 
   let to_grace = function
@@ -500,7 +501,7 @@ module TypeError = struct
           "Function %a is not implemented for distribution %a" quoted
           (prefix ^ "_" ^ suffix)
           quoted prefix
-    | FuncOverloadRtOnly (name, _, rt', prev_decl) ->
+    | FunOverloadRtOnly (name, _, rt', prev_decl) ->
         make_error
           ~labels:(optional previous_declaration prev_decl)
           ~notes:
@@ -508,7 +509,7 @@ module TypeError = struct
                 (actual_style UnsizedType.pp_returntype)
                 rt' ]
           "Function %a cannot be overloaded by return type only." quoted name
-    | FuncDeclRedefined (name, ut, prev_decl) ->
+    | FunDeclRedefined (name, ut, prev_decl) ->
         make_error
           ~labels:(previous_declaration prev_decl)
           "Function %a has already been declared for signature %a" quoted name
@@ -523,9 +524,22 @@ module TypeError = struct
           ~labels:(previous_declaration prev_decl)
           "Function %a has already been declared. A definition is expected."
           quoted name
+    | FunExternDefined (name, annotation_loc) ->
+        make_error
+          ~labels:(context annotation_loc "Annotation supplied here")
+          "Cannot provide a body for function %a marked with '%a'." quoted name
+          Fmt.(styled `Bold string)
+          "@extern"
     | FunDeclNoDefn name ->
-        make_error "Function %a is declared without specifying a definition."
-          quoted name
+        let notes =
+          [ Message.createf
+              "If this function will be supplied elsewhere after compilation,@ \
+               (e.g., it is being manually implemented in C++)@ consider \
+               marking it with '%a' to silence this error."
+              Fmt.(styled `Bold string)
+              "@extern" ] in
+        make_error ~notes
+          "Function %a is declared without specifying a definition." quoted name
     | NonRealProbFunDef Void ->
         make_error
           "%a return type required for probability functions ending in _lpdf, \
@@ -1306,16 +1320,19 @@ let no_int_params loc transformed =
   (loc, StatementError (StatementError.IntegerParameter transformed))
 
 let fn_overload_rt_only loc name rt1 rt2 overload_loc =
-  (loc, TypeError (TypeError.FuncOverloadRtOnly (name, rt1, rt2, overload_loc)))
+  (loc, TypeError (TypeError.FunOverloadRtOnly (name, rt1, rt2, overload_loc)))
 
 let fn_decl_redefined loc name ut original_loc =
-  (loc, TypeError (TypeError.FuncDeclRedefined (name, ut, original_loc)))
+  (loc, TypeError (TypeError.FunDeclRedefined (name, ut, original_loc)))
 
 let stan_math_fn_redefined loc name ut =
   (loc, TypeError (TypeError.StanMathFuncRedefined (name, ut)))
 
 let fn_decl_exists loc name original_loc =
   (loc, TypeError (TypeError.FunDeclExists (name, original_loc)))
+
+let fn_extern_defined loc name annotation_loc =
+  (loc, TypeError (TypeError.FunExternDefined (name, annotation_loc)))
 
 let fn_decl_without_def loc name =
   (loc, TypeError (TypeError.FunDeclNoDefn name))

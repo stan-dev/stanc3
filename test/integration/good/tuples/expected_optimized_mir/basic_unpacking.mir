@@ -3,7 +3,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) UInt
@@ -11,7 +11,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y) ()) UInt
@@ -26,7 +26,8 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)
+          (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -72,7 +73,8 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)
+          (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -116,7 +118,8 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)
+          (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -155,7 +158,8 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)
+          (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
