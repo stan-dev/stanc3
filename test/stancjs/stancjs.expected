@@ -7,7 +7,7 @@ error: Function "foo" is declared without specifying a definition.
   4 │  }
     = If this function will be supplied elsewhere after compilation,
       (e.g., it is being manually implemented in C++)
-      consider marking it with '@extern' to silence this error.
+      it must be marked with '@extern' .
 
 $ node auto-format.js
 parameters {
@@ -440,7 +440,7 @@ error: Function "foo" is declared without specifying a definition.
   4 │  }
     = If this function will be supplied elsewhere after compilation,
       (e.g., it is being manually implemented in C++)
-      consider marking it with '@extern' to silence this error.
+      it must be marked with '@extern' .
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js

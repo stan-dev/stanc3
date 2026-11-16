@@ -534,8 +534,8 @@ module TypeError = struct
         let notes =
           [ Message.createf
               "If this function will be supplied elsewhere after compilation,@ \
-               (e.g., it is being manually implemented in C++)@ consider \
-               marking it with '%a' to silence this error."
+               (e.g., it is being manually implemented in C++)@ it must be \
+               marked with '%a' ."
               Fmt.(styled `Bold string)
               "@extern" ] in
         make_error ~notes

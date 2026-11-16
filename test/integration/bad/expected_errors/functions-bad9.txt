@@ -7,4 +7,4 @@ error: Function "bar" is declared without specifying a definition.
   3 │    void bar(int x, real y);
     = If this function will be supplied elsewhere after compilation,
       (e.g., it is being manually implemented in C++)
-      consider marking it with '@extern' to silence this error.
+      it must be marked with '@extern' .
