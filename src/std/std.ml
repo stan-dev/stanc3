@@ -234,6 +234,7 @@ module Int = struct
   let of_string_opt = int_of_string_opt
 
   module Map = Map.Make (Int)
+  module Set = Set.Make (Int)
 end
 
 module Float = struct

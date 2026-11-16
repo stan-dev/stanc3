@@ -809,6 +809,28 @@ let minimal_variables_fwd_transfer
     with type labels = int
      and type properties = string Set.Poly.t)
 
+(** The nodes of a flowgraph in reverse postorder from the initials set.
+
+    For motivation, see
+    {{:https://eli.thegreenplace.net/2015/directed-graph-traversal-orderings-and-applications-to-data-flow-analysis/} Eli Bendersky's post}:
+    {v the most efficient way to run forward data-flow analyses is in RPO. In the
+    absence of cycles, RPO (topological order) makes sure we've seen all of a
+    node's predecessors before we get to it. This means we can perform the
+    analysis in a single pass over the graph.} *)
+let reverse_postorder (module F : FLOWGRAPH with type labels = int) =
+  let visited = Hash_set.create (LabelMap.cardinal F.successors) in
+  let nodes = ref [] in
+  let rec visit root =
+    (* postorder traversal. The 'reverse' comes for free because we are consing
+       onto the list *)
+    if not (Hash_set.mem visited root) then (
+      Hash_set.add visited root;
+      Set.Poly.iter ~f:visit (LabelMap.find root F.successors);
+      nodes := root :: !nodes) in
+  Set.Poly.iter F.initials ~f:visit;
+  LabelMap.iter F.successors ~f:(fun ~key ~data:_ -> visit key);
+  Array.of_list !nodes
+
 (** The central definition of a monotone dataflow analysis framework. Given a
     compatible flowgraph, lattice and transfer function, we can run the mfp
     (maximal fixed point) algorithm, which computes a maximal fixed point (MFP)
@@ -827,28 +849,34 @@ let monotone_framework (type p) (module F : FLOWGRAPH with type labels = int)
 
     let mfp () =
       (* STEP 1: initialize data structures *)
-      let workstack = Stack.create () in
-      (* TODO: does the order matter a lot for efficiency here? *)
-      LabelMap.iter F.successors ~f:(fun ~key ~data ->
-          Set.Poly.iter data ~f:(fun succ -> Stack.push (key, succ) workstack));
-      let analysis_in = Hashtbl.create 32 in
-      LabelMap.iter
-        ~f:(fun ~key:l ~data:_ ->
-          Hashtbl.add analysis_in ~key:l
-            ~data:(if Set.Poly.mem l F.initials then L.initial else L.bottom))
-        F.successors;
+      let labels = reverse_postorder (module F) in
+      let positions =
+        LabelMap.of_seq (Array.to_seqi labels |> Seq.map (fun (a, b) -> (b, a)))
+      in
+      (* The worklist holds indices into [labels], so processing the min element
+         means we are processing predecessors first, whenever possible *)
+      let worklist =
+        ref (Int.Set.of_list (List.range 0 (Array.length labels))) in
+      let analysis_in =
+        Hashtbl.of_seq
+          (LabelMap.to_seq F.successors
+          |> Seq.map (fun (l, _) ->
+              (l, if Set.Poly.mem l F.initials then L.initial else L.bottom)))
+      in
       (* STEP 2: iterate *)
-      while Stack.length workstack <> 0 do
-        let l, l' = Stack.pop workstack in
-        let old_analysis_in_l' = Hashtbl.find analysis_in l' in
+      while not (Int.Set.is_empty !worklist) do
+        let earliest = Int.Set.min_elt !worklist in
+        worklist := Int.Set.remove earliest !worklist;
+        let l = labels.(earliest) in
         let new_analysis_in_l' =
           T.transfer_function l (Hashtbl.find analysis_in l) in
-        if not (L.leq new_analysis_in_l' old_analysis_in_l') then
-          let () =
-            Hashtbl.add analysis_in ~key:l'
-              ~data:(L.lub old_analysis_in_l' new_analysis_in_l') in
-          Set.Poly.iter (LabelMap.find l' F.successors) ~f:(fun l'' ->
-              Stack.push (l', l'') workstack)
+        Set.Poly.iter (LabelMap.find l F.successors) ~f:(fun l' ->
+            let old_analysis_in_l' = Hashtbl.find analysis_in l' in
+            if not (L.leq new_analysis_in_l' old_analysis_in_l') then (
+              Hashtbl.add analysis_in ~key:l'
+                ~data:(L.lub old_analysis_in_l' new_analysis_in_l');
+              let successor_idx = LabelMap.find l' positions in
+              worklist := Int.Set.add successor_idx !worklist))
       done;
       (* STEP 3: present final results *)
       let analysis_in_out =
@@ -1133,5 +1161,5 @@ module Tests = struct
       (!calls - LabelMap.cardinal F.successors)
       (Set.Poly.cardinal last.exit);
     [%expect
-      {| nodes: 61, transfer calls during iteration: 2400, facts at exit: 61 |}]
+      {| nodes: 61, transfer calls during iteration: 61, facts at exit: 61 |}]
 end

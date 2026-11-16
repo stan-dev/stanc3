@@ -384,7 +384,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
       stan::model::assign(a, inline_sign_fix_return4__,
         "assigning variable a");
       out__.write(lcm9__);
-      out__.write(a);
+      out__.write(inline_sign_fix_return4__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
