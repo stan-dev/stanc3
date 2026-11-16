@@ -4,7 +4,7 @@ functions {
   }
 }
 parameters {
-  @baz(1, true, int) matrix[3,3] A;
+  @baz(1, true, int, "blah") matrix[3,3] A;
 }
 
 generated quantities {

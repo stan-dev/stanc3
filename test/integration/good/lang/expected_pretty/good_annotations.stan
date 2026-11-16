@@ -13,7 +13,7 @@ functions {
   }
 }
 parameters {
-  @baz(1, true, int) matrix[3, 3] A;
+  @baz(1, true, int, "blah") matrix[3, 3] A;
 }
 generated quantities {
   /* comment in an odd place */
@@ -42,8 +42,8 @@ warning: Unknown annotation '@biz'.
 warning: Unknown annotation '@baz'.
     ┌─ ../good_annotations.stan:7:3
   6 │  parameters {
-  7 │    @baz(1, true, int) matrix[3,3] A;
-    │    ^^^^^^^^^^^^^^^^^^ Unknown annotation.
+  7 │    @baz(1, true, int, "blah") matrix[3,3] A;
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation.
   8 │  }
     = This will be ignored by the compiler.
 warning: Unknown annotation '@bar'.

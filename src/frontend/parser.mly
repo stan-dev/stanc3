@@ -349,7 +349,7 @@ annotation_arg:
     | s = INTNUMERAL
     | s = REALNUMERAL
     | s = DOTNUMERAL
-    | s = IMAGNUMERAL
+    | s = string_literal
     { s }
   | TRUNCATE { "T" }
   | r = reserved_word { fst3 r }
