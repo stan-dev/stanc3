@@ -136,10 +136,7 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
           DUMMY_VAR__);
       current_statement__ = 5;
       for (int g = 1; g <= num_groups; ++g) {
-        int s;
-        current_statement__ = 3;
-        s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-              stan::model::index_uni(g));
+        int s = std::numeric_limits<int>::min();
       }
       current_statement__ = 6;
       lp_accum__.add(stan::math::sum(log_lik));
@@ -193,10 +190,7 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
                                                               )));
       current_statement__ = 5;
       for (int g = 1; g <= num_groups; ++g) {
-        int s;
-        current_statement__ = 3;
-        s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-              stan::model::index_uni(g));
+        int s = std::numeric_limits<int>::min();
       }
       current_statement__ = 6;
       lp_accum__.add(stan::math::sum(log_lik));

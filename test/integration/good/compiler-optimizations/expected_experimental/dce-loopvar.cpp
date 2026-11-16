@@ -128,12 +128,10 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm14__;
-      int lcm13__;
-      int lcm12__;
-      int lcm11__;
       int lcm10__;
-      double lcm9__;
+      int lcm9__;
+      int lcm8__;
+      double lcm7__;
       {
         current_statement__ = 1;
         stan::math::validate_non_negative_index("log_lik", "num_groups",
@@ -143,23 +141,17 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 5;
         if (stan::math::logical_gte(num_groups, 1)) {
-          int s;
-          current_statement__ = 3;
-          s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-                stan::model::index_uni(1));
+          int s = std::numeric_limits<int>::min();
           for (int g = 2; g <= num_groups; ++g) {
-            int s;
-            current_statement__ = 3;
-            s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-                  stan::model::index_uni(g));
+            int s = std::numeric_limits<int>::min();
           }
         }
         current_statement__ = 6;
         lp_accum__.add(stan::math::sum(log_lik));
         current_statement__ = 11;
         if (stan::math::logical_gte(num_comp, 1)) {
-          lcm12__ = stan::math::logical_gte(num_strata, 1);
-          if (lcm12__) {
+          lcm10__ = stan::math::logical_gte(num_strata, 1);
+          if (lcm10__) {
             current_statement__ = 7;
             if (pstream__) {
               stan::math::stan_print(pstream__, 1);
@@ -175,7 +167,7 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
           }
           for (int j = 2; j <= num_comp; ++j) {
             current_statement__ = 9;
-            if (lcm12__) {
+            if (lcm10__) {
               current_statement__ = 7;
               if (pstream__) {
                 stan::math::stan_print(pstream__, 1);
@@ -222,8 +214,6 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm8__;
-      int lcm7__;
       int lcm6__;
       int lcm5__;
       int lcm4__;
@@ -237,15 +227,9 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 5;
         if (stan::math::logical_gte(num_groups, 1)) {
-          int s;
-          current_statement__ = 3;
-          s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-                stan::model::index_uni(1));
+          int s = std::numeric_limits<int>::min();
           for (int g = 2; g <= num_groups; ++g) {
-            int s;
-            current_statement__ = 3;
-            s = stan::model::rvalue(group_stratum_cid, "group_stratum_cid",
-                  stan::model::index_uni(g));
+            int s = std::numeric_limits<int>::min();
           }
         }
         current_statement__ = 6;
