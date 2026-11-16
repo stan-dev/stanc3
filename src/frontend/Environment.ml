@@ -1,28 +1,8 @@
 open Std
 open Middle
 
-type originblock =
-  | MathLibrary
-  | Functions
-  | Data
-  | TData
-  | Param
-  | TParam
-  | Model
-  | GQuant
-
-let block_name = function
-  | MathLibrary -> "Stan Math Library"
-  | Functions -> "functions block"
-  | Data -> "data block"
-  | TData -> "transformed data block"
-  | Param -> "parameters block"
-  | TParam -> "transformed parameters block"
-  | Model -> "model block"
-  | GQuant -> "generated quantities block"
-
 type varinfo =
-  {origin: originblock; global: bool; readonly: bool; location: Location_span.t}
+  {origin: Block.t; global: bool; readonly: bool; location: Location_span.t}
 
 type info =
   { type_: UnsizedType.t

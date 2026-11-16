@@ -22,7 +22,7 @@ type other_output =
 val version : string
 
 val stan2mir :
-     ?allowed_annotations:Annotations.annotation_classifier
+     ?allowed_annotations:Middle.Annotation.annotation_classifier
   -> string
   -> [`Code of string | `File of string]
   -> Flags.t

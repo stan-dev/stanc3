@@ -36,6 +36,18 @@ let needs_higher_order_autodiff fn =
 (* model name - don't love this here *)
 let model_name = ref ""
 
+let classify_annotations : Middle.Annotation.annotation_classifier ref =
+  ref (fun _ _ _ _ ~is_global:_ -> `Unknown)
+
+let verify_decl_annotations anns ty origin is_global =
+  List.iter
+    ~f:(fun (a : Middle.Annotation.t) ->
+      match !classify_annotations a.name a.args ty origin ~is_global with
+      | `Fine -> ()
+      | `Unknown -> add_warning (Warnings.unknown_annotation (a.loc, a.name))
+      | `Wrong fmt -> add_warning (Warnings.unsupported_annotation (a.loc, fmt)))
+    anns
+
 type function_indicator =
   | NotInFunction
   | NonReturning of Fun_kind.suffix
@@ -44,7 +56,7 @@ type function_indicator =
 (* Record structure holding flags and other markers about context to be used for
    error reporting. *)
 type context_flags_record =
-  { current_block: Env.originblock
+  { current_block: Block.t
   ; in_toplevel_decl: bool
   ; containing_function: function_indicator
   ; loop_depth: int }
@@ -80,7 +92,7 @@ let rec calculate_autodifftype cf origin ut =
   match (origin, ut) with
   | _, UTuple ts ->
       UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
-  | Env.(Param | TParam | Model | Functions), _
+  | Block.(Param | TParam | Model | Functions), _
     when not (UnsizedType.is_discrete_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _, _ -> DataOnly
@@ -2005,6 +2017,7 @@ and check_var_decl loc cf tenv sized_ty trans
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans;
   verify_transformed_param_ty loc cf is_global unsized_type;
+  verify_decl_annotations annotations unsized_type cf.current_block is_global;
   let stmt =
     VarDecl
       { decl_type= checked_type
@@ -2060,8 +2073,18 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
 
 and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
     annotations =
-  let is_extern Middle.Annotation.{name; args; _} =
-    name = "extern" && args = [] in
+  let is_extern =
+    match
+      (* Somewhat hacky: because @extern turns _off_ a piece of typechecking, it
+         is difficult to modularize *)
+      !classify_annotations "extern" []
+        (UnsizedType.UFun
+           (arg_tys, rt, Fun_kind.suffix_from_name id.name, Mem_pattern.AoS))
+        Block.Functions ~is_global:true
+    with
+    | `Fine ->
+        fun Middle.Annotation.{name; args; _} -> name = "extern" && args = []
+    | _ -> Fun.const false in
   match body with
   | {stmt= Skip; _} -> (
       match exists_matching_fn_declared tenv id arg_tys rt with
@@ -2147,7 +2170,7 @@ and check_fundef loc cf tenv return_ty id args annotations body =
   let arg_types_internal =
     List.map
       ~f:(function
-        | UnsizedType.DataOnly, ut -> (Env.Data, ut)
+        | UnsizedType.DataOnly, ut -> (Block.Data, ut)
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
             Common.ICE.internal_error
@@ -2171,6 +2194,10 @@ and check_fundef loc cf tenv return_ty id args annotations body =
             Returning (kind, r)) } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body;
+  verify_decl_annotations annotations
+    (UnsizedType.UFun
+       (arg_types, return_ty, Fun_kind.suffix_from_name id.name, Mem_pattern.AoS))
+    cf.current_block true;
   let stmt =
     FunDef
       { returntype= return_ty
@@ -2307,6 +2334,9 @@ let check_program_exn ~allow_undefined_functions
   verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
-let check_program ?(allow_undefined_functions = false) ast =
+let check_program ?(allow_undefined_functions = false)
+    ?(allowed_annotations : Annotation.annotation_classifier =
+      fun _ _ _ _ ~is_global:_ -> `Unknown) ast =
+  classify_annotations := allowed_annotations;
   try Result.Ok (check_program_exn ~allow_undefined_functions ast)
   with TypecheckerException err -> Result.Error err

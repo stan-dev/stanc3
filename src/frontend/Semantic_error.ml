@@ -39,7 +39,7 @@ let variable_declared ?block loc =
   | None -> context loc "Variable was declared here."
   | Some block ->
       context loc "Variable was declared in %a here."
-        (Fmt.of_to_string Environment.block_name)
+        (Fmt.of_to_string Block.block_name)
         block
 
 let functions_considered errors =
@@ -816,8 +816,7 @@ end
 module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string * Location_span.t option
-    | CannotAssignToGlobal of
-        string * Environment.originblock * Location_span.t option
+    | CannotAssignToGlobal of string * Block.t * Location_span.t option
     | CannotAssignFunction of string * UnsizedType.t
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of
@@ -833,7 +832,7 @@ module StatementError = struct
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
     | VoidReturnOutsideNonReturningFn
-    | NonDataVariableSizeDecl of Environment.originblock * Location_span.t
+    | NonDataVariableSizeDecl of Block.t * Location_span.t
     | NonIntBounds
     | ComplexTransform
     | IntegerParameter of bool

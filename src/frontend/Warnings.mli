@@ -25,10 +25,7 @@ val lkj_cov_deprecation : Location_span.t -> t
 val function_deprecation : Location_span.t -> string -> int * int -> string -> t
 val ode_deprecation : Location_span.t -> string -> int * int -> string -> t
 val unknown_annotation : Location_span.t * string -> t
-
-val unsupported_annotation :
-  Location_span.t * string * Middle.UnsizedType.t -> t
-
+val unsupported_annotation : Location_span.t * unit Fmt.t -> t
 val pedantic_warning : Location_span.t * string -> t
 
 val optimization_hazard :

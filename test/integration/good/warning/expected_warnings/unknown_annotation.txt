@@ -6,7 +6,7 @@ warning: Unknown annotation '@not_a_real_annotation'.
     │    ^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation.
   3 │  
     = This will be ignored by the compiler.
-warning: Unsupported annotation '@extern' for type real.
+warning: Annotation '@extern' can only be applied to functions, but was applied here to type real.
     ┌─ ../unknown_annotation.stan:5:3
   4 │  
   5 │    @extern real theta;

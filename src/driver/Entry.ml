@@ -49,9 +49,9 @@ let debug_output_mir output mir = function
   | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir))
 
 let stan2mir
-    ?(allowed_annotations : Frontend.Annotations.annotation_classifier =
-      fun _ _ _ -> `Unknown) model_name model (flags : Flags.t)
-    (output : other_output -> unit) : mir_compilation_result =
+    ?(allowed_annotations : Middle.Annotation.annotation_classifier option)
+    model_name model (flags : Flags.t) (output : other_output -> unit) :
+    mir_compilation_result =
   let open Result.Syntax in
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
@@ -60,14 +60,11 @@ let stan2mir
     else Parse.parse_program model in
   output (Warnings parser_warnings);
   let* ast in
-  let unused_annotations =
-    Frontend.Annotations.find_unrecognized allowed_annotations ast in
-  output (Warnings unused_annotations);
   if flags.debug_settings.print_ast then
     output (DebugOutput (fmt_sexp (Ast.sexp_of_untyped_program ast)));
   let* typed_ast, type_warnings =
-    Typechecker.check_program ~allow_undefined_functions:flags.allow_undefined
-      ast
+    Typechecker.check_program ?allowed_annotations
+      ~allow_undefined_functions:flags.allow_undefined ast
     |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
   if flags.debug_settings.print_typed_ast then
     output (DebugOutput (fmt_sexp (Ast.sexp_of_typed_program typed_ast)));
