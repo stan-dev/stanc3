@@ -1081,3 +1081,57 @@ let minimal_variables_mfp
       (module Lattice)
       (module Transfer) in
   Mf.mfp ()
+
+module Tests = struct
+  (* A chain of [n] diamonds: 1 -> {a, b} -> join -> {a, b} -> join ... *)
+  let diamond_chain n =
+    let a i = (3 * i) + 2 and b i = (3 * i) + 3 and join i = (3 * i) + 4 in
+    let edges =
+      (1, [a 0; b 0])
+      :: List.concat_map (List.range 0 n) ~f:(fun i ->
+          [ (a i, [join i]); (b i, [join i])
+          ; (join i, if i = n - 1 then [] else [a (i + 1); b (i + 1)]) ]) in
+    (module struct
+      type labels = int
+
+      let initials = Set.Poly.singleton 1
+
+      let successors =
+        LabelMap.of_list
+          (List.map edges ~f:(fun (l, succs) -> (l, Set.Poly.of_list succs)))
+    end : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+
+  let%expect_test "mfp visits each node of an acyclic graph once" =
+    let n = 20 in
+    let (module F) = diamond_chain n in
+    let calls = ref 0 in
+    let (module Lattice) =
+      powerset_lattice
+        (module struct
+          type vals = int
+
+          let initial = Set.Poly.empty
+        end) in
+    let (module Transfer) =
+      (module struct
+        type labels = int
+        type properties = int Set.Poly.t
+
+        let transfer_function l p =
+          incr calls;
+          Set.Poly.add l p
+      end : Monotone_framework_sigs.TRANSFER_FUNCTION
+        with type labels = int
+         and type properties = int Set.Poly.t) in
+    let (module Mf) =
+      monotone_framework (module F) (module Lattice) (module Transfer) in
+    let result = Mf.mfp () in
+    let last = LabelMap.find ((3 * (n - 1)) + 4) result in
+    Fmt.pr "nodes: %d, transfer calls during iteration: %d, facts at exit: %d@."
+      (LabelMap.cardinal F.successors)
+      (!calls - LabelMap.cardinal F.successors)
+      (Set.Poly.cardinal last.exit);
+    [%expect
+      {| nodes: 61, transfer calls during iteration: 2400, facts at exit: 61 |}]
+end
