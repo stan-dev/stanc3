@@ -45,10 +45,7 @@ val is_overwritten : is_same_iteration:bool -> path -> path -> bool
 type t
 
 val test_dependence : label list * path -> label list * path -> t
-val is_writer_possibly_first : is_writer_first:bool -> t -> bool
-
-val is_writer_possibly_first_at_loop :
-  loop_id:label -> is_writer_first:bool -> t -> bool
-
-val known_distance : loop_id:label -> t -> int option
-val pp : loop_name:(label -> string) -> t Fmt.t
+val is_writer_possibly_first : bool -> t -> bool
+val is_writer_possibly_first_at_loop : label -> bool -> t -> bool
+val known_distance : label -> t -> int option
+val pp : (label -> string) -> t Fmt.t

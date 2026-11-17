@@ -42,25 +42,22 @@ let print_verdicts ~var prog =
                             (writer.loop_ids, write.path)
                             (reader.loop_ids, read.path) in
                         let is_reader_possibly_first =
-                          Dependence.is_writer_possibly_first
-                            ~is_writer_first:false
+                          Dependence.is_writer_possibly_first false
                             (Dependence.test_dependence
                                (reader.loop_ids, read.path)
                                (writer.loop_ids, write.path)) in
                         let is_overlap_possible =
-                          Dependence.is_writer_possibly_first
-                            ~is_writer_first:true dependence
+                          Dependence.is_writer_possibly_first true dependence
                           || is_reader_possibly_first in
                         let outcome =
                           if not is_overlap_possible then ""
                           else if
                             Dependence.is_writer_possibly_first
-                              ~is_writer_first:(writer_id < reader_id)
-                              dependence
+                              (writer_id < reader_id) dependence
                           then "  flows"
                           else "  cannot flow" in
                         Fmt.pr "  %d %a --> %a: %a%s@." writer_id pp_access
-                          write pp_access read (Dependence.pp ~loop_name)
+                          write pp_access read (Dependence.pp loop_name)
                           dependence outcome)))))
 
 let%expect_test "Comparing write paths" =

@@ -473,15 +473,14 @@ module Direction_set = struct
            ; Option.some_if directions.is_writer_after ">" ])
 end
 
-type subscript_constraint =
-  | Disjoint
-  | Distance of {loop_id: label; distance: int}
-  | Directions of {loop_id: label; directions: Direction_set.t}
-  | No_information
+type loop_constraint = Distance of int | Directions of Direction_set.t
+type t = Independent | Possible_overlap of (label * loop_constraint) list
+
+let no_information : t = Possible_overlap []
 
 let test_constant_subscripts (write : Access_function.affine)
-    (read : Access_function.affine) : subscript_constraint =
-  if write.constant = read.constant then No_information else Disjoint
+    (read : Access_function.affine) : t =
+  if write.constant = read.constant then no_information else Independent
 
 let is_longer_than_loop (loop : Access_function.loop) (distance : int) : bool =
   match (loop.lower, loop.upper) with
@@ -491,19 +490,17 @@ let is_longer_than_loop (loop : Access_function.loop) (distance : int) : bool =
 let test_equal_stride_subscripts
     ({key= loop; coefficient= stride} :
       Access_function.loop Access_function.term)
-    (write : Access_function.affine) (read : Access_function.affine) :
-    subscript_constraint =
+    (write : Access_function.affine) (read : Access_function.affine) : t =
   let difference = write.constant - read.constant in
   let distance = difference / stride in
   if difference mod stride <> 0 || is_longer_than_loop loop distance then
-    Disjoint
-  else Distance {loop_id= loop.loop_id; distance}
+    Independent
+  else Possible_overlap [(loop.loop_id, Distance distance)]
 
 let test_weak_zero_subscripts ~(is_writer_varying : bool)
     ({key= loop; coefficient= stride} :
       Access_function.loop Access_function.term)
-    (varying : Access_function.affine) (fixed : Access_function.affine) :
-    subscript_constraint =
+    (varying : Access_function.affine) (fixed : Access_function.affine) : t =
   let is_before_bound bound iteration =
     match bound with Some bound -> iteration < bound | None -> false in
   let is_after_bound bound iteration =
@@ -514,36 +511,36 @@ let test_weak_zero_subscripts ~(is_writer_varying : bool)
     difference mod stride <> 0
     || is_before_bound loop.lower iteration
     || is_after_bound loop.upper iteration
-  then Disjoint
+  then Independent
   else
     let is_earlier_possible = not (is_before_bound loop.lower (iteration - 1)) in
     let is_later_possible = not (is_after_bound loop.upper (iteration + 1)) in
-    Directions
-      { loop_id= loop.loop_id
-      ; directions=
-          { is_writer_before=
-              (if is_writer_varying then is_later_possible
-               else is_earlier_possible)
-          ; is_same_iteration= true
-          ; is_writer_after=
-              (if is_writer_varying then is_earlier_possible
-               else is_later_possible) } }
+    Possible_overlap
+      [ ( loop.loop_id
+        , Directions
+            { is_writer_before=
+                (if is_writer_varying then is_later_possible
+                 else is_earlier_possible)
+            ; is_same_iteration= true
+            ; is_writer_after=
+                (if is_writer_varying then is_earlier_possible
+                 else is_later_possible) } ) ]
 
 let rec greatest_common_divisor (left : int) (right : int) : int =
   if right = 0 then abs left else greatest_common_divisor right (left mod right)
 
 let test_gcd_subscripts (write : Access_function.affine)
-    (read : Access_function.affine) : subscript_constraint =
+    (read : Access_function.affine) : t =
   let divisor =
     List.fold_left (write.loop_terms @ read.loop_terms) ~init:0
       ~f:(fun divisor (term : Access_function.loop Access_function.term) ->
         greatest_common_divisor divisor term.coefficient) in
   if divisor > 0 && (read.constant - write.constant) mod divisor <> 0 then
-    Disjoint
-  else No_information
+    Independent
+  else no_information
 
 let test_subscripts (write : Access_function.t Index.t)
-    (read : Access_function.t Index.t) : subscript_constraint =
+    (read : Access_function.t Index.t) : t =
   match (write, read) with
   | Single {view= Some write_view; _}, Single {view= Some read_view; _}
     when Access_function.has_same_invariant_terms write_view read_view -> (
@@ -560,120 +557,136 @@ let test_subscripts (write : Access_function.t Index.t)
           test_weak_zero_subscripts ~is_writer_varying:false read_term read_view
             write_view
       | _, _ -> test_gcd_subscripts write_view read_view)
-  | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> No_information
+  | (Single _ | All | Upfrom _ | Between _ | MultiIndex _), _ -> no_information
 
 let test_steps (write : Access_function.t step) (read : Access_function.t step)
-    : subscript_constraint =
+    : t =
   match (write, read) with
   | Field write_field, Field read_field ->
-      if write_field = read_field then No_information else Disjoint
+      if write_field = read_field then no_information else Independent
   | Subscript write_index, Subscript read_index ->
       test_subscripts write_index read_index
-  | Field _, Subscript _ | Subscript _, Field _ -> No_information
+  | Field _, Subscript _ | Subscript _, Field _ -> no_information
 
-type loop_relation = {directions: Direction_set.t; distance: int option}
-type t = Independent | Possible_overlap of (label * loop_relation) list
+let directions_of (loop_constraint : loop_constraint) : Direction_set.t =
+  match loop_constraint with
+  | Distance distance -> Direction_set.of_distance distance
+  | Directions directions -> directions
 
-let constrain_relation ~(loop_id : label) (constraint_ : loop_relation)
-    ((common_loop_id, relation) : label * loop_relation) :
-    (label * loop_relation) option =
+let inter_constraints (first : loop_constraint) (second : loop_constraint) :
+    loop_constraint option =
   let directions =
-    Direction_set.inter relation.directions constraint_.directions in
-  match (relation.distance, constraint_.distance) with
-  | _ when common_loop_id <> loop_id -> Some (common_loop_id, relation)
-  | Some known, Some distance when known <> distance -> None
+    Direction_set.inter (directions_of first) (directions_of second) in
+  match (first, second) with
   | _ when Direction_set.is_empty directions -> None
-  | known, distance ->
-      Some
-        ( common_loop_id
-        , {directions; distance= Option.first_some known distance} )
+  | Distance first_distance, Distance second_distance
+    when first_distance <> second_distance ->
+      None
+  | Distance _, _ -> Some first
+  | Directions _, Distance _ -> Some second
+  | Directions _, Directions _ -> Some (Directions directions)
 
-let constrain_loop (relations : (label * loop_relation) list) ~(loop_id : label)
-    (constraint_ : loop_relation) : t =
-  match
-    Option.all (List.map relations ~f:(constrain_relation ~loop_id constraint_))
-  with
-  | Some constrained_relations -> Possible_overlap constrained_relations
-  | None -> Independent
+let constrain_relation ((loop_id, loop_constraint) : label * loop_constraint)
+    ((common_loop_id, relation) : label * loop_constraint) :
+    (label * loop_constraint) option =
+  if common_loop_id <> loop_id then Some (common_loop_id, relation)
+  else
+    Option.map (inter_constraints relation loop_constraint)
+      ~f:(fun constrained -> (common_loop_id, constrained))
+
+let constrain (dependence : t) (loop_constraint : label * loop_constraint) : t =
+  match dependence with
+  | Independent -> Independent
+  | Possible_overlap relations -> (
+      match
+        Option.all (List.map relations ~f:(constrain_relation loop_constraint))
+      with
+      | Some constrained_relations -> Possible_overlap constrained_relations
+      | None -> Independent)
+
+let inter (dependence : t) (step_dependence : t) : t =
+  match step_dependence with
+  | Independent -> Independent
+  | Possible_overlap loop_constraints ->
+      List.fold_left loop_constraints ~init:dependence ~f:constrain
 
 let test_dependence ((writer_loop_ids, write_path) : label list * path)
     ((reader_loop_ids, read_path) : label list * path) : t =
   let common_loop_ids =
     List.filter writer_loop_ids ~f:(fun loop_id ->
         List.mem loop_id ~set:reader_loop_ids) in
-  let no_information =
-    List.map common_loop_ids ~f:(fun loop_id ->
-        (loop_id, {directions= Direction_set.all; distance= None})) in
-  if List.compare_lengths write_path read_path <> 0 then
-    Possible_overlap no_information
+  let unconstrained =
+    Possible_overlap
+      (List.map common_loop_ids ~f:(fun loop_id ->
+           (loop_id, Directions Direction_set.all))) in
+  if List.compare_lengths write_path read_path <> 0 then unconstrained
   else
-    List.fold_left2 write_path read_path ~init:(Possible_overlap no_information)
+    List.fold_left2 write_path read_path ~init:unconstrained
       ~f:(fun dependence write_step read_step ->
-        match dependence with
-        | Independent -> Independent
-        | Possible_overlap relations -> (
-            match test_steps write_step read_step with
-            | Disjoint -> Independent
-            | No_information -> dependence
-            | Distance {loop_id; distance} ->
-                constrain_loop relations ~loop_id
-                  { directions= Direction_set.of_distance distance
-                  ; distance= Some distance }
-            | Directions {loop_id; directions} ->
-                constrain_loop relations ~loop_id {directions; distance= None}))
+        inter dependence (test_steps write_step read_step))
 
-let rec is_writer_first_possible ~(is_writer_first : bool)
-    (relations : (label * loop_relation) list) : bool =
+let rec is_writer_first_possible (is_writer_first : bool)
+    (relations : (label * loop_constraint) list) : bool =
   match relations with
   | [] -> is_writer_first
-  | (_, {directions; _}) :: inner_relations ->
+  | (_, loop_constraint) :: inner_relations ->
+      let directions = directions_of loop_constraint in
       directions.is_writer_before
       || directions.is_same_iteration
-         && is_writer_first_possible ~is_writer_first inner_relations
+         && is_writer_first_possible is_writer_first inner_relations
 
-let rec is_writer_first_possible_at_loop ~(loop_id : label)
-    ~(is_writer_first : bool) (relations : (label * loop_relation) list) : bool
+let rec is_writer_first_possible_at_loop (loop_id : label)
+    (is_writer_first : bool) (relations : (label * loop_constraint) list) : bool
     =
   match relations with
   | [] -> false
   | (common_loop_id, _) :: _ when common_loop_id = loop_id ->
-      is_writer_first_possible ~is_writer_first relations
-  | (_, {directions; _}) :: inner_relations ->
-      directions.is_same_iteration
-      && is_writer_first_possible_at_loop ~loop_id ~is_writer_first
+      is_writer_first_possible is_writer_first relations
+  | (_, loop_constraint) :: inner_relations ->
+      (directions_of loop_constraint).is_same_iteration
+      && is_writer_first_possible_at_loop loop_id is_writer_first
            inner_relations
 
-let is_writer_possibly_first ~(is_writer_first : bool) (dependence : t) : bool =
+let if_overlap (dependence : t) f : bool =
   match dependence with
   | Independent -> false
-  | Possible_overlap relations ->
-      is_writer_first_possible ~is_writer_first relations
+  | Possible_overlap relations -> f relations
 
-let is_writer_possibly_first_at_loop ~(loop_id : label)
-    ~(is_writer_first : bool) (dependence : t) : bool =
-  match dependence with
-  | Independent -> false
-  | Possible_overlap relations ->
-      is_writer_first_possible_at_loop ~loop_id ~is_writer_first relations
+let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
+  if_overlap dependence (is_writer_first_possible is_writer_first)
 
-let known_distance ~(loop_id : label) (dependence : t) : int option =
+let is_writer_possibly_first_at_loop (loop_id : label) (is_writer_first : bool)
+    (dependence : t) : bool =
+  if_overlap dependence
+    (is_writer_first_possible_at_loop loop_id is_writer_first)
+
+let overlap_opt_map (dependence : t) f : 'a option =
   match dependence with
   | Independent -> None
-  | Possible_overlap relations ->
-      Option.bind (List.assoc_opt loop_id relations) ~f:(fun relation ->
-          relation.distance)
+  | Possible_overlap relations -> f relations
 
-let pp_relation ~(loop_name : label -> string) ppf
-    ((loop_id, {directions; distance}) : label * loop_relation) =
-  match distance with
-  | Some distance -> Fmt.pf ppf "[%s:%d]" (loop_name loop_id) distance
-  | None -> Fmt.pf ppf "[%s:%a]" (loop_name loop_id) Direction_set.pp directions
+let distance_at (loop_id : label) (relations : (label * loop_constraint) list) :
+    int option =
+  match List.assoc_opt loop_id relations with
+  | Some (Distance distance) -> Some distance
+  | Some (Directions _) | None -> None
 
-let is_unconstrained ((_, {directions; distance}) : label * loop_relation) :
-    bool =
-  Option.is_none distance && Direction_set.is_all directions
+let known_distance (loop_id : label) (dependence : t) : int option =
+  overlap_opt_map dependence (distance_at loop_id)
 
-let pp ~(loop_name : label -> string) ppf (dependence : t) =
+let pp_relation (loop_name : label -> string) ppf
+    ((loop_id, loop_constraint) : label * loop_constraint) =
+  match loop_constraint with
+  | Distance distance -> Fmt.pf ppf "[%s:%d]" (loop_name loop_id) distance
+  | Directions directions ->
+      Fmt.pf ppf "[%s:%a]" (loop_name loop_id) Direction_set.pp directions
+
+let is_unconstrained ((_, loop_constraint) : label * loop_constraint) : bool =
+  match loop_constraint with
+  | Distance _ -> false
+  | Directions directions -> Direction_set.is_all directions
+
+let pp (loop_name : label -> string) ppf (dependence : t) =
   match dependence with
   | Independent -> Fmt.string ppf "independent"
   | Possible_overlap relations when List.for_all relations ~f:is_unconstrained
@@ -681,5 +694,5 @@ let pp ~(loop_name : label -> string) ppf (dependence : t) =
       Fmt.string ppf "unknown"
   | Possible_overlap relations ->
       Fmt.pf ppf "distances %a"
-        Fmt.(list ~sep:nop (pp_relation ~loop_name))
+        Fmt.(list ~sep:nop (pp_relation loop_name))
         relations

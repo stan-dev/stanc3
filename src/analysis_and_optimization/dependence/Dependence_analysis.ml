@@ -102,8 +102,7 @@ let compute_reaching_definitions (mir : Program.Typed.t)
 let is_flow_dependence (writer_id : label) (definition : reaching_definition)
     (statement : stmt_info) (read : access) : bool =
   String.equal definition.access.var read.var
-  && Dependence.is_writer_possibly_first
-       ~is_writer_first:(writer_id < statement.id)
+  && Dependence.is_writer_possibly_first (writer_id < statement.id)
        (Dependence.test_dependence
           (definition.loop_ids, definition.access.path)
           (statement.loop_ids, read.path))

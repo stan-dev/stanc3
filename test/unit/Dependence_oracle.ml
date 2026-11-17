@@ -53,9 +53,9 @@ let paths_of_x (statements : stmt_info LabelMap.t) kind :
 
 let is_overlap_possible (write : label list * Dependence.path)
     (read : label list * Dependence.path) : bool =
-  Dependence.is_writer_possibly_first ~is_writer_first:true
+  Dependence.is_writer_possibly_first true
     (Dependence.test_dependence write read)
-  || Dependence.is_writer_possibly_first ~is_writer_first:false
+  || Dependence.is_writer_possibly_first false
        (Dependence.test_dependence read write)
 
 let violations ~lower ~upper case (write : label list * Dependence.path)
@@ -65,7 +65,7 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
   let forward = Dependence.test_dependence write read in
   let backward = Dependence.test_dependence read write in
   let has_distance dependence ~f =
-    match Dependence.known_distance ~loop_id dependence with
+    match Dependence.known_distance loop_id dependence with
     | None -> true
     | Some distance ->
         List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
@@ -75,12 +75,12 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
       , has_distance forward ~f:(fun write_iteration read_iteration ->
             read_iteration - write_iteration) )
     ; ( "order excludes an overlap in the same iteration"
-      , Dependence.is_writer_possibly_first ~is_writer_first:true forward
+      , Dependence.is_writer_possibly_first true forward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration <= read_iteration)) )
     ; ( "order excludes an overlap in a later iteration"
-      , Dependence.is_writer_possibly_first ~is_writer_first:false forward
+      , Dependence.is_writer_possibly_first false forward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration < read_iteration)) )
@@ -88,7 +88,7 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
       , has_distance backward ~f:(fun write_iteration read_iteration ->
             write_iteration - read_iteration) )
     ; ( "reversed order excludes an overlap"
-      , Dependence.is_writer_possibly_first ~is_writer_first:false backward
+      , Dependence.is_writer_possibly_first false backward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   read_iteration < write_iteration)) ) ] in
@@ -123,15 +123,14 @@ let run_bounds ?upper_text (lower, upper) =
             + count
                 (Option.is_some
                    (Dependence.known_distance
-                      ~loop_id:(List.hd_exn (fst write))
+                      (List.hd_exn (fst write))
                       dependence))
         ; refuted_order=
             tally.refuted_order
             + count
                 (is_overlap_possible
-                && not
-                     (Dependence.is_writer_possibly_first ~is_writer_first:true
-                        dependence)) }) in
+                && not (Dependence.is_writer_possibly_first true dependence)) })
+  in
   Fmt.pr
     "%d:%s cases %d, disjoint %d, proven independent %d, with distance %d, \
      writer never first %d@."
@@ -214,7 +213,7 @@ let nest_violations case (write : label list * Dependence.path)
     | _ -> failwith "expected two loops" in
   let dependence = Dependence.test_dependence write read in
   let has_distance ~loop_id ~f =
-    match Dependence.known_distance ~loop_id dependence with
+    match Dependence.known_distance loop_id dependence with
     | None -> true
     | Some distance ->
         List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
@@ -225,32 +224,29 @@ let nest_violations case (write : label list * Dependence.path)
     [ ("outer distance", has_distance ~loop_id:outer_loop_id ~f:fst)
     ; ("inner distance", has_distance ~loop_id:inner_loop_id ~f:snd)
     ; ( "order, writer first in the body"
-      , is_implied
-          (Dependence.is_writer_possibly_first ~is_writer_first:true dependence)
+      , is_implied (Dependence.is_writer_possibly_first true dependence)
           ~by:(fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration <= 0) )
     ; ( "order, reader first in the body"
-      , is_implied
-          (Dependence.is_writer_possibly_first ~is_writer_first:false dependence)
+      , is_implied (Dependence.is_writer_possibly_first false dependence)
           ~by:(fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration < 0) )
     ; ( "inner loop order, writer first in the body"
       , is_implied
-          (Dependence.is_writer_possibly_first_at_loop ~loop_id:inner_loop_id
-             ~is_writer_first:true dependence)
+          (Dependence.is_writer_possibly_first_at_loop inner_loop_id true
+             dependence)
           ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
             write_outer = read_outer && write_inner <= read_inner) )
     ; ( "inner loop order, reader first in the body"
       , is_implied
-          (Dependence.is_writer_possibly_first_at_loop ~loop_id:inner_loop_id
-             ~is_writer_first:false dependence)
+          (Dependence.is_writer_possibly_first_at_loop inner_loop_id false
+             dependence)
           ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
             write_outer = read_outer && write_inner < read_inner) )
     ; ( "outer loop order"
       , is_implied
-          (Dependence.is_writer_possibly_first_at_loop ~loop_id:outer_loop_id
-             ~is_writer_first:false dependence)
-          ~by:(fun (write_iteration, read_iteration) ->
+          (Dependence.is_writer_possibly_first_at_loop outer_loop_id false
+             dependence) ~by:(fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration < 0) ) ] in
   List.filter_map checks ~f:(fun (name, is_sound) ->
       if is_sound then None else Some name)
