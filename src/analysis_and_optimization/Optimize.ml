@@ -1377,9 +1377,8 @@ let block_fixing mir =
     @param update_stmt:
       Function for updating an MIR statement given the variable set
     @param extra_variables:
-      the set of variables that are implied to be in the set by a given variable
-      in the set (usually empty, sometimes unrepresented variables like _in__
-      variables)
+      add variables that are implied to be in the set (usually empty, sometimes
+      unrepresented variables like _in__ variables)
     @param initial_variables: the initial known members of the set of variables
     @param stmt the MIR statement to optimize. *)
 let optimize_minimal_variables
@@ -1393,7 +1392,7 @@ let optimize_minimal_variables
           (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t
        -> string Set.Poly.t
        -> (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t)
-    ~(extra_variables : string -> string Set.Poly.t)
+    ~(extra_variables : string Set.Poly.t -> string Set.Poly.t)
     ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
   let rev_flowgraph, flowgraph_to_mir =
     Monotone_framework.inverse_flowgraph_of_stmt stmt in
@@ -1405,9 +1404,7 @@ let optimize_minimal_variables
       (module Circular_Fwd_Flowgraph)
       flowgraph_to_mir initial_variables gen_variables in
   let optimize_min_vars_stmt_base i stmt_pattern =
-    let variable_set =
-      let exits = (LabelMap.find i mfp_variables).exit in
-      Set.Poly.union exits (Set.Poly.union_map exits ~f:extra_variables) in
+    let variable_set = extra_variables (LabelMap.find i mfp_variables).exit in
     let stmt_val =
       Stmt.Pattern.map (update_expr variable_set) (fun x -> x) stmt_pattern
     in
@@ -1449,7 +1446,9 @@ let optimize_ad_levels (mir : Program.Typed.t) =
           Set.Poly.union (var_declarations s)
             (Set.Poly.of_list autodiffable_args)
     | _ -> global_initial_ad_variables in
-  let extra_variables v = Set.Poly.singleton (v ^ "_in__") in
+  let extra_variables variables =
+    Set.Poly.union variables (Set.Poly.map variables ~f:(fun v -> v ^ "_in__"))
+  in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
     | Stmt.Pattern.Decl ({decl_id; decl_type; _} as decl)
@@ -1509,10 +1508,13 @@ let optimize_soa (mir : Program.Typed.t) =
     map_rec_expr (Memory_patterns.modify_expr_pattern aos_exits) mod_expr in
   let modify_stmt_patt stmt_pattern variable_set =
     Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
+  let extra_variables variables =
+    if Set.Poly.is_empty variables then variables
+    else Set.Poly.union variables initial_variables in
   let transform stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
-      stmt ~extra_variables:(fun _ -> initial_variables) in
+      ~extra_variables stmt in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l
