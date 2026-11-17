@@ -664,3 +664,61 @@ let%expect_test "Predecessor graph example 5" =
     {|
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
+
+let%expect_test "Controls retain loop ancestry, branch sides and jumps" =
+  let mir =
+    Test_utils.mir_of_string
+      {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] v;
+        for (n in 1:N) {
+          if (c > 0) continue;
+          while (v[n] < 0) {
+            if (c > 1) v[n] = a;
+          }
+        }
+      }
+    |}
+  in
+  let statement_map =
+    build_statement_map
+      (fun Stmt.{pattern; _} -> pattern)
+      (fun Stmt.{meta; _} -> meta)
+      Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
+  let controls_map = build_controls statement_map in
+  print_endline "(statement, enclosing, dependencies, loops)";
+  LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
+      let controls = LabelMap.find statement_id controls_map in
+      let enclosing =
+        List.map controls.enclosing ~f:(fun {id; side} ->
+            ( id
+            , match side with
+              | None -> "loop"
+              | Some Then -> "then"
+              | Some Else -> "else" )) in
+      print_s
+        [%sexp
+          (( statement_id
+           , enclosing
+           , control_dependency_ids controls
+           , enclosing_loop_ids statement_id pattern controls )
+            : label * (label * string) list * label Set.Poly.t * label list)]);
+  [%expect
+    {|
+    (statement, enclosing, dependencies, loops)
+    (1 () () ())
+    (2 () () ())
+    (3 () () ())
+    (4 () () ())
+    (5 () () ())
+    (6 () () (6))
+    (7 ((6 loop)) (6) (6))
+    (8 ((6 loop)) (6) (6))
+    (9 ((6 loop) (8 then)) (8) (6))
+    (10 ((6 loop)) (6 9) (6 10))
+    (11 ((6 loop) (10 loop)) (9 10) (6 10))
+    (12 ((6 loop) (10 loop)) (9 10) (6 10))
+    (13 ((6 loop) (10 loop) (12 then)) (9 12) (6 10))
+    |}]

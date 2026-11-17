@@ -47,13 +47,7 @@ type cf_state =
   ; returns: label Set.Poly.t
   ; exits: label Set.Poly.t }
 
-(** Represents the control flow information at each node in the control graph,
-    where
-    - predecessors points to the nodes which could have executed before this
-      node
-    - parents points to the adjacent nodes which directly influence the
-      execution of this node *)
-type cf_edges = {predecessors: label Set.Poly.t; parents: label Set.Poly.t}
+type cf_edges = {predecessors: label Set.Poly.t; controls: controls}
 
 (** Join the state of a controlflow traversal across different branches of
     execution such as over if/else branch. *)
@@ -75,16 +69,16 @@ let is_ctrl_flow pattern =
     and the exit set of a statement. It's advantageous to build them together
     because they both rely on some of the same Break, Continue and Return
     bookkeeping. *)
-let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
+let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
-  let rec build_cf_graph_rec (cf_parent : label option)
+  let rec build_cf_graph_rec (enclosing : enclosing list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
-    (* Only control flow nodes should pass themselves down as parents *)
-    let child_cf = if is_ctrl_flow stmt then Some label else cf_parent in
-    (* This node is the parent of substatements, unless this is a Block, which
-       is visited after substatements *)
+    let child_cf =
+      match stmt with
+      | Stmt.Pattern.For _ | While _ -> enclosing @ [{id= label; side= None}]
+      | _ -> enclosing in
     let substmt_preds =
       match stmt with
       | (Block _ | Profile _) when blocks_after_body -> in_state.exits
@@ -95,7 +89,9 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       match stmt with
       | IfElse (_, then_s, else_s_opt) ->
           let then_state, after_then_map =
-            build_cf_graph_rec child_cf (child_init, in_map) then_s in
+            build_cf_graph_rec
+              (enclosing @ [{id= label; side= Some Then}])
+              (child_init, in_map) then_s in
           Option.value_map else_s_opt
             ~default:(join_cf_states then_state child_init, after_then_map)
             ~f:(fun else_s ->
@@ -104,8 +100,10 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
                  labelled nodes, so carry it through the branches instead of
                  persistently unioning two maps that share the whole prefix. *)
               let else_state, after_both_map =
-                build_cf_graph_rec child_cf (child_init, after_then_map) else_s
-              in
+                build_cf_graph_rec
+                  (enclosing @ [{id= label; side= Some Else}])
+                  (child_init, after_then_map)
+                  else_s in
               (join_cf_states then_state else_state, after_both_map))
       | _ ->
           fst
@@ -183,19 +181,17 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
           , substmt_state.returns
           , substmt_state.continues
           , Set.Poly.empty ) in
-    let cf_parents =
-      Set.Poly.union_list
-        [ Option.value_map cf_parent ~default:Set.Poly.empty
-            ~f:Set.Poly.singleton; in_state.returns; in_state.continues
-        ; extra_cf_deps ] in
+    let jump_ids =
+      Set.Poly.union_list [in_state.returns; in_state.continues; extra_cf_deps]
+    in
     ( { breaks= breaks_out
       ; continues= continues_out
       ; returns= returns_out
       ; exits= substmt_state.exits }
     , LabelMap.add substmt_map ~key:label
-        ~data:{parents= cf_parents; predecessors} ) in
+        ~data:{controls= {enclosing; jump_ids}; predecessors} ) in
   let state, edges =
-    build_cf_graph_rec None
+    build_cf_graph_rec []
       ( { breaks= Set.Poly.empty
         ; continues= Set.Poly.empty
         ; returns= Set.Poly.empty
@@ -204,16 +200,32 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       1 in
   ( state.exits
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
-  , LabelMap.map edges ~f:(fun e -> e.parents) )
+  , LabelMap.map edges ~f:(fun e -> e.controls) )
+
+let control_dependency_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t
+    =
+  match List.hd (List.rev enclosing) with
+  | Some {id; _} -> Set.Poly.add id jump_ids
+  | None -> jump_ids
+
+let enclosing_loop_ids (statement_id : label)
+    (pattern : ('e, 's) Stmt.Pattern.t) (controls : controls) : label list =
+  List.filter_map controls.enclosing ~f:(function
+    | {id; side= None} -> Some id
+    | {side= Some _; _} -> None)
+  @ match pattern with For _ | While _ -> [statement_id] | _ -> []
+
+let build_controls statement_map =
+  let _, _, controls = build_control_flow statement_map in
+  controls
 
 (** See interface file *)
 let build_cf_graph statement_map =
-  let _, _, cf_graph = build_cf_graphs statement_map in
-  cf_graph
+  LabelMap.map (build_controls statement_map) ~f:control_dependency_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let exits, pred_graph, _ =
-    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map in
+    build_control_flow ~flatten_loops ~blocks_after_body statement_map in
   (exits, pred_graph)

@@ -200,7 +200,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let _, preds, parents = build_cf_graphs statement_map in
+  let _, preds, controls = build_control_flow statement_map in
+  let parents = LabelMap.map controls ~f:control_dependency_ids in
   let rd_map = mir_reaching_definitions mir stmt in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
       let rds = LabelMap.find label rd_map in

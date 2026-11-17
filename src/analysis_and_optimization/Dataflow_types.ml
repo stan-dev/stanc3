@@ -23,6 +23,16 @@ type reaching_defn = vexpr * label [@@deriving sexp_of]
     through the tree, not across and up like everything else *)
 type cf_state = label
 
+(** The side of an [if] that holds a statement. *)
+type side = Then | Else
+
+type enclosing = {id: label; side: side option}
+
+type controls =
+  { enclosing: enclosing list
+        (** The index of ifs and loops around the statement, outermost first. *)
+  ; jump_ids: label Set.Poly.t }
+
 module LabelMap = struct
   include Int.Map
 
