@@ -39,7 +39,7 @@ val build_controls :
   -> controls LabelMap.t
 (** Returns the controls of each label of the statement map. *)
 
-val control_parent_ids : controls -> label Set.Poly.t
+val control_dependency_ids : controls -> label Set.Poly.t
 (** Returns the labels of the control parents of a statement, given the controls
     of the statement. *)
 
@@ -98,3 +98,10 @@ val build_statement_map :
     label, and records each statement's pattern with every nested statement
     replaced by the nested statement's label, paired with the location of the
     statement. *)
+
+val build_control_flow :
+     ?flatten_loops:bool
+  -> ?blocks_after_body:bool
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t) LabelMap.t
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * controls LabelMap.t
+(** Build exits, predecessor edges, and control information in one traversal. *)

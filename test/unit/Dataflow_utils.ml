@@ -680,7 +680,7 @@ let%expect_test "Controls and the two views derived from them" =
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
         statement_id Test_utils.pp_stmt pattern (pp_controls loop_name) controls
         Test_utils.pp_labels
-        (control_parent_ids controls)
+        (control_dependency_ids controls)
         Fmt.(list ~sep:(any "; ") int)
         (enclosing_loop_ids statement_id pattern controls));
   [%expect

@@ -140,8 +140,9 @@ let var_deps (statements : stmt_info LabelMap.t) label
     | None -> (transitive_dependence_ids statements label, Set.Poly.empty)
     | Some expr ->
         let read_names = expr_names expr in
-        (var_dependence_ids statements read_names label, read_names) in
-  let dependency_read_names = used_vars_at statements dependency_labels in
+        ( variable_dependence_ids statements Set.Poly.empty read_names label
+        , read_names ) in
+  let dependency_read_names = read_variables_at statements dependency_labels in
   (* The dependency query for these names can leave out the statement where the
      query starts. The union adds the names that [expr] reads, such as [a] in [a
      > 0]. *)
@@ -152,17 +153,13 @@ let var_deps (statements : stmt_info LabelMap.t) label
 let list_target_dependant_cf (statements : stmt_info LabelMap.t)
     (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
-  (* Find all the control flow nodes *)
-  let cf_labels =
-    statements
-    |> LabelMap.filter ~f:(fun _ statement -> is_ctrl_flow statement.pattern)
-    |> LabelMap.to_list |> List.map ~f:fst |> Set.Poly.of_list in
-  Set.Poly.filter_map
-    ~f:(fun label ->
-      let deps = var_deps statements label targets in
-      if Set.Poly.is_empty deps then None
-      else Some ((LabelMap.find label statements).meta, deps))
-    cf_labels
+  LabelMap.fold statements ~init:Set.Poly.empty
+    ~f:(fun ~key:label ~data:info results ->
+      if not (is_ctrl_flow info.statement.pattern) then results
+      else
+        let deps = var_deps statements label targets in
+        if Set.Poly.is_empty deps then results
+        else Set.Poly.add (info.statement.meta, deps) results)
 
 let list_param_dependant_cf (mir : Program.Typed.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
@@ -206,20 +203,18 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t
     =
   let dep_args = list_arg_dependant_fundef_cf mir fun_def in
-  let calls_in_statement label statement =
-    let funapps =
-      Set.Poly.union_map (stmt_rhs statement.pattern) ~f:(fun rhs_expr ->
-          expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
-              match rhs_subexpr.pattern with
-              | Expr.Pattern.FunApp (UserDefined (fname, _), _)
-                when fname = fun_def.fdname ->
-                  Some (rhs_subexpr, label)
-              | _ -> None)) in
-    if Set.Poly.is_empty funapps then None else Some funapps in
+  let calls_in_statement label info =
+    Set.Poly.union_map (stmt_rhs info.statement.pattern) ~f:(fun rhs_expr ->
+        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
+            match rhs_subexpr.pattern with
+            | Expr.Pattern.FunApp (UserDefined (fname, _), _)
+              when fname = fun_def.fdname ->
+                Some (rhs_subexpr, label)
+            | _ -> None)) in
   let fun_calls : (Expr.Typed.t * label) Set.Poly.t =
-    statements
-    |> LabelMap.filter_map ~f:calls_in_statement
-    |> LabelMap.to_list |> List.map ~f:snd |> Set.Poly.union_list in
+    LabelMap.fold statements ~init:Set.Poly.empty
+      ~f:(fun ~key:label ~data:statement calls ->
+        Set.Poly.union (calls_in_statement label statement) calls) in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
     | {pattern= Expr.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}

@@ -39,7 +39,7 @@ let extract_factors_statement stmt =
       []
 
 let rec extract_factors (statements : stmt_info LabelMap.t) label =
-  let stmt = (LabelMap.find label statements).pattern in
+  let stmt = (LabelMap.find label statements).statement.pattern in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
   Stmt.Pattern.fold Fun.const
@@ -56,8 +56,8 @@ let factor_var_dependencies (statements : stmt_info LabelMap.t) blockers
     (label, factor) =
   let term_read_names = factor_rhs factor in
   let dependency_labels =
-    var_dependence_ids statements ~blockers term_read_names label in
-  let dependency_read_names = used_vars_at statements dependency_labels in
+    variable_dependence_ids statements blockers term_read_names label in
+  let dependency_read_names = read_variables_at statements dependency_labels in
   (* The dependency traversal can leave out the statement where the traversal
      starts. The union adds the names that the factor itself reads, such as [mu]
      in [normal_lpdf(mu | 0, 1)]. *)

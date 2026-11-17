@@ -492,19 +492,18 @@ let assigned_or_declared_vars (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 
 (** Transfer function for reaching definitions. The definitions that leave
     statement [l] are [gen l], the definitions that [l] adds, together with the
-    definitions that reach [l] and that [is_killed ~killer:l] rejects.
-    [is_killed] must be true only if [l] overwrites, on every path to [l], every
-    value that the definition can leave. *)
-let reaching_definitions_transfer (type d) ~(gen : int -> d Set.Poly.t)
-    ~(is_killed : killer:int -> d -> bool) =
+    definitions that reach [l] and that [is_killed l] rejects. [is_killed] must
+    be true only if [l] overwrites, on every path to [l], every value that the
+    definition can leave. *)
+let reaching_definitions_transfer (type d) (gen : int -> d Set.Poly.t)
+    (is_killed : int -> d -> bool) =
   (module struct
     type labels = int
     type properties = d Set.Poly.t
 
     let transfer_function (l : labels) (p : properties) =
       Set.Poly.union (gen l)
-        (Set.Poly.filter p ~f:(fun definition ->
-             not (is_killed ~killer:l definition)))
+        (Set.Poly.filter p ~f:(fun definition -> not (is_killed l definition)))
   end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = d Set.Poly.t)
@@ -922,8 +921,8 @@ let propagation_mfp (prog : Program.Typed.t)
     definition type. [initial] holds the definitions from outside the analyzed
     code, which reach the entry; [gen] and [is_killed] are the arguments of
     {!reaching_definitions_transfer}. *)
-let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
-    ~(gen : int -> d Set.Poly.t) ~(is_killed : killer:int -> d -> bool)
+let reaching_definitions_mfp (type d) (initial : d Set.Poly.t)
+    (gen : int -> d Set.Poly.t) (is_killed : int -> d -> bool)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int) =
   let (module Lattice) =
@@ -934,7 +933,7 @@ let reaching_definitions_mfp (type d) ~(initial : d Set.Poly.t)
         let initial = initial
       end : INITIALTYPE
         with type vals = d) in
-  let (module Transfer) = reaching_definitions_transfer ~gen ~is_killed in
+  let (module Transfer) = reaching_definitions_transfer gen is_killed in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

@@ -47,13 +47,15 @@ let pp_dependences ppf (statement : stmt_info) =
   Fmt.(list ~sep:(any "  ") string)
     ppf
     (List.filter_map ~f:Fun.id
-       [ labels_of "data" (Set.Poly.map statement.writers ~f:snd)
-       ; labels_of "control" (control_parent_ids statement.controls) ])
+       [ labels_of "data"
+           (Writer_dependencies.writer_ids Set.Poly.empty statement.writers)
+       ; labels_of "control"
+           (control_dependency_ids statement.statement.controls) ])
 
 let pp_immediate_dependencies ppf (statements : stmt_info LabelMap.t) =
   LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
-        statement.pattern pp_dependences statement)
+        statement.statement.pattern pp_dependences statement)
 
 let print_immediate_dependencies prog =
   Fmt.pr "%a" pp_immediate_dependencies
@@ -92,26 +94,10 @@ let%expect_test "Dependency graph example" =
 
 let%expect_test "Variable dependency example" =
   let statements = build_log_prob_dependence_info example1_program in
-  Fmt.pr "var_dependence_ids {j} 17: %a@." Test_utils.pp_labels
-    (var_dependence_ids statements (Set.Poly.singleton "j") 17);
-  [%expect {| var_dependence_ids {j} 17: 4 5 9 11 13 14 16 |}]
-
-module Accesses = Analysis_and_optimization.Dependence.Accesses
-
-let%test "External definitions are distinct from statement label 1" =
-  let definition var statement_id : reaching_definition =
-    {access= {var; path= []; kind= Accesses.Write}; statement_id; loop_ids= []}
-  in
-  let definitions =
-    Set.Poly.of_list
-      [definition "x" None; definition "x" (Some 1); definition "y" (Some 2)]
-  in
-  let labels_of_x =
-    Set.Poly.filter_map definitions ~f:(fun definition ->
-        if String.equal definition.access.var "x" then
-          Some definition.statement_id
-        else None) in
-  Set.Poly.equal labels_of_x (Set.Poly.of_list [None; Some 1])
+  Fmt.pr "variable_dependence_ids {j} 17: %a@." Test_utils.pp_labels
+    (variable_dependence_ids statements Set.Poly.empty (Set.Poly.singleton "j")
+       17);
+  [%expect {| variable_dependence_ids {j} 17: 4 5 9 11 13 14 16 |}]
 
 let%expect_test "External inputs reach a statement but are not dependencies" =
   print_immediate_dependencies
@@ -147,28 +133,28 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
   let if_id =
     LabelMap.fold map ~init:0
       ~f:(fun ~key:statement_id ~data:statement found_id ->
-        match statement.pattern with
+        match statement.statement.pattern with
         | Stmt.Pattern.IfElse _ -> statement_id
         | _ -> found_id) in
   Fmt.pr "%a" pp_immediate_dependencies map;
   Fmt.pr "transitive_dependence_ids %d: %a@." if_id Test_utils.pp_labels
     (transitive_dependence_ids map if_id);
-  Fmt.pr "var_dependence_ids {b} %d: %a@." if_id Test_utils.pp_labels
-    (var_dependence_ids map (Set.Poly.singleton "b") if_id);
-  Fmt.pr "var_dependence_ids ~blockers:{b} {b} %d: %a@." if_id
+  Fmt.pr "variable_dependence_ids {b} %d: %a@." if_id Test_utils.pp_labels
+    (variable_dependence_ids map Set.Poly.empty (Set.Poly.singleton "b") if_id);
+  Fmt.pr "variable_dependence_ids (blockers={b}) {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (var_dependence_ids map ~blockers:(Set.Poly.singleton "b")
+    (variable_dependence_ids map (Set.Poly.singleton "b")
        (Set.Poly.singleton "b") if_id);
-  Fmt.pr "var_dependence_ids ~blockers:{a} {b} %d: %a@." if_id
+  Fmt.pr "variable_dependence_ids (blockers={a}) {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (var_dependence_ids map ~blockers:(Set.Poly.singleton "a")
+    (variable_dependence_ids map (Set.Poly.singleton "a")
        (Set.Poly.singleton "b") if_id);
-  Fmt.pr "var_dependence_ids ~blockers:{mu} {b} %d: %a@." if_id
+  Fmt.pr "variable_dependence_ids (blockers={mu}) {b} %d: %a@." if_id
     Test_utils.pp_labels
-    (var_dependence_ids map ~blockers:(Set.Poly.singleton "mu")
+    (variable_dependence_ids map (Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_id);
-  Fmt.pr "var_dependence_ids {c} %d: %a@." if_id Test_utils.pp_labels
-    (var_dependence_ids map (Set.Poly.singleton "c") if_id);
+  Fmt.pr "variable_dependence_ids {c} %d: %a@." if_id Test_utils.pp_labels
+    (variable_dependence_ids map Set.Poly.empty (Set.Poly.singleton "c") if_id);
   [%expect
     {|
     1: 2 3 4  //
@@ -184,11 +170,11 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     11: if((b > 0)) 12  // data 8
     12: target += normal_lpdf(c, promote(0, real, data), promote(1, real, data));  // data 10  control 11
     transitive_dependence_ids 11: 2 6 8 11
-    var_dependence_ids {b} 11: 2 6 8
-    var_dependence_ids ~blockers:{b} {b} 11:
-    var_dependence_ids ~blockers:{a} {b} 11: 8
-    var_dependence_ids ~blockers:{mu} {b} 11: 6 8
-    var_dependence_ids {c} 11:
+    variable_dependence_ids {b} 11: 2 6 8
+    variable_dependence_ids (blockers={b}) {b} 11:
+    variable_dependence_ids (blockers={a}) {b} 11: 8
+    variable_dependence_ids (blockers={mu}) {b} 11: 6 8
+    variable_dependence_ids {c} 11:
     |}]
 
 let%expect_test
@@ -207,10 +193,10 @@ let%expect_test
          |})
   in
   LabelMap.iter map ~f:(fun ~key:statement_id ~data:statement ->
-      match statement.pattern with
+      match statement.statement.pattern with
       | Stmt.Pattern.IfElse _ ->
           Fmt.pr "%d: %a  // %a@." statement_id Test_utils.pp_stmt
-            statement.pattern pp_dependences statement
+            statement.statement.pattern pp_dependences statement
       | _ -> ());
   [%expect {| 6: if((target() > 0)) 7  // data 5 |}]
 
@@ -345,14 +331,14 @@ let%expect_test "Variables read at a set of labels" =
       }
     |})
   in
-  let print_used_vars_at labels =
-    Fmt.pr "used_vars_at {%a}: %a@." Test_utils.pp_labels labels
+  let print_read_variables_at labels =
+    Fmt.pr "read_variables_at {%a}: %a@." Test_utils.pp_labels labels
       Fmt.(list ~sep:(any " ") string)
-      (Set.Poly.to_list (used_vars_at map labels)) in
+      (Set.Poly.to_list (read_variables_at map labels)) in
   Fmt.pr "%a" pp_immediate_dependencies map;
-  print_used_vars_at (Set.Poly.singleton 6);
-  print_used_vars_at (Set.Poly.singleton 9);
-  print_used_vars_at (Set.Poly.of_list [6; 7; 9]);
+  print_read_variables_at (Set.Poly.singleton 6);
+  print_read_variables_at (Set.Poly.singleton 9);
+  print_read_variables_at (Set.Poly.of_list [6; 7; 9]);
   [%expect
     {|
     1: 2 3  //
@@ -364,9 +350,9 @@ let%expect_test "Variables read at a set of labels" =
     7: for(n in 1:N) 8  //
     8: { 9 }  // control 7
     9: v[n] = x[n];  // control 7
-    used_vars_at {6}: k mu x
-    used_vars_at {9}: x
-    used_vars_at {6 7 9}: N k mu x
+    read_variables_at {6}: k mu x
+    read_variables_at {9}: x
+    read_variables_at {6 7 9}: N k mu x
     |}]
 
 let%expect_test "Kills: the same element in every iteration" =
@@ -744,3 +730,118 @@ let%expect_test "Kills: equal values written differently" =
     13: v[((2 * k) + 1)] = b;  // data 3  control 12
     14: target += v[((2 * k) + 1)];  // data 7 10 11 13
     |}]
+
+let%test "Read-write effects and repeated reads produce one writer edge" =
+  let statements =
+    build_log_prob_dependence_info
+      (Test_utils.mir_of_string
+         {|
+      parameters { real a; real b; }
+      model {
+        real x;
+        real y;
+        x = a;
+        x += b;
+        y = x + x;
+        target += y;
+      }
+    |})
+  in
+  let assignment_reading variable input =
+    LabelMap.fold statements ~init:None ~f:(fun ~key:_ ~data:info found ->
+        match info.statement.pattern with
+        | Stmt.Pattern.Assignment (lhs, _, _)
+          when String.equal (Stmt.Helpers.lhs_variable lhs) variable
+               && List.exists info.statement.effects.reads
+                    ~f:(fun (read : location) ->
+                      String.equal read.variable input) ->
+            Some info
+        | _ -> found)
+    |> Option.get in
+  let initial = assignment_reading "x" "a" in
+  let update = assignment_reading "x" "x" in
+  let reader = assignment_reading "y" "x" in
+  let writers = reader.writers in
+  Set.Poly.equal
+    (Writer_dependencies.for_variable "x" update.writers)
+    (Set.Poly.singleton initial.statement.id)
+  && Set.Poly.equal
+       (Writer_dependencies.for_variable "x" writers)
+       (Set.Poly.singleton update.statement.id)
+  && Set.Poly.equal
+       (Writer_dependencies.writer_ids Set.Poly.empty writers)
+       (Set.Poly.singleton update.statement.id)
+  && Set.Poly.is_empty (Writer_dependencies.for_variable "missing" writers)
+  && Set.Poly.is_empty
+       (Writer_dependencies.writer_ids_for_variables (Set.Poly.singleton "y")
+          Set.Poly.empty writers)
+  && Set.Poly.is_empty
+       (Writer_dependencies.writer_ids (Set.Poly.singleton "x") writers)
+
+let%test "Index expressions contribute reads but not writes" =
+  let statements =
+    build_log_prob_dependence_info
+      (Test_utils.mir_of_string
+         {|
+      data { array[2] int idx; }
+      parameters { vector[2] a; }
+      model {
+        vector[2] x = a;
+        x[idx[1]] += x[idx[2]];
+        target += sum(x);
+      }
+    |})
+  in
+  LabelMap.exists statements ~f:(fun _ info ->
+      match info.statement.pattern with
+      | Stmt.Pattern.Assignment (lhs, _, _)
+        when String.equal (Stmt.Helpers.lhs_variable lhs) "x" -> (
+          let effects = info.statement.effects in
+          Set.Poly.equal
+            (Analysis_and_optimization.Dependence.Accesses.read_variables
+               effects)
+            (Set.Poly.of_list ["x"; "idx"])
+          &&
+          match effects.writes with
+          | [{variable= "x"; _}] -> true
+          | _ -> false)
+      | _ -> false)
+
+let%test "Killing one write preserves another write from the same statement" =
+  let statements =
+    build_log_prob_dependence_info
+      (Test_utils.mir_of_string
+         {|functions {
+          real contribute_lp(real a) { target += a; return a; }
+        }
+        parameters { real a; }
+        model {
+          real y;
+          y = contribute_lp(a) + contribute_lp(a);
+          y = 0;
+          target += y;
+        }|})
+  in
+  let multiple_writer, writer_info =
+    LabelMap.bindings statements
+    |> List.find_opt ~f:(fun (_, info) ->
+        let names =
+          Analysis_and_optimization.Dependence.Accesses.written_variables
+            info.statement.effects in
+        Set.Poly.mem "y" names && Set.Poly.mem "target" names)
+    |> Option.get in
+  let writes = writer_info.statement.effects.writes in
+  let distinct_writes =
+    List.sort_uniq ~cmp:Analysis_and_optimization.Dependence.compare_locations
+      writes in
+  List.length writes = 3
+  && List.length distinct_writes = 2
+  && LabelMap.exists statements ~f:(fun _ info ->
+      match info.statement.pattern with
+      | Stmt.Pattern.TargetPE _ ->
+          Set.Poly.mem multiple_writer
+            (Writer_dependencies.for_variable "target" info.writers)
+          && not
+               (Set.Poly.mem multiple_writer
+                  (Writer_dependencies.for_variable "y" info.writers))
+      | _ -> false)

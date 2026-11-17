@@ -3,6 +3,15 @@ open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Dataflow_types
 module Dependence = Analysis_and_optimization.Dependence
 
+let dependence_of_accesses (writer_loops, write_path) (reader_loops, read_path)
+    =
+  Dependence.analyze_dependence writer_loops write_path reader_loops read_path
+
+let overlap_may_write_precede_read writer_first overlap =
+  match overlap with
+  | None -> false
+  | Some vector -> Dependence.may_write_precede_read writer_first vector
+
 type case =
   {write_stride: int; write_offset: int; read_stride: int; read_offset: int}
 
@@ -22,7 +31,7 @@ let pp_case ppf case =
     pp_subscript
     (case.read_stride, case.read_offset)
 
-let program ~lower ~upper_text =
+let program lower upper_text =
   Fmt.str
     "data { int N; } parameters { real a; } model { vector[N] x; real y; for \
      (n in %d:%s) { %a } }"
@@ -30,7 +39,7 @@ let program ~lower ~upper_text =
     Fmt.(list ~sep:sp pp_case)
     cases
 
-let overlaps ~lower ~upper case : (int * int) list =
+let overlaps lower upper case : (int * int) list =
   let iterations = List.range lower (upper + 1) in
   List.concat_map iterations ~f:(fun write_iteration ->
       List.filter_map iterations ~f:(fun read_iteration ->
@@ -40,42 +49,41 @@ let overlaps ~lower ~upper case : (int * int) list =
           then Some (write_iteration, read_iteration)
           else None))
 
-let paths_of_x (statements : stmt_info LabelMap.t) kind :
+let paths_of_x (statements : stmt_info LabelMap.t) locations :
     (label list * Dependence.path) list =
-  List.concat_map (LabelMap.bindings statements) ~f:(fun (_, statement) ->
-      List.filter_map statement.accesses ~f:(fun (access : access) ->
+  List.concat_map (LabelMap.bindings statements) ~f:(fun (_, info) ->
+      let statement = info.statement in
+      List.filter_map (locations statement.effects)
+        ~f:(fun (location : location) ->
           if
-            String.equal access.var "x"
-            && Dependence.Accesses.equal_kind access.kind kind
-            && not (List.is_empty access.path)
-          then Some (statement.loop_ids, access.path)
+            String.equal location.variable "x"
+            && not (List.is_empty location.path)
+          then Some (statement.loop_ids, location.path)
           else None))
 
 let is_overlap_possible (write : label list * Dependence.path)
     (read : label list * Dependence.path) : bool =
-  Dependence.is_writer_possibly_first true
-    (Dependence.test_dependence write read)
-  || Dependence.is_writer_possibly_first false
-       (Dependence.test_dependence read write)
+  overlap_may_write_precede_read true (dependence_of_accesses write read)
+  || overlap_may_write_precede_read false (dependence_of_accesses read write)
 
-let violations ~lower ~upper case (write : label list * Dependence.path)
+let violations lower upper case (write : label list * Dependence.path)
     (read : label list * Dependence.path) : string list =
-  let pairs = overlaps ~lower ~upper case in
-  let forward = Dependence.test_dependence write read in
-  let backward = Dependence.test_dependence read write in
+  let pairs = overlaps lower upper case in
+  let forward = dependence_of_accesses write read in
+  let backward = dependence_of_accesses read write in
   let checks =
     [ ( "order excludes an overlap in the same iteration"
-      , Dependence.is_writer_possibly_first true forward
+      , overlap_may_write_precede_read true forward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration <= read_iteration)) )
     ; ( "order excludes an overlap in a later iteration"
-      , Dependence.is_writer_possibly_first false forward
+      , overlap_may_write_precede_read false forward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration < read_iteration)) )
     ; ( "reversed order excludes an overlap"
-      , Dependence.is_writer_possibly_first false backward
+      , overlap_may_write_precede_read false backward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   read_iteration < write_iteration)) ) ] in
@@ -84,31 +92,31 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
 
 type tally = {disjoint: int; independent: int; refuted_order: int}
 
-let run_bounds ?upper_text (lower, upper) =
+let run_bounds upper_text (lower, upper) =
   let upper_text = Option.value upper_text ~default:(Int.to_string upper) in
   let statements =
     build_log_prob_dependence_info
-      (Test_utils.mir_of_string (program ~lower ~upper_text)) in
-  let writes = paths_of_x statements Write in
-  let reads = paths_of_x statements Read in
+      (Test_utils.mir_of_string (program lower upper_text)) in
+  let writes = paths_of_x statements (fun effects -> effects.writes) in
+  let reads = paths_of_x statements (fun effects -> effects.reads) in
   let tally =
     List.fold_left
       (List.combine cases (List.combine writes reads))
       ~init:{disjoint= 0; independent= 0; refuted_order= 0}
       ~f:(fun tally (case, (write, read)) ->
-        List.iter (violations ~lower ~upper case write read) ~f:(fun name ->
+        List.iter (violations lower upper case write read) ~f:(fun name ->
             Fmt.pr "%d:%s %a: %s@." lower upper_text pp_case case name);
-        let dependence = Dependence.test_dependence write read in
+        let dependence = dependence_of_accesses write read in
         let count is_counted = if is_counted then 1 else 0 in
         let is_overlap_possible = is_overlap_possible write read in
         { disjoint=
-            tally.disjoint + count (List.is_empty (overlaps ~lower ~upper case))
+            tally.disjoint + count (List.is_empty (overlaps lower upper case))
         ; independent= tally.independent + count (not is_overlap_possible)
         ; refuted_order=
             tally.refuted_order
             + count
                 (is_overlap_possible
-                && not (Dependence.is_writer_possibly_first true dependence)) })
+                && not (overlap_may_write_precede_read true dependence)) })
   in
   Fmt.pr
     "%d:%s cases %d, disjoint %d, proven independent %d, writer never first \
@@ -117,7 +125,7 @@ let run_bounds ?upper_text (lower, upper) =
     tally.refuted_order
 
 let%expect_test "One loop, linear subscripts, against enumeration" =
-  List.iter [(1, 5); (-2, 2); (3, 3); (4, 2)] ~f:run_bounds;
+  List.iter [(1, 5); (-2, 2); (3, 3); (4, 2)] ~f:(run_bounds None);
   [%expect
     {|
     1:5 cases 450, disjoint 255, proven independent 152, writer never first 22
@@ -127,9 +135,9 @@ let%expect_test "One loop, linear subscripts, against enumeration" =
     |}]
 
 let%expect_test "One loop, unknown upper bound, against enumeration" =
-  run_bounds ~upper_text:"N" (1, 8);
-  run_bounds ~upper_text:"N" (-2, 5);
-  run_bounds ~upper_text:"N" (3, 3);
+  run_bounds (Some "N") (1, 8);
+  run_bounds (Some "N") (-2, 5);
+  run_bounds (Some "N") (3, 3);
   [%expect
     {|
     1:N cases 450, disjoint 245, proven independent 150, writer never first 23
@@ -186,17 +194,16 @@ let nest_overlaps case : ((int * int) * (int * int)) list =
 let nest_violations case (write : label list * Dependence.path)
     (read : label list * Dependence.path) : string list =
   let pairs = nest_overlaps case in
-  let dependence = Dependence.test_dependence write read in
-  let is_implied is_possible ~by =
-    is_possible || not (List.exists pairs ~f:by) in
+  let dependence = dependence_of_accesses write read in
+  let is_implied is_possible by = is_possible || not (List.exists pairs ~f:by) in
   let checks =
     [ ( "order, writer first in the body"
-      , is_implied (Dependence.is_writer_possibly_first true dependence)
-          ~by:(fun (write_iteration, read_iteration) ->
+      , is_implied (overlap_may_write_precede_read true dependence)
+          (fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration <= 0) )
     ; ( "order, reader first in the body"
-      , is_implied (Dependence.is_writer_possibly_first false dependence)
-          ~by:(fun (write_iteration, read_iteration) ->
+      , is_implied (overlap_may_write_precede_read false dependence)
+          (fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration < 0) ) ] in
   List.filter_map checks ~f:(fun (name, is_sound) ->
       if is_sound then None else Some name)
@@ -204,8 +211,8 @@ let nest_violations case (write : label list * Dependence.path)
 let%expect_test "Two loops, linear subscripts, against enumeration" =
   let statements =
     build_log_prob_dependence_info (Test_utils.mir_of_string nest_program) in
-  let writes = paths_of_x statements Write in
-  let reads = paths_of_x statements Read in
+  let writes = paths_of_x statements (fun effects -> effects.writes) in
+  let reads = paths_of_x statements (fun effects -> effects.reads) in
   let independent =
     List.fold_left
       (List.combine nest_cases (List.combine writes reads))
@@ -222,3 +229,69 @@ let%expect_test "Two loops, linear subscripts, against enumeration" =
             List.is_empty (nest_overlaps case))))
     independent;
   [%expect {| cases 512, disjoint 194, proven independent 32 |}]
+
+let single_pair source =
+  let statements =
+    build_log_prob_dependence_info (Test_utils.mir_of_string source) in
+  match
+    ( paths_of_x statements (fun effects -> effects.writes)
+    , paths_of_x statements (fun effects -> effects.reads) )
+  with
+  | [write], [read] -> (write, read)
+  | _ -> failwith "Expected one indexed write and read of x"
+
+let%test "Constant loop domains preserve cancellation of stable symbols" =
+  let write, read =
+    single_pair
+      {|data { int N; } parameters { real a; }
+      model { vector[10] x; real y;
+        for (n in 1:(N - N + 2)) { x[n] = a; y = x[n + 2]; }
+      }|}
+  in
+  not (is_overlap_possible write read)
+
+let%test "Different exact distances conflict even when their signs agree" =
+  let write, read =
+    single_pair
+      {|parameters { real a; }
+      model { matrix[10,10] x; real y;
+        for (n in 1:5) { x[n,n] = a; y = x[n+1,n+2]; }
+      }|}
+  in
+  not (is_overlap_possible write read)
+
+let%test "Sibling loops with the same variable name are distinct domains" =
+  let write, read =
+    single_pair
+      {|parameters { real a; }
+      model { vector[10] x; real y;
+        for (n in 1:5) { x[n] = a; }
+        for (n in 1:5) { y = x[n]; }
+      }|}
+  in
+  is_overlap_possible write read
+
+let%test "Long reordered sums retain the same invariant coefficients" =
+  let names = List.init ~len:128 ~f:(fun i -> "k" ^ Int.to_string i) in
+  let declarations =
+    String.concat ~sep:" " (List.map names ~f:(fun name -> "int " ^ name ^ ";"))
+  in
+  let forward = String.concat ~sep:" + " names in
+  let backward = String.concat ~sep:" + " (List.rev names) in
+  let write, read =
+    single_pair
+      (Fmt.str
+         "data { %s } parameters { real a; } model { vector[1000] x; real y; \
+          for (n in 1:5) { x[n + (%s)] = a; y = x[n + (%s) + 6]; } }"
+         declarations forward backward) in
+  not (is_overlap_possible write read)
+
+let%test "Stable nonlinear subexpressions remain opaque invariant terms" =
+  let write, read =
+    single_pair
+      {|data { int k; int m; } parameters { real a; }
+      model { vector[100] x; real y;
+        for (n in 1:5) { x[n + abs(k * m)] = a; y = x[n + abs(k * m) + 6]; }
+      }|}
+  in
+  not (is_overlap_possible write read)

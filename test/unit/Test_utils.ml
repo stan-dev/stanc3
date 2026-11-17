@@ -57,6 +57,7 @@ let loop_name
     =
   match
     (Analysis_and_optimization.Dataflow_types.LabelMap.find loop statements)
+      .statement
       .pattern
   with
   | For {loopvar; _} -> loopvar

@@ -28,16 +28,20 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
   | FunApp (kind, _) when is_target_increment kind -> true
   | _ -> false
 
+let cannot_duplicate_top_expr (e : Expr.Typed.t) =
+  can_side_effect_top_expr e
+  ||
+  match e.pattern with
+  | FunApp ((UserDefined (_, FnRng) | StanLib (_, (FnRng | FnTarget))), _) ->
+      true
+  | _ -> false
+
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
-  let pred e =
-    can_side_effect_top_expr e
-    || (match e.pattern with
-      | FunApp ((UserDefined (_, FnRng) | StanLib (_, (FnRng | FnTarget))), _)
-        ->
-          true
-      | _ -> false)
-    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
-  expr_any pred e
+  expr_any
+    (fun e ->
+      cannot_duplicate_top_expr e
+      || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_))
+    e
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 

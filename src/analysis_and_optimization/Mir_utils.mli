@@ -9,6 +9,9 @@ val is_target_increment : 'e Fun_kind.t -> bool
 (** True if a call to a function of this kind increments the target. The Stan
     Math call [target()] only reads [target] and gives false. *)
 
+val cannot_duplicate_top_expr : Expr.Typed.t -> bool
+(** Whether this node itself prevents duplication; does not visit children. *)
+
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
 val cannot_remove_expr : ExprSet.elt -> bool
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t

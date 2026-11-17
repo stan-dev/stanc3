@@ -212,7 +212,8 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
   , LabelMap.map edges ~f:(fun e -> e.controls) )
 
-let control_parent_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t =
+let control_dependency_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t
+    =
   match List.hd (List.rev enclosing) with
   | Some {id; _} -> Set.Poly.add id jump_ids
   | None -> jump_ids
@@ -229,7 +230,7 @@ let build_controls statement_map =
   controls
 
 let build_cf_graph statement_map =
-  LabelMap.map (build_controls statement_map) ~f:control_parent_ids
+  LabelMap.map (build_controls statement_map) ~f:control_dependency_ids
 
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     (statement_map :
