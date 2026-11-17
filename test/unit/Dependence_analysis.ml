@@ -231,14 +231,15 @@ let%expect_test "Indexed overwrites require a stable address" =
     [["a"]];
   [%expect {| |}]
 
-let%expect_test "Loop arithmetic and loop-carried dependences stay conservative"
-    =
+let%expect_test
+    "Loop bounds and overwrites remove false dependences but retain carried \
+     flow" =
   assert_parameter_dependencies
-    "for (n in 1:5) { v[n + 5] = a; if (v[n] > 0) target += 1; }" [["a"]];
+    "for (n in 1:5) { v[n + 5] = a; if (v[n] > 0) target += 1; }" [];
   assert_parameter_dependencies
     "for (n in 2:5) { if (v[n - 1] > 0) target += 1; v[n] = a; }" [["a"]];
   assert_parameter_dependencies
-    "for (n in 1:5) { v[n] = a; v[n] = 0; if (v[n] > 0) target += 1; }" [["a"]];
+    "for (n in 1:5) { v[n] = a; v[n] = 0; if (v[n] > 0) target += 1; }" [];
   [%expect {| |}]
 
 let%expect_test "Conditional writes and slices preserve possible dependencies" =
@@ -284,3 +285,63 @@ let%expect_test
           print_s [%sexp (writers : label Set.Poly.t)]
       | _ -> ());
   [%expect {| (3 4 5) |}]
+
+let%expect_test "Equivalent stable subscripts overwrite without syntax equality"
+    =
+  assert_parameter_dependencies
+    "v[k + k] = a; v[2 * k] = 0; if (v[2 * k] > 0) target += 1;" [];
+  assert_parameter_dependencies
+    "v[k + k] = a; if (k > 0) v[2 * k] = 0; if (v[2 * k] > 0) target += 1;"
+    [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Loop overwrites require the later write on every relevant path"
+    =
+  assert_parameter_dependencies
+    "for (n in 2:10) { v[n] = a; while (k > 0) break; v[n] = 0; if (v[n - 1] > \
+     0) target += 1; }"
+    [];
+  assert_parameter_dependencies
+    "for (n in 2:10) { if (k > 0) v[n] = a; v[n] = 0; if (v[n - 1] > 0) target \
+     += 1; }"
+    [];
+  assert_parameter_dependencies
+    "for (n in 2:10) { v[n] = a; if (k > 0) continue; v[n] = 0; if (v[n - 1] > \
+     0) target += 1; }"
+    [["a"]];
+  assert_parameter_dependencies
+    "for (n in 2:10) { v[n] = a; for (m in 1:k) v[n] = 0; if (v[n - 1] > 0) \
+     target += 1; }"
+    [["a"]];
+  assert_parameter_dependencies
+    "for (n in 2:10) { v[n] = a; if (k > 0) v[n] = 0; else v[n] = 1; if (v[n - \
+     1] > 0) target += 1; }"
+    [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Earlier reads do not receive values from later iterations" =
+  assert_parameter_dependencies
+    "vector[10] c; vector[10] d; for (n in 1:9) { c[n] = v[n + 1]; d[n] = \
+     v[n]; v[n] = a; if (c[n] > 0) target += 1; if (d[n] > 0) target += 1; if \
+     (v[n] > 0) target += 1; }"
+    [["a"]];
+  assert_parameter_dependencies
+    "vector[10] c; vector[10] d; for (n in 1:8) { c[10 - n] = v[10 - n - 1]; \
+     d[10 - n] = v[10 - n]; v[10 - n] = a; if (c[10 - n] > 0) target += 1; if \
+     (d[10 - n] > 0) target += 1; if (v[10 - n] > 0) target += 1; }"
+    [["a"]];
+  [%expect {| |}]
+
+let%expect_test
+    "Fixed read before the final possible writer does not depend on it" =
+  assert_parameter_dependencies
+    "for (n in 1:5) { if (v[5] > 0) target += 1; v[n] = a; }" [];
+  [%expect {| |}]
+
+let%expect_test
+    "A write earlier in the body cannot kill a later writer's previous \
+     iteration" =
+  assert_parameter_dependencies
+    "for (n in 2:10) { v[n] = 0; v[n] = a; if (v[n - 1] > 0) target += 1; }"
+    [["a"]];
+  [%expect {| |}]

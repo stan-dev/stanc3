@@ -23,6 +23,7 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_definition Set.Poly.t
   ; reaching_defn_exit: reaching_definition Set.Poly.t
+  ; writers: label Set.Poly.t String.Map.t
   ; accesses: Dependence.accesses
   ; loop_ids: label list
   ; meta: Location_span.t }

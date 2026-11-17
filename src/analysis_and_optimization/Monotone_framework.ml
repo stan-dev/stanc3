@@ -475,7 +475,7 @@ let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 
 (** The transfer function for indexed reaching definitions. *)
 let reaching_definitions_transfer (accesses : Dependence.accesses LabelMap.t)
-    defined_vars =
+    overwrites =
   let generated =
     LabelMap.mapi accesses ~f:(fun label effects ->
         Set.Poly.of_list
@@ -487,11 +487,9 @@ let reaching_definitions_transfer (accesses : Dependence.accesses LabelMap.t)
 
     let transfer_function label reaching =
       let writes = (LabelMap.find label accesses).Dependence.writes in
-      let is_overwritten (previous, _) =
-        List.exists writes ~f:(fun write ->
-            String.equal write.Dependence.variable previous.Dependence.variable
-            && Dependence.definitely_overwrites defined_vars write.path
-                 previous.path) in
+      let is_overwritten definition =
+        List.exists writes ~f:(fun write -> overwrites label write definition)
+      in
       Set.Poly.union
         (LabelMap.find label generated)
         (Set.Poly.filter reaching ~f:(fun definition ->
@@ -912,7 +910,7 @@ let propagation_mfp (prog : Program.Typed.t)
 let reaching_definitions_mfp (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int) (accesses : Dependence.accesses LabelMap.t)
-    defined_vars =
+    overwrites =
   let variables =
     (module struct
       type vals = Dependence.location
@@ -930,7 +928,7 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
     end : TYPE
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer accesses defined_vars in
+  let (module Transfer) = reaching_definitions_transfer accesses overwrites in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

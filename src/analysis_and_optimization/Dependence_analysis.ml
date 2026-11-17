@@ -17,6 +17,7 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_definition Set.Poly.t
   ; reaching_defn_exit: reaching_definition Set.Poly.t
+  ; writers: label Set.Poly.t String.Map.t
   ; accesses: Dependence.accesses
   ; loop_ids: label list
   ; meta: Location_span.t }
@@ -35,8 +36,11 @@ let read_dependencies info blockers reads =
   List.fold_left reads ~init:info.parents ~f:(fun dependencies read ->
       if Set.Poly.mem (VVar read.Dependence.variable) blockers then dependencies
       else
-        Set.Poly.union dependencies
-          (reaching_defn_lookup info.reaching_defn_entry read))
+        let writers =
+          match String.Map.find_opt read.variable info.writers with
+          | Some labels -> labels
+          | None -> reaching_defn_lookup info.reaching_defn_entry read in
+        Set.Poly.union dependencies writers)
 
 let node_immediate_dependencies
     (statement_map :
@@ -195,6 +199,23 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
+let writers_of_reads analysis reader reads definitions =
+  List.fold_left reads ~init:String.Map.empty ~f:(fun writers read ->
+      let previous =
+        Option.value
+          (String.Map.find_opt read.Dependence.variable writers)
+          ~default:Set.Poly.empty in
+      let labels =
+        Set.Poly.fold definitions ~init:previous
+          ~f:(fun (write, writer_id) found ->
+            match writer_id with
+            | Some writer
+              when Loop_dependence.may_supply_read analysis writer write reader
+                     read ->
+                Set.Poly.add writer found
+            | _ -> found) in
+      String.Map.add writers ~key:read.variable ~data:labels)
+
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t =
   let statement_map =
@@ -213,6 +234,15 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         List.fold_left effects.Dependence.writes ~init:names
           ~f:(fun written location ->
             Set.Poly.add location.Dependence.variable written)) in
+  let analysis = Loop_dependence.create statement_map controls defined_vars in
+  let overwrites killer write (previous, previous_id) =
+    match previous_id with
+    | Some writer ->
+        Loop_dependence.definitely_overwrites analysis killer write writer
+          previous
+    | None ->
+        String.equal write.Dependence.variable previous.Dependence.variable
+        && List.is_empty write.path in
   let inverse =
     (module struct
       type labels = int
@@ -224,15 +254,18 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let rd_map =
     reaching_definitions_mfp mir
       (Monotone_framework.reverse inverse)
-      accesses defined_vars in
+      accesses overwrites in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
       let rds = LabelMap.find label rd_map in
+      let statement_accesses = LabelMap.find label accesses in
       ( stmt
       , { predecessors= LabelMap.find label preds
         ; parents= LabelMap.find label parents
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
-        ; accesses= LabelMap.find label accesses
+        ; writers=
+            writers_of_reads analysis label statement_accesses.reads rds.entry
+        ; accesses= statement_accesses
         ; loop_ids= enclosing_loop_ids label stmt (LabelMap.find label controls)
         ; meta } ))
 
