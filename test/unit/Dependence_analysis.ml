@@ -56,8 +56,9 @@ let%expect_test "Reaching defns example" =
   let deps =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
-        ( reaching_defn_lookup x.reaching_defn_entry (VVar "j")
-        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") )) in
+        ( reaching_defn_lookup x.reaching_defn_entry {variable= "j"; path= []}
+        , reaching_defn_lookup x.reaching_defn_exit {variable= "j"; path= []} ))
+  in
   print_s [%sexp (deps : (label Set.Poly.t * label Set.Poly.t) LabelMap.t)];
   [%expect
     {|
@@ -71,7 +72,14 @@ let%expect_test "Reaching defns example" =
 let%expect_test "Reaching defns example" =
   let deps =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit)) in
+      ~f:(fun (_, x) ->
+        let variable_labels definitions =
+          Set.Poly.filter_map definitions ~f:(fun (location, label) ->
+              Option.map label ~f:(fun id ->
+                  ( VVar location.Analysis_and_optimization.Dependence.variable
+                  , id ))) in
+        ( variable_labels x.reaching_defn_entry
+        , variable_labels x.reaching_defn_exit )) in
   print_s
     [%sexp
       (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
@@ -190,3 +198,89 @@ let%expect_test "Uninitialized variables example" =
            (included_from ()))))
         k))
     |}]
+
+let assert_parameter_dependencies body expected =
+  let mir =
+    Test_utils.mir_of_string
+      ("data { int k; } parameters { real a; } model { vector[10] v = \
+        rep_vector(0, 10); " ^ body ^ " }") in
+  let prefix = "A control flow statement depends on parameter(s): " in
+  let actual =
+    Analysis_and_optimization.Pedantic_analysis.warn_pedantic mir
+    |> List.filter_map ~f:(fun (_, message) ->
+        if String.starts_with ~prefix message then Some message else None) in
+  let expected =
+    List.map expected ~f:(fun names ->
+        prefix ^ String.concat ~sep:", " names ^ ".") in
+  if actual <> expected then
+    failwith ("Unexpected parameter dependencies for: " ^ body)
+
+let%expect_test "Indexed reads exclude distinct literal writes" =
+  assert_parameter_dependencies "v[1] = a; if (v[2] > 0) target += 1;" [];
+  assert_parameter_dependencies "v[1] = a; if (v[1] > 0) target += 1;" [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Indexed overwrites require a stable address" =
+  assert_parameter_dependencies "v[k] = a; v[k] = 0; if (v[k] > 0) target += 1;"
+    [];
+  assert_parameter_dependencies
+    "int i = 1; v[i] = a; i = 2; v[i] = 0; if (v[1] > 0) target += 1;" [["a"]];
+  assert_parameter_dependencies
+    "array[2] int idx = {1, 2}; v[idx[1]] = a; idx[1] = 2; v[idx[1]] = 0; if \
+     (v[1] > 0) target += 1;"
+    [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Loop arithmetic and loop-carried dependences stay conservative"
+    =
+  assert_parameter_dependencies
+    "for (n in 1:5) { v[n + 5] = a; if (v[n] > 0) target += 1; }" [["a"]];
+  assert_parameter_dependencies
+    "for (n in 2:5) { if (v[n - 1] > 0) target += 1; v[n] = a; }" [["a"]];
+  assert_parameter_dependencies
+    "for (n in 1:5) { v[n] = a; v[n] = 0; if (v[n] > 0) target += 1; }" [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Conditional writes and slices preserve possible dependencies" =
+  assert_parameter_dependencies
+    "v[1] = a; if (k > 0) v[1] = 0; if (v[1] > 0) target += 1;" [["a"]];
+  assert_parameter_dependencies "v[2] = a; if (v[2:3][1] > 0) target += 1;"
+    [["a"]];
+  assert_parameter_dependencies
+    "v[1] = a; v[1:2] = rep_vector(0, 2); if (v[1] > 0) target += 1;" [["a"]];
+  [%expect {| |}]
+
+let%expect_test "Tuple fields have separate dependencies" =
+  assert_parameter_dependencies
+    "tuple(real, real) t; t.1 = a; t.2 = 0; if (t.2 > 0) target += 1;" [];
+  assert_parameter_dependencies
+    "tuple(real, real) t; t.1 = a; t.2 = 0; if (t.1 > 0) target += 1;" [["a"]];
+  [%expect {| |}]
+
+let%expect_test
+    "Random subscripts retain both writes and the initial definition" =
+  let mir =
+    Test_utils.mir_of_string
+      {|functions {
+        real pick_rng(vector theta) {
+          vector[4] v = rep_vector(0, 4);
+          v[categorical_rng(theta)] = 1;
+          v[categorical_rng(theta)] = 2;
+          return v[categorical_rng(theta) + 1];
+        }
+      } model {}|}
+  in
+  let body =
+    Option.get
+      (List.find_map mir.functions_block ~f:(fun definition ->
+           definition.Program.fdbody)) in
+  let statements = build_dep_info_map mir body in
+  LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
+      match pattern with
+      | Stmt.Pattern.Return _ ->
+          let writers =
+            reaching_defn_lookup info.reaching_defn_entry
+              {variable= "v"; path= []} in
+          print_s [%sexp (writers : label Set.Poly.t)]
+      | _ -> ());
+  [%expect {| (3 4 5) |}]

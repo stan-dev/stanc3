@@ -10,30 +10,41 @@ open Monotone_framework
 (* Dependency analysis & interface *)
 (***********************************)
 
+type reaching_definition = Dependence.location * label option
+
 type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
-  ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; reaching_defn_entry: reaching_definition Set.Poly.t
+  ; reaching_defn_exit: reaching_definition Set.Poly.t
+  ; accesses: Dependence.accesses
+  ; loop_ids: label list
   ; meta: Location_span.t }
 
-(** Find all of the reaching definitions of a variable in an RD set *)
-let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
-    label Set.Poly.t =
-  Set.Poly.map (Set.Poly.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
+let reaching_defn_lookup (rds : reaching_definition Set.Poly.t)
+    (read : Dependence.location) : label Set.Poly.t =
+  Set.Poly.fold rds ~init:Set.Poly.empty ~f:(fun (write, writer_id) labels ->
+      match writer_id with
+      | Some label
+        when String.equal write.Dependence.variable read.variable
+             && Dependence.may_overlap write.path read.path ->
+          Set.Poly.add label labels
+      | _ -> labels)
+
+let read_dependencies info blockers reads =
+  List.fold_left reads ~init:info.parents ~f:(fun dependencies read ->
+      if Set.Poly.mem (VVar read.Dependence.variable) blockers then dependencies
+      else
+        Set.Poly.union dependencies
+          (reaching_defn_lookup info.reaching_defn_entry read))
 
 let node_immediate_dependencies
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
     ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
     label Set.Poly.t =
-  let stmt, info = LabelMap.find label statement_map in
-  let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
-  let rhs_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff rhs_set blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
-  Set.Poly.union info.parents rhs_deps
+  let _, info = LabelMap.find label statement_map in
+  read_dependencies info blockers info.accesses.reads
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
@@ -60,12 +71,16 @@ let node_vars_dependencies
     ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (vars : vexpr Set.Poly.t)
     (label : label) : label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
-  let var_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff vars blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
+  let reads =
+    Set.Poly.fold vars ~init:[] ~f:(fun (VVar variable) selected_reads ->
+        let matching =
+          List.filter info.accesses.reads ~f:(fun read ->
+              String.equal read.Dependence.variable variable) in
+        match matching with
+        | [] -> Dependence.{variable; path= []} :: selected_reads
+        | _ -> matching @ selected_reads) in
   Set.Poly.fold
-    (Set.Poly.union info.parents var_deps)
+    (read_dependencies info blockers reads)
     ~init:Set.Poly.empty
     ~f:(node_dependencies_rec statement_map ~blockers)
 
@@ -94,19 +109,6 @@ let all_node_dependencies
     let m' = step_map m in
     if map_equal m m' then m else step_until_fixed m' in
   step_until_fixed immediate_map
-
-let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
-    reaching_defn Set.Poly.t entry_exit LabelMap.t =
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt in
-  let (module Flowgraph) = flowgraph in
-  let rd_map =
-    reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir in
-  let to_rd_set set =
-    Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:1)) in
-  LabelMap.map rd_map ~f:(fun {entry; exit} ->
-      {entry= to_rd_set entry; exit= to_rd_set exit})
 
 let all_labels
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -200,9 +202,29 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let _, preds, controls = build_control_flow statement_map in
+  let exits, preds, controls = build_control_flow statement_map in
   let parents = LabelMap.map controls ~f:control_dependency_ids in
-  let rd_map = mir_reaching_definitions mir stmt in
+  let accesses =
+    LabelMap.map statement_map ~f:(fun (pattern, _) ->
+        Dependence.collect_accesses pattern) in
+  let defined_vars =
+    LabelMap.fold accesses ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:effects names ->
+        List.fold_left effects.Dependence.writes ~init:names
+          ~f:(fun written location ->
+            Set.Poly.add location.Dependence.variable written)) in
+  let inverse =
+    (module struct
+      type labels = int
+
+      let initials = exits
+      let successors = preds
+    end : FLOWGRAPH
+      with type labels = int) in
+  let rd_map =
+    reaching_definitions_mfp mir
+      (Monotone_framework.reverse inverse)
+      accesses defined_vars in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
       let rds = LabelMap.find label rd_map in
       ( stmt
@@ -210,6 +232,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; parents= LabelMap.find label parents
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
+        ; accesses= LabelMap.find label accesses
+        ; loop_ids= enclosing_loop_ids label stmt (LabelMap.find label controls)
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :
