@@ -107,18 +107,33 @@ let is_flow_dependence (writer_id : label) (definition : reaching_definition)
           (definition.loop_ids, definition.access.path)
           (statement.loop_ids, read.path))
 
+let is_read (access : access) : bool =
+  match access.kind with Read | ReadWrite -> true | Write -> false
+
+let writer_of_read (writer_id : label) (read : access) : string * label =
+  (read.var, writer_id)
+
+let reads_from_writer (statement : stmt_info) (reads : access list)
+    (definition : reaching_definition) (writer_id : label) :
+    (string * label) Set.Poly.t =
+  let read_has_dependence read =
+    (is_flow_dependence writer_id definition statement) read in
+  reads
+  |> List.filter ~f:read_has_dependence
+  |> List.map ~f:(writer_of_read writer_id)
+  |> Set.Poly.of_list
+
+let writers_of_definition (statement : stmt_info) (reads : access list)
+    (definition : reaching_definition) : (string * label) Set.Poly.t =
+  definition.statement_id
+  |> Option.map ~f:(reads_from_writer statement reads definition)
+  |> Option.value ~default:Set.Poly.empty
+
 let writers_of_statement (statement : stmt_info) : (string * label) Set.Poly.t =
-  let reads =
-    List.filter statement.accesses ~f:(fun (access : access) ->
-        match access.kind with Read | ReadWrite -> true | Write -> false) in
-  Set.Poly.union_map statement.reaching_definitions ~f:(fun definition ->
-      match definition.statement_id with
-      | None -> Set.Poly.empty
-      | Some writer_id ->
-          reads
-          |> List.filter ~f:(is_flow_dependence writer_id definition statement)
-          |> List.map ~f:(fun (read : access) -> (read.var, writer_id))
-          |> Set.Poly.of_list)
+  let blah =
+    statement.accesses |> List.filter ~f:is_read
+    |> writers_of_definition statement in
+  Set.Poly.union_map ~f:blah statement.reaching_definitions
 
 let direct_dependence_ids ?(blockers : string Set.Poly.t = Set.Poly.empty)
     ?(vars : string Set.Poly.t option) (statement : stmt_info) :

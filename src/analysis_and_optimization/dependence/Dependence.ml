@@ -506,11 +506,13 @@ let constrain_relation ((loop_id, loop_constraint) : label * loop_constraint)
 let constrain (dependence : t) (loop_constraint : label * loop_constraint) : t =
   match dependence with
   | Independent -> Independent
-  | Possible_overlap relations -> (
+  | Possible_overlap dependence_vector -> (
       match
-        Option.all (List.map relations ~f:(constrain_relation loop_constraint))
+        Option.all
+          (List.map dependence_vector ~f:(constrain_relation loop_constraint))
       with
-      | Some constrained_relations -> Possible_overlap constrained_relations
+      | Some constrained_dependencies ->
+          Possible_overlap constrained_dependencies
       | None -> Independent)
 
 let inter (dependence : t) (step_dependence : t) : t =
@@ -521,12 +523,12 @@ let inter (dependence : t) (step_dependence : t) : t =
 
 let test_dependence ((writer_loop_ids, write_path) : label list * path)
     ((reader_loop_ids, read_path) : label list * path) : t =
-  let common_loop_ids =
-    List.filter writer_loop_ids ~f:(fun loop_id ->
-        List.mem loop_id ~set:reader_loop_ids) in
+  let readwrite_loop_ids =
+    let find_in_reader loop_id = List.mem loop_id ~set:reader_loop_ids in
+    List.filter writer_loop_ids ~f:find_in_reader in
   let unconstrained =
     Possible_overlap
-      (List.map common_loop_ids ~f:(fun loop_id ->
+      (List.map readwrite_loop_ids ~f:(fun loop_id ->
            (loop_id, Directions Direction_set.all))) in
   if List.compare_lengths write_path read_path <> 0 then unconstrained
   else
@@ -534,20 +536,17 @@ let test_dependence ((writer_loop_ids, write_path) : label list * path)
       ~f:(fun dependence write_step read_step ->
         inter dependence (test_steps write_step read_step))
 
-let rec is_writer_first_possible (is_writer_first : bool)
-    (relations : (label * loop_constraint) list) : bool =
-  match relations with
-  | [] -> is_writer_first
-  | (_, loop_constraint) :: inner_relations ->
-      let directions = directions_of loop_constraint in
-      directions.is_writer_before
-      || directions.is_same_iteration
-         && is_writer_first_possible is_writer_first inner_relations
-
-let if_overlap (dependence : t) f : bool =
+let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
   match dependence with
   | Independent -> false
-  | Possible_overlap relations -> f relations
-
-let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
-  if_overlap dependence (is_writer_first_possible is_writer_first)
+  | Possible_overlap dependence_vector ->
+      let rec is_writer_first_possible (is_writer_first : bool)
+          (dependence_vector : (label * loop_constraint) list) : bool =
+        match dependence_vector with
+        | [] -> is_writer_first
+        | (_, loop_constraint) :: rest_depvec ->
+            let directions = directions_of loop_constraint in
+            directions.is_writer_before
+            || directions.is_same_iteration
+               && is_writer_first_possible is_writer_first rest_depvec in
+      is_writer_first_possible is_writer_first dependence_vector
