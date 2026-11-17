@@ -21,30 +21,35 @@ type stmt_info =
   ; reaching_definitions: reaching_definition Set.Poly.t
   ; writers: (string * label) Set.Poly.t }
 
+let is_covered_by ~(statements : stmt_info LabelMap.t) ~(covering : stmt_info)
+    (statement_id : label) : bool =
+  let covered = (LabelMap.find statement_id statements).controls in
+  List.for_all covered.enclosing ~f:(fun enclosing ->
+      List.mem enclosing ~set:covering.controls.enclosing)
+  && Set.Poly.subset covered.jump_ids covering.controls.jump_ids
+
+let is_killed_in_same_iteration ~(statements : stmt_info LabelMap.t)
+    ~(killer : label) (killer_path : Dependence.path)
+    (killed : reaching_definition) : bool =
+  let killer_statement = LabelMap.find killer statements in
+  match killed.statement_id with
+  | None -> false
+  | Some killed_id -> (
+      let killed_statement = LabelMap.find killed_id statements in
+      killed_id < killer
+      && Dependence.is_overwritten ~is_same_iteration:true killer_path
+           killed.access.path
+      &&
+      match List.rev killed.loop_ids with
+      | innermost :: _ ->
+          List.equal ~eq:Int.equal killer_statement.loop_ids killed.loop_ids
+          && is_covered_by ~statements ~covering:killed_statement killer
+          && is_covered_by ~statements ~covering:killed_statement innermost
+      | [] -> false)
+
 let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
     (killed : reaching_definition) : bool =
   let killer_statement = LabelMap.find killer statements in
-  let is_killed_in_same_iteration (killer_path : Dependence.path) : bool =
-    match killed.statement_id with
-    | None -> false
-    | Some killed_id -> (
-        let killed_statement = LabelMap.find killed_id statements in
-        let is_covered_by_killed (statement_id : label) : bool =
-          let covered = (LabelMap.find statement_id statements).controls in
-          List.for_all covered.enclosing ~f:(fun enclosing ->
-              List.mem enclosing ~set:killed_statement.controls.enclosing)
-          && Set.Poly.subset covered.jump_ids killed_statement.controls.jump_ids
-        in
-        killed_id < killer
-        && Dependence.is_overwritten ~is_same_iteration:true killer_path
-             killed.access.path
-        &&
-        match List.rev killed.loop_ids with
-        | innermost :: _ ->
-            List.equal ~eq:Int.equal killer_statement.loop_ids killed.loop_ids
-            && is_covered_by_killed killer
-            && is_covered_by_killed innermost
-        | [] -> false) in
   List.exists killer_statement.accesses ~f:(fun (access : access) ->
       String.equal access.var killed.access.var
       &&
@@ -53,7 +58,26 @@ let is_killed ~(statements : stmt_info LabelMap.t) ~(killer : label)
       | Write | ReadWrite ->
           Dependence.is_overwritten ~is_same_iteration:false access.path
             killed.access.path
-          || is_killed_in_same_iteration access.path)
+          || is_killed_in_same_iteration ~statements ~killer access.path killed)
+
+let outside_definition ((name, _, _) : string * 'location * 'var_type) :
+    reaching_definition =
+  {access= {var= name; path= []; kind= Write}; statement_id= None; loop_ids= []}
+
+let definition_of_access (statement : stmt_info) (access : access) :
+    reaching_definition option =
+  match access.kind with
+  | Write | ReadWrite ->
+      Some
+        {access; statement_id= Some statement.id; loop_ids= statement.loop_ids}
+  | Read -> None
+
+let definitions_of (statements : stmt_info LabelMap.t) (statement_id : label) :
+    reaching_definition Set.Poly.t =
+  let statement = LabelMap.find statement_id statements in
+  statement.accesses
+  |> List.filter_map ~f:(definition_of_access statement)
+  |> Set.Poly.of_list
 
 let compute_reaching_definitions (mir : Program.Typed.t)
     (statements : stmt_info LabelMap.t) :
@@ -63,29 +87,13 @@ let compute_reaching_definitions (mir : Program.Typed.t)
     |> LabelMap.map ~f:(fun {pattern; meta; _} -> (pattern, meta))
     |> Monotone_framework.forward_flowgraph_of_statement_map in
   let (module Flowgraph) = flowgraph in
-  let outside_definition (name, _, _) : reaching_definition =
-    { access= {var= name; path= []; kind= Write}
-    ; statement_id= None
-    ; loop_ids= [] } in
   let outside_definitions =
     Set.Poly.of_list
       (List.map mir.input_vars ~f:outside_definition
       @ List.map mir.output_vars ~f:outside_definition) in
-  let definitions_of (statement_id : label) : reaching_definition Set.Poly.t =
-    let statement = LabelMap.find statement_id statements in
-    let definition_of_access (access : access) =
-      match access.kind with
-      | Write | ReadWrite ->
-          Some
-            { access
-            ; statement_id= Some statement.id
-            ; loop_ids= statement.loop_ids }
-      | Read -> None in
-    statement.accesses
-    |> List.filter_map ~f:definition_of_access
-    |> Set.Poly.of_list in
   let definitions_at_entry_and_exit =
-    reaching_definitions_mfp ~initial:outside_definitions ~gen:definitions_of
+    reaching_definitions_mfp ~initial:outside_definitions
+      ~gen:(definitions_of statements)
       ~is_killed:(is_killed ~statements)
       (module Flowgraph) in
   LabelMap.map definitions_at_entry_and_exit ~f:(fun definitions ->
@@ -116,12 +124,12 @@ let writers_of_statement (statement : stmt_info) : (string * label) Set.Poly.t =
 let direct_dependence_ids ?(blockers : string Set.Poly.t = Set.Poly.empty)
     ?(vars : string Set.Poly.t option) (statement : stmt_info) :
     label Set.Poly.t * label Set.Poly.t =
-  let is_followed var =
-    (not (Set.Poly.mem var blockers))
-    && Option.value_map vars ~default:true ~f:(Set.Poly.mem var) in
   let writer_ids =
     Set.Poly.filter_map statement.writers ~f:(fun (var, writer_id) ->
-        if is_followed var then Some writer_id else None) in
+        let is_followed =
+          (not (Set.Poly.mem var blockers))
+          && Option.value_map vars ~default:true ~f:(Set.Poly.mem var) in
+        if is_followed then Some writer_id else None) in
   (control_parent_ids statement.controls, writer_ids)
 
 let rec add_transitive_dependence_ids (statements : stmt_info LabelMap.t)
@@ -156,6 +164,13 @@ let used_vars_at (statements : stmt_info LabelMap.t)
   Set.Poly.union_map statement_ids ~f:(fun statement_id ->
       Accesses.used_vars (LabelMap.find statement_id statements).accesses)
 
+let is_loop_var_read (context : Loop_context.t) ~(loop_ids : label list)
+    (collected : Expr.Typed.t Accesses.access) : bool =
+  match collected.kind with
+  | Read ->
+      Option.is_some (Loop_context.for_loop_id context ~loop_ids collected.var)
+  | Write | ReadWrite -> false
+
 let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     stmt_info LabelMap.t =
   let statement_map = build_statement_map stmt in
@@ -173,15 +188,10 @@ let build_dependence_info (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     LabelMap.mapi statement_map ~f:(fun statement_id (pattern, meta) ->
         let controls = LabelMap.find statement_id control_ids in
         let loop_ids = enclosing_loop_ids statement_id pattern controls in
-        let is_loop_var_read (collected : Expr.Typed.t Accesses.access) =
-          match collected.kind with
-          | Read ->
-              Option.is_some
-                (Loop_context.for_loop_id context ~loop_ids collected.var)
-          | Write | ReadWrite -> false in
         let accesses =
           LabelMap.find statement_id collected_accesses
-          |> List.filter ~f:(fun collected -> not (is_loop_var_read collected))
+          |> List.filter ~f:(fun collected ->
+              not (is_loop_var_read context ~loop_ids collected))
           |> List.map
                ~f:
                  (Accesses.map_scalars
@@ -226,27 +236,31 @@ let pp_pattern ppf (pattern : (Expr.Typed.t, label) Stmt.Pattern.t) =
   | Block labels -> Fmt.pf ppf "Block { %a }" pp_labels labels
   | _ -> one_line (Stmt.Pattern.pp Expr.Typed.pp pp_label) ppf pattern
 
+let pp_enclosing ~(loop_name : label -> string) ppf (enclosing : enclosing) =
+  match enclosing with
+  | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
+  | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
+  | {id; side= None} -> Fmt.pf ppf "loop %d (%s)" id (loop_name id)
+
 let pp_controls ~(loop_name : label -> string) ppf
     ({enclosing; jump_ids} : controls) =
-  let pp_enclosing ppf = function
-    | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
-    | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
-    | {id; side= None} -> Fmt.pf ppf "loop %d (%s)" id (loop_name id) in
   Fmt.(list ~sep:(any "; ") string)
     ppf
-    (List.map enclosing ~f:(Fmt.str "%a" pp_enclosing)
+    (List.map enclosing ~f:(Fmt.str "%a" (pp_enclosing ~loop_name))
     @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d"))
+
+let pp_defined_element ~(loop_name : label -> string) ppf
+    ({var; path; _} : access) =
+  Fmt.pf ppf "%s%a" var
+    (one_line (Accesses.pp_path (Access_function.pp ~loop_name)))
+    path
 
 let pp_definitions ~(loop_name : label -> string) ppf
     (definitions : reaching_definition Set.Poly.t) =
-  let pp_access ppf ({var; path; _} : access) =
-    Fmt.pf ppf "%s%a" var
-      (one_line (Accesses.pp_path (Access_function.pp ~loop_name)))
-      path in
   let entries =
     List.map (Set.Poly.to_list definitions) ~f:(fun definition ->
-        (Fmt.str "%a" pp_access definition.access, definition.statement_id))
-  in
+        ( Fmt.str "%a" (pp_defined_element ~loop_name) definition.access
+        , definition.statement_id )) in
   let texts =
     List.rev
       (List.fold_left entries ~init:[] ~f:(fun texts (text, label) ->

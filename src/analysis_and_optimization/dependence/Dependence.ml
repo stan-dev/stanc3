@@ -44,22 +44,26 @@ module Accesses = struct
   type 'scalar t = 'scalar access list
 
   module Path = struct
+    let is_single_element (step : Expr.Typed.t step) : bool =
+      match step with
+      | Subscript (Index.Single _) | Field _ -> true
+      | Subscript _ -> false
+
     let rec of_expr (expr : Expr.Typed.t) :
         (string * Expr.Typed.t step list) option =
-      let extend_path base steps =
-        match of_expr base with
-        | Some (name, prefix)
-          when List.for_all prefix ~f:(function
-                 | Subscript (Index.Single _) | Field _ -> true
-                 | Subscript _ -> false) ->
-            Some (name, prefix @ steps)
-        | Some _ | None -> None in
       match expr.pattern with
       | Var name -> Some (name, [])
       | Indexed (base, indices) ->
           extend_path base (List.map indices ~f:(fun index -> Subscript index))
       | TupleProjection (base, field) -> extend_path base [Field field]
       | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
+
+    and extend_path (base : Expr.Typed.t) (steps : Expr.Typed.t step list) :
+        (string * Expr.Typed.t step list) option =
+      match of_expr base with
+      | Some (name, prefix) when List.for_all prefix ~f:is_single_element ->
+          Some (name, prefix @ steps)
+      | Some _ | None -> None
 
     let rec of_lvalue ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
         Expr.Typed.t step list =
@@ -68,31 +72,30 @@ module Accesses = struct
         | LTupleProjection (inner, field) -> of_lvalue inner @ [Field field])
       @ List.map indices ~f:(fun index -> Subscript index)
 
+    let step_exprs (step : Expr.Typed.t step) : Expr.Typed.t list =
+      match step with Subscript index -> Index.bounds index | Field _ -> []
+
     let subscript_exprs (path : Expr.Typed.t step list) : Expr.Typed.t list =
-      List.concat_map path ~f:(function
-        | Subscript index -> Index.bounds index
-        | Field _ -> [])
+      List.concat_map path ~f:step_exprs
   end
+
+  let is_same_step (first : Expr.Typed.t step) (second : Expr.Typed.t step) :
+      bool =
+    match (first, second) with
+    | Field first_field, Field second_field -> first_field = second_field
+    | Subscript first_index, Subscript second_index ->
+        Index.compare Expr.Helpers.compare_ignore_meta first_index second_index
+        = 0
+    | Field _, Subscript _ | Subscript _, Field _ -> false
 
   let is_same_syntax (first : Expr.Typed.t step list)
       (second : Expr.Typed.t step list) : bool =
-    let is_same_step first_step second_step =
-      match (first_step, second_step) with
-      | Field first_field, Field second_field -> first_field = second_field
-      | Subscript first_index, Subscript second_index ->
-          Index.compare Expr.Helpers.compare_ignore_meta first_index
-            second_index
-          = 0
-      | Field _, Subscript _ | Subscript _, Field _ -> false in
     List.equal ~eq:is_same_step first second
 
+  let target_access (kind : kind) : Expr.Typed.t access =
+    {var= "target"; path= []; kind}
+
   let rec collect_expr (expr : Expr.Typed.t) : Expr.Typed.t t =
-    let of_children () =
-      Expr.Pattern.fold
-        (fun running_accesses subexpr ->
-          running_accesses @ collect_expr subexpr)
-        [] expr.pattern in
-    let target kind = {var= "target"; path= []; kind} in
     match expr.pattern with
     | Var name -> [{var= name; path= []; kind= Read}]
     | Indexed _ | TupleProjection _ -> (
@@ -100,31 +103,39 @@ module Accesses = struct
         | Some (name, path) ->
             {var= name; path; kind= Read}
             :: List.concat_map (Path.subscript_exprs path) ~f:collect_expr
-        | None -> of_children ())
-    | FunApp (StanLib (_, FnTarget), []) -> [target Read]
+        | None -> collect_subexprs expr)
+    | FunApp (StanLib (_, FnTarget), []) -> [target_access Read]
     | FunApp (fun_kind, _) when is_target_increment fun_kind ->
-        of_children () @ [target ReadWrite]
+        collect_subexprs expr @ [target_access ReadWrite]
     | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
-        of_children ()
+        collect_subexprs expr
+
+  and collect_subexprs (expr : Expr.Typed.t) : Expr.Typed.t t =
+    Expr.Pattern.fold
+      (fun running_accesses subexpr -> running_accesses @ collect_expr subexpr)
+      [] expr.pattern
+
+  let collect_statement_exprs
+      (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : Expr.Typed.t t =
+    Stmt.Pattern.fold
+      (fun running_accesses subexpr -> running_accesses @ collect_expr subexpr)
+      Fun.const [] stmt
+
+  let is_read_of_written ~(var : string) ~(path : Expr.Typed.t step list)
+      (read : Expr.Typed.t access) : bool =
+    String.equal read.var var && equal_kind read.kind Read
+    && is_same_syntax read.path path
 
   let of_assignment (var : string) (path : Expr.Typed.t step list)
       (reads : Expr.Typed.t t) : Expr.Typed.t t =
-    let is_read_of_written (read : Expr.Typed.t access) =
-      String.equal read.var var && equal_kind read.kind Read
-      && is_same_syntax read.path path in
-    if List.exists reads ~f:is_read_of_written then
-      List.filter reads ~f:(fun read -> not (is_read_of_written read))
+    if List.exists reads ~f:(is_read_of_written ~var ~path) then
+      List.filter reads ~f:(fun read ->
+          not (is_read_of_written ~var ~path read))
       @ [{var; path; kind= ReadWrite}]
     else reads @ [{var; path; kind= Write}]
 
   let of_statement (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) :
       Expr.Typed.t t =
-    let of_children () =
-      Stmt.Pattern.fold
-        (fun running_accesses subexpr ->
-          running_accesses @ collect_expr subexpr)
-        Fun.const [] stmt in
-    let target_read_write = {var= "target"; path= []; kind= ReadWrite} in
     match stmt with
     | Assignment (lhs, _, rhs) ->
         let path = Path.of_lvalue lhs in
@@ -133,20 +144,23 @@ module Accesses = struct
           path
           (List.concat_map (Path.subscript_exprs path @ [rhs]) ~f:collect_expr)
     | Decl {decl_id; _} ->
-        of_children () @ [{var= decl_id; path= []; kind= Write}]
-    | TargetPE _ | JacobianPE _ -> of_children () @ [target_read_write]
+        collect_statement_exprs stmt @ [{var= decl_id; path= []; kind= Write}]
+    | TargetPE _ | JacobianPE _ ->
+        collect_statement_exprs stmt @ [target_access ReadWrite]
     | NRFunApp (fun_kind, _) when is_target_increment fun_kind ->
-        of_children () @ [target_read_write]
+        collect_statement_exprs stmt @ [target_access ReadWrite]
     | NRFunApp _ | Return _ | IfElse _ | While _ | For _ | Profile _ | Block _
      |SList _ | Break | Continue | Skip ->
-        of_children ()
+        collect_statement_exprs stmt
+
+  let map_step ~(f : 'scalar -> 'mapped) (step : 'scalar step) : 'mapped step =
+    match step with
+    | Subscript index -> Subscript (Index.map f index)
+    | Field field -> Field field
 
   let map_scalars ~(f : 'scalar -> 'mapped) (access : 'scalar access) :
       'mapped access =
-    let map_step = function
-      | Subscript index -> Subscript (Index.map f index)
-      | Field field -> Field field in
-    {access with path= List.map access.path ~f:map_step}
+    {access with path= List.map access.path ~f:(map_step ~f)}
 
   let used_vars (accesses : 'scalar t) : string Set.Poly.t =
     let used_var {var; kind; _} =
@@ -164,7 +178,8 @@ module Accesses = struct
       | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_scalar indices
       | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_scalar ppf index
 
-    let rec pp_path pp_scalar ppf = function
+    let rec pp_path pp_scalar ppf (path : 'scalar step list) =
+      match path with
       | [] -> ()
       | Field field :: rest -> Fmt.pf ppf ".%d%a" field (pp_path pp_scalar) rest
       | Subscript index :: rest ->
@@ -172,12 +187,13 @@ module Accesses = struct
             (pp_subscripts_after pp_scalar)
             rest
 
-    and pp_subscripts_after pp_scalar ppf = function
+    and pp_subscripts_after pp_scalar ppf (path : 'scalar step list) =
+      match path with
       | Subscript index :: rest ->
           Fmt.pf ppf ", %a%a" (pp_subscript pp_scalar) index
             (pp_subscripts_after pp_scalar)
             rest
-      | path -> Fmt.pf ppf "]%a" (pp_path pp_scalar) path
+      | [] | Field _ :: _ -> Fmt.pf ppf "]%a" (pp_path pp_scalar) path
 
     let pp_kind ppf kind =
       Fmt.string ppf
@@ -263,63 +279,79 @@ module Access_function = struct
   let is_stable (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : bool =
     let used_names = expr_names expr in
-    let is_loop_var name =
-      Option.is_some (Loop_context.for_loop_id context ~loop_ids name) in
     Set.Poly.disjoint used_names context.defined_vars
-    && (not (Set.Poly.exists used_names ~f:is_loop_var))
+    && (not
+          (Set.Poly.exists used_names ~f:(fun name ->
+               Option.is_some (Loop_context.for_loop_id context ~loop_ids name))))
     && not (cannot_duplicate_expr expr)
 
-  let rec affine_of_expr (context : Loop_context.t) ~(loop_ids : label list)
+  let invariant_view (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : affine option =
-    let literal_bound (bound : Expr.Typed.t) : int option =
-      match affine_of_expr context ~loop_ids:[] bound with
-      | Some {constant; loop_terms= []; invariant_terms= []} -> Some constant
-      | Some _ | None -> None in
-    let loop_of_id (loop_id : label) : loop =
-      match Loop_context.for_loop_bounds context loop_id with
-      | Some (lower, upper) ->
-          {loop_id; lower= literal_bound lower; upper= literal_bound upper}
-      | None -> {loop_id; lower= None; upper= None} in
-    let of_atom (subexpr : Expr.Typed.t) : affine option =
-      if is_stable context ~loop_ids subexpr then
-        Some
-          { constant= 0
-          ; loop_terms= []
-          ; invariant_terms= [{key= subexpr; coefficient= 1}] }
-      else None in
-    let rec of_linear (subexpr : Expr.Typed.t) : affine option =
-      let or_atom (view : affine option) : affine option =
-        match view with Some _ -> view | None -> of_atom subexpr in
-      let combine operation lhs rhs =
-        match (of_linear lhs, of_linear rhs) with
-        | Some left_view, Some right_view -> operation left_view right_view
-        | None, _ | _, None -> None in
-      match subexpr.pattern with
-      | Var name -> (
-          match Loop_context.for_loop_id context ~loop_ids name with
-          | Some loop_id ->
-              Some
-                { constant= 0
-                ; loop_terms= [{key= loop_of_id loop_id; coefficient= 1}]
-                ; invariant_terms= [] }
-          | None -> of_atom subexpr)
-      | Lit (Int, digits) ->
-          Option.map (Int.of_string_opt digits) ~f:(fun constant ->
-              {constant; loop_terms= []; invariant_terms= []})
-      | FunApp (Operator Plus, [lhs; rhs]) ->
-          or_atom (combine (fun left right -> Some (add left right)) lhs rhs)
-      | FunApp (Operator Minus, [lhs; rhs]) ->
-          or_atom
-            (combine (fun left right -> Some (subtract left right)) lhs rhs)
-      | FunApp (Operator Times, [lhs; rhs]) ->
-          or_atom (combine multiply lhs rhs)
-      | FunApp (Operator PMinus, [operand]) ->
-          or_atom (Option.map (of_linear operand) ~f:(scale (-1)))
-      | FunApp (Operator PPlus, [operand]) -> or_atom (of_linear operand)
-      | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
-       |TupleProjection _ | Promotion _ ->
-          of_atom subexpr in
-    of_linear expr
+    if is_stable context ~loop_ids expr then
+      Some
+        { constant= 0
+        ; loop_terms= []
+        ; invariant_terms= [{key= expr; coefficient= 1}] }
+    else None
+
+  let rec linear_view (context : Loop_context.t) ~(loop_ids : label list)
+      (expr : Expr.Typed.t) : affine option =
+    match expr.pattern with
+    | Var name ->
+        Option.map (Loop_context.for_loop_id context ~loop_ids name)
+          ~f:(fun loop_id ->
+            { constant= 0
+            ; loop_terms= [{key= loop_of_id context loop_id; coefficient= 1}]
+            ; invariant_terms= [] })
+    | Lit (Int, digits) ->
+        Option.map (Int.of_string_opt digits) ~f:(fun constant ->
+            {constant; loop_terms= []; invariant_terms= []})
+    | FunApp (Operator Plus, [lhs; rhs]) ->
+        Option.map (operand_views context ~loop_ids lhs rhs)
+          ~f:(fun (left, right) -> add left right)
+    | FunApp (Operator Minus, [lhs; rhs]) ->
+        Option.map (operand_views context ~loop_ids lhs rhs)
+          ~f:(fun (left, right) -> subtract left right)
+    | FunApp (Operator Times, [lhs; rhs]) ->
+        Option.bind (operand_views context ~loop_ids lhs rhs)
+          ~f:(fun (left, right) -> multiply left right)
+    | FunApp (Operator PMinus, [operand]) ->
+        Option.map (affine_of_expr context ~loop_ids operand) ~f:(scale (-1))
+    | FunApp (Operator PPlus, [operand]) ->
+        affine_of_expr context ~loop_ids operand
+    | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
+     |TupleProjection _ | Promotion _ ->
+        None
+
+  and affine_of_expr (context : Loop_context.t) ~(loop_ids : label list)
+      (expr : Expr.Typed.t) : affine option =
+    match (linear_view context ~loop_ids expr, expr.pattern) with
+    | Some view, _ -> Some view
+    | None, Lit (Int, _) -> None
+    | None, _ -> invariant_view context ~loop_ids expr
+
+  and operand_views (context : Loop_context.t) ~(loop_ids : label list)
+      (lhs : Expr.Typed.t) (rhs : Expr.Typed.t) : (affine * affine) option =
+    match
+      ( affine_of_expr context ~loop_ids lhs
+      , affine_of_expr context ~loop_ids rhs )
+    with
+    | Some left, Some right -> Some (left, right)
+    | None, _ | _, None -> None
+
+  and literal_bound (context : Loop_context.t) (bound : Expr.Typed.t) :
+      int option =
+    match affine_of_expr context ~loop_ids:[] bound with
+    | Some {constant; loop_terms= []; invariant_terms= []} -> Some constant
+    | Some _ | None -> None
+
+  and loop_of_id (context : Loop_context.t) (loop_id : label) : loop =
+    match Loop_context.for_loop_bounds context loop_id with
+    | Some (lower, upper) ->
+        { loop_id
+        ; lower= literal_bound context lower
+        ; upper= literal_bound context upper }
+    | None -> {loop_id; lower= None; upper= None}
 
   let of_expr (context : Loop_context.t) ~(loop_ids : label list)
       (expr : Expr.Typed.t) : t =
@@ -542,20 +574,27 @@ let test_steps (write : Access_function.t step) (read : Access_function.t step)
 type loop_relation = {directions: Direction_set.t; distance: int option}
 type t = Independent | Possible_overlap of (label * loop_relation) list
 
+let constrain_relation ~(loop_id : label) (constraint_ : loop_relation)
+    ((common_loop_id, relation) : label * loop_relation) :
+    (label * loop_relation) option =
+  let directions =
+    Direction_set.inter relation.directions constraint_.directions in
+  match (relation.distance, constraint_.distance) with
+  | _ when common_loop_id <> loop_id -> Some (common_loop_id, relation)
+  | Some known, Some distance when known <> distance -> None
+  | _ when Direction_set.is_empty directions -> None
+  | known, distance ->
+      Some
+        ( common_loop_id
+        , {directions; distance= Option.first_some known distance} )
+
 let constrain_loop (relations : (label * loop_relation) list) ~(loop_id : label)
-    (constraint_ : loop_relation) : (label * loop_relation) list option =
-  let constrained (common_loop_id, relation) =
-    let directions =
-      Direction_set.inter relation.directions constraint_.directions in
-    match (relation.distance, constraint_.distance) with
-    | _ when common_loop_id <> loop_id -> Some (common_loop_id, relation)
-    | Some known, Some distance when known <> distance -> None
-    | _ when Direction_set.is_empty directions -> None
-    | known, distance ->
-        Some
-          ( common_loop_id
-          , {directions; distance= Option.first_some known distance} ) in
-  Option.all (List.map relations ~f:constrained)
+    (constraint_ : loop_relation) : t =
+  match
+    Option.all (List.map relations ~f:(constrain_relation ~loop_id constraint_))
+  with
+  | Some constrained_relations -> Possible_overlap constrained_relations
+  | None -> Independent
 
 let test_dependence ((writer_loop_ids, write_path) : label list * path)
     ((reader_loop_ids, read_path) : label list * path) : t =
@@ -565,10 +604,6 @@ let test_dependence ((writer_loop_ids, write_path) : label list * path)
   let no_information =
     List.map common_loop_ids ~f:(fun loop_id ->
         (loop_id, {directions= Direction_set.all; distance= None})) in
-  let constrained relations ~loop_id constraint_ =
-    match constrain_loop relations ~loop_id constraint_ with
-    | Some relations -> Possible_overlap relations
-    | None -> Independent in
   if List.compare_lengths write_path read_path <> 0 then
     Possible_overlap no_information
   else
@@ -581,39 +616,48 @@ let test_dependence ((writer_loop_ids, write_path) : label list * path)
             | Disjoint -> Independent
             | No_information -> dependence
             | Distance {loop_id; distance} ->
-                constrained relations ~loop_id
+                constrain_loop relations ~loop_id
                   { directions= Direction_set.of_distance distance
                   ; distance= Some distance }
             | Directions {loop_id; directions} ->
-                constrained relations ~loop_id {directions; distance= None}))
+                constrain_loop relations ~loop_id {directions; distance= None}))
 
-let rec is_writer_first_possible ~(is_writer_first : bool) :
-    (label * loop_relation) list -> bool = function
+let rec is_writer_first_possible ~(is_writer_first : bool)
+    (relations : (label * loop_relation) list) : bool =
+  match relations with
   | [] -> is_writer_first
   | (_, {directions; _}) :: inner_relations ->
       directions.is_writer_before
       || directions.is_same_iteration
          && is_writer_first_possible ~is_writer_first inner_relations
 
-let is_writer_possibly_first ~(is_writer_first : bool) : t -> bool = function
+let rec is_writer_first_possible_at_loop ~(loop_id : label)
+    ~(is_writer_first : bool) (relations : (label * loop_relation) list) : bool
+    =
+  match relations with
+  | [] -> false
+  | (common_loop_id, _) :: _ when common_loop_id = loop_id ->
+      is_writer_first_possible ~is_writer_first relations
+  | (_, {directions; _}) :: inner_relations ->
+      directions.is_same_iteration
+      && is_writer_first_possible_at_loop ~loop_id ~is_writer_first
+           inner_relations
+
+let is_writer_possibly_first ~(is_writer_first : bool) (dependence : t) : bool =
+  match dependence with
   | Independent -> false
   | Possible_overlap relations ->
       is_writer_first_possible ~is_writer_first relations
 
 let is_writer_possibly_first_at_loop ~(loop_id : label)
-    ~(is_writer_first : bool) : t -> bool = function
+    ~(is_writer_first : bool) (dependence : t) : bool =
+  match dependence with
   | Independent -> false
   | Possible_overlap relations ->
-      let rec is_possible_from = function
-        | [] -> false
-        | (common_loop_id, _) :: _ as relations when common_loop_id = loop_id ->
-            is_writer_first_possible ~is_writer_first relations
-        | (_, {directions; _}) :: inner_relations ->
-            directions.is_same_iteration && is_possible_from inner_relations
-      in
-      is_possible_from relations
+      is_writer_first_possible_at_loop ~loop_id ~is_writer_first relations
 
-let known_distance ~(loop_id : label) : t -> int option = function
+let known_distance ~(loop_id : label) (dependence : t) : int option =
+  match dependence with
   | Independent -> None
   | Possible_overlap relations ->
       Option.bind (List.assoc_opt loop_id relations) ~f:(fun relation ->
@@ -625,11 +669,15 @@ let pp_relation ~(loop_name : label -> string) ppf
   | Some distance -> Fmt.pf ppf "[%s:%d]" (loop_name loop_id) distance
   | None -> Fmt.pf ppf "[%s:%a]" (loop_name loop_id) Direction_set.pp directions
 
-let pp ~(loop_name : label -> string) ppf = function
+let is_unconstrained ((_, {directions; distance}) : label * loop_relation) :
+    bool =
+  Option.is_none distance && Direction_set.is_all directions
+
+let pp ~(loop_name : label -> string) ppf (dependence : t) =
+  match dependence with
   | Independent -> Fmt.string ppf "independent"
-  | Possible_overlap relations
-    when List.for_all relations ~f:(fun (_, {directions; distance}) ->
-             Option.is_none distance && Direction_set.is_all directions) ->
+  | Possible_overlap relations when List.for_all relations ~f:is_unconstrained
+    ->
       Fmt.string ppf "unknown"
   | Possible_overlap relations ->
       Fmt.pf ppf "distances %a"
