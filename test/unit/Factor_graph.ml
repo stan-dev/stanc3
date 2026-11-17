@@ -3,10 +3,6 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
-(** Prints the factor map and the variable map of [graph]. The factor map links
-    each factor and the statement label of the factor to the variables that the
-    factor reads. The variable map links each variable to the factors that read
-    the variable. *)
 let print_factor_graph (graph : factor_graph) =
   print_s
     [%sexp

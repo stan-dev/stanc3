@@ -587,10 +587,6 @@ let test_dependence ((writer_loop_ids, write_path) : label list * path)
             | Directions {loop_id; directions} ->
                 constrained relations ~loop_id {directions; distance= None}))
 
-let is_overlap_possible : t -> bool = function
-  | Independent -> false
-  | Possible_overlap _ -> true
-
 let rec is_writer_first_possible ~(is_writer_first : bool) :
     (label * loop_relation) list -> bool = function
   | [] -> is_writer_first

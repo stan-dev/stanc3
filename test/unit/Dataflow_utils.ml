@@ -637,10 +637,6 @@ let%expect_test "Predecessor graph example 5" =
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
 
-(* Each statement prints the controls, then the two views that queries use. The
-   controls list the enclosing ifs and loops, outermost first, then the jumps.
-   [control_parent_ids] keeps the nearest enclosing if or loop and the jumps.
-   [enclosing_loop_ids] keeps the loops, and a loop statement adds itself. *)
 let%expect_test "Controls and the two views derived from them" =
   let mir =
     Test_utils.mir_of_string

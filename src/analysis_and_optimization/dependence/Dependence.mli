@@ -45,7 +45,6 @@ val is_overwritten : is_same_iteration:bool -> path -> path -> bool
 type t
 
 val test_dependence : label list * path -> label list * path -> t
-val is_overlap_possible : t -> bool
 val is_writer_possibly_first : is_writer_first:bool -> t -> bool
 
 val is_writer_possibly_first_at_loop :

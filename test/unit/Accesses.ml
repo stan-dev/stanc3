@@ -1,28 +1,3 @@
-(* These tests check {!Analysis_and_optimization.Dependence.Accesses}. The
-   module records the accesses of each statement. An access is one read, write
-   or read-write of a variable. The dependence analysis uses the accesses to
-   find the earlier statements that a statement depends on.
-
-   The tests build a map of statements with [build_log_prob_dependence_info]. A
-   label is the integer that identifies a statement in this map. The map covers
-   the log density, which contains the statements of the parameters, transformed
-   parameters and model blocks.
-
-   The tests print [label: statement // accesses]. R marks a read, W marks a
-   write, and RW marks a read and a write of the same element, as [x += 1] and
-   [target += 1] make. Each access prints the variable and the indices. An index
-   with a view ({!Analysis_and_optimization.Dependence.Access_function}) is a
-   sum of a loop variable, an invariant part and a constant, and prints as that
-   sum, as in [n+k-1]. The invariant part is an expression that has the same
-   value at every evaluation. An index without a loop variable, as in [v[k]] or
-   [v[3]], selects the same element in every iteration. Every other index has no
-   view and prints as the source expression in parentheses, as in [v[(2 * n)]]
-   or [v[idx[n]]]: an index that reads a variable that a statement in the log
-   density writes, or a loop variable in an expression other than a sum.
-
-   The path of an access lists the subscripts and tuple fields that select the
-   element. Each subscript or tuple field is one step of the path. *)
-
 open Std
 open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Dataflow_types

@@ -6,19 +6,12 @@ module Dependence = Analysis_and_optimization.Dependence
 module Accesses = Dependence.Accesses
 module Access_function = Dependence.Access_function
 
-(* Prints, under each read of [var], one line per reaching write of [var]: {v 12
-   W b[n] --> R b[n-1]: distances [n:1] flows ^writer ^write ^read
-   ^Dependence.pp ^can the write run first v} The last word is [flows] or
-   [cannot flow], and an [independent] line has no last word. A [*] distance is
-   unknown. *)
 let print_verdicts ~var prog =
   let statements =
     build_log_prob_dependence_info (Test_utils.mir_of_string prog) in
   let accesses_of (statement : stmt_info) =
     List.filter statement.accesses ~f:(fun (access : access) ->
         String.equal access.var var) in
-  (* The kinds that can form a flow dependence: the write side writes and the
-     read side reads. *)
   let is_flow_kind (write : access) (read : access) =
     (match write.kind with Write | ReadWrite -> true | Read -> false)
     && match read.kind with Read | ReadWrite -> true | Write -> false in
@@ -48,9 +41,18 @@ let print_verdicts ~var prog =
                           Dependence.test_dependence
                             (writer.loop_ids, write.path)
                             (reader.loop_ids, read.path) in
+                        let is_reader_possibly_first =
+                          Dependence.is_writer_possibly_first
+                            ~is_writer_first:false
+                            (Dependence.test_dependence
+                               (reader.loop_ids, read.path)
+                               (writer.loop_ids, write.path)) in
+                        let is_overlap_possible =
+                          Dependence.is_writer_possibly_first
+                            ~is_writer_first:true dependence
+                          || is_reader_possibly_first in
                         let outcome =
-                          if not (Dependence.is_overlap_possible dependence)
-                          then ""
+                          if not is_overlap_possible then ""
                           else if
                             Dependence.is_writer_possibly_first
                               ~is_writer_first:(writer_id < reader_id)
@@ -61,11 +63,6 @@ let print_verdicts ~var prog =
                           write pp_access read (Dependence.pp ~loop_name)
                           dependence outcome)))))
 
-(* [is_overwritten] decides whether a later write kills an earlier one. A write
-   to [m[1]] overwrites [m[1, 2]], because the row [m[1]] contains the element
-   [m[1, 2]]. A write to [m[n, 1]] overwrites itself only within one iteration
-   of the loop over [n]. The comparison does not analyze slices, so a slice
-   write kills nothing. *)
 let%expect_test "Comparing write paths" =
   let statements =
     build_log_prob_dependence_info
@@ -102,8 +99,6 @@ let%expect_test "Comparing write paths" =
   let loop_name = Test_utils.loop_name statements in
   let pp_path =
     Test_utils.one_line (Accesses.pp_path (Access_function.pp ~loop_name)) in
-  (* The paths of the writes to [w], without the declaration, in source
-     order. *)
   let write_paths =
     List.concat_map (LabelMap.bindings statements) ~f:(fun (_, statement) ->
         List.filter_map statement.accesses ~f:(fun (access : access) ->
@@ -585,11 +580,6 @@ let%expect_test "Loop headers run in every iteration of their own loop" =
       17 RW k[n] --> RW k[n]: distances [n:0][i:*]  flows
     |}]
 
-(* A loop is identified by the label of the loop statement, not by the name of
-   the loop variable. The two sibling loops both use [n], and no loop is around
-   both the write and the read. The write of [b[n]] and the read of [b[n - 1]]
-   thus have no distance, and the write of the first loop can supply any element
-   that the second loop reads. *)
 let%expect_test "Loop identity: the same variable name in sibling loops" =
   print_verdicts ~var:"b"
     {|

@@ -51,6 +51,13 @@ let paths_of_x (statements : stmt_info LabelMap.t) kind :
           then Some (statement.loop_ids, access.path)
           else None))
 
+let is_overlap_possible (write : label list * Dependence.path)
+    (read : label list * Dependence.path) : bool =
+  Dependence.is_writer_possibly_first ~is_writer_first:true
+    (Dependence.test_dependence write read)
+  || Dependence.is_writer_possibly_first ~is_writer_first:false
+       (Dependence.test_dependence read write)
+
 let violations ~lower ~upper case (write : label list * Dependence.path)
     (read : label list * Dependence.path) : string list =
   let pairs = overlaps ~lower ~upper case in
@@ -64,9 +71,7 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
         List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
             f write_iteration read_iteration = distance) in
   let checks =
-    [ ( "independent hides an overlap"
-      , Dependence.is_overlap_possible forward || List.is_empty pairs )
-    ; ( "distance excludes an overlap"
+    [ ( "distance excludes an overlap"
       , has_distance forward ~f:(fun write_iteration read_iteration ->
             read_iteration - write_iteration) )
     ; ( "order excludes an overlap in the same iteration"
@@ -79,8 +84,6 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration < read_iteration)) )
-    ; ( "reversed independent hides an overlap"
-      , Dependence.is_overlap_possible backward || List.is_empty pairs )
     ; ( "reversed distance excludes an overlap"
       , has_distance backward ~f:(fun write_iteration read_iteration ->
             write_iteration - read_iteration) )
@@ -111,7 +114,7 @@ let run_bounds ?upper_text (lower, upper) =
             Fmt.pr "%d:%s %a: %s@." lower upper_text pp_case case name);
         let dependence = Dependence.test_dependence write read in
         let count is_counted = if is_counted then 1 else 0 in
-        let is_overlap_possible = Dependence.is_overlap_possible dependence in
+        let is_overlap_possible = is_overlap_possible write read in
         { disjoint=
             tally.disjoint + count (List.is_empty (overlaps ~lower ~upper case))
         ; independent= tally.independent + count (not is_overlap_possible)
@@ -219,9 +222,7 @@ let nest_violations case (write : label list * Dependence.path)
   let is_implied is_possible ~by =
     is_possible || not (List.exists pairs ~f:by) in
   let checks =
-    [ ( "independent hides an overlap"
-      , Dependence.is_overlap_possible dependence || List.is_empty pairs )
-    ; ("outer distance", has_distance ~loop_id:outer_loop_id ~f:fst)
+    [ ("outer distance", has_distance ~loop_id:outer_loop_id ~f:fst)
     ; ("inner distance", has_distance ~loop_id:inner_loop_id ~f:snd)
     ; ( "order, writer first in the body"
       , is_implied
@@ -266,10 +267,8 @@ let%expect_test "Two loops, linear subscripts, against enumeration" =
       ~f:(fun independent (case, (write, read)) ->
         List.iter (nest_violations case write read) ~f:(fun name ->
             Fmt.pr "%a: %s@." pp_nest_case case name);
-        if
-          Dependence.is_overlap_possible (Dependence.test_dependence write read)
-        then independent
-        else independent + 1) in
+        if is_overlap_possible write read then independent else independent + 1)
+  in
   Fmt.pr "cases %d, disjoint %d, proven independent %d@."
     (List.length nest_cases)
     (List.length

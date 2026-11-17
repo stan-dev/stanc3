@@ -4,14 +4,6 @@ open Analysis_and_optimization.Dataflow_utils
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-(* These tests print the tables of the running example in the interface of
-   {!Analysis_and_optimization.Dependence_analysis}, so the tables and the
-   analysis cannot drift apart. When the analysis or the documentation changes,
-   regenerate the tables in the interface from these tests. *)
-
-(** Prints rows of cells as a table. The first row is the header. Each column is
-    padded to the widest cell of the column, except the last column, and two
-    spaces separate the columns. *)
 let pp_table ppf (rows : string list list) =
   let rec widen widths row =
     match (widths, row) with
@@ -21,7 +13,6 @@ let pp_table ppf (rows : string list list) =
     | widths, [] -> widths in
   let widths = List.fold_left rows ~init:[] ~f:widen in
   let last_column = List.length widths - 1 in
-  (* An empty last cell would leave trailing spaces after the padding. *)
   let rec strip_trailing_spaces line =
     if String.ends_with ~suffix:" " line then
       strip_trailing_spaces
@@ -34,16 +25,12 @@ let pp_table ppf (rows : string list list) =
             else Printf.sprintf "%-*s" (List.nth widths column) cell) in
       Fmt.pf ppf "%s@." (strip_trailing_spaces (String.concat ~sep:"  " cells)))
 
-(** The rows of a table, one per label of the statement map in ascending order,
-    leaving out the labels for which [row] returns [None]. *)
 let table_rows (statements : stmt_info LabelMap.t)
     ~(row : label -> stmt_info -> string list option) : string list list =
   List.rev
     (LabelMap.fold statements ~init:[] ~f:(fun ~key ~data rows ->
          match row key data with Some cells -> cells :: rows | None -> rows))
 
-(* The program starts at the first line of the string, so the Stan line of each
-   statement is the line of the listing in the documentation. *)
 let running_example =
   {|data {
   int N;
@@ -68,8 +55,6 @@ model {
 let running_example_statements () =
   build_log_prob_dependence_info (Test_utils.mir_of_string running_example)
 
-(** Whether the statement at a label is the root or a block, which hold other
-    statements and have no accesses of their own. *)
 let is_block (statement : stmt_info) =
   match statement.pattern with
   | Stmt.Pattern.SList _ | Stmt.Pattern.Block _ -> true
@@ -148,8 +133,6 @@ let%expect_test "Running example: the reaching definitions" =
 
 let%expect_test "Running example: the direct dependencies" =
   let statements = running_example_statements () in
-  (* The writer labels and the control parents, as two columns. An empty column
-     prints [-]. *)
   let column labels =
     if Set.Poly.is_empty labels then "-"
     else Fmt.str "%a" Test_utils.pp_labels labels in

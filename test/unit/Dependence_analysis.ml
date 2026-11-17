@@ -4,17 +4,6 @@ open Analysis_and_optimization.Dataflow_utils
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-(* These tests check {!Analysis_and_optimization.Dependence_analysis}, which
-   finds the earlier statements that each statement depends on.
-
-   Each test builds the statement records of the log density with
-   [build_log_prob_dependence_info] and prints one line per statement: [label:
-   statement // data 5 9 control 6]. The labels after [data] are the writers
-   whose value the statement can read, and the labels after [control] are the
-   if, loop or jump that decides whether the statement runs. A query prints as
-   [name args: labels]. The // comments in the first program give the labels,
-   and label 1 is the root statement that holds all the others. *)
-
 let example1_program =
   Test_utils.mir_of_string
     {|
@@ -50,7 +39,6 @@ let example1_program =
         }
       |}
 
-(** Prints each statement and the immediate dependences of the statement. *)
 let pp_immediate_dependencies ppf (statements : stmt_info LabelMap.t) =
   LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
@@ -62,8 +50,6 @@ let print_immediate_dependencies prog =
 
 let%expect_test "Dependency graph example" =
   let statements = build_log_prob_dependence_info example1_program in
-  (* The direct and transitive dependencies of each statement, without the
-     statement itself. *)
   LabelMap.iter statements ~f:(fun ~key:label ~data:_ ->
       Fmt.pr "transitive_dependence_ids %d: %a@." label Test_utils.pp_labels
         (Set.Poly.remove label (transitive_dependence_ids statements label)));
@@ -101,8 +87,6 @@ let%expect_test "Variable dependency example" =
 
 module Accesses = Analysis_and_optimization.Dependence.Accesses
 
-(* A definition from outside the analyzed code has no label, so [None] is a key
-   distinct from the root statement at label 1. *)
 let%test "External definitions are distinct from statement label 1" =
   let definition var statement_id : reaching_definition =
     {access= {var; path= []; kind= Accesses.Write}; statement_id; loop_ids= []}
@@ -118,9 +102,6 @@ let%test "External definitions are distinct from statement label 1" =
         else None) in
   Set.Poly.equal labels_of_x (Set.Poly.of_list [None; Some 1])
 
-(* The data [N] reaches the condition as a definition from outside the analyzed
-   code, but the dependencies hold statement labels only, so the if at label 4
-   has no data dependency. *)
 let%expect_test "External inputs reach a statement but are not dependencies" =
   print_immediate_dependencies
     {|
@@ -175,8 +156,6 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     Test_utils.pp_labels
     (var_dependence_ids map ~blockers:(Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_id);
-  (* The condition does not read c, so a query for c finds no writer, although
-     two writes of c reach the condition. *)
   Fmt.pr "var_dependence_ids {c} %d: %a@." if_id Test_utils.pp_labels
     (var_dependence_ids map (Set.Poly.singleton "c") if_id);
   [%expect
@@ -223,10 +202,6 @@ let%expect_test
             statement.pattern pp_dependences statement
       | _ -> ());
   [%expect {| 6: if((target() > 0)) 7  // data 5 |}]
-
-(* The Graph tests use programs from test/unit/Dependence.ml. A write is not a
-   dependency of a read if the write selects a different element, or if the
-   write runs after the read. *)
 
 let%expect_test "Graph: definitions that execute after the read never flow" =
   print_immediate_dependencies
@@ -324,8 +299,6 @@ let%expect_test "Graph: distinct literal subscripts are independent" =
     9: target += normal_lupdf(y, theta[2], s);  // data 5 7 8
     |}]
 
-(* A read-write of target uses the latest read-write of target, and target() is
-   a plain read of the same value. *)
 let%expect_test "Graph: each read-write of target uses the previous one" =
   print_immediate_dependencies
     {|
@@ -384,9 +357,6 @@ let%expect_test "Variables read at a set of labels" =
     used_vars_at {9}: x
     used_vars_at {6 7 9}: N k mu x
     |}]
-
-(* The Kills tests check that a killed write is not a dependency of a read after
-   the later write. *)
 
 let%expect_test "Kills: the same element in every iteration" =
   print_immediate_dependencies
@@ -661,10 +631,6 @@ let%expect_test "Kills: loop-variable indices within one iteration" =
     43: target += 1;  // data 13 22 35 43  control 42
     |}]
 
-(* A subscript that draws a random number selects a different element at each
-   evaluation, so two such subscripts are never known to be the same element.
-   The second write must not kill the first, and the read of
-   [v[categorical_rng(theta) + 1]] must depend on both writes. *)
 let%expect_test "Kills: a random subscript is not a fixed element" =
   let mir =
     Test_utils.mir_of_string
