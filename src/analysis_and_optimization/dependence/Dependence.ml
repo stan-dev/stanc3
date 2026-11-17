@@ -635,18 +635,6 @@ let rec is_writer_first_possible (is_writer_first : bool)
       || directions.is_same_iteration
          && is_writer_first_possible is_writer_first inner_relations
 
-let rec is_writer_first_possible_at_loop (loop_id : label)
-    (is_writer_first : bool) (relations : (label * loop_constraint) list) : bool
-    =
-  match relations with
-  | [] -> false
-  | (common_loop_id, _) :: _ when common_loop_id = loop_id ->
-      is_writer_first_possible is_writer_first relations
-  | (_, loop_constraint) :: inner_relations ->
-      (directions_of loop_constraint).is_same_iteration
-      && is_writer_first_possible_at_loop loop_id is_writer_first
-           inner_relations
-
 let if_overlap (dependence : t) f : bool =
   match dependence with
   | Independent -> false
@@ -654,11 +642,6 @@ let if_overlap (dependence : t) f : bool =
 
 let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
   if_overlap dependence (is_writer_first_possible is_writer_first)
-
-let is_writer_possibly_first_at_loop (loop_id : label) (is_writer_first : bool)
-    (dependence : t) : bool =
-  if_overlap dependence
-    (is_writer_first_possible_at_loop loop_id is_writer_first)
 
 let overlap_opt_map (dependence : t) f : 'a option =
   match dependence with

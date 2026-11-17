@@ -230,23 +230,6 @@ let nest_violations case (write : label list * Dependence.path)
     ; ( "order, reader first in the body"
       , is_implied (Dependence.is_writer_possibly_first false dependence)
           ~by:(fun (write_iteration, read_iteration) ->
-            compare write_iteration read_iteration < 0) )
-    ; ( "inner loop order, writer first in the body"
-      , is_implied
-          (Dependence.is_writer_possibly_first_at_loop inner_loop_id true
-             dependence)
-          ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
-            write_outer = read_outer && write_inner <= read_inner) )
-    ; ( "inner loop order, reader first in the body"
-      , is_implied
-          (Dependence.is_writer_possibly_first_at_loop inner_loop_id false
-             dependence)
-          ~by:(fun ((write_outer, write_inner), (read_outer, read_inner)) ->
-            write_outer = read_outer && write_inner < read_inner) )
-    ; ( "outer loop order"
-      , is_implied
-          (Dependence.is_writer_possibly_first_at_loop outer_loop_id false
-             dependence) ~by:(fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration < 0) ) ] in
   List.filter_map checks ~f:(fun (name, is_sound) ->
       if is_sound then None else Some name)

@@ -46,6 +46,5 @@ type t
 
 val test_dependence : label list * path -> label list * path -> t
 val is_writer_possibly_first : bool -> t -> bool
-val is_writer_possibly_first_at_loop : label -> bool -> t -> bool
 val known_distance : label -> t -> int option
 val pp : (label -> string) -> t Fmt.t
