@@ -395,15 +395,6 @@ module Access_function = struct
     if constant <> 0 || is_first then
       Fmt.pf ppf "%s%d" (sign ~is_first constant) (abs constant)
 
-  let stride ~(loop_id : label) (access_function : t) : int option =
-    Option.map access_function.view ~f:(fun view ->
-        match
-          List.find_opt view.loop_terms ~f:(fun term ->
-              term.key.loop_id = loop_id)
-        with
-        | Some term -> term.coefficient
-        | None -> 0)
-
   let pp ~loop_name ppf ({expr; view} : t) =
     match view with
     | Some affine -> pp_affine ~loop_name ppf affine
@@ -642,20 +633,6 @@ let if_overlap (dependence : t) f : bool =
 
 let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
   if_overlap dependence (is_writer_first_possible is_writer_first)
-
-let overlap_opt_map (dependence : t) f : 'a option =
-  match dependence with
-  | Independent -> None
-  | Possible_overlap relations -> f relations
-
-let distance_at (loop_id : label) (relations : (label * loop_constraint) list) :
-    int option =
-  match List.assoc_opt loop_id relations with
-  | Some (Distance distance) -> Some distance
-  | Some (Directions _) | None -> None
-
-let known_distance (loop_id : label) (dependence : t) : int option =
-  overlap_opt_map dependence (distance_at loop_id)
 
 let pp_relation (loop_name : label -> string) ppf
     ((loop_id, loop_constraint) : label * loop_constraint) =

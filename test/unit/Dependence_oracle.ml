@@ -61,20 +61,10 @@ let is_overlap_possible (write : label list * Dependence.path)
 let violations ~lower ~upper case (write : label list * Dependence.path)
     (read : label list * Dependence.path) : string list =
   let pairs = overlaps ~lower ~upper case in
-  let loop_id = List.hd_exn (fst write) in
   let forward = Dependence.test_dependence write read in
   let backward = Dependence.test_dependence read write in
-  let has_distance dependence ~f =
-    match Dependence.known_distance loop_id dependence with
-    | None -> true
-    | Some distance ->
-        List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
-            f write_iteration read_iteration = distance) in
   let checks =
-    [ ( "distance excludes an overlap"
-      , has_distance forward ~f:(fun write_iteration read_iteration ->
-            read_iteration - write_iteration) )
-    ; ( "order excludes an overlap in the same iteration"
+    [ ( "order excludes an overlap in the same iteration"
       , Dependence.is_writer_possibly_first true forward
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
@@ -84,9 +74,6 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
         || not
              (List.exists pairs ~f:(fun (write_iteration, read_iteration) ->
                   write_iteration < read_iteration)) )
-    ; ( "reversed distance excludes an overlap"
-      , has_distance backward ~f:(fun write_iteration read_iteration ->
-            write_iteration - read_iteration) )
     ; ( "reversed order excludes an overlap"
       , Dependence.is_writer_possibly_first false backward
         || not
@@ -95,8 +82,7 @@ let violations ~lower ~upper case (write : label list * Dependence.path)
   List.filter_map checks ~f:(fun (name, is_sound) ->
       if is_sound then None else Some name)
 
-type tally =
-  {disjoint: int; independent: int; with_distance: int; refuted_order: int}
+type tally = {disjoint: int; independent: int; refuted_order: int}
 
 let run_bounds ?upper_text (lower, upper) =
   let upper_text = Option.value upper_text ~default:(Int.to_string upper) in
@@ -108,7 +94,7 @@ let run_bounds ?upper_text (lower, upper) =
   let tally =
     List.fold_left
       (List.combine cases (List.combine writes reads))
-      ~init:{disjoint= 0; independent= 0; with_distance= 0; refuted_order= 0}
+      ~init:{disjoint= 0; independent= 0; refuted_order= 0}
       ~f:(fun tally (case, (write, read)) ->
         List.iter (violations ~lower ~upper case write read) ~f:(fun name ->
             Fmt.pr "%d:%s %a: %s@." lower upper_text pp_case case name);
@@ -118,13 +104,6 @@ let run_bounds ?upper_text (lower, upper) =
         { disjoint=
             tally.disjoint + count (List.is_empty (overlaps ~lower ~upper case))
         ; independent= tally.independent + count (not is_overlap_possible)
-        ; with_distance=
-            tally.with_distance
-            + count
-                (Option.is_some
-                   (Dependence.known_distance
-                      (List.hd_exn (fst write))
-                      dependence))
         ; refuted_order=
             tally.refuted_order
             + count
@@ -132,19 +111,19 @@ let run_bounds ?upper_text (lower, upper) =
                 && not (Dependence.is_writer_possibly_first true dependence)) })
   in
   Fmt.pr
-    "%d:%s cases %d, disjoint %d, proven independent %d, with distance %d, \
-     writer never first %d@."
+    "%d:%s cases %d, disjoint %d, proven independent %d, writer never first \
+     %d@."
     lower upper_text (List.length cases) tally.disjoint tally.independent
-    tally.with_distance tally.refuted_order
+    tally.refuted_order
 
 let%expect_test "One loop, linear subscripts, against enumeration" =
   List.iter [(1, 5); (-2, 2); (3, 3); (4, 2)] ~f:run_bounds;
   [%expect
     {|
-    1:5 cases 450, disjoint 255, proven independent 152, with distance 52, writer never first 22
-    -2:2 cases 450, disjoint 124, proven independent 122, with distance 52, writer never first 22
-    3:3 cases 450, disjoint 424, proven independent 234, with distance 8, writer never first 0
-    4:2 cases 450, disjoint 450, proven independent 250, with distance 0, writer never first 0
+    1:5 cases 450, disjoint 255, proven independent 152, writer never first 22
+    -2:2 cases 450, disjoint 124, proven independent 122, writer never first 22
+    3:3 cases 450, disjoint 424, proven independent 234, writer never first 0
+    4:2 cases 450, disjoint 450, proven independent 250, writer never first 0
     |}]
 
 let%expect_test "One loop, unknown upper bound, against enumeration" =
@@ -153,9 +132,9 @@ let%expect_test "One loop, unknown upper bound, against enumeration" =
   run_bounds ~upper_text:"N" (3, 3);
   [%expect
     {|
-    1:N cases 450, disjoint 245, proven independent 150, with distance 54, writer never first 23
-    -2:N cases 450, disjoint 105, proven independent 104, with distance 54, writer never first 23
-    3:N cases 450, disjoint 424, proven independent 180, with distance 54, writer never first 23
+    1:N cases 450, disjoint 245, proven independent 150, writer never first 23
+    -2:N cases 450, disjoint 105, proven independent 104, writer never first 23
+    3:N cases 450, disjoint 424, proven independent 180, writer never first 23
     |}]
 
 type nest_case =
@@ -207,23 +186,11 @@ let nest_overlaps case : ((int * int) * (int * int)) list =
 let nest_violations case (write : label list * Dependence.path)
     (read : label list * Dependence.path) : string list =
   let pairs = nest_overlaps case in
-  let outer_loop_id, inner_loop_id =
-    match fst write with
-    | [outer_loop_id; inner_loop_id] -> (outer_loop_id, inner_loop_id)
-    | _ -> failwith "expected two loops" in
   let dependence = Dependence.test_dependence write read in
-  let has_distance ~loop_id ~f =
-    match Dependence.known_distance loop_id dependence with
-    | None -> true
-    | Some distance ->
-        List.for_all pairs ~f:(fun (write_iteration, read_iteration) ->
-            f read_iteration - f write_iteration = distance) in
   let is_implied is_possible ~by =
     is_possible || not (List.exists pairs ~f:by) in
   let checks =
-    [ ("outer distance", has_distance ~loop_id:outer_loop_id ~f:fst)
-    ; ("inner distance", has_distance ~loop_id:inner_loop_id ~f:snd)
-    ; ( "order, writer first in the body"
+    [ ( "order, writer first in the body"
       , is_implied (Dependence.is_writer_possibly_first true dependence)
           ~by:(fun (write_iteration, read_iteration) ->
             compare write_iteration read_iteration <= 0) )
