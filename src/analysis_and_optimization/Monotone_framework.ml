@@ -855,8 +855,7 @@ let monotone_framework (type p) (module F : FLOWGRAPH with type labels = int)
       in
       (* The worklist holds indices into [labels], so processing the min element
          means we are processing predecessors first, whenever possible *)
-      let worklist =
-        ref (Int.Set.of_list (List.range 0 (Array.length labels))) in
+      let workset = ref (Int.Set.of_list (List.range 0 (Array.length labels))) in
       let analysis_in =
         Hashtbl.of_seq
           (LabelMap.to_seq F.successors
@@ -864,9 +863,9 @@ let monotone_framework (type p) (module F : FLOWGRAPH with type labels = int)
               (l, if Set.Poly.mem l F.initials then L.initial else L.bottom)))
       in
       (* STEP 2: iterate *)
-      while not (Int.Set.is_empty !worklist) do
-        let earliest = Int.Set.min_elt !worklist in
-        worklist := Int.Set.remove earliest !worklist;
+      while not (Int.Set.is_empty !workset) do
+        let earliest = Int.Set.min_elt !workset in
+        workset := Int.Set.remove earliest !workset;
         let l = labels.(earliest) in
         let new_analysis_in_l' =
           T.transfer_function l (Hashtbl.find analysis_in l) in
@@ -876,7 +875,7 @@ let monotone_framework (type p) (module F : FLOWGRAPH with type labels = int)
               Hashtbl.add analysis_in ~key:l'
                 ~data:(L.lub old_analysis_in_l' new_analysis_in_l');
               let successor_idx = LabelMap.find l' positions in
-              worklist := Int.Set.add successor_idx !worklist))
+              workset := Int.Set.add successor_idx !workset))
       done;
       (* STEP 3: present final results *)
       let analysis_in_out =
