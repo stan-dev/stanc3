@@ -33,10 +33,3 @@ val var_dependence_ids :
   -> label Set.Poly.t
 
 val used_vars_at : stmt_info LabelMap.t -> label Set.Poly.t -> string Set.Poly.t
-val pp_pattern : (Expr.Typed.t, label) Stmt.Pattern.t Fmt.t
-val pp_controls : loop_name:(label -> string) -> controls Fmt.t
-
-val pp_definitions :
-  loop_name:(label -> string) -> reaching_definition Set.Poly.t Fmt.t
-
-val pp_dependences : stmt_info Fmt.t

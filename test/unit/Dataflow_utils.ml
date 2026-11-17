@@ -637,6 +637,19 @@ let%expect_test "Predecessor graph example 5" =
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
 
+let pp_enclosing (loop_name : label -> string) ppf (enclosing : enclosing) =
+  match enclosing with
+  | {id; side= Some Then} -> Fmt.pf ppf "if %d then" id
+  | {id; side= Some Else} -> Fmt.pf ppf "if %d else" id
+  | {id; side= None} -> Fmt.pf ppf "loop %d (%s)" id (loop_name id)
+
+let pp_controls (loop_name : label -> string) ppf
+    ({enclosing; jump_ids} : controls) =
+  Fmt.(list ~sep:(any "; ") string)
+    ppf
+    (List.map enclosing ~f:(Fmt.str "%a" (pp_enclosing loop_name))
+    @ List.map (Set.Poly.to_list jump_ids) ~f:(Fmt.str "jump %d"))
+
 let%expect_test "Controls and the two views derived from them" =
   let mir =
     Test_utils.mir_of_string
@@ -665,9 +678,8 @@ let%expect_test "Controls and the two views derived from them" =
   LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
       let controls = LabelMap.find statement_id controls_map in
       Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
-        statement_id Test_utils.pp_stmt pattern
-        (Analysis_and_optimization.Dependence_analysis.pp_controls ~loop_name)
-        controls Test_utils.pp_labels
+        statement_id Test_utils.pp_stmt pattern (pp_controls loop_name) controls
+        Test_utils.pp_labels
         (control_parent_ids controls)
         Fmt.(list ~sep:(any "; ") int)
         (enclosing_loop_ids statement_id pattern controls));

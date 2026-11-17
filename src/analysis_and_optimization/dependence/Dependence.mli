@@ -25,16 +25,12 @@ module Accesses : sig
   val map_scalars : f:('scalar -> 'mapped) -> 'scalar access -> 'mapped access
   val used_vars : 'scalar t -> string Set.Poly.t
   val defined_vars : 'scalar t -> string Set.Poly.t
-  val pp_path : 'scalar Fmt.t -> 'scalar step list Fmt.t
-  val pp_access : 'scalar Fmt.t -> 'scalar access Fmt.t
-  val pp : 'scalar Fmt.t -> 'scalar t Fmt.t
 end
 
 module Access_function : sig
   type t
 
   val of_expr : Loop_context.t -> loop_ids:label list -> Expr.Typed.t -> t
-  val pp : loop_name:(label -> string) -> t Fmt.t
 end
 
 type path = Access_function.t Accesses.step list
@@ -45,4 +41,3 @@ type t
 
 val test_dependence : label list * path -> label list * path -> t
 val is_writer_possibly_first : bool -> t -> bool
-val pp : (label -> string) -> t Fmt.t

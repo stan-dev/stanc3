@@ -171,52 +171,6 @@ module Accesses = struct
     let defined_var {var; kind; _} =
       match kind with Write | ReadWrite -> Some var | Read -> None in
     accesses |> List.filter_map ~f:defined_var |> Set.Poly.of_list
-
-  module Printing = struct
-    let pp_subscript pp_scalar ppf (index : 'scalar Index.t) =
-      match index with
-      | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_scalar indices
-      | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_scalar ppf index
-
-    let rec pp_path pp_scalar ppf (path : 'scalar step list) =
-      match path with
-      | [] -> ()
-      | Field field :: rest -> Fmt.pf ppf ".%d%a" field (pp_path pp_scalar) rest
-      | Subscript index :: rest ->
-          Fmt.pf ppf "[%a%a" (pp_subscript pp_scalar) index
-            (pp_subscripts_after pp_scalar)
-            rest
-
-    and pp_subscripts_after pp_scalar ppf (path : 'scalar step list) =
-      match path with
-      | Subscript index :: rest ->
-          Fmt.pf ppf ", %a%a" (pp_subscript pp_scalar) index
-            (pp_subscripts_after pp_scalar)
-            rest
-      | [] | Field _ :: _ -> Fmt.pf ppf "]%a" (pp_path pp_scalar) path
-
-    let pp_kind ppf kind =
-      Fmt.string ppf
-        (match kind with Read -> "R" | ReadWrite -> "RW" | Write -> "W")
-
-    let pp_access pp_scalar ppf {var; path; kind} =
-      Fmt.pf ppf "%a %s%a" pp_kind kind var (pp_path pp_scalar) path
-
-    let pp pp_scalar ppf (accesses : 'scalar t) =
-      let reads, read_writes, writes =
-        List.partition3_map accesses ~f:(fun access ->
-            match access.kind with
-            | Read -> `Fst access
-            | ReadWrite -> `Snd access
-            | Write -> `Trd access) in
-      Fmt.(list ~sep:(any ", ") (pp_access pp_scalar))
-        ppf
-        (reads @ read_writes @ writes)
-  end
-
-  let pp_path = Printing.pp_path
-  let pp_access = Printing.pp_access
-  let pp = Printing.pp
 end
 
 module Access_function = struct
@@ -377,28 +331,6 @@ module Access_function = struct
              second_view.loop_terms
         && (is_same_iteration || List.is_empty first_view.loop_terms)
     | None, _ | _, None -> false
-
-  let pp_affine ~(loop_name : label -> string) ppf
-      ({constant; loop_terms; invariant_terms} : affine) =
-    let terms =
-      List.map loop_terms ~f:(fun {key; coefficient} ->
-          (coefficient, loop_name key.loop_id))
-      @ List.map invariant_terms ~f:(fun {key; coefficient} ->
-          (coefficient, Fmt.str "%a" Expr.Typed.pp key)) in
-    let sign ~is_first value =
-      if value < 0 then "-" else if is_first then "" else "+" in
-    List.iteri terms ~f:(fun position (coefficient, text) ->
-        let sign = sign ~is_first:(position = 0) coefficient in
-        if abs coefficient = 1 then Fmt.pf ppf "%s%s" sign text
-        else Fmt.pf ppf "%s%d*%s" sign (abs coefficient) text);
-    let is_first = List.is_empty terms in
-    if constant <> 0 || is_first then
-      Fmt.pf ppf "%s%d" (sign ~is_first constant) (abs constant)
-
-  let pp ~loop_name ppf ({expr; view} : t) =
-    match view with
-    | Some affine -> pp_affine ~loop_name ppf affine
-    | None -> Expr.Typed.pp ppf expr
 end
 
 open Accesses
@@ -448,20 +380,6 @@ module Direction_set = struct
     not
       (directions.is_writer_before || directions.is_same_iteration
      || directions.is_writer_after)
-
-  let is_all (directions : t) : bool =
-    directions.is_writer_before && directions.is_same_iteration
-    && directions.is_writer_after
-
-  let pp ppf (directions : t) =
-    if is_all directions then Fmt.string ppf "*"
-    else
-      Fmt.(list ~sep:(any ",") string)
-        ppf
-        (List.filter_map ~f:Fun.id
-           [ Option.some_if directions.is_writer_before "<"
-           ; Option.some_if directions.is_same_iteration "="
-           ; Option.some_if directions.is_writer_after ">" ])
 end
 
 type loop_constraint = Distance of int | Directions of Direction_set.t
@@ -633,26 +551,3 @@ let if_overlap (dependence : t) f : bool =
 
 let is_writer_possibly_first (is_writer_first : bool) (dependence : t) : bool =
   if_overlap dependence (is_writer_first_possible is_writer_first)
-
-let pp_relation (loop_name : label -> string) ppf
-    ((loop_id, loop_constraint) : label * loop_constraint) =
-  match loop_constraint with
-  | Distance distance -> Fmt.pf ppf "[%s:%d]" (loop_name loop_id) distance
-  | Directions directions ->
-      Fmt.pf ppf "[%s:%a]" (loop_name loop_id) Direction_set.pp directions
-
-let is_unconstrained ((_, loop_constraint) : label * loop_constraint) : bool =
-  match loop_constraint with
-  | Distance _ -> false
-  | Directions directions -> Direction_set.is_all directions
-
-let pp (loop_name : label -> string) ppf (dependence : t) =
-  match dependence with
-  | Independent -> Fmt.string ppf "independent"
-  | Possible_overlap relations when List.for_all relations ~f:is_unconstrained
-    ->
-      Fmt.string ppf "unknown"
-  | Possible_overlap relations ->
-      Fmt.pf ppf "distances %a"
-        Fmt.(list ~sep:nop (pp_relation loop_name))
-        relations

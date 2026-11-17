@@ -39,6 +39,17 @@ let example1_program =
         }
       |}
 
+let labels_of (kind_name : string) (labels : label Set.Poly.t) : string option =
+  if Set.Poly.is_empty labels then None
+  else Some (Fmt.str "%s %a" kind_name Test_utils.pp_labels labels)
+
+let pp_dependences ppf (statement : stmt_info) =
+  Fmt.(list ~sep:(any "  ") string)
+    ppf
+    (List.filter_map ~f:Fun.id
+       [ labels_of "data" (Set.Poly.map statement.writers ~f:snd)
+       ; labels_of "control" (control_parent_ids statement.controls) ])
+
 let pp_immediate_dependencies ppf (statements : stmt_info LabelMap.t) =
   LabelMap.iter statements ~f:(fun ~key:statement_id ~data:statement ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt
