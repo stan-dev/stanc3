@@ -537,14 +537,16 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Assignment ((LVariable x, []), _, _) | Decl {decl_id= x; _} ->
+        | Assignment ((LVariable x, []), _, _)
+         |Decl {decl_id= x; _}
+         |For {loopvar= x; _} ->
             Set.Poly.singleton x
         | TargetPE _ | JacobianPE _
          |NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
-         |For _ | Profile _ | Block _ | SList _
+         |Profile _ | Block _ | SList _
          |Assignment (_, _, _) ->
             Set.Poly.empty in
       transfer_gen_kill p gen (Set.Poly.diff kill never_kill)
