@@ -9,19 +9,25 @@ open Std.Sexp_conv
     and often corresponds to one node in the Mir. *)
 type label = int [@@deriving sexp_of]
 
-(** Representation of an expression that can be assigned to. This should also be
-    able to represent indexed variables, but we don't support that yet. *)
-type vexpr = VVar of string [@@deriving sexp_of]
+(** The side of an [if] that holds a statement. *)
+type side = Then | Else
 
-(** A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that
-    the variable v could have been affected at the label l. *)
-type reaching_defn = vexpr * label [@@deriving sexp_of]
+(** An [if] or a loop around a statement. [id] is the label of the [if] or the
+    loop. [side] is the side of the [if] that holds the statement, and [None]
+    for a loop. A loop is identified by the label of the loop statement, and the
+    statement at that label holds the loop variable. *)
+type enclosing = {id: label; side: side option}
 
-(** The most recently nested control flow (block start, if/then, or loop)
-
-    This isn't included in the traversal_state because it only flows downward
-    through the tree, not across and up like everything else *)
-type cf_state = label
+(** The {e controls} of a statement are the other statements that decide
+    whether, or how often, the statement runs. {!Dataflow_utils.build_controls}
+    finds the controls of each statement. *)
+type controls =
+  { enclosing: enclosing list
+        (** The index of ifs and loops around the statement, outermost first. *)
+  ; jump_ids: label Set.Poly.t
+        (** The labels of the [break], [continue] and [return] statements that
+            can skip the statement. For a loop statement, also each [break] or
+            [return] in the loop body that can end the loop. *) }
 
 module LabelMap = struct
   include Int.Map

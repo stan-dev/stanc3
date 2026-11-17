@@ -962,7 +962,7 @@ let add_known_size (info : declsize_info) (name : string)
     let deps =
       List.filter_mapi sizes ~f:(fun i -> function
         | None -> None
-        | Some d -> Some (i, Mir_utils.expr_var_names_set d))
+        | Some d -> Some (i, Mir_utils.expr_names d))
       |> List.fold_left ~init:info.deps ~f:(fun init (i, names) ->
           Set.Poly.fold names ~init ~f:(fun key ->
               String.Map.update ~key ~f:(fun l ->

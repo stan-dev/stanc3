@@ -37,6 +37,9 @@ module Pattern : sig
     -> 'a
     -> ('b, 'c) t
     -> 'a * ('b, 'd) t
+
+  val pp : 'a Fmt.t -> 'b Fmt.t -> ('a, 'b) t Fmt.t
+  (** Prints a pattern with the given expression and child printers. *)
 end
 
 (** The "two-level" type for statements in the MIR. This corresponds to what the
