@@ -1,0 +1,55 @@
+; Loop-vectorization corpus: loops from the GCC, LLVM and TSVC vectorizer test
+; suites and the design examples (design-docs/active/vectorize-loop-fission.md
+; sections 7.8 and 13.3). For every model.stan in this folder, two files are
+; pinned:
+;   expected_report/model.report  the --debug-loop-vectorization report: the
+;                                 leaves with their outcome, the dependence
+;                                 graph and the pi-blocks of every loop
+;   expected_mir/model.mir        the optimized MIR with the pass alone (base
+;                                 O0, so the raw slices survive): the emitted
+;                                 statements, and every sequential loop
+;                                 unchanged
+; The header comment of each model predicts both; the expected files are
+; reviewed against that prediction before promotion. One known difference:
+; llvm_loop_distribute loop 4 accumulates total4, a reduction the pass does
+; not recognise yet, so the loop stays sequential.
+; The rules are generated at build time from the .stan files by
+; test/integration/gen_expected_rules.exe, as in the other optimization test
+; folders, so no model name is listed anywhere: drop a .stan file here and run
+; `dune runtest` then `dune promote`.
+
+(subdir
+ dunes
+ (rule
+  (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_report/*)
+   (:stanfiles
+    (glob_files ../*.stan)))
+  (action
+   (with-stdout-to
+    report.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     report
+     "-fvectorize-loops --debug-loop-vectorization"
+     %{stanfiles}))))
+ (rule
+  (deps
+   (sandbox patch_back_source_tree)
+   (glob_files ../expected_mir/*)
+   (:stanfiles
+    (glob_files ../*.stan)))
+  (action
+   (with-stdout-to
+    mir.dune
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     mir
+     "-fvectorize-loops --debug-optimized-mir-pretty"
+     %{stanfiles})))))
+
+(subdir
+ run
+ (dynamic_include ../dunes/report.dune)
+ (dynamic_include ../dunes/mir.dune))

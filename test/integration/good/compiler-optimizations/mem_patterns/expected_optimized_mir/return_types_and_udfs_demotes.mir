@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../return_types_and_udfs_demotes.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../return_types_and_udfs_demotes.stan : [exit 0] */
 matrix[10, 10] row_soa: SoA
 matrix[10, 10] udf_input_aos: AoS
 matrix[10, 10] user_func_aos: AoS

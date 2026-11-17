@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../constraints.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../constraints.stan : [exit 0] */
 vector[N] high_low_est: SoA
 vector[K] b: SoA
 vector[Nr] h: SoA

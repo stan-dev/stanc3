@@ -1,8 +1,9 @@
 // An assignment loop `w[n] = x[n - 1]` that reads the data vector at an
 // offset from the loop variable.
-// Desired outcome: left as a loop.
-// The subscript `n - 1` uses the loop variable inside arithmetic, which the
-// vectorizer cannot turn into a range or an index array.
+// Desired outcome: fully vectorized.
+//   `w[2:N] = x[(2 - 1):(N - 1)]`
+// The subscript `n - 1` is affine in the loop variable, so the read becomes
+// the loop's range shifted by the offset.
 data {
   int<lower=0> N;
   vector[N] x;

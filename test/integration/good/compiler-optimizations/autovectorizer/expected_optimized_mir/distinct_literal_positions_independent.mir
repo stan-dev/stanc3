@@ -20,10 +20,8 @@ log_prob {
     v10 = rep_matrix(promote(0, real, data), N, 2);
     FnValidateSize__("w10", "N", N);
     vector[N] w10;
-    for(n in 1:N) {
-      v10[n, 1] = x[n];
-      w10[n] = v10[n, 2];
-    }
+    v10[1:N, 1] = x[1:N];
+    w10[1:N] = v10[1:N, 2];
     target += (sum(v10) + sum(w10));
   } }
 
@@ -34,10 +32,8 @@ rev_log_prob {
     v10 = rep_matrix(promote(0, real, data), N, 2);
     FnValidateSize__("w10", "N", N);
     vector[N] w10;
-    for(n in 1:N) {
-      v10[n, 1] = x[n];
-      w10[n] = v10[n, 2];
-    }
+    v10[1:N, 1] = x[1:N];
+    w10[1:N] = v10[1:N, 2];
     target += (sum(v10) + sum(w10));
   } }
 

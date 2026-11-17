@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../tuple_test2.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../tuple_test2.stan : [exit 0] */
 matrix[3, 3] m1: AoS
 matrix[3, 3] m2: AoS
 tuple(matrix[2, 2], matrix[3, 3]) temp: AoS

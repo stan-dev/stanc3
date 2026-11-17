@@ -37,6 +37,8 @@ and debug_settings =
       (Analysis_and_optimization.Optimize.optimization_pass * bool) list
         (** applied in order on top of [optimization_level], each turning one
             optimization on or off *)
+  ; print_loop_vectorization: bool
+        (** print the dependence graph and pi-blocks of every loop *)
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool

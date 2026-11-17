@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../single_indexing.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../single_indexing.stan : [exit 0] */
 matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
 row_vector[10] tp_row_vector_from_soa_loop: SoA

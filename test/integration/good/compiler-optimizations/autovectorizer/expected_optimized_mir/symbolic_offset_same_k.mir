@@ -25,10 +25,8 @@ log_prob {
     v12 = rep_vector(promote(0, real, data), (N + k));
     FnValidateSize__("y12", "N", N);
     vector[N] y12;
-    for(n in 1:N) {
-      v12[(n + k)] = x[n];
-      y12[n] = (v12[(n + k)] * promote(2, real, data));
-    }
+    v12[(1 + k):(N + k)] = x[1:N];
+    y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
     target += (sum(v12) + sum(y12));
   } }
 
@@ -40,10 +38,8 @@ rev_log_prob {
     v12 = rep_vector(promote(0, real, data), (N + k));
     FnValidateSize__("y12", "N", N);
     vector[N] y12;
-    for(n in 1:N) {
-      v12[(n + k)] = x[n];
-      y12[n] = (v12[(n + k)] * promote(2, real, data));
-    }
+    v12[(1 + k):(N + k)] = x[1:N];
+    y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
     target += (sum(v12) + sum(y12));
   } }
 

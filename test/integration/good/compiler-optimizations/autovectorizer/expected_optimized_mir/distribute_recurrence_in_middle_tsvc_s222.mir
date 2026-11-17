@@ -36,11 +36,9 @@ log_prob {
     FnValidateSize__("e2", "N", N);
     vector[N] e2;
     e2 = e0;
-    for(n in 2:N) {
-      a2[n] = (a2[n] + (b2[n] .* c[n]));
-      e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
-      a2[n] = (a2[n] - (b2[n] .* c[n]));
-    }
+    for(n in 2:N) e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
+    a2[2:N] = (a2[2:N] + (b2[2:N] .* c[2:N]));
+    a2[2:N] = (a2[2:N] - (b2[2:N] .* c[2:N]));
     target += sum(a2);
     target += sum(e2);
   } }
@@ -56,11 +54,9 @@ rev_log_prob {
     FnValidateSize__("e2", "N", N);
     vector[N] e2;
     e2 = e0;
-    for(n in 2:N) {
-      a2[n] = (a2[n] + (b2[n] .* c[n]));
-      e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
-      a2[n] = (a2[n] - (b2[n] .* c[n]));
-    }
+    for(n in 2:N) e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
+    a2[2:N] = (a2[2:N] + (b2[2:N] .* c[2:N]));
+    a2[2:N] = (a2[2:N] - (b2[2:N] .* c[2:N]));
     target += sum(a2);
     target += sum(e2);
   } }

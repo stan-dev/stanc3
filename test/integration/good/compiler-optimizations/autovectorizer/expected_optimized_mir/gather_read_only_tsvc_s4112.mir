@@ -31,9 +31,7 @@ log_prob {
     FnValidateSize__("a1", "N", N);
     vector[N] a1;
     a1 = a0;
-    for(n in 1:N) {
-      a1[n] = (a1[n] + (b[ip[n]] * s));
-    }
+    a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
     target += sum(a1);
   } }
 
@@ -42,9 +40,7 @@ rev_log_prob {
     FnValidateSize__("a1", "N", N);
     vector[N] a1;
     a1 = a0;
-    for(n in 1:N) {
-      a1[n] = (a1[n] + (b[ip[n]] * s));
-    }
+    a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
     target += sum(a1);
   } }
 

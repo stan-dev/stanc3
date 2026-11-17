@@ -24,10 +24,8 @@ log_prob {
     FnValidateSize__("v2", "N", N);
     vector[N] v2;
     v2 = v0;
-    for(n in 1:N) {
-      mu2[n] = (v2[n] + promote(1, real, data));
-      v2[n] = x[n];
-    }
+    mu2[1:N] = (v2[1:N] + promote(1, real, data));
+    v2[1:N] = x[1:N];
     target += (sum(mu2) + sum(v2));
   } }
 
@@ -38,10 +36,8 @@ rev_log_prob {
     FnValidateSize__("v2", "N", N);
     vector[N] v2;
     v2 = v0;
-    for(n in 1:N) {
-      mu2[n] = (v2[n] + promote(1, real, data));
-      v2[n] = x[n];
-    }
+    mu2[1:N] = (v2[1:N] + promote(1, real, data));
+    v2[1:N] = x[1:N];
     target += (sum(mu2) + sum(v2));
   } }
 

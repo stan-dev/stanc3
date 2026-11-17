@@ -18,9 +18,7 @@ log_prob {
     FnValidateSize__("a11", "N", N);
     vector[N] a11;
     a11 = a0;
-    for(n in 1:(N - 1)) {
-      a11[n] = (a11[(n + 1)] + promote(1, real, data));
-    }
+    a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
     target += sum(a11);
   } }
 
@@ -29,9 +27,7 @@ rev_log_prob {
     FnValidateSize__("a11", "N", N);
     vector[N] a11;
     a11 = a0;
-    for(n in 1:(N - 1)) {
-      a11[n] = (a11[(n + 1)] + promote(1, real, data));
-    }
+    a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
     target += sum(a11);
   } }
 

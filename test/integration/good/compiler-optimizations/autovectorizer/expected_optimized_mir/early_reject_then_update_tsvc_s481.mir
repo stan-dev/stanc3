@@ -30,12 +30,10 @@ log_prob {
     FnValidateSize__("a2", "N", N);
     vector[N] a2;
     a2 = a0;
-    for(n in 1:N) {
-      if((d[n] < 0)) {
-        FnReject__("neg");
-      }
-      a2[n] = (a2[n] + (b0[n] .* c[n]));
+    for(n in 1:N) if((d[n] < 0)) {
+      FnReject__("neg");
     }
+    a2[1:N] = (a2[1:N] + (b0[1:N] .* c[1:N]));
     target += sum(a2);
   } }
 
@@ -44,12 +42,10 @@ rev_log_prob {
     FnValidateSize__("a2", "N", N);
     vector[N] a2;
     a2 = a0;
-    for(n in 1:N) {
-      if((d[n] < 0)) {
-        FnReject__("neg");
-      }
-      a2[n] = (a2[n] + (b0[n] .* c[n]));
+    for(n in 1:N) if((d[n] < 0)) {
+      FnReject__("neg");
     }
+    a2[1:N] = (a2[1:N] + (b0[1:N] .* c[1:N]));
     target += sum(a2);
   } }
 

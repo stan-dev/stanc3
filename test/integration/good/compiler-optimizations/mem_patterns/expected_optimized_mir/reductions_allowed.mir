@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../reductions_allowed.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../reductions_allowed.stan : [exit 0] */
 matrix[5, 10] soa_x: SoA
 matrix[5, 10] aos_x: AoS
 matrix[5, 10] aos_y: AoS

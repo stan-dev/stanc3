@@ -13,6 +13,7 @@ let invoke_driver model_name model flags =
       | Formatted s
        |DebugOutput s
        |Memory_patterns s
+       |Loop_vectorization s
        |Version s
        |Generated s ->
           (* stanc.js will only ever return one output, so we break out
