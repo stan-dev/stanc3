@@ -39,11 +39,11 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
-let is_stable_expr (defined_vars : string Set.Poly.t) (expr : Expr.Typed.t) :
+let is_stable_expr (written_vars : string Set.Poly.t) (expr : Expr.Typed.t) :
     bool =
   let is_written_variable (expression : Expr.Typed.t) =
     match expression.pattern with
-    | Var name -> Set.Poly.mem name defined_vars
+    | Var name -> Set.Poly.mem name written_vars
     | _ -> false in
   (not (cannot_duplicate_expr expr)) && not (expr_any is_written_variable expr)
 

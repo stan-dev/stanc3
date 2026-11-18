@@ -2,6 +2,21 @@ open Std
 open Middle
 open Dataflow_types
 
+val build_cf_graphs :
+     ?flatten_loops:bool
+  -> ?blocks_after_body:bool
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * controls LabelMap.t
+(** Simultaneously builds control information, the predecessor graph and the
+    exit set of a statement. It's advantageous to build them together because
+    they both rely on some of the same Break, Continue and Return bookkeeping.
+
+    Takes a statement map and returns the triple: (exit set, predecessor graph,
+    control information) where
+    - (exit set, predecessor graph) is the return value of
+      build_predecessor_graph
+    - (control information) is the return value of build_controls *)
+
 val build_controls :
   ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t -> controls LabelMap.t
 (** Returns the controls of each label of the statement map. *)
@@ -61,10 +76,3 @@ val build_statement_map :
     statement maps. Then, the result is the union of the substatement maps with
     this statement's singleton pair, which is expressed in terms of the new
     label-containing statement. *)
-
-val build_cf_graphs :
-     ?flatten_loops:bool
-  -> ?blocks_after_body:bool
-  -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
-  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * controls LabelMap.t
-(** Build exits, predecessor edges, and control information in one traversal. *)

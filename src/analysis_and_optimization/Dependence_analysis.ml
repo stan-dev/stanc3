@@ -21,23 +21,23 @@ type node_dep_info =
   ; loop_ids: label list
   ; meta: Location_span.t }
 
-let reaching_defn_lookup (rds : reaching_definition Set.Poly.t)
+let reaching_defn_lookup (definitions : reaching_definition Set.Poly.t)
     (read : Dependence.location) : label Set.Poly.t =
-  Set.Poly.fold rds ~init:Set.Poly.empty
-    ~f:(fun ((write : Dependence.location), writer_id) labels ->
+  Set.Poly.fold definitions ~init:Set.Poly.empty
+    ~f:(fun ((write : Dependence.location), writer_id) writer_labels ->
       match writer_id with
-      | Some label
-        when String.equal write.variable read.variable
+      | Some statement_id
+        when Dependence.Location.same_var write read
              && Dependence.may_overlap write.path read.path ->
-          Set.Poly.add label labels
-      | _ -> labels)
+          Set.Poly.add statement_id writer_labels
+      | _ -> writer_labels)
 
-let read_dependencies info blockers reads =
-  List.fold_left reads ~init:info.parents ~f:(fun dependencies read ->
+let read_dependencies statement_info blockers reads =
+  List.fold_left reads ~init:statement_info.parents ~f:(fun dependencies read ->
       if Set.Poly.mem (VVar read.Dependence.variable) blockers then dependencies
       else
         Set.Poly.union dependencies
-          (reaching_defn_lookup info.reaching_defn_entry read))
+          (reaching_defn_lookup statement_info.reaching_defn_entry read))
 
 let node_immediate_dependencies
     (statement_map :
@@ -74,12 +74,12 @@ let node_vars_dependencies
   let _, info = LabelMap.find label statement_map in
   let reads =
     Set.Poly.fold vars ~init:[] ~f:(fun (VVar variable) selected_reads ->
-        let matching =
+        let matching_reads =
           List.filter info.accesses.reads ~f:(fun read ->
               String.equal read.Dependence.variable variable) in
-        match matching with
+        match matching_reads with
         | [] -> Dependence.{variable; path= []} :: selected_reads
-        | _ -> matching @ selected_reads) in
+        | _ -> matching_reads @ selected_reads) in
   read_dependencies info blockers reads
   |> Set.Poly.fold ~init:Set.Poly.empty
        ~f:(node_dependencies_rec statement_map ~blockers)
@@ -202,17 +202,17 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let exits, preds, controls = build_cf_graphs statement_map in
-  let accesses =
+  let exits, preds, controls_by_statement = build_cf_graphs statement_map in
+  let accesses_by_statement =
     LabelMap.map statement_map ~f:(fun (pattern, _) ->
         Dependence.collect_accesses pattern) in
-  let defined_vars =
-    LabelMap.fold accesses ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:effects names ->
-        List.fold_left effects.Dependence.writes ~init:names
-          ~f:(fun written location ->
-            Set.Poly.add location.Dependence.variable written)) in
-  let inverse =
+  let written_vars =
+    LabelMap.fold accesses_by_statement ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:statement_accesses collected_variables ->
+        List.fold_left statement_accesses.Dependence.writes
+          ~init:collected_variables ~f:(fun variables write_location ->
+            Set.Poly.add write_location.Dependence.variable variables)) in
+  let inverse_flowgraph =
     (module struct
       type labels = int
 
@@ -222,17 +222,17 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       with type labels = int) in
   let rd_map =
     reaching_definitions_mfp mir
-      (Monotone_framework.reverse inverse)
-      accesses defined_vars in
+      (Monotone_framework.reverse inverse_flowgraph)
+      accesses_by_statement written_vars in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
-      let rds = LabelMap.find label rd_map in
-      let statement_controls = LabelMap.find label controls in
+      let definitions = LabelMap.find label rd_map in
+      let statement_controls = LabelMap.find label controls_by_statement in
       ( stmt
       , { predecessors= LabelMap.find label preds
         ; parents= control_dependency_ids statement_controls
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit
-        ; accesses= LabelMap.find label accesses
+        ; reaching_defn_entry= definitions.entry
+        ; reaching_defn_exit= definitions.exit
+        ; accesses= LabelMap.find label accesses_by_statement
         ; loop_ids= enclosing_loop_ids label stmt statement_controls
         ; meta } ))
 

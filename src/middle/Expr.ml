@@ -156,6 +156,11 @@ module Helpers = struct
     { meta= {Typed.Meta.empty with type_= UArray type_}
     ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
 
+  let array_literal_elements (expr : 'a t) =
+    match expr.pattern with
+    | FunApp (CompilerInternal FnMakeArray, elements) -> Some elements
+    | _ -> None
+
   let tuple_expr l =
     let type_ = UnsizedType.UTuple (List.map ~f:Typed.type_of l) in
     { meta=

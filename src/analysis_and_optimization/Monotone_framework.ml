@@ -474,25 +474,29 @@ let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for indexed reaching definitions. *)
-let reaching_definitions_transfer (accesses : Dependence.accesses LabelMap.t)
-    defined_vars =
-  let generated =
-    LabelMap.mapi accesses ~f:(fun label effects ->
-        effects.Dependence.writes
-        |> List.map ~f:(fun location -> (location, Some label))
+let reaching_definitions_transfer
+    (accesses_by_statement : Dependence.accesses LabelMap.t) written_vars =
+  let generated_definitions =
+    LabelMap.mapi accesses_by_statement
+      ~f:(fun statement_id statement_accesses ->
+        statement_accesses.Dependence.writes
+        |> List.map ~f:(fun write_location ->
+            (write_location, Some statement_id))
         |> Set.Poly.of_list) in
   (module struct
     type labels = int
     type properties = (Dependence.location * labels option) Set.Poly.t
 
-    let transfer_function label reaching =
-      let writes = (LabelMap.find label accesses).Dependence.writes in
-      let is_overwritten (previous, _) =
+    let transfer_function statement_id incoming_definitions =
+      let writes =
+        (LabelMap.find statement_id accesses_by_statement).Dependence.writes
+      in
+      let is_overwritten (previous_write, _) =
         List.exists writes ~f:(fun write ->
-            Dependence.is_overwritten defined_vars previous write) in
-      reaching
+            Dependence.is_overwritten written_vars previous_write write) in
+      incoming_definitions
       |> Set.Poly.filter ~f:(fun definition -> not (is_overwritten definition))
-      |> Set.Poly.union (LabelMap.find label generated)
+      |> Set.Poly.union (LabelMap.find statement_id generated_definitions)
   end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (Dependence.location * int option) Set.Poly.t)
@@ -908,8 +912,8 @@ let propagation_mfp (prog : Program.Typed.t)
 
 let reaching_definitions_mfp (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int) (accesses : Dependence.accesses LabelMap.t)
-    defined_vars =
+      with type labels = int)
+    (accesses_by_statement : Dependence.accesses LabelMap.t) written_vars =
   let variables =
     (module struct
       type vals = Dependence.location
@@ -927,7 +931,8 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
     end : TYPE
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer accesses defined_vars in
+  let (module Transfer) =
+    reaching_definitions_transfer accesses_by_statement written_vars in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in
