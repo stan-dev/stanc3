@@ -1502,6 +1502,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 
     @param mir: The program's whole MIR. *)
 let optimize_soa (mir : Program.Typed.t) =
+  Memory_patterns.reset_warnings ();
   let transfer_aos_variables
       (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
       (aos_variables : string Set.Poly.t) =
@@ -1514,12 +1515,10 @@ let optimize_soa (mir : Program.Typed.t) =
       mir.reverse_mode_log_prob in
   let mod_exprs aos_exits mod_expr =
     map_rec_expr (Memory_patterns.modify_expr_pattern aos_exits) mod_expr in
-  let modify_stmt_patt stmt_pattern variable_set =
-    Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
   let transform stmt =
     optimize_minimal_variables ~transfer_variables:transfer_aos_variables
-      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
-      stmt in
+      ~update_expr:mod_exprs ~update_stmt:Memory_patterns.modify_stmt_pattern
+      ~initial_variables stmt in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l

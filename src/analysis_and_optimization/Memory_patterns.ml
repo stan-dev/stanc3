@@ -19,6 +19,7 @@ type reason =
 type demotion_reason = Location_span.t * reason
 
 let demotion_reasons : demotion_reason list ref = ref []
+let reset_warnings () = demotion_reasons := []
 let get_warnings () = !demotion_reasons |> List.sort_uniq ~cmp:Stdlib.compare
 
 let user_warning_op loc reason =

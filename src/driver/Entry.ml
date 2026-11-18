@@ -28,7 +28,6 @@ let set_model_name model_name =
 let reset_mutable_states model_name (flags : Flags.t) =
   Common.Gensym.reset_danger_use_cautiously ();
   Include_files.include_provider := flags.include_source;
-  Memory_patterns.demotion_reasons := [];
   set_model_name model_name
 
 type other_output =
