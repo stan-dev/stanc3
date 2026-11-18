@@ -10,7 +10,7 @@ type reason =
   | UserDefinedFunction of string list
   | InTuple of string list
   | AssignmentAllAoS of string * string list
-  | AssignmentNotPromotable of string * string list
+  | AssignmentNotPromotable of string
   | AssignmentUnsupportedFunction of string * string * string list
   | ComplexType of string
   | LhsRequiresAoS of string * string list
@@ -47,12 +47,12 @@ let pp_reason ppf reason =
   | AssignmentAllAoS (assign, names) ->
       Fmt.pf ppf "Right hand side of assignment to '%s' is all AoS: %a" assign
         pp_names names
-  | AssignmentNotPromotable (assign, names) ->
+  | AssignmentNotPromotable assign ->
       Fmt.pf ppf
         (Format.format_text
-           "The right hand side of the assignment to '%s' only contains data \
-            and scalar operations that are not promotable to SoA: %a")
-        assign pp_names names
+           "The right hand side of the assignment only contains data and \
+            scalar operations that are not promotable to SoA: %s")
+        assign
   | AssignmentUnsupportedFunction (fn, assign, names) ->
       Fmt.pf ppf
         "Function '%s' on right hand side of assignment to '%s' is not \
@@ -448,8 +448,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
               user_warning_op loc
                 (AssignmentAllAoS (name, Set.Poly.to_list rhs_set));
             if is_rhs_not_promoteable_to_soa then
-              user_warning_op loc
-                (AssignmentNotPromotable (name, Set.Poly.to_list rhs_set));
+              user_warning_op loc (AssignmentNotPromotable name);
             (match non_supported_func_name with
             | Some fname ->
                 user_warning_op loc
