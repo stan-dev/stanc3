@@ -458,8 +458,7 @@ tuple(matrix[2, 2], matrix[3, 3]) temp: AoS
      (out_block Parameters) (out_trans Identity)))))
  (prog_name tuple_test2_model) (prog_path ../tuple_test2.stan))
 /*
-../tuple_test2.stan:5:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: m1
-../tuple_test2.stan:5:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: m2
+../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Used in a container (tuple, array, row vector) literal: m1, m2
 ../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Right hand side of assignment to 'temp' is all AoS: m1, m2
-../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: temp
+../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): The left hand side 'temp' is AoS, so the following values from the right hand side will be demoted: m1, m2
 */

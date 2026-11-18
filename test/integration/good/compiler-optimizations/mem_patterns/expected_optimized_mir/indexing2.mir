@@ -507,5 +507,5 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
      (out_block Parameters) (out_trans Identity)))))
  (prog_name indexing2_model) (prog_path ../indexing2.stan))
 /*
-../indexing2.stan:9:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_loop_single_idx
+../indexing2.stan:16:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_loop_single_idx
 */

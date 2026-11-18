@@ -258,7 +258,6 @@ matrix[10, 10] A_p: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name complex_fails_model) (prog_path ../complex-fails.stan))
 /*
-../complex-fails.stan:2:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: A_p
 ../complex-fails.stan:6:4: warning: Optimization hazard (SoA): Complex-valued types cannot be SoA: A_complex_tp
-../complex-fails.stan:6:4: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: A_complex_tp
+../complex-fails.stan:6:4: warning: Optimization hazard (SoA): The left hand side 'A_complex_tp' is AoS, so the following values from the right hand side will be demoted: A_p
 */

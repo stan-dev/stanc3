@@ -1491,11 +1491,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
  (prog_name ad_scalar_data_matrix_model) (prog_path ../ad_scalar_data_matrix.stan))
 /*
 ../ad_scalar_data_matrix.stan:13:3: warning: Optimization hazard (SoA): The right hand side of the assignment to 'aos_deep' only contains data and scalar operations that are not promotable to SoA: 
-../ad_scalar_data_matrix.stan:13:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_deep
 ../ad_scalar_data_matrix.stan:17:3: warning: Optimization hazard (SoA): The right hand side of the assignment to 'aos_from_data' only contains data and scalar operations that are not promotable to SoA: 
-../ad_scalar_data_matrix.stan:17:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_from_data
-../ad_scalar_data_matrix.stan:20:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_mat_rep
+../ad_scalar_data_matrix.stan:20:3: warning: Optimization hazard (SoA): The left hand side 'aos_mat_rep' is AoS, so the following values from the right hand side will be demoted: aos_deep
 ../ad_scalar_data_matrix.stan:20:3: warning: Optimization hazard (SoA): Right hand side contains AoS expressions (aos_deep): aos_mat_rep
 ../ad_scalar_data_matrix.stan:21:3: warning: Optimization hazard (SoA): The right hand side of the assignment to 'aos_mat_from_vecs' only contains data and scalar operations that are not promotable to SoA: 
-../ad_scalar_data_matrix.stan:21:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_mat_from_vecs
 */

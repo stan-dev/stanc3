@@ -723,8 +723,7 @@ matrix[1, 1] x: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_test_model) (prog_path ../tuple_test.stan))
 /*
-../tuple_test.stan:3:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: xx
 ../tuple_test.stan:6:5: warning: Optimization hazard (SoA): Right hand side of assignment to 'x' is all AoS: xx
 ../tuple_test.stan:6:5: warning: Optimization hazard (SoA): The right hand side of the assignment to 'x' only contains data and scalar operations that are not promotable to SoA: xx
-../tuple_test.stan:6:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: x
+../tuple_test.stan:6:5: warning: Optimization hazard (SoA): The left hand side 'x' is AoS, so the following values from the right hand side will be demoted: xx
 */

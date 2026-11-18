@@ -13,7 +13,7 @@ type reason =
   | AssignmentNotPromotable of string * string list
   | AssignmentUnsupportedFunction of string * string * string list
   | ComplexType of string
-  | RhsOnlyAoS of string
+  | LhsRequiresAoS of string * string list
   | RhsAoSExpressions of string list * string
 
 type demotion_reason = Location_span.t * reason
@@ -29,45 +29,44 @@ let pp_reason ppf reason =
   let pp_names = Fmt.(box (list ~sep:comma string)) in
   match reason with
   | ElementInLoop names ->
-      Format.fprintf ppf "Accessed by element in a for loop: %a" pp_names names
+      Fmt.pf ppf "Accessed by element in a for loop: %a" pp_names names
   | UsedTernary names ->
-      Format.fprintf ppf "Used in a ternary operator which is not allowed: %a"
-        pp_names names
-  | UnsupportedFunction (name, names) ->
-      Format.fprintf ppf "Function '%s' is not supported: %a" name pp_names
+      Fmt.pf ppf "Used in a ternary operator which is not allowed: %a" pp_names
         names
+  | UnsupportedFunction (name, names) ->
+      Fmt.pf ppf "Passed to unsupported function '%s': %a" name pp_names names
   | UnsupportedOperator (op, names) ->
-      Format.fprintf ppf "Operator %a is not supported: %a" Operator.pp op
-        pp_names names
+      Fmt.pf ppf "Used with unsupported operator %a: %a" Operator.pp op pp_names
+        names
   | MakeArrayOrRowVector names ->
-      Format.fprintf ppf
-        "Used in {} make array or make row vector compiler functions: %a"
+      Fmt.pf ppf "Used in a container (tuple, array, row vector) literal: %a"
         pp_names names
   | UserDefinedFunction names ->
-      Format.fprintf ppf "Used in user defined function: %a" pp_names names
-  | InTuple names -> Format.fprintf ppf "Used in tuple: %a" pp_names names
+      Fmt.pf ppf "Used in user defined function: %a" pp_names names
+  | InTuple names -> Fmt.pf ppf "Stored in tuple: %a" pp_names names
   | AssignmentAllAoS (assign, names) ->
-      Format.fprintf ppf "Right hand side of assignment to '%s' is all AoS: %a"
-        assign pp_names names
+      Fmt.pf ppf "Right hand side of assignment to '%s' is all AoS: %a" assign
+        pp_names names
   | AssignmentNotPromotable (assign, names) ->
-      Format.fprintf ppf
+      Fmt.pf ppf
         (Format.format_text
            "The right hand side of the assignment to '%s' only contains data \
             and scalar operations that are not promotable to SoA: %a")
         assign pp_names names
   | AssignmentUnsupportedFunction (fn, assign, names) ->
-      Format.fprintf ppf
+      Fmt.pf ppf
         "Function '%s' on right hand side of assignment to '%s' is not \
          supported by SoA: %a"
         fn assign pp_names names
-  | ComplexType name ->
-      Format.fprintf ppf "Complex-valued types cannot be SoA: %s" name
-  | RhsOnlyAoS name ->
-      Format.fprintf ppf "Right hand side contains only AoS expressions: %s"
-        name
+  | ComplexType name -> Fmt.pf ppf "Complex-valued types cannot be SoA: %s" name
+  | LhsRequiresAoS (assign, others) ->
+      Fmt.pf ppf
+        "The left hand side '%s' is AoS, so the following values from the \
+         right hand side will be demoted: %a"
+        assign pp_names others
   | RhsAoSExpressions (names, name) ->
-      Format.fprintf ppf "Right hand side contains AoS expressions (%a): %s"
-        pp_names names name
+      Fmt.pf ppf "Right hand side contains AoS expressions (%a): %s" pp_names
+        names name
 
 (** Return a Var expression of the name for each type containing an eigen matrix
 *)
@@ -196,7 +195,7 @@ let rec query_initial_demotable_expr (in_loop : bool) (loc : Location_span.t)
       let index_demotes =
         if is_uni_eigen_loop_indexing in_loop type_ indexed then (
           let single_index_set = query_var_eigen_names expr in
-          let failure_set = Set.Poly.inter acc single_index_set in
+          let failure_set = Set.Poly.diff single_index_set acc in
           if not (Set.Poly.is_empty failure_set) then
             user_warning_op loc (ElementInLoop (Set.Poly.to_list failure_set));
           Set.Poly.union single_index_set index_set)
@@ -213,7 +212,7 @@ let rec query_initial_demotable_expr (in_loop : bool) (loc : Location_span.t)
           (query_var_eigen_names fexpr) in
       if Set.Poly.is_empty full_set then full_set
       else
-        let failure_set = Set.Poly.inter acc full_set in
+        let failure_set = Set.Poly.diff full_set acc in
         if not (Set.Poly.is_empty failure_set) then
           user_warning_op loc (UsedTernary (Set.Poly.to_list failure_set));
         full_set
@@ -257,7 +256,7 @@ and query_initial_demotable_funs (in_loop : bool) (loc : Location_span.t)
           if is_fun_soa_supported name exprs then
             Set.Poly.union acc demoted_eigen_names
           else
-            let fail_names = Set.Poly.inter acc top_level_eigen_names in
+            let fail_names = Set.Poly.diff top_level_eigen_names acc in
             if not (Set.Poly.is_empty fail_names) then
               user_warning_op loc
                 (UnsupportedFunction (name, Set.Poly.to_list fail_names));
@@ -266,19 +265,19 @@ and query_initial_demotable_funs (in_loop : bool) (loc : Location_span.t)
       if is_op_soa_supported op exprs then
         Set.Poly.union acc demoted_eigen_names
       else
-        let fail_names = Set.Poly.inter acc top_level_eigen_names in
+        let fail_names = Set.Poly.diff top_level_eigen_names acc in
         if not (Set.Poly.is_empty fail_names) then
           user_warning_op loc
             (UnsupportedOperator (op, Set.Poly.to_list fail_names));
         Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
-      let fail_names = Set.Poly.inter acc demoted_and_top_level_names in
+      let fail_names = Set.Poly.diff demoted_and_top_level_names acc in
       if not (Set.Poly.is_empty fail_names) then
         user_warning_op loc (MakeArrayOrRowVector (Set.Poly.to_list fail_names));
       Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (_ : 'a Internal_fun.t) -> acc
   | UserDefined ((_ : string), (_ : Fun_kind.suffix)) ->
-      let fail_names = Set.Poly.inter acc demoted_and_top_level_names in
+      let fail_names = Set.Poly.diff demoted_and_top_level_names acc in
       if not (Set.Poly.is_empty fail_names) then
         user_warning_op loc (UserDefinedFunction (Set.Poly.to_list fail_names));
       Set.Poly.union acc demoted_and_top_level_names
@@ -531,7 +530,9 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       let assign_name = Stmt.Helpers.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
       if Set.Poly.mem assign_name aos_exits then (
-        user_warning_op loc (RhsOnlyAoS assign_name);
+        if not (Set.Poly.is_empty all_rhs_eigen_names) then
+          user_warning_op loc
+            (LhsRequiresAoS (assign_name, Set.Poly.to_list all_rhs_eigen_names));
         Set.Poly.add assign_name all_rhs_eigen_names)
       else if is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names then (
         user_warning_op loc
@@ -543,7 +544,9 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   | Decl {decl_id; initialize= Assign e; _} ->
       let all_rhs_eigen_names = query_var_eigen_names e in
       if Set.Poly.mem decl_id aos_exits then (
-        user_warning_op loc (RhsOnlyAoS decl_id);
+        if not (Set.Poly.is_empty all_rhs_eigen_names) then
+          user_warning_op loc
+            (LhsRequiresAoS (decl_id, Set.Poly.to_list all_rhs_eigen_names));
         Set.Poly.add decl_id all_rhs_eigen_names)
       else if is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names then (
         user_warning_op loc

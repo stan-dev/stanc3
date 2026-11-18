@@ -456,10 +456,9 @@ matrix[5, 10] tp_matrix_aos: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tp_reused_model) (prog_path ../tp_reused.stan))
 /*
-../tp_reused.stan:16:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: first_pass_soa_x
-../tp_reused.stan:17:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_x
-../tp_reused.stan:21:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_matrix_aos
+../tp_reused.stan:21:5: warning: Optimization hazard (SoA): The left hand side 'tp_matrix_aos' is AoS, so the following values from the right hand side will be demoted: first_pass_soa_x
+../tp_reused.stan:22:5: warning: Optimization hazard (SoA): Used in user defined function: aos_x
 ../tp_reused.stan:22:5: warning: Optimization hazard (SoA): Right hand side of assignment to 'tp_matrix_aos' is all AoS: aos_x
 ../tp_reused.stan:22:5: warning: Optimization hazard (SoA): Function 'nono_func' on right hand side of assignment to 'tp_matrix_aos' is not supported by SoA: aos_x
-../tp_reused.stan:22:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_matrix_aos
+../tp_reused.stan:22:5: warning: Optimization hazard (SoA): The left hand side 'tp_matrix_aos' is AoS, so the following values from the right hand side will be demoted: aos_x
 */

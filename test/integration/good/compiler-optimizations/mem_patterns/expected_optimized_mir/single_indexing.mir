@@ -594,5 +594,5 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name single_indexing_model) (prog_path ../single_indexing.stan))
 /*
-../single_indexing.stan:6:4: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_p
+../single_indexing.stan:16:8: warning: Optimization hazard (SoA): Accessed by element in a for loop: aos_p
 */

@@ -5339,29 +5339,23 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name indexing_model) (prog_path ../indexing.stan))
 /*
-../indexing.stan:33:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_vec_v_assign_to_aos
-../indexing.stan:35:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_vec_v_tp_fails_func
-../indexing.stan:37:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_loop_vec_v_uni_idx
-../indexing.stan:39:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_fail_assign_from_top_idx
-../indexing.stan:40:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_loop_mat_uni_uni_idx
-../indexing.stan:43:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat
-../indexing.stan:45:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed1
-../indexing.stan:46:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
-../indexing.stan:49:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
-../indexing.stan:50:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
+../indexing.stan:59:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos
 ../indexing.stan:59:3: warning: Optimization hazard (SoA): Right hand side of assignment to 'tp_aos_vec_v' is all AoS: p_aos_vec_v_assign_to_aos
 ../indexing.stan:59:3: warning: Optimization hazard (SoA): Function 'udf_fun' on right hand side of assignment to 'tp_aos_vec_v' is not supported by SoA: p_aos_vec_v_assign_to_aos
-../indexing.stan:59:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_vec_v
-../indexing.stan:66:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
-../indexing.stan:68:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
-../indexing.stan:71:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_fail_assign_from_top_idx
-../indexing.stan:80:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
-../indexing.stan:81:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
-../indexing.stan:82:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
-../indexing.stan:83:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
-../indexing.stan:100:5: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+../indexing.stan:59:3: warning: Optimization hazard (SoA): The left hand side 'tp_aos_vec_v' is AoS, so the following values from the right hand side will be demoted: p_aos_vec_v_assign_to_aos
+../indexing.stan:66:3: warning: Optimization hazard (SoA): The left hand side 'tp_aos_fail_func_vec_v' is AoS, so the following values from the right hand side will be demoted: p_aos_vec_v_tp_fails_func
+../indexing.stan:71:3: warning: Optimization hazard (SoA): The left hand side 'tp_aos_fail_assign_from_top_idx' is AoS, so the following values from the right hand side will be demoted: p_aos_fail_assign_from_top_idx
+../indexing.stan:80:3: warning: Optimization hazard (SoA): Used in user defined function: tp_aos_fail_func_vec_v
+../indexing.stan:81:3: warning: Optimization hazard (SoA): Used in user defined function: tp_aos_fail_func_vec_v
+../indexing.stan:82:3: warning: Optimization hazard (SoA): Used in user defined function: tp_aos_fail_assign_from_top_idx
+../indexing.stan:83:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_mat, tp_aos_fail_func_vec_v
+../indexing.stan:100:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_mat_pass_func_outer_single_indexed1, p_aos_mat_pass_func_outer_single_indexed2
+../indexing.stan:102:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_mat_fail_uni_uni_idx1
+../indexing.stan:102:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_mat_fail_uni_uni_idx2
 ../indexing.stan:111:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: tp_aos_loop_vec_v_uni_idx
-../indexing.stan:111:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_loop_vec_v_uni_idx
 ../indexing.stan:112:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: tp_aos_loop_vec_v_multi_uni_idx
-../indexing.stan:112:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_loop_vec_v_multi_uni_idx
+../indexing.stan:114:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_loop_vec_v_uni_idx
+../indexing.stan:115:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_loop_mat_uni_uni_idx
+../indexing.stan:116:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_mat_fail_uni_uni_idx1
+../indexing.stan:116:5: warning: Optimization hazard (SoA): Accessed by element in a for loop: p_aos_mat_fail_uni_uni_idx2
 */

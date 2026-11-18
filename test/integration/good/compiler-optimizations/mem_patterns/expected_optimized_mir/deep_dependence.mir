@@ -832,14 +832,12 @@ matrix[10, 10] X_tp7: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name deep_dependence_model) (prog_path ../deep_dependence.stan))
 /*
-../deep_dependence.stan:6:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_p
-../deep_dependence.stan:10:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp1
-../deep_dependence.stan:11:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp2
-../deep_dependence.stan:12:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp3
-../deep_dependence.stan:13:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp4
-../deep_dependence.stan:14:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp5
-../deep_dependence.stan:15:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp6
-../deep_dependence.stan:16:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp7
+../deep_dependence.stan:10:5: warning: Optimization hazard (SoA): The left hand side 'X_tp1' is AoS, so the following values from the right hand side will be demoted: X_p
+../deep_dependence.stan:11:5: warning: Optimization hazard (SoA): The left hand side 'X_tp2' is AoS, so the following values from the right hand side will be demoted: X_tp1
+../deep_dependence.stan:12:5: warning: Optimization hazard (SoA): The left hand side 'X_tp3' is AoS, so the following values from the right hand side will be demoted: X_tp2
+../deep_dependence.stan:13:5: warning: Optimization hazard (SoA): The left hand side 'X_tp4' is AoS, so the following values from the right hand side will be demoted: X_tp3
+../deep_dependence.stan:14:5: warning: Optimization hazard (SoA): The left hand side 'X_tp5' is AoS, so the following values from the right hand side will be demoted: X_tp4
+../deep_dependence.stan:15:5: warning: Optimization hazard (SoA): The left hand side 'X_tp6' is AoS, so the following values from the right hand side will be demoted: X_tp5
+../deep_dependence.stan:16:5: warning: Optimization hazard (SoA): The left hand side 'X_tp7' is AoS, so the following values from the right hand side will be demoted: X_tp6
 ../deep_dependence.stan:19:13: warning: Optimization hazard (SoA): Accessed by element in a for loop: X_tp7
-../deep_dependence.stan:19:13: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: X_tp7
 */
