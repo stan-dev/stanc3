@@ -460,6 +460,6 @@ tuple(matrix[2, 2], matrix[3, 3]) temp: AoS
 /*
 ../tuple_test2.stan:5:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: m1
 ../tuple_test2.stan:5:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: m2
-../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Right hand side of assignment is all AoS: m1, m2, temp
+../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Right hand side of assignment to 'temp' is all AoS: m1, m2
 ../tuple_test2.stan:8:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: temp
 */

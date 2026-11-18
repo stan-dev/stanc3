@@ -5349,8 +5349,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
 ../indexing.stan:46:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
 ../indexing.stan:49:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
 ../indexing.stan:50:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
-../indexing.stan:59:3: warning: Optimization hazard (SoA): Right hand side of assignment is all AoS: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
-../indexing.stan:59:3: warning: Optimization hazard (SoA): Function 'udf_fun' on right hand side of assignment is not supported by SoA: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+../indexing.stan:59:3: warning: Optimization hazard (SoA): Right hand side of assignment to 'tp_aos_vec_v' is all AoS: p_aos_vec_v_assign_to_aos
+../indexing.stan:59:3: warning: Optimization hazard (SoA): Function 'udf_fun' on right hand side of assignment to 'tp_aos_vec_v' is not supported by SoA: p_aos_vec_v_assign_to_aos
 ../indexing.stan:59:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_vec_v
 ../indexing.stan:66:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
 ../indexing.stan:68:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v

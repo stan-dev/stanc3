@@ -9,9 +9,9 @@ type reason =
   | MakeArrayOrRowVector of string list
   | UserDefinedFunction of string list
   | InTuple of string list
-  | AssignmentAllAoS of string list
-  | AssignmentNotPromotable of string list
-  | AssignmentUnsupportedFunction of string * string list
+  | AssignmentAllAoS of string * string list
+  | AssignmentNotPromotable of string * string list
+  | AssignmentUnsupportedFunction of string * string * string list
   | ComplexType of string
   | RhsOnlyAoS of string
   | RhsAoSExpressions of string list * string
@@ -46,20 +46,20 @@ let pp_reason ppf reason =
   | UserDefinedFunction names ->
       Format.fprintf ppf "Used in user defined function: %a" pp_names names
   | InTuple names -> Format.fprintf ppf "Used in tuple: %a" pp_names names
-  | AssignmentAllAoS names ->
-      Format.fprintf ppf "Right hand side of assignment is all AoS: %a" pp_names
-        names
-  | AssignmentNotPromotable names ->
+  | AssignmentAllAoS (assign, names) ->
+      Format.fprintf ppf "Right hand side of assignment to '%s' is all AoS: %a"
+        assign pp_names names
+  | AssignmentNotPromotable (assign, names) ->
       Format.fprintf ppf
         (Format.format_text
-           "The right hand side of the assignment only contains data and \
-            scalar operations that are not promotable to SoA: %a")
-        pp_names names
-  | AssignmentUnsupportedFunction (name, names) ->
+           "The right hand side of the assignment to '%s' only contains data \
+            and scalar operations that are not promotable to SoA: %a")
+        assign pp_names names
+  | AssignmentUnsupportedFunction (fn, assign, names) ->
       Format.fprintf ppf
-        "Function '%s' on right hand side of assignment is not supported by \
-         SoA: %a"
-        name pp_names names
+        "Function '%s' on right hand side of assignment to '%s' is not \
+         supported by SoA: %a"
+        fn assign pp_names names
   | ComplexType name ->
       Format.fprintf ppf "Complex-valued types cannot be SoA: %s" name
   | RhsOnlyAoS name ->
@@ -445,18 +445,17 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             || Option.is_some non_supported_func_name
           then (
             let rhs_set = query_var_eigen_names rhs in
-            let rhs_name_set = Set.Poly.add name rhs_set in
             if is_all_rhs_aos then
               user_warning_op loc
-                (AssignmentAllAoS (Set.Poly.to_list rhs_name_set));
+                (AssignmentAllAoS (name, Set.Poly.to_list rhs_set));
             if is_rhs_not_promoteable_to_soa then
               user_warning_op loc
-                (AssignmentNotPromotable (Set.Poly.to_list rhs_name_set));
+                (AssignmentNotPromotable (name, Set.Poly.to_list rhs_set));
             (match non_supported_func_name with
             | Some fname ->
                 user_warning_op loc
                   (AssignmentUnsupportedFunction
-                     (fname, Set.Poly.to_list rhs_name_set))
+                     (fname, name, Set.Poly.to_list rhs_set))
             | None -> ());
             Set.Poly.add name (Set.Poly.union tuple_demotions rhs_set))
           else tuple_demotions
