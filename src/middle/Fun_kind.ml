@@ -29,6 +29,10 @@ type 'e t =
   | UserDefined of string * suffix
 [@@deriving compare, sexp_of, map, fold]
 
+let is_target_increment = function
+  | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
+  | _ -> false
+
 let suffix_from_name fname =
   let is_suffix suffix = String.ends_with ~suffix fname in
   if is_suffix "_rng" then FnRng

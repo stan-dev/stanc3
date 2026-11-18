@@ -71,7 +71,7 @@ let is_ctrl_flow pattern =
     bookkeeping. *)
 let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
-  let rec build_cf_graph_rec (enclosing : enclosing list)
+  let rec build_cf_graph (enclosing : enclosing list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
@@ -89,7 +89,7 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
       match stmt with
       | IfElse (_, then_s, else_s_opt) ->
           let then_state, after_then_map =
-            build_cf_graph_rec
+            build_cf_graph
               (enclosing @ [{id= label; side= Some Then}])
               (child_init, in_map) then_s in
           Option.value_map else_s_opt
@@ -100,7 +100,7 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
                  labelled nodes, so carry it through the branches instead of
                  persistently unioning two maps that share the whole prefix. *)
               let else_state, after_both_map =
-                build_cf_graph_rec
+                build_cf_graph
                   (enclosing @ [{id= label; side= Some Else}])
                   (child_init, after_then_map)
                   else_s in
@@ -108,8 +108,8 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
       | _ ->
           fst
             (fwd_traverse_statement stmt ~init:(child_init, in_map)
-               ~f:(fun state child ->
-                 (build_cf_graph_rec child_cf state child, ()))) in
+               ~f:(fun state child -> (build_cf_graph child_cf state child, ())))
+    in
     (* If the statement is a loop, we need to include the loop body exits as
        predecessors of the loop *)
     let substmt_state, predecessors =
@@ -191,7 +191,7 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
     , LabelMap.add substmt_map ~key:label
         ~data:{controls= {enclosing; jump_ids}; predecessors} ) in
   let state, edges =
-    build_cf_graph_rec []
+    build_cf_graph []
       ( { breaks= Set.Poly.empty
         ; continues= Set.Poly.empty
         ; returns= Set.Poly.empty
@@ -221,7 +221,7 @@ let build_controls statement_map =
 
 (** See interface file *)
 let build_cf_graph statement_map =
-  LabelMap.map (build_controls statement_map) ~f:control_dependency_ids
+  build_controls statement_map |> LabelMap.map ~f:control_dependency_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)

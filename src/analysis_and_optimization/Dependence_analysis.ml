@@ -23,10 +23,11 @@ type node_dep_info =
 
 let reaching_defn_lookup (rds : reaching_definition Set.Poly.t)
     (read : Dependence.location) : label Set.Poly.t =
-  Set.Poly.fold rds ~init:Set.Poly.empty ~f:(fun (write, writer_id) labels ->
+  Set.Poly.fold rds ~init:Set.Poly.empty
+    ~f:(fun ((write : Dependence.location), writer_id) labels ->
       match writer_id with
       | Some label
-        when String.equal write.Dependence.variable read.variable
+        when String.equal write.variable read.variable
              && Dependence.may_overlap write.path read.path ->
           Set.Poly.add label labels
       | _ -> labels)
@@ -79,10 +80,9 @@ let node_vars_dependencies
         match matching with
         | [] -> Dependence.{variable; path= []} :: selected_reads
         | _ -> matching @ selected_reads) in
-  Set.Poly.fold
-    (read_dependencies info blockers reads)
-    ~init:Set.Poly.empty
-    ~f:(node_dependencies_rec statement_map ~blockers)
+  read_dependencies info blockers reads
+  |> Set.Poly.fold ~init:Set.Poly.empty
+       ~f:(node_dependencies_rec statement_map ~blockers)
 
 (* The strategy here is to write an update function on the whole dependency
    graph in terms of node_immediate_dependencies, and then to find a

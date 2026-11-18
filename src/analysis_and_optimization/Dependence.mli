@@ -14,6 +14,8 @@ val collect_accesses : (Expr.Typed.t, 'substatement) Stmt.Pattern.t -> accesses
 val may_overlap : path -> path -> bool
 (** False proves disjoint paths. Unknown indices and slices permit overlap. *)
 
-val definitely_overwrites : string Set.Poly.t -> path -> path -> bool
-(** The variable set must include every variable written in the analyzed region.
+val is_overwritten : string Set.Poly.t -> location -> location -> bool
+(** [is_overwritten defined_vars previous write] proves that [write] covers
+    [previous]. False means the previous definition must be retained.
+    [defined_vars] must include every variable written in the analyzed region.
 *)

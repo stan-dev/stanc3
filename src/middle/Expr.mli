@@ -50,6 +50,11 @@ end
 
 module Helpers : sig
   val int : int -> Typed.t
+
+  val int_literal_value : 'a t -> int option
+  (** Read an integer literal; return [None] for other expressions or values
+      outside the OCaml integer range. *)
+
   val float : float -> Typed.t
   val complex : float * float -> Typed.t
   val str : string -> Typed.t

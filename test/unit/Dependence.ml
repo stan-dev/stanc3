@@ -28,8 +28,10 @@ let location_text (location : Access.location) =
 
 let print_locations name locations =
   let paths =
-    List.sort ~cmp:String.compare (List.map locations ~f:location_text) in
-  Fmt.pr "%s: %s@." name (String.concat ~sep:", " paths)
+    locations |> List.map ~f:location_text
+    |> List.sort ~cmp:String.compare
+    |> String.concat ~sep:", " in
+  Fmt.pr "%s: %s@." name paths
 
 let%expect_test "Collect indexed reads, writes, tuple fields and slices" =
   assignment_accesses
@@ -62,18 +64,17 @@ let%expect_test "Collect indexed reads, writes, tuple fields and slices" =
     writes: z
     |}]
 
-let write_paths source =
+let write_locations source =
   List.concat_map (assignment_accesses source) ~f:(fun accesses ->
-      List.map accesses.Access.writes ~f:(fun location -> location.Access.path))
+      accesses.Access.writes)
 
 let check_paths defined_vars source expected_overlap expected_overwrite =
-  match write_paths source with
+  match write_locations source with
   | [first; second] ->
-      assert (Access.may_overlap first second = expected_overlap);
-      assert (Access.may_overlap second first = expected_overlap);
+      assert (Access.may_overlap first.path second.path = expected_overlap);
+      assert (Access.may_overlap second.path first.path = expected_overlap);
       assert (
-        Access.definitely_overwrites defined_vars first second
-        = expected_overwrite)
+        Access.is_overwritten defined_vars second first = expected_overwrite)
   | _ -> failwith "Expected two writes"
 
 let%expect_test "Literal paths are distinct; equal stable paths overwrite" =
@@ -125,6 +126,22 @@ let%expect_test "Tuple fields and whole-variable writes" =
   check_paths Set.Poly.empty
     {|model { tuple(vector[4], real) t; t.1 = rep_vector(0, 4); t.1[2] = 1; }|}
     true true;
+  [%expect {| |}]
+
+let%expect_test "Overwrites require the same variable and complete coverage" =
+  let locations =
+    write_locations
+      {|model { vector[4] v; vector[4] w;
+          v[1] = 1; v = rep_vector(0, 4); w = rep_vector(0, 4);
+        }|}
+  in
+  (match locations with
+  | [element; whole; other] ->
+      assert (Access.is_overwritten Set.Poly.empty element whole);
+      assert (not (Access.is_overwritten Set.Poly.empty whole element));
+      assert (not (Access.is_overwritten Set.Poly.empty element other));
+      assert (not (Access.is_overwritten Set.Poly.empty whole other))
+  | _ -> failwith "Expected three writes");
   [%expect {| |}]
 
 let%expect_test "Loop headers write the induction variable" =

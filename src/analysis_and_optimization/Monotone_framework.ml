@@ -478,9 +478,9 @@ let reaching_definitions_transfer (accesses : Dependence.accesses LabelMap.t)
     defined_vars =
   let generated =
     LabelMap.mapi accesses ~f:(fun label effects ->
-        Set.Poly.of_list
-          (List.map effects.Dependence.writes ~f:(fun location ->
-               (location, Some label)))) in
+        effects.Dependence.writes
+        |> List.map ~f:(fun location -> (location, Some label))
+        |> Set.Poly.of_list) in
   (module struct
     type labels = int
     type properties = (Dependence.location * labels option) Set.Poly.t
@@ -489,13 +489,10 @@ let reaching_definitions_transfer (accesses : Dependence.accesses LabelMap.t)
       let writes = (LabelMap.find label accesses).Dependence.writes in
       let is_overwritten (previous, _) =
         List.exists writes ~f:(fun write ->
-            String.equal write.Dependence.variable previous.Dependence.variable
-            && Dependence.definitely_overwrites defined_vars write.path
-                 previous.path) in
-      Set.Poly.union
-        (LabelMap.find label generated)
-        (Set.Poly.filter reaching ~f:(fun definition ->
-             not (is_overwritten definition)))
+            Dependence.is_overwritten defined_vars previous write) in
+      reaching
+      |> Set.Poly.filter ~f:(fun definition -> not (is_overwritten definition))
+      |> Set.Poly.union (LabelMap.find label generated)
   end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (Dependence.location * int option) Set.Poly.t)

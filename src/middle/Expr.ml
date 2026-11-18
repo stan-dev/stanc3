@@ -88,6 +88,11 @@ end
 module Helpers = struct
   let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, Int.to_string i)}
 
+  let int_literal_value (expr : 'a t) =
+    match expr.pattern with
+    | Lit (Int, digits) -> Int.of_string_opt digits
+    | _ -> None
+
   let float i =
     { meta= {Typed.Meta.empty with type_= UReal}
     ; pattern= Lit (Real, Float.to_string i) }

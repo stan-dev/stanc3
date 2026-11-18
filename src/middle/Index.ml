@@ -10,6 +10,8 @@ type 'a t =
   | MultiIndex of 'a
 [@@deriving sexp_of, map, compare, fold]
 
+let is_single = function Single _ -> true | _ -> false
+
 let pp pp_e ppf = function
   | All -> Fmt.char ppf ':'
   | Single index | MultiIndex index -> pp_e ppf index
