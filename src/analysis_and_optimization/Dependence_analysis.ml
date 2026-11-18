@@ -22,25 +22,27 @@ type node_dep_info =
   ; loop_ids: label list
   ; meta: Location_span.t }
 
-let reaching_defn_lookup (rds : reaching_definition Set.Poly.t)
+let reaching_defn_lookup (definitions : reaching_definition Set.Poly.t)
     (read : Dependence.location) : label Set.Poly.t =
-  Set.Poly.fold rds ~init:Set.Poly.empty ~f:(fun (write, writer_id) labels ->
+  Set.Poly.fold definitions ~init:Set.Poly.empty
+    ~f:(fun ((write : Dependence.location), writer_id) writer_labels ->
       match writer_id with
-      | Some label
-        when String.equal write.Dependence.variable read.variable
+      | Some statement_id
+        when Dependence.Location.same_var write read
              && Dependence.may_overlap write.path read.path ->
-          Set.Poly.add label labels
-      | _ -> labels)
+          Set.Poly.add statement_id writer_labels
+      | _ -> writer_labels)
 
-let read_dependencies info blockers reads =
-  List.fold_left reads ~init:info.parents ~f:(fun dependencies read ->
+let read_dependencies statement_info blockers reads =
+  List.fold_left reads ~init:statement_info.parents ~f:(fun dependencies read ->
       if Set.Poly.mem (VVar read.Dependence.variable) blockers then dependencies
       else
-        let writers =
-          match String.Map.find_opt read.variable info.writers with
+        let writer_labels =
+          match String.Map.find_opt read.variable statement_info.writers with
           | Some labels -> labels
-          | None -> reaching_defn_lookup info.reaching_defn_entry read in
-        Set.Poly.union dependencies writers)
+          | None -> reaching_defn_lookup statement_info.reaching_defn_entry read
+        in
+        Set.Poly.union dependencies writer_labels)
 
 let node_immediate_dependencies
     (statement_map :
@@ -77,16 +79,15 @@ let node_vars_dependencies
   let _, info = LabelMap.find label statement_map in
   let reads =
     Set.Poly.fold vars ~init:[] ~f:(fun (VVar variable) selected_reads ->
-        let matching =
+        let matching_reads =
           List.filter info.accesses.reads ~f:(fun read ->
               String.equal read.Dependence.variable variable) in
-        match matching with
+        match matching_reads with
         | [] -> Dependence.{variable; path= []} :: selected_reads
-        | _ -> matching @ selected_reads) in
-  Set.Poly.fold
-    (read_dependencies info blockers reads)
-    ~init:Set.Poly.empty
-    ~f:(node_dependencies_rec statement_map ~blockers)
+        | _ -> matching_reads @ selected_reads) in
+  read_dependencies info blockers reads
+  |> Set.Poly.fold ~init:Set.Poly.empty
+       ~f:(node_dependencies_rec statement_map ~blockers)
 
 (* The strategy here is to write an update function on the whole dependency
    graph in terms of node_immediate_dependencies, and then to find a
@@ -199,22 +200,23 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
-let writers_of_reads analysis reader reads definitions =
-  List.fold_left reads ~init:String.Map.empty ~f:(fun writers read ->
-      let previous =
+let writers_of_reads analysis reader_id reads definitions =
+  List.fold_left reads ~init:String.Map.empty
+    ~f:(fun writers_by_variable read ->
+      let previous_writers =
         Option.value
-          (String.Map.find_opt read.Dependence.variable writers)
+          (String.Map.find_opt read.Dependence.variable writers_by_variable)
           ~default:Set.Poly.empty in
-      let labels =
-        Set.Poly.fold definitions ~init:previous
-          ~f:(fun (write, writer_id) found ->
+      let writer_labels =
+        Set.Poly.fold definitions ~init:previous_writers
+          ~f:(fun (write, writer_id) found_writers ->
             match writer_id with
-            | Some writer
-              when Loop_dependence.may_supply_read analysis writer write reader
-                     read ->
-                Set.Poly.add writer found
-            | _ -> found) in
-      String.Map.add writers ~key:read.variable ~data:labels)
+            | Some statement_id
+              when Loop_dependence.may_supply_read analysis statement_id write
+                     reader_id read ->
+                Set.Poly.add statement_id found_writers
+            | _ -> found_writers) in
+      String.Map.add writers_by_variable ~key:read.variable ~data:writer_labels)
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t =
@@ -223,27 +225,28 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let exits, preds, controls = build_control_flow statement_map in
-  let parents = LabelMap.map controls ~f:control_dependency_ids in
-  let accesses =
+  let exits, preds, controls_by_statement = build_cf_graphs statement_map in
+  let accesses_by_statement =
     LabelMap.map statement_map ~f:(fun (pattern, _) ->
         Dependence.collect_accesses pattern) in
-  let defined_vars =
-    LabelMap.fold accesses ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:effects names ->
-        List.fold_left effects.Dependence.writes ~init:names
-          ~f:(fun written location ->
-            Set.Poly.add location.Dependence.variable written)) in
-  let analysis = Loop_dependence.create statement_map controls defined_vars in
-  let overwrites killer write (previous, previous_id) =
+  let written_vars =
+    LabelMap.fold accesses_by_statement ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:statement_accesses collected_variables ->
+        List.fold_left statement_accesses.Dependence.writes
+          ~init:collected_variables ~f:(fun variables write_location ->
+            Set.Poly.add write_location.Dependence.variable variables)) in
+  let analysis =
+    Loop_dependence.create statement_map controls_by_statement written_vars
+  in
+  let overwrites writer_id write (previous_write, previous_id) =
     match previous_id with
-    | Some writer ->
-        Loop_dependence.definitely_overwrites analysis killer write writer
-          previous
+    | Some previous_writer ->
+        Loop_dependence.is_overwritten analysis previous_writer previous_write
+          writer_id write
     | None ->
-        String.equal write.Dependence.variable previous.Dependence.variable
+        Dependence.Location.same_var write previous_write
         && List.is_empty write.path in
-  let inverse =
+  let inverse_flowgraph =
     (module struct
       type labels = int
 
@@ -253,20 +256,22 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       with type labels = int) in
   let rd_map =
     reaching_definitions_mfp mir
-      (Monotone_framework.reverse inverse)
-      accesses overwrites in
+      (Monotone_framework.reverse inverse_flowgraph)
+      accesses_by_statement overwrites in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
-      let rds = LabelMap.find label rd_map in
-      let statement_accesses = LabelMap.find label accesses in
+      let definitions = LabelMap.find label rd_map in
+      let statement_accesses = LabelMap.find label accesses_by_statement in
+      let statement_controls = LabelMap.find label controls_by_statement in
       ( stmt
       , { predecessors= LabelMap.find label preds
-        ; parents= LabelMap.find label parents
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit
+        ; parents= control_dependency_ids statement_controls
+        ; reaching_defn_entry= definitions.entry
+        ; reaching_defn_exit= definitions.exit
         ; writers=
-            writers_of_reads analysis label statement_accesses.reads rds.entry
+            writers_of_reads analysis label statement_accesses.reads
+              definitions.entry
         ; accesses= statement_accesses
-        ; loop_ids= enclosing_loop_ids label stmt (LabelMap.find label controls)
+        ; loop_ids= enclosing_loop_ids label stmt statement_controls
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :

@@ -74,9 +74,11 @@ let%expect_test "Reaching defns example" =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
         let variable_labels definitions =
-          Set.Poly.filter_map definitions ~f:(fun (location, label) ->
-              Option.map label ~f:(fun id ->
-                  ( VVar location.Analysis_and_optimization.Dependence.variable
+          Set.Poly.filter_map definitions ~f:(fun (write_location, writer_id) ->
+              Option.map writer_id ~f:(fun id ->
+                  ( VVar
+                      write_location
+                        .Analysis_and_optimization.Dependence.variable
                   , id ))) in
         ( variable_labels x.reaching_defn_entry
         , variable_labels x.reaching_defn_exit )) in
@@ -344,4 +346,16 @@ let%expect_test
   assert_parameter_dependencies
     "for (n in 2:10) { v[n] = 0; v[n] = a; if (v[n - 1] > 0) target += 1; }"
     [["a"]];
+  [%expect {| |}]
+
+let%expect_test
+    "Disjoint ranges and index arrays exclude parameter dependencies" =
+  assert_parameter_dependencies
+    "v[1:2] = rep_vector(a, 2); if (sum(v[3:4]) > 0) target += 1;" [];
+  assert_parameter_dependencies
+    "v[{1, 3}] = rep_vector(a, 2); if (sum(v[{2, 4}]) > 0) target += 1;" [];
+  assert_parameter_dependencies
+    "v[1:2] = rep_vector(a, 2); if (sum(v[2:3]) > 0) target += 1;" [["a"]];
+  assert_parameter_dependencies
+    "v[{1, k}] = rep_vector(a, 2); if (v[2] > 0) target += 1;" [["a"]];
   [%expect {| |}]

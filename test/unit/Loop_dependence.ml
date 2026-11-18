@@ -39,19 +39,22 @@ let program upper body =
   "data { int N; int k; int j; array[20] int idx; } parameters { real a; } \
    model { vector[100] v; real y; for (n in 1:" ^ upper ^ ") { " ^ body ^ " } }"
 
+let check_flow source expected =
+  match analyze source with
+  | context, [(writer, write_location)], [(reader, read_location)] ->
+      let actual =
+        Proof.may_supply_read context writer write_location reader read_location
+      in
+      if actual <> expected then failwith ("Unexpected dependence: " ^ source)
+  | _ -> failwith "Expected one pair of indexed accesses"
+
 let check_pair ~write_first upper write read expected =
   let assignment = "v[" ^ write ^ "] = a;" in
   let read_assignment = "y = v[" ^ read ^ "];" in
   let body =
     if write_first then assignment ^ read_assignment
     else read_assignment ^ assignment in
-  match analyze (program upper body) with
-  | context, [(writer, write_location)], [(reader, read_location)] ->
-      let actual =
-        Proof.may_supply_read context writer write_location reader read_location
-      in
-      if actual <> expected then failwith ("Unexpected dependence: " ^ body)
-  | _ -> failwith "Expected one pair of indexed accesses"
+  check_flow (program upper body) expected
 
 let%expect_test
     "Equal strides establish direction, divisibility and trip-count limits" =
@@ -89,7 +92,8 @@ let%expect_test "Normalization overflow cannot manufacture independence" =
     true;
   let smallest = "((-2147483647 - 1) * 2147483647 + (-2147483647 - 1))" in
   check_pair ~write_first:true "5" ("n + " ^ smallest) "n" true;
-  check_pair ~write_first:true "5" (smallest ^ " * n") "2 * n + 1" true;
+  (* Equal parity leaves the overflow fallback responsible for the answer. *)
+  check_pair ~write_first:true "5" (smallest ^ " * n") "2 * n" true;
   [%expect {| |}]
 
 type linear_case =
@@ -192,4 +196,50 @@ let%expect_test "Nested-loop enumeration validates direction intersections" =
                   failwith "Lost nested forward dependence";
                 if (k < i || (k = i && l < j)) && not backward then
                   failwith "Lost nested backward dependence"))));
+  [%expect {| |}]
+
+let%expect_test "Slices use the shared overlap rules inside loops" =
+  check_flow
+    {|parameters { real a; } model {
+      vector[10] v; real y;
+      for (n in 1:5) { v[1:2] = rep_vector(a, 2); y = sum(v[3:4]); }
+    }|}
+    false;
+  [%expect {| |}]
+
+let%expect_test "Loop direction is checked after an overlapping slice" =
+  check_flow
+    {|parameters { real a; } model {
+      matrix[3, 10] v; real y;
+      for (n in 2:8) { v[1:2, n] = rep_vector(a, 2); y = sum(v[2:3, n + 1]); }
+    }|}
+    false;
+  [%expect {| |}]
+
+let%expect_test "Loop-carried flow is retained after an overlapping slice" =
+  check_flow
+    {|parameters { real a; } model {
+      matrix[3, 10] v; real y;
+      for (n in 2:8) { v[1:2, n] = rep_vector(a, 2); y = sum(v[2:3, n - 1]); }
+    }|}
+    true;
+  [%expect {| |}]
+
+let%expect_test "Literal columns remain disjoint after index arrays" =
+  check_flow
+    {|parameters { real a; } model {
+      matrix[3, 2] v; real y;
+      for (n in 1:5) { v[{1, 3}, 1] = rep_vector(a, 2); y = sum(v[{1, 3}, 2]); }
+    }|}
+    false;
+  [%expect {| |}]
+
+let%expect_test "Parity separates indirect indices without an affine view" =
+  check_pair ~write_first:true "5" "2 * idx[n]" "2 * idx[n] + 1" false;
+  check_pair ~write_first:true "5" "2 * idx[n]" "2 * idx[n]" true;
+  [%expect {| |}]
+
+let%expect_test "Parity remains valid when affine coefficients overflow" =
+  let smallest = "((-2147483647 - 1) * 2147483647 + (-2147483647 - 1))" in
+  check_pair ~write_first:true "5" (smallest ^ " * n") "2 * n + 1" false;
   [%expect {| |}]

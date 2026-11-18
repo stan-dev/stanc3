@@ -64,18 +64,16 @@ module Affine = struct
       { offset= Checked.mul factor sum.offset
       ; terms= Terms.map (Checked.mul factor) sum.terms }
 
-  let is_stable defined_vars expr =
-    (not (Mir_utils.cannot_duplicate_expr expr))
-    && Set.Poly.disjoint defined_vars (Mir_utils.expr_var_names_set expr)
+  let invariant written_vars expr =
+    if Mir_utils.is_stable_expr written_vars expr then
+      Some (term (Invariant expr))
+    else None
 
-  let invariant defined_vars expr =
-    if is_stable defined_vars expr then Some (term (Invariant expr)) else None
-
-  let rec normalize defined_vars variables (expr : Expr.Typed.t) =
+  let rec normalize written_vars variables (expr : Expr.Typed.t) =
     let binary operation left right =
       match
-        ( normalize defined_vars variables left
-        , normalize defined_vars variables right )
+        ( normalize written_vars variables left
+        , normalize written_vars variables right )
       with
       | Some a, Some b -> operation a b
       | _ -> None in
@@ -84,7 +82,7 @@ module Affine = struct
     | Var name -> (
         match String.Map.find_opt name variables with
         | Some loop -> Some (term (Loop loop))
-        | None -> invariant defined_vars expr)
+        | None -> invariant written_vars expr)
     | FunApp (Operator Plus, [a; b]) -> binary (fun x y -> Some (add x y)) a b
     | FunApp (Operator Minus, [a; b]) ->
         binary (fun x y -> Some (add x (scale (-1) y))) a b
@@ -93,16 +91,16 @@ module Affine = struct
           (fun x y ->
             if Terms.is_empty x.terms then Some (scale x.offset y)
             else if Terms.is_empty y.terms then Some (scale y.offset x)
-            else invariant defined_vars expr)
+            else invariant written_vars expr)
           a b
     | FunApp (Operator PMinus, [a]) ->
-        Option.map (normalize defined_vars variables a) ~f:(scale (-1))
-    | FunApp (Operator PPlus, [a]) -> normalize defined_vars variables a
-    | _ -> invariant defined_vars expr
+        Option.map (normalize written_vars variables a) ~f:(scale (-1))
+    | FunApp (Operator PPlus, [a]) -> normalize written_vars variables a
+    | _ -> invariant written_vars expr
 
-  let of_expr defined_vars variables expr =
+  let of_expr written_vars variables expr =
     try
-      Option.map (normalize defined_vars variables expr) ~f:(fun sum ->
+      Option.map (normalize written_vars variables expr) ~f:(fun sum ->
           let loops, invariants =
             Terms.fold
               (fun key coefficient (loops, invariants) ->
@@ -127,12 +125,12 @@ type scope =
 type t =
   { scopes: scope LabelMap.t
   ; bounds: bounds LabelMap.t
-  ; defined_vars: string Set.Poly.t
+  ; written_vars: string Set.Poly.t
   ; expressions: (label * Expr.Typed.t, Affine.t option) Stdlib.Hashtbl.t }
 
-let create statement_map controls_by_statement defined_vars =
+let create statement_map controls_by_statement written_vars =
   let constant_bound expr =
-    match Affine.of_expr defined_vars String.Map.empty expr with
+    match Affine.of_expr written_vars String.Map.empty expr with
     | Some {constant; loops= []; invariants= []} -> Some constant
     | _ -> None in
   let loop_variables, bounds =
@@ -159,7 +157,7 @@ let create statement_map controls_by_statement defined_vars =
             Dataflow_utils.enclosing_loop_ids id pattern statement_controls
         ; variables
         ; controls= statement_controls }) in
-  {scopes; bounds; defined_vars; expressions= Stdlib.Hashtbl.create 32}
+  {scopes; bounds; written_vars; expressions= Stdlib.Hashtbl.create 32}
 
 let affine_view context statement_id expr =
   let key = (statement_id, expr) in
@@ -167,7 +165,7 @@ let affine_view context statement_id expr =
   | Some view -> view
   | None ->
       let scope = LabelMap.find statement_id context.scopes in
-      let view = Affine.of_expr context.defined_vars scope.variables expr in
+      let view = Affine.of_expr context.written_vars scope.variables expr in
       Stdlib.Hashtbl.add context.expressions key view;
       view
 
@@ -285,12 +283,13 @@ let compare_affine context (write : Affine.t) (read : Affine.t) =
           else Unconstrained
   with Checked.Overflow -> Unconstrained
 
-let compare_steps context writer write reader read =
-  match (write, read) with
-  | Dependence.Field a, Dependence.Field b ->
-      if a = b then Unconstrained else Disjoint
-  | Subscript (Single a), Subscript (Single b) -> (
-      match (affine_view context writer a, affine_view context reader b) with
+let compare_indices context writer_id write_index reader_id read_index =
+  match (write_index, read_index) with
+  | Index.Single write_expr, Index.Single read_expr -> (
+      match
+        ( affine_view context writer_id write_expr
+        , affine_view context reader_id read_expr )
+      with
       | Some write_view, Some read_view ->
           compare_affine context write_view read_view
       | _ -> Unconstrained)
@@ -302,22 +301,22 @@ let rec unconstrained_common_loops writer reader =
       (w, Directions all_directions) :: unconstrained_common_loops ws rs
   | _ -> []
 
-let rec constrain_paths context writer reader (vector : dependence_vector)
-    writes reads =
-  match (writes, reads) with
-  | ( (Dependence.Field _ as write) :: write_tail
-    , (Dependence.Field _ as read) :: read_tail )
-   |( (Subscript (Single _) as write) :: write_tail
-    , (Subscript (Single _) as read) :: read_tail ) -> (
-      match compare_steps context writer write reader read with
+let rec constrain_paths context writer_id reader_id (vector : dependence_vector)
+    (write_path : Dependence.access_path) (read_path : Dependence.access_path) =
+  match (write_path, read_path) with
+  | write_index :: remaining_writes, read_index :: remaining_reads -> (
+      match
+        compare_indices context writer_id write_index reader_id read_index
+      with
       | Disjoint -> None
       | Unconstrained ->
-          constrain_paths context writer reader vector write_tail read_tail
-      | Constrain (loop, constraint_) ->
-          Option.bind (constrain_vector loop constraint_ vector)
-            ~f:(fun constrained ->
-              constrain_paths context writer reader constrained write_tail
-                read_tail))
+          constrain_paths context writer_id reader_id vector remaining_writes
+            remaining_reads
+      | Constrain (loop_id, constraint_) ->
+          Option.bind (constrain_vector loop_id constraint_ vector)
+            ~f:(fun constrained_vector ->
+              constrain_paths context writer_id reader_id constrained_vector
+                remaining_writes remaining_reads))
   | _ -> Some vector
 
 let rec permits_forward_order is_writer_first = function
@@ -329,7 +328,10 @@ let rec permits_forward_order is_writer_first = function
 
 let may_supply_read context writer (write : Dependence.location) reader
     (read : Dependence.location) =
-  if not (String.equal write.variable read.variable) then false
+  if
+    (not (Dependence.Location.same_var write read))
+    || not (Dependence.may_overlap write.path read.path)
+  then false
   else
     let writer_scope = LabelMap.find writer context.scopes in
     let reader_scope = LabelMap.find reader context.scopes in
@@ -346,7 +348,7 @@ let may_supply_read context writer (write : Dependence.location) reader
 
 let equal_subscripts context killer a previous b ~is_same_iteration =
   if
-    Affine.is_stable context.defined_vars a
+    Mir_utils.is_stable_expr context.written_vars a
     && Expr.Helpers.compare_ignore_meta a b = 0
   then true
   else
@@ -362,9 +364,7 @@ let rec covers_path context killer previous ~is_same_iteration writes old_writes
     =
   match (writes, old_writes) with
   | [], _ -> true
-  | Dependence.Field a :: ws, Dependence.Field b :: ps ->
-      a = b && covers_path context killer previous ~is_same_iteration ws ps
-  | Subscript (Single a) :: ws, Subscript (Single b) :: ps ->
+  | Index.Single a :: ws, Index.Single b :: ps ->
       equal_subscripts context killer a previous b ~is_same_iteration
       && covers_path context killer previous ~is_same_iteration ws ps
   | _ -> false
@@ -376,9 +376,9 @@ let includes_controls (covering : controls) (covered : controls) =
 
 (* A loop-varying write is killed only when every execution is overwritten
    before that iteration can finish or skip the killer. *)
-let definitely_overwrites context killer (write : Dependence.location) previous
-    (old_write : Dependence.location) =
-  if not (String.equal write.variable old_write.variable) then false
+let is_overwritten context previous (old_write : Dependence.location) killer
+    (write : Dependence.location) =
+  if not (Dependence.Location.same_var write old_write) then false
   else if
     covers_path context killer previous ~is_same_iteration:false write.path
       old_write.path

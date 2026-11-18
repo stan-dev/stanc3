@@ -24,12 +24,12 @@ type reaching_defn = vexpr * label [@@deriving sexp_of]
 type cf_state = label
 
 (** The side of an [if] that holds a statement. *)
-type side = Then | Else
+type branch_side = Then | Else
 
-type enclosing = {id: label; side: side option}
+type enclosing_control = {id: label; side: branch_side option}
 
 type controls =
-  { enclosing: enclosing list
+  { enclosing: enclosing_control list
         (** The index of ifs and loops around the statement, outermost first. *)
   ; jump_ids: label Set.Poly.t }
 

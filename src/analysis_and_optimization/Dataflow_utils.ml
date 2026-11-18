@@ -47,6 +47,12 @@ type cf_state =
   ; returns: label Set.Poly.t
   ; exits: label Set.Poly.t }
 
+(** Represents the control flow information at each node in the control graph,
+    where
+    - predecessors points to the nodes which could have executed before this
+      node
+    - controls records the enclosing branches and loops, and jumps which
+      influence the execution of this node *)
 type cf_edges = {predecessors: label Set.Poly.t; controls: controls}
 
 (** Join the state of a controlflow traversal across different branches of
@@ -69,13 +75,13 @@ let is_ctrl_flow pattern =
     and the exit set of a statement. It's advantageous to build them together
     because they both rely on some of the same Break, Continue and Return
     bookkeeping. *)
-let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
+let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
-  let rec build_cf_graph_rec (enclosing : enclosing list)
+  let rec build_cf_graph_rec (enclosing : enclosing_control list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
-    let child_cf =
+    let enclosing_for_children =
       match stmt with
       | Stmt.Pattern.For _ | While _ -> enclosing @ [{id= label; side= None}]
       | _ -> enclosing in
@@ -109,7 +115,8 @@ let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
           fst
             (fwd_traverse_statement stmt ~init:(child_init, in_map)
                ~f:(fun state child ->
-                 (build_cf_graph_rec child_cf state child, ()))) in
+                 (build_cf_graph_rec enclosing_for_children state child, ())))
+    in
     (* If the statement is a loop, we need to include the loop body exits as
        predecessors of the loop *)
     let substmt_state, predecessors =
@@ -209,23 +216,24 @@ let control_dependency_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t
   | None -> jump_ids
 
 let enclosing_loop_ids (statement_id : label)
-    (pattern : ('e, 's) Stmt.Pattern.t) (controls : controls) : label list =
-  List.filter_map controls.enclosing ~f:(function
+    (statement_pattern : ('e, 's) Stmt.Pattern.t)
+    (statement_controls : controls) : label list =
+  List.filter_map statement_controls.enclosing ~f:(function
     | {id; side= None} -> Some id
     | {side= Some _; _} -> None)
-  @ match pattern with For _ | While _ -> [statement_id] | _ -> []
+  @ match statement_pattern with For _ | While _ -> [statement_id] | _ -> []
 
 let build_controls statement_map =
-  let _, _, controls = build_control_flow statement_map in
+  let _, _, controls = build_cf_graphs statement_map in
   controls
 
 (** See interface file *)
 let build_cf_graph statement_map =
-  LabelMap.map (build_controls statement_map) ~f:control_dependency_ids
+  build_controls statement_map |> LabelMap.map ~f:control_dependency_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let exits, pred_graph, _ =
-    build_control_flow ~flatten_loops ~blocks_after_body statement_map in
+    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map in
   (exits, pred_graph)

@@ -50,6 +50,11 @@ end
 
 module Helpers : sig
   val int : int -> Typed.t
+
+  val int_literal_value : 'a t -> int option
+  (** Read an integer literal; return [None] for other expressions or values
+      outside the OCaml integer range. *)
+
   val float : float -> Typed.t
   val complex : float * float -> Typed.t
   val str : string -> Typed.t
@@ -68,6 +73,11 @@ module Helpers : sig
   val complex_matrix_from_rows : Typed.t list -> Typed.t
   val transpose : Typed.t -> Typed.t
   val array_expr : Typed.t list -> Typed.t
+
+  val array_literal_elements : 'a t -> 'a t list option
+  (** Returns the elements of an inline array, or [None] for other expressions.
+  *)
+
   val tuple_expr : Typed.t list -> Typed.t
   val loop_bottom : Typed.t
   val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t
