@@ -665,60 +665,216 @@ let%expect_test "Predecessor graph example 5" =
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
 
-let%expect_test "Controls retain loop ancestry, branch sides and jumps" =
-  let mir =
-    Test_utils.mir_of_string
-      {|
-      data { int N; int c; }
-      parameters { real a; }
-      model {
-        vector[N] v;
-        for (n in 1:N) {
-          if (c > 0) continue;
-          while (v[n] < 0) {
-            if (c > 1) v[n] = a;
-          }
-        }
-      }
-    |}
-  in
-  let statement_map =
+let print_control_contexts source =
+  let mir = Test_utils.mir_of_string source in
+  let bodies =
+    List.filter_map mir.functions_block ~f:(fun definition ->
+        definition.Program.fdbody) in
+  let statements =
     build_statement_map
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
-      Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
-  let controls_map = build_controls statement_map in
-  print_endline "(statement, enclosing, dependencies, loops)";
-  LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
-      let controls = LabelMap.find statement_id controls_map in
-      let enclosing =
-        List.map controls.enclosing ~f:(fun {id; side} ->
-            ( id
-            , match side with
-              | None -> "loop"
-              | Some Then -> "then"
-              | Some Else -> "else" )) in
-      print_s
-        [%sexp
-          (( statement_id
-           , enclosing
-           , control_dependency_ids controls
-           , enclosing_loop_ids statement_id pattern controls )
-            : label * (label * string) list * label Set.Poly.t * label list)]);
+      Stmt.{meta= Location_span.empty; pattern= SList (bodies @ mir.log_prob)}
+  in
+  let controls_by_statement = build_controls statements in
+  let statement_name id =
+    match fst (LabelMap.find id statements) with
+    | Stmt.Pattern.For {loopvar; _} -> "for " ^ loopvar
+    | While (condition, _) -> Fmt.str "while %a" Expr.Typed.pp condition
+    | IfElse (condition, _, _) -> Fmt.str "if %a" Expr.Typed.pp condition
+    | NRFunApp (CompilerInternal FnPrint, args) ->
+        Fmt.str "print(%a)" (Fmt.list ~sep:Fmt.comma Expr.Typed.pp) args
+    | Break -> "break"
+    | Continue -> "continue"
+    | Return (Some result) -> Fmt.str "return %a" Expr.Typed.pp result
+    | Return None -> "return"
+    | _ -> failwith "Expected a control statement or print" in
+  let names ids = List.map ids ~f:statement_name |> String.concat ~sep:"; " in
+  LabelMap.iter statements ~f:(fun ~key:id ~data:(pattern, _) ->
+      match pattern with
+      | Stmt.Pattern.For _ | While _ | NRFunApp (CompilerInternal FnPrint, _) ->
+          let statement_controls = LabelMap.find id controls_by_statement in
+          let enclosing =
+            List.map statement_controls.enclosing ~f:(fun {id= parent; side} ->
+                statement_name parent
+                ^
+                match side with
+                | None -> ""
+                | Some Then -> " (then)"
+                | Some Else -> " (else)")
+            |> String.concat ~sep:"; " in
+          Fmt.pr
+            "%s@.  enclosing: [%s]@.  loops: [%s]@.  control dependencies: \
+             [%s]@."
+            (statement_name id) enclosing
+            (names (enclosing_loop_ids id pattern statement_controls))
+            (names
+               (Set.Poly.to_list (control_dependency_ids statement_controls)))
+      | _ -> ())
+
+let%expect_test
+    "Controls: nested for and while loops retain outer-to-inner ancestry" =
+  print_control_contexts
+    {|data { int<lower=0> N; }
+      model {
+        for (n in 1:N) {
+          int remaining = 2;
+          while (remaining > 0) {
+            print("inside while");
+            remaining -= 1;
+          }
+          print("after while");
+        }
+        print("outside loops");
+      }|};
   [%expect
     {|
-    (statement, enclosing, dependencies, loops)
-    (1 () () ())
-    (2 () () ())
-    (3 () () ())
-    (4 () () ())
-    (5 () () ())
-    (6 () () (6))
-    (7 ((6 loop)) (6) (6))
-    (8 ((6 loop)) (6) (6))
-    (9 ((6 loop) (8 then)) (8) (6))
-    (10 ((6 loop)) (6 9) (6 10))
-    (11 ((6 loop) (10 loop)) (9 10) (6 10))
-    (12 ((6 loop) (10 loop)) (9 10) (6 10))
-    (13 ((6 loop) (10 loop) (12 then)) (9 12) (6 10))
+    for n
+      enclosing: []
+      loops: [for n]
+      control dependencies: []
+    while (remaining > 0)
+      enclosing: [for n]
+      loops: [for n; while (remaining > 0)]
+      control dependencies: [for n]
+    print("inside while")
+      enclosing: [for n; while (remaining > 0)]
+      loops: [for n; while (remaining > 0)]
+      control dependencies: [while (remaining > 0)]
+    print("after while")
+      enclosing: [for n]
+      loops: [for n]
+      control dependencies: [for n]
+    print("outside loops")
+      enclosing: []
+      loops: []
+      control dependencies: []
+    |}]
+
+let%expect_test "Controls: then and else branches stay distinct" =
+  print_control_contexts
+    {|data { int choose_then; }
+      model {
+        if (choose_then) print("then branch");
+        else print("else branch");
+        print("after branches");
+      }|};
+  [%expect
+    {|
+    print("then branch")
+      enclosing: [if choose_then (then)]
+      loops: []
+      control dependencies: [if choose_then]
+    print("else branch")
+      enclosing: [if choose_then (else)]
+      loops: []
+      control dependencies: [if choose_then]
+    print("after branches")
+      enclosing: []
+      loops: []
+      control dependencies: []
+    |}]
+
+let%expect_test "Controls: continue controls the rest of the iteration" =
+  print_control_contexts
+    {|data { int skip; }
+      model {
+        for (n in 1:3) {
+          if (skip) continue;
+          print("after continue");
+        }
+        print("after loop");
+      }|};
+  [%expect
+    {|
+    for n
+      enclosing: []
+      loops: [for n]
+      control dependencies: []
+    print("after continue")
+      enclosing: [for n]
+      loops: [for n]
+      control dependencies: [for n; continue]
+    print("after loop")
+      enclosing: []
+      loops: []
+      control dependencies: []
+    |}]
+
+let%expect_test "Controls: break is a dependency of the loop header" =
+  print_control_contexts
+    {|data { int stop; }
+      model {
+        for (n in 1:3) {
+          if (stop) break;
+          print("after break");
+        }
+        print("after loop");
+      }|};
+  [%expect
+    {|
+    for n
+      enclosing: []
+      loops: [for n]
+      control dependencies: [break]
+    print("after break")
+      enclosing: [for n]
+      loops: [for n]
+      control dependencies: [for n]
+    print("after loop")
+      enclosing: []
+      loops: []
+      control dependencies: []
+    |}]
+
+let%expect_test "Controls: return controls later statements in the function" =
+  print_control_contexts
+    {|functions {
+        int f(int stop) {
+          if (stop) return 0;
+          print("after return");
+          return 1;
+        }
+      } model {}|};
+  [%expect
+    {|
+    print("after return")
+      enclosing: []
+      loops: []
+      control dependencies: [return 0]
+    |}]
+
+let%expect_test
+    "Controls: an outer continue remains visible inside nested controls" =
+  print_control_contexts
+    {|data { int skip; int choose_then; }
+      model {
+        for (n in 1:3) {
+          if (skip) continue;
+          int remaining = 2;
+          while (remaining > 0) {
+            if (choose_then) print("nested then");
+            else print("nested else");
+            remaining -= 1;
+          }
+        }
+      }|};
+  [%expect
+    {|
+    for n
+      enclosing: []
+      loops: [for n]
+      control dependencies: []
+    while (remaining > 0)
+      enclosing: [for n]
+      loops: [for n; while (remaining > 0)]
+      control dependencies: [for n; continue]
+    print("nested then")
+      enclosing: [for n; while (remaining > 0); if choose_then (then)]
+      loops: [for n; while (remaining > 0)]
+      control dependencies: [continue; if choose_then]
+    print("nested else")
+      enclosing: [for n; while (remaining > 0); if choose_then (else)]
+      loops: [for n; while (remaining > 0)]
+      control dependencies: [continue; if choose_then]
     |}]

@@ -201,71 +201,205 @@ let%expect_test "Uninitialized variables example" =
         k))
     |}]
 
-let assert_parameter_dependencies body expected =
+let pp_statement ppf pattern =
+  let without_promotions =
+    Expr.rewrite_bottom_up ~f:(fun expr ->
+        match expr.Expr.pattern with
+        | Promotion (original, _, _) -> original
+        | _ -> expr) in
+  Stmt.Located.pp ppf
+    Stmt.
+      { pattern=
+          Pattern.map without_promotions
+            (fun _ -> {pattern= Skip; meta= Location_span.empty})
+            pattern
+      ; meta= Location_span.empty }
+
+let print_parameter_dependencies body =
   let mir =
     Test_utils.mir_of_string
-      ("data { int k; } parameters { real a; } model { vector[10] v = \
-        rep_vector(0, 10); " ^ body ^ " }") in
+      ("data { int<lower=1, upper=10> k; } parameters { real a; } model { \
+        vector[10] v = rep_vector(0, 10); " ^ body ^ " }") in
   let prefix = "A control flow statement depends on parameter(s): " in
-  let actual =
+  let warnings =
     Analysis_and_optimization.Pedantic_analysis.warn_pedantic mir
     |> List.filter_map ~f:(fun (_, message) ->
         if String.starts_with ~prefix message then Some message else None) in
-  let expected =
-    List.map expected ~f:(fun names ->
-        prefix ^ String.concat ~sep:", " names ^ ".") in
-  if actual <> expected then
-    failwith ("Unexpected parameter dependencies for: " ^ body)
+  match warnings with
+  | [] -> print_endline "Control-flow warnings: none"
+  | messages -> List.iter messages ~f:print_endline
 
-let%expect_test "Indexed reads exclude distinct literal writes" =
-  assert_parameter_dependencies "v[1] = a; if (v[2] > 0) target += 1;" [];
-  assert_parameter_dependencies "v[1] = a; if (v[1] > 0) target += 1;" [["a"]];
-  [%expect {| |}]
+let%expect_test "Dependencies: reading another literal element does not warn" =
+  print_parameter_dependencies {|v[1] = a;
+      if (v[2] > 0) target += 1;|};
+  [%expect {|
+    Control-flow warnings: none
+  |}]
 
-let%expect_test "Indexed overwrites require a stable address" =
-  assert_parameter_dependencies "v[k] = a; v[k] = 0; if (v[k] > 0) target += 1;"
-    [];
-  assert_parameter_dependencies
-    "int i = 1; v[i] = a; i = 2; v[i] = 0; if (v[1] > 0) target += 1;" [["a"]];
-  assert_parameter_dependencies
-    "array[2] int idx = {1, 2}; v[idx[1]] = a; idx[1] = 2; v[idx[1]] = 0; if \
-     (v[1] > 0) target += 1;"
-    [["a"]];
-  [%expect {| |}]
-
-let%expect_test "Loop arithmetic and loop-carried dependences stay conservative"
-    =
-  assert_parameter_dependencies
-    "for (n in 1:5) { v[n + 5] = a; if (v[n] > 0) target += 1; }" [["a"]];
-  assert_parameter_dependencies
-    "for (n in 2:5) { if (v[n - 1] > 0) target += 1; v[n] = a; }" [["a"]];
-  assert_parameter_dependencies
-    "for (n in 1:5) { v[n] = a; v[n] = 0; if (v[n] > 0) target += 1; }" [["a"]];
-  [%expect {| |}]
-
-let%expect_test "Conditional writes and slices preserve possible dependencies" =
-  assert_parameter_dependencies
-    "v[1] = a; if (k > 0) v[1] = 0; if (v[1] > 0) target += 1;" [["a"]];
-  assert_parameter_dependencies "v[2] = a; if (v[2:3][1] > 0) target += 1;"
-    [["a"]];
-  assert_parameter_dependencies
-    "v[1] = a; v[1:2] = rep_vector(0, 2); if (v[1] > 0) target += 1;" [["a"]];
-  [%expect {| |}]
-
-let%expect_test "Tuple fields have separate dependencies" =
-  assert_parameter_dependencies
-    "tuple(real, real) t; t.1 = a; t.2 = 0; if (t.2 > 0) target += 1;" [];
-  assert_parameter_dependencies
-    "tuple(real, real) t; t.1 = a; t.2 = 0; if (t.1 > 0) target += 1;" [["a"]];
-  [%expect {| |}]
+let%expect_test "Dependencies: reading the written element warns" =
+  print_parameter_dependencies {|v[1] = a;
+      if (v[1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
 
 let%expect_test
-    "Random subscripts retain both writes and the initial definition" =
+    "Dependencies: overwriting a stable element removes its parameter \
+     dependency" =
+  print_parameter_dependencies
+    {|v[k] = a;
+      v[k] = 0;
+      if (v[k] > 0) target += 1;|};
+  [%expect {|
+    Control-flow warnings: none
+  |}]
+
+let%expect_test "Dependencies: changing an index preserves the earlier element"
+    =
+  print_parameter_dependencies
+    {|int i = 1;
+      v[i] = a;
+      i = 2;
+      v[i] = 0;
+      if (v[1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Dependencies: changing an index array preserves the earlier element" =
+  print_parameter_dependencies
+    {|array[2] int idx = {1, 2};
+      v[idx[1]] = a;
+      idx[1] = 2;
+      v[idx[1]] = 0;
+      if (v[1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Conservative dependencies: loop bounds do not yet prove disjointness" =
+  print_parameter_dependencies
+    {|for (n in 1:5) {
+        v[n + 5] = a;
+        if (v[n] > 0) target += 1;
+      }|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test "Dependencies: an earlier iteration can supply a read" =
+  print_parameter_dependencies
+    {|for (n in 2:5) {
+        if (v[n - 1] > 0) target += 1;
+        v[n] = a;
+      }|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Conservative dependencies: same-iteration overwrites are not yet proved" =
+  print_parameter_dependencies
+    {|for (n in 1:5) {
+        v[n] = a;
+        v[n] = 0;
+        if (v[n] > 0) target += 1;
+      }|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test "Dependencies: a conditional overwrite might not execute" =
+  print_parameter_dependencies
+    {|v[1] = a;
+      if (k > 1) v[1] = 0;
+      if (v[1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test "Dependencies: nested slices still read the original vector" =
+  print_parameter_dependencies
+    {|v[2] = a;
+      if (v[2:3][1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Conservative dependencies: slice overwrites do not yet remove definitions"
+    =
+  print_parameter_dependencies
+    {|v[1] = a;
+      v[1:2] = rep_vector(0, 2);
+      if (v[1] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test "Dependencies: writing another tuple field does not warn" =
+  print_parameter_dependencies
+    {|tuple(real, real) t;
+      t.1 = a;
+      t.2 = 0;
+      if (t.2 > 0) target += 1;|};
+  [%expect {|
+    Control-flow warnings: none
+  |}]
+
+let%expect_test
+    "Dependencies: another tuple field does not overwrite the parameter" =
+  print_parameter_dependencies
+    {|tuple(real, real) t;
+      t.1 = a;
+      t.2 = 0;
+      if (t.1 > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test "Dependencies: disjoint ranges do not warn" =
+  print_parameter_dependencies
+    {|v[1:2] = rep_vector(a, 2);
+      if (sum(v[3:4]) > 0) target += 1;|};
+  [%expect {|
+    Control-flow warnings: none
+  |}]
+
+let%expect_test "Dependencies: disjoint index arrays do not warn" =
+  print_parameter_dependencies
+    {|v[{1, 3}] = rep_vector(a, 2);
+      if (sum(v[{2, 4}]) > 0) target += 1;|};
+  [%expect {|
+    Control-flow warnings: none
+  |}]
+
+let%expect_test "Dependencies: ranges sharing an endpoint warn" =
+  print_parameter_dependencies
+    {|v[1:2] = rep_vector(a, 2);
+      if (sum(v[2:3]) > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Dependencies: a symbolic array element can select the read position" =
+  print_parameter_dependencies
+    {|v[{1, k}] = rep_vector(a, 2);
+      if (v[2] > 0) target += 1;|};
+  [%expect {|
+    A control flow statement depends on parameter(s): a.
+  |}]
+
+let%expect_test
+    "Random subscripts: the actual indexed read retains all three writers" =
   let mir =
     Test_utils.mir_of_string
       {|functions {
         real pick_rng(vector theta) {
-          vector[4] v = rep_vector(0, 4);
+          vector[num_elements(theta) + 1] v = rep_vector(0, num_elements(theta) + 1);
           v[categorical_rng(theta)] = 1;
           v[categorical_rng(theta)] = 2;
           return v[categorical_rng(theta) + 1];
@@ -280,21 +414,22 @@ let%expect_test
   LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
       match pattern with
       | Stmt.Pattern.Return _ ->
-          let writers =
-            reaching_defn_lookup info.reaching_defn_entry
-              {variable= "v"; path= []} in
-          print_s [%sexp (writers : label Set.Poly.t)]
+          Fmt.pr "%a@.Possible writers:@." pp_statement pattern;
+          let read =
+            List.find_opt info.accesses.reads ~f:(fun location ->
+                String.equal
+                  location.Analysis_and_optimization.Dependence.variable "v")
+            |> Option.get in
+          reaching_defn_lookup info.reaching_defn_entry read
+          |> Set.Poly.iter ~f:(fun writer_id ->
+              let writer, _ = LabelMap.find writer_id statements in
+              Fmt.pr "  %a@." pp_statement writer)
       | _ -> ());
-  [%expect {| (3 4 5) |}]
-
-let%expect_test
-    "Disjoint ranges and index arrays exclude parameter dependencies" =
-  assert_parameter_dependencies
-    "v[1:2] = rep_vector(a, 2); if (sum(v[3:4]) > 0) target += 1;" [];
-  assert_parameter_dependencies
-    "v[{1, 3}] = rep_vector(a, 2); if (sum(v[{2, 4}]) > 0) target += 1;" [];
-  assert_parameter_dependencies
-    "v[1:2] = rep_vector(a, 2); if (sum(v[2:3]) > 0) target += 1;" [["a"]];
-  assert_parameter_dependencies
-    "v[{1, k}] = rep_vector(a, 2); if (v[2] > 0) target += 1;" [["a"]];
-  [%expect {| |}]
+  [%expect
+    {|
+    return v[(categorical_rng(theta) + 1)];
+    Possible writers:
+      v = rep_vector(0, (num_elements(theta) + 1));
+      v[categorical_rng(theta)] = 1;
+      v[categorical_rng(theta)] = 2;
+    |}]

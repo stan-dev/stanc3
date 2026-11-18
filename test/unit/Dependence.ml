@@ -39,40 +39,83 @@ let print_locations heading locations =
     |> String.concat ~sep:", " in
   Fmt.pr "%s: %s@." heading locations_text
 
-let%expect_test "Collect indexed reads, writes, tuple fields and slices" =
-  assignment_accesses
-    {|model {
-        vector[4] v; vector[4] w; array[4] int idx;
-        tuple(vector[4], real) t;
-        v[idx[1]] = w[idx[2] * idx[3]];
-        t.1[idx[1]] = v[2];
-        t.1[1] = t.1[2];
-        v[1:2] = w[2:3];
-        v[1] += 1;
-        real z = w[2:3][1];
-      }|}
+let print_assignment_accesses source =
+  assignment_accesses source
   |> List.iter ~f:(fun statement_accesses ->
-      print_locations "reads" statement_accesses.Access.reads;
-      print_locations "writes" statement_accesses.writes);
+      print_locations "read paths" statement_accesses.Access.reads;
+      print_locations "write paths" statement_accesses.writes)
+
+let%expect_test
+    "Access collection: index expressions contribute their own reads" =
+  print_assignment_accesses
+    {|data { array[3] int<lower=1, upper=2> idx; vector[4] w; }
+      model { vector[4] v; v[idx[1]] = w[idx[2] * idx[3]]; }|};
   [%expect
     {|
-    reads: idx[1], idx[2], idx[3], w[(idx[2] * idx[3])]
-    writes: v[idx[1]]
-    reads: idx[1], v[2]
-    writes: t[1][idx[1]]
-    reads: t[1][2]
-    writes: t[1][1]
-    reads: w[2:3]
-    writes: v[1:2]
-    reads: v[1]
-    writes: v[1]
-    reads: w[2:3]
-    writes: z
+    read paths: idx[1], idx[2], idx[3], w[(idx[2] * idx[3])]
+    write paths: v[idx[1]]
     |}]
 
-let write_locations source =
-  List.concat_map (assignment_accesses source) ~f:(fun statement_accesses ->
-      statement_accesses.Access.writes)
+let%expect_test "Access collection: tuple fields precede element indices" =
+  (* Tuple field numbers appear as Single indices in the access paths. *)
+  print_assignment_accesses
+    {|data { array[1] int<lower=1, upper=4> idx; vector[4] v; }
+      model { tuple(vector[4], real) t; t.1[idx[1]] = v[2]; }|};
+  [%expect {|
+    read paths: idx[1], v[2]
+    write paths: t[1][idx[1]]
+    |}]
+
+let%expect_test "Access collection: tuple fields have separate paths" =
+  (* Tuple field numbers appear as Single indices in the access paths. *)
+  print_assignment_accesses
+    {|data { tuple(real, real) source; }
+      model { tuple(real, real) t; t.1 = source.2; }|};
+  [%expect {|
+    read paths: source[2]
+    write paths: t[1]
+    |}]
+
+let%expect_test
+    "Access collection: tuple element reads keep the field and index" =
+  (* The first path index identifies the tuple field. *)
+  print_assignment_accesses
+    {|data { tuple(vector[4], real) t; }
+      model { real x = t.1[2]; }|};
+  [%expect {|
+    read paths: t[1][2]
+    write paths: x
+    |}]
+
+let%expect_test "Access collection: slices retain their bounds" =
+  print_assignment_accesses
+    {|data { vector[4] w; }
+      model { vector[4] v; v[1:2] = w[2:3]; }|};
+  [%expect {|
+    read paths: w[2:3]
+    write paths: v[1:2]
+    |}]
+
+let%expect_test "Access collection: compound assignment reads its destination" =
+  print_assignment_accesses
+    {|parameters { vector[4] initial; }
+      model { vector[4] v = initial; v[1] += 1; }|};
+  [%expect
+    {|
+    read paths: initial
+    write paths: v
+    read paths: v[1]
+    write paths: v[1]
+    |}]
+
+let%expect_test "Access collection: nested slices retain the base selection" =
+  print_assignment_accesses
+    {|data { vector[4] w; }
+      model { real z = w[2:3][1]; }|};
+  [%expect {|
+    read paths: w[2:3]
+    write paths: z
+    |}]
 
 let check_overlap first_path second_path expected =
   let actual = Access.may_overlap first_path second_path in
@@ -83,131 +126,299 @@ let check_overlap first_path second_path expected =
       (Index.pp_indices pp_index_expr)
       second_path expected actual
   else
-    Fmt.pr "PASS: v%a / v%a@."
+    Fmt.pr "PASS: v%a / v%a; may overlap: %b@."
       (Index.pp_indices pp_index_expr)
       first_path
       (Index.pp_indices pp_index_expr)
-      second_path
+      second_path actual
 
-let check_locations written_vars source expected_overlap
-    expected_first_overwrites_second =
-  match write_locations source with
-  | [first; second] ->
-      check_overlap first.path second.path expected_overlap;
-      check_overlap second.path first.path expected_overlap;
-      let actual_overwrite = Access.is_overwritten written_vars second first in
-      if actual_overwrite <> expected_first_overwrites_second then
-        Fmt.pr "Overwrite %s covers %s: expected %b, got %b@."
-          (location_text first) (location_text second)
-          expected_first_overwrites_second actual_overwrite
-  | _ -> failwith "Expected two writes"
+let pp_statement ppf pattern =
+  let without_promotions =
+    Expr.rewrite_bottom_up ~f:(fun expr ->
+        match expr.Expr.pattern with
+        | Promotion (original, _, _) -> original
+        | _ -> expr) in
+  Stmt.Located.pp ppf
+    Stmt.
+      { pattern=
+          Pattern.map without_promotions
+            (fun _ -> {pattern= Skip; meta= Location_span.empty})
+            pattern
+      ; meta= Location_span.empty }
 
-let%expect_test "Literal paths are distinct; equal stable paths overwrite" =
-  List.iter
-    [ ("1", "2", false, false); ("1", "1", true, true); ("k", "k", true, true)
-    ; ("k", "j", true, false); ("k + k", "2 * k", true, false)
-    ; ("idx[k]", "idx[k]", true, true); ("k * k", "j", true, false) ]
-    ~f:(fun (first, second, overlap, overwrite) ->
-      let source =
-        Fmt.str
-          "data { int k; int j; array[4] int idx; } model { vector[4] v; v[%s] \
-           = 1; v[%s] = 2; }"
-          first second in
-      check_locations (Set.Poly.singleton "v") source overlap overwrite);
+let print_write_comparison variables source =
+  let statements = statement_map source |> LabelMap.bindings in
+  let written_vars =
+    List.fold_left statements ~init:Set.Poly.empty
+      ~f:(fun names (_, (pattern, _)) ->
+        List.fold_left (Access.collect_accesses pattern).writes ~init:names
+          ~f:(fun collected write ->
+            Set.Poly.add write.Access.variable collected)) in
+  let assignments =
+    List.filter_map statements ~f:(fun (_, (pattern, _)) ->
+        match pattern with
+        | Stmt.Pattern.Assignment _ -> (
+            match (Access.collect_accesses pattern).writes with
+            | [write] when List.mem write.variable ~set:variables ->
+                Some (pattern, write)
+            | _ -> None)
+        | _ -> None) in
+  match assignments with
+  | [(previous_statement, previous); (next_statement, next_write)] ->
+      Fmt.pr "previous: %a@.next: %a@." pp_statement previous_statement
+        pp_statement next_statement;
+      Fmt.pr "may overlap: %b@.previous overwritten: %b@."
+        (Access.Location.same_var previous next_write
+        && Access.may_overlap previous.path next_write.path)
+        (Access.is_overwritten written_vars previous next_write)
+  | _ -> failwith "Expected two writes to the selected variables"
+
+let%expect_test "Overwrite: different literal elements retain the earlier write"
+    =
+  print_write_comparison ["v"] {|model { vector[4] v; v[1] = 1; v[2] = 2; }|};
   [%expect
     {|
-    PASS: v[1] / v[2]
-    PASS: v[2] / v[1]
-    PASS: v[1] / v[1]
-    PASS: v[1] / v[1]
-    PASS: v[k] / v[k]
-    PASS: v[k] / v[k]
-    PASS: v[k] / v[j]
-    PASS: v[j] / v[k]
-    PASS: v[(k + k)] / v[(2 * k)]
-    PASS: v[(2 * k)] / v[(k + k)]
-    PASS: v[idx[k]] / v[idx[k]]
-    PASS: v[idx[k]] / v[idx[k]]
-    PASS: v[(k * k)] / v[j]
-    PASS: v[j] / v[(k * k)]
+    previous: v[1] = 1;
+    next: v[2] = 2;
+    may overlap: false
+    previous overwritten: false
     |}]
 
-let%expect_test "Mutable and random indices cannot prove overwrites" =
-  check_locations
-    (Set.Poly.of_list ["v"; "k"])
-    {|data { int k; } model { vector[4] v; v[k] = 1; v[k] = 2; }|} true false;
-  check_locations
-    (Set.Poly.of_list ["v"; "idx"])
-    {|data { int k; array[4] int idx; } model { vector[4] v; v[idx[k]] = 1; v[idx[k]] = 2; }|}
-    true false;
-  check_locations (Set.Poly.singleton "v")
+let%expect_test "Overwrite: the same literal element replaces the earlier write"
+    =
+  print_write_comparison ["v"] {|model { vector[4] v; v[1] = 1; v[1] = 2; }|};
+  [%expect
+    {|
+    previous: v[1] = 1;
+    next: v[1] = 2;
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test "Overwrite: the same stable index replaces the earlier write" =
+  print_write_comparison ["v"]
+    {|data { int<lower=1, upper=4> k; }
+      model { vector[4] v; v[k] = 1; v[k] = 2; }|};
+  [%expect
+    {|
+    previous: v[k] = 1;
+    next: v[k] = 2;
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test "Overwrite: different symbolic indices can alias" =
+  print_write_comparison ["v"]
+    {|data { int<lower=1, upper=4> k; int<lower=1, upper=4> j; }
+      model { vector[4] v; v[k] = 1; v[j] = 2; }|};
+  [%expect
+    {|
+    previous: v[k] = 1;
+    next: v[j] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: algebraic equivalence is not yet used" =
+  print_write_comparison ["v"]
+    {|data { int<lower=1, upper=2> k; }
+      model { vector[4] v; v[k + k] = 1; v[2 * k] = 2; }|};
+  [%expect
+    {|
+    previous: v[(k + k)] = 1;
+    next: v[(2 * k)] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: stable indirect indices replace the earlier write" =
+  print_write_comparison ["v"]
+    {|data { int<lower=1, upper=4> k; array[4] int<lower=1, upper=4> idx; }
+      model { vector[4] v; v[idx[k]] = 1; v[idx[k]] = 2; }|};
+  [%expect
+    {|
+    previous: v[idx[k]] = 1;
+    next: v[idx[k]] = 2;
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test "Overwrite: nonlinear indices can alias a symbolic element" =
+  print_write_comparison ["v"]
+    {|data { int<lower=1, upper=2> k; int<lower=1, upper=4> j; }
+      model { vector[4] v; v[k * k] = 1; v[j] = 2; }|};
+  [%expect
+    {|
+    previous: v[(k * k)] = 1;
+    next: v[j] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: changing the scalar index retains the earlier write"
+    =
+  print_write_comparison ["v"]
+    {|model { vector[4] v; int k = 1; v[k] = 1; k = 2; v[k] = 2; }|};
+  [%expect
+    {|
+    previous: v[k] = 1;
+    next: v[k] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: changing the index array retains the earlier write"
+    =
+  print_write_comparison ["v"]
+    {|model { vector[4] v; array[1] int idx = {1}; v[idx[1]] = 1; idx[1] = 2; v[idx[1]] = 2; }|};
+  [%expect
+    {|
+    previous: v[idx[1]] = 1;
+    next: v[idx[1]] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: different tuple fields remain distinct" =
+  print_write_comparison ["t"]
+    {|model { tuple(real, real) t; t.1 = 1; t.2 = 2; }|};
+  [%expect
+    {|
+    previous: t.1 = 1;
+    next: t.2 = 2;
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: an element write does not replace the whole vector"
+    =
+  print_write_comparison ["v"]
+    {|model { vector[4] v; v = rep_vector(1, 4); v[1] = 2; }|};
+  [%expect
+    {|
+    previous: v = rep_vector(1, 4);
+    next: v[1] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: a whole-vector write replaces an element" =
+  print_write_comparison ["v"]
+    {|model { vector[4] v; v[1] = 1; v = rep_vector(2, 4); }|};
+  [%expect
+    {|
+    previous: v[1] = 1;
+    next: v = rep_vector(2, 4);
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test "Overwrite: different variables remain distinct" =
+  print_write_comparison ["v"; "w"]
+    {|model { vector[4] v; vector[4] w; v[1] = 1; w = rep_vector(2, 4); }|};
+  [%expect
+    {|
+    previous: v[1] = 1;
+    next: w = rep_vector(2, 4);
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: whole writes to different variables remain distinct"
+    =
+  print_write_comparison ["v"; "w"]
+    {|model { vector[4] v; vector[4] w; v = rep_vector(1, 4); w = rep_vector(2, 4); }|};
+  [%expect
+    {|
+    previous: v = rep_vector(1, 4);
+    next: w = rep_vector(2, 4);
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: disjoint slices retain the earlier write" =
+  print_write_comparison ["v"]
+    {|model { vector[4] v; v[1:2] = rep_vector(1, 2); v[3:4] = rep_vector(2, 2); }|};
+  [%expect
+    {|
+    previous: v[1:2] = rep_vector(1, 2);
+    next: v[3:4] = rep_vector(2, 2);
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test
+    "Overwrite: tuple fields in different array elements remain distinct" =
+  print_write_comparison ["t"]
+    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[2].1 = 2; }|};
+  [%expect
+    {|
+    previous: t[1].2 = 1;
+    next: t[2].1 = 2;
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test
+    "Overwrite: tuple fields in the same array element remain distinct" =
+  print_write_comparison ["t"]
+    {|model { array[2] tuple(real, real) t; t[1].1 = 1; t[1].2 = 2; }|};
+  [%expect
+    {|
+    previous: t[1].1 = 1;
+    next: t[1].2 = 2;
+    may overlap: false
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: the same tuple field replaces the earlier write" =
+  print_write_comparison ["t"]
+    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[1].2 = 2; }|};
+  [%expect
+    {|
+    previous: t[1].2 = 1;
+    next: t[1].2 = 2;
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test
+    "Overwrite: an element does not replace its enclosing tuple field" =
+  print_write_comparison ["t"]
+    {|model { tuple(vector[4], real) t; t.1 = rep_vector(1, 4); t.1[2] = 2; }|};
+  [%expect
+    {|
+    previous: t.1 = rep_vector(1, 4);
+    next: t.1[2] = 2;
+    may overlap: true
+    previous overwritten: false
+    |}]
+
+let%expect_test "Overwrite: a tuple field replaces its contained element" =
+  print_write_comparison ["t"]
+    {|model { tuple(vector[4], real) t; t.1[2] = 1; t.1 = rep_vector(2, 4); }|};
+  [%expect
+    {|
+    previous: t.1[2] = 1;
+    next: t.1 = rep_vector(2, 4);
+    may overlap: true
+    previous overwritten: true
+    |}]
+
+let%expect_test "Overwrite: repeated RNG calls can select different elements" =
+  print_write_comparison ["v"]
     {|functions { void f_rng(vector theta) {
-        vector[4] v; v[categorical_rng(theta)] = 1; v[categorical_rng(theta)] = 2;
-      }} model {}|}
-    true false;
+        vector[num_elements(theta)] v;
+        v[categorical_rng(theta)] = 1;
+        v[categorical_rng(theta)] = 2;
+      }} model {}|};
   [%expect
     {|
-    PASS: v[k] / v[k]
-    PASS: v[k] / v[k]
-    PASS: v[idx[k]] / v[idx[k]]
-    PASS: v[idx[k]] / v[idx[k]]
-    PASS: v[categorical_rng(theta)] / v[categorical_rng(theta)]
-    PASS: v[categorical_rng(theta)] / v[categorical_rng(theta)]
+    previous: v[categorical_rng(theta)] = 1;
+    next: v[categorical_rng(theta)] = 2;
+    may overlap: true
+    previous overwritten: false
     |}]
-
-let%expect_test "Tuple fields and whole-variable writes" =
-  check_locations Set.Poly.empty
-    {|model { tuple(real, real) t; t.1 = 1; t.2 = 2; }|} false false;
-  check_locations Set.Poly.empty
-    {|model { vector[4] v; v = rep_vector(0, 4); v[1] = 1; }|} true true;
-  check_locations Set.Poly.empty
-    {|model { vector[4] v; v[1:2] = rep_vector(0, 2); v[3:4] = rep_vector(0, 2); }|}
-    false false;
-  check_locations Set.Poly.empty
-    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[2].1 = 2; }|} false
-    false;
-  check_locations Set.Poly.empty
-    {|model { array[2] tuple(real, real) t; t[1].1 = 1; t[1].2 = 2; }|} false
-    false;
-  check_locations Set.Poly.empty
-    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[1].2 = 2; }|} true
-    true;
-  check_locations Set.Poly.empty
-    {|model { tuple(vector[4], real) t; t.1 = rep_vector(0, 4); t.1[2] = 1; }|}
-    true true;
-  [%expect
-    {|
-    PASS: v[1] / v[2]
-    PASS: v[2] / v[1]
-    PASS: v / v[1]
-    PASS: v[1] / v
-    PASS: v[1:2] / v[3:4]
-    PASS: v[3:4] / v[1:2]
-    PASS: v[1, 2] / v[2, 1]
-    PASS: v[2, 1] / v[1, 2]
-    PASS: v[1, 1] / v[1, 2]
-    PASS: v[1, 2] / v[1, 1]
-    PASS: v[1, 2] / v[1, 2]
-    PASS: v[1, 2] / v[1, 2]
-    PASS: v[1] / v[1, 2]
-    PASS: v[1, 2] / v[1]
-    |}]
-
-let%expect_test "Overwrites require the same variable and complete coverage" =
-  let locations =
-    write_locations
-      {|model { vector[4] v; vector[4] w;
-          v[1] = 1; v = rep_vector(0, 4); w = rep_vector(0, 4);
-        }|}
-  in
-  (match locations with
-  | [element; whole; other] ->
-      assert (Access.is_overwritten Set.Poly.empty element whole);
-      assert (not (Access.is_overwritten Set.Poly.empty whole element));
-      assert (not (Access.is_overwritten Set.Poly.empty element other));
-      assert (not (Access.is_overwritten Set.Poly.empty whole other))
-  | _ -> failwith "Expected three writes");
-  [%expect {| |}]
 
 let%expect_test "Loop headers write the induction variable" =
   let statements =
@@ -248,7 +459,7 @@ let check_read_overlap source expected_overlap =
       check_overlap second.path first.path expected_overlap
   | _ -> failwith "Expected two reads of v"
 
-(* Expected overlap means some valid inputs select a common element. *)
+(* False proves disjointness; true means overlap cannot be ruled out. *)
 let check_may_idx_overlap first_index second_index ~expected =
   let source =
     Fmt.str
@@ -259,9 +470,10 @@ let check_may_idx_overlap first_index second_index ~expected =
 
 let%expect_test "Index overlap: All / All" =
   check_may_idx_overlap ":" ":" ~expected:true;
-  [%expect {|
-    PASS: v[:] / v[:]
-    PASS: v[:] / v[:]
+  [%expect
+    {|
+    PASS: v[:] / v[:]; may overlap: true
+    PASS: v[:] / v[:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: All / Single" =
@@ -271,14 +483,14 @@ let%expect_test "Index overlap: All / Single" =
   check_may_idx_overlap ":" "k" ~expected:true;
   [%expect
     {|
-    PASS: v[:] / v[2]
-    PASS: v[2] / v[:]
-    PASS: v[:] / v[1]
-    PASS: v[1] / v[:]
-    PASS: v[:] / v[10]
-    PASS: v[10] / v[:]
-    PASS: v[:] / v[k]
-    PASS: v[k] / v[:]
+    PASS: v[:] / v[2]; may overlap: true
+    PASS: v[2] / v[:]; may overlap: true
+    PASS: v[:] / v[1]; may overlap: true
+    PASS: v[1] / v[:]; may overlap: true
+    PASS: v[:] / v[10]; may overlap: true
+    PASS: v[10] / v[:]; may overlap: true
+    PASS: v[:] / v[k]; may overlap: true
+    PASS: v[k] / v[:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: All / Upfrom" =
@@ -288,14 +500,14 @@ let%expect_test "Index overlap: All / Upfrom" =
   check_may_idx_overlap ":" "k:" ~expected:true;
   [%expect
     {|
-    PASS: v[:] / v[3:]
-    PASS: v[3:] / v[:]
-    PASS: v[:] / v[1:]
-    PASS: v[1:] / v[:]
-    PASS: v[:] / v[10:]
-    PASS: v[10:] / v[:]
-    PASS: v[:] / v[k:]
-    PASS: v[k:] / v[:]
+    PASS: v[:] / v[3:]; may overlap: true
+    PASS: v[3:] / v[:]; may overlap: true
+    PASS: v[:] / v[1:]; may overlap: true
+    PASS: v[1:] / v[:]; may overlap: true
+    PASS: v[:] / v[10:]; may overlap: true
+    PASS: v[10:] / v[:]; may overlap: true
+    PASS: v[:] / v[k:]; may overlap: true
+    PASS: v[k:] / v[:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: All / Between" =
@@ -307,18 +519,18 @@ let%expect_test "Index overlap: All / Between" =
   check_may_idx_overlap ":" "k:j" ~expected:true;
   [%expect
     {|
-    PASS: v[:] / v[1:2]
-    PASS: v[1:2] / v[:]
-    PASS: v[:] / v[3:2]
-    PASS: v[3:2] / v[:]
-    PASS: v[:] / v[1:10]
-    PASS: v[1:10] / v[:]
-    PASS: v[:] / v[5:5]
-    PASS: v[5:5] / v[:]
-    PASS: v[:] / v[10:1]
-    PASS: v[10:1] / v[:]
-    PASS: v[:] / v[k:j]
-    PASS: v[k:j] / v[:]
+    PASS: v[:] / v[1:2]; may overlap: true
+    PASS: v[1:2] / v[:]; may overlap: true
+    PASS: v[:] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[:]; may overlap: false
+    PASS: v[:] / v[1:10]; may overlap: true
+    PASS: v[1:10] / v[:]; may overlap: true
+    PASS: v[:] / v[5:5]; may overlap: true
+    PASS: v[5:5] / v[:]; may overlap: true
+    PASS: v[:] / v[10:1]; may overlap: false
+    PASS: v[10:1] / v[:]; may overlap: false
+    PASS: v[:] / v[k:j]; may overlap: true
+    PASS: v[k:j] / v[:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: All / MultiIndex" =
@@ -329,16 +541,16 @@ let%expect_test "Index overlap: All / MultiIndex" =
   check_may_idx_overlap ":" "{k, j}" ~expected:true;
   [%expect
     {|
-    PASS: v[:] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[:]
-    PASS: v[:] / v[{1}]
-    PASS: v[{1}] / v[:]
-    PASS: v[:] / v[{10, 1, 10}]
-    PASS: v[{10, 1, 10}] / v[:]
-    PASS: v[:] / v[idx]
-    PASS: v[idx] / v[:]
-    PASS: v[:] / v[{k, j}]
-    PASS: v[{k, j}] / v[:]
+    PASS: v[:] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[:]; may overlap: true
+    PASS: v[:] / v[{1}]; may overlap: true
+    PASS: v[{1}] / v[:]; may overlap: true
+    PASS: v[:] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[{10, 1, 10}] / v[:]; may overlap: true
+    PASS: v[:] / v[idx]; may overlap: true
+    PASS: v[idx] / v[:]; may overlap: true
+    PASS: v[:] / v[{k, j}]; may overlap: true
+    PASS: v[{k, j}] / v[:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Single / All" =
@@ -348,14 +560,14 @@ let%expect_test "Index overlap: Single / All" =
   check_may_idx_overlap "k" ":" ~expected:true;
   [%expect
     {|
-    PASS: v[2] / v[:]
-    PASS: v[:] / v[2]
-    PASS: v[1] / v[:]
-    PASS: v[:] / v[1]
-    PASS: v[10] / v[:]
-    PASS: v[:] / v[10]
-    PASS: v[k] / v[:]
-    PASS: v[:] / v[k]
+    PASS: v[2] / v[:]; may overlap: true
+    PASS: v[:] / v[2]; may overlap: true
+    PASS: v[1] / v[:]; may overlap: true
+    PASS: v[:] / v[1]; may overlap: true
+    PASS: v[10] / v[:]; may overlap: true
+    PASS: v[:] / v[10]; may overlap: true
+    PASS: v[k] / v[:]; may overlap: true
+    PASS: v[:] / v[k]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Single / Single" =
@@ -372,26 +584,26 @@ let%expect_test "Index overlap: Single / Single" =
   check_may_idx_overlap "k + 1 * j" "k + 1 * j" ~expected:true;
   [%expect
     {|
-    PASS: v[1] / v[1]
-    PASS: v[1] / v[1]
-    PASS: v[1] / v[2]
-    PASS: v[2] / v[1]
-    PASS: v[(2 * k)] / v[(2 * k)]
-    PASS: v[(2 * k)] / v[(2 * k)]
-    PASS: v[k] / v[j]
-    PASS: v[j] / v[k]
-    PASS: v[(2 * k)] / v[((2 * k) + 1)]
-    PASS: v[((2 * k) + 1)] / v[(2 * k)]
-    PASS: v[10] / v[10]
-    PASS: v[10] / v[10]
-    PASS: v[1] / v[10]
-    PASS: v[10] / v[1]
-    PASS: v[1] / v[k]
-    PASS: v[k] / v[1]
-    PASS: v[k] / v[k]
-    PASS: v[k] / v[k]
-    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]
-    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]
+    PASS: v[1] / v[1]; may overlap: true
+    PASS: v[1] / v[1]; may overlap: true
+    PASS: v[1] / v[2]; may overlap: false
+    PASS: v[2] / v[1]; may overlap: false
+    PASS: v[(2 * k)] / v[(2 * k)]; may overlap: true
+    PASS: v[(2 * k)] / v[(2 * k)]; may overlap: true
+    PASS: v[k] / v[j]; may overlap: true
+    PASS: v[j] / v[k]; may overlap: true
+    PASS: v[(2 * k)] / v[((2 * k) + 1)]; may overlap: false
+    PASS: v[((2 * k) + 1)] / v[(2 * k)]; may overlap: false
+    PASS: v[10] / v[10]; may overlap: true
+    PASS: v[10] / v[10]; may overlap: true
+    PASS: v[1] / v[10]; may overlap: false
+    PASS: v[10] / v[1]; may overlap: false
+    PASS: v[1] / v[k]; may overlap: true
+    PASS: v[k] / v[1]; may overlap: true
+    PASS: v[k] / v[k]; may overlap: true
+    PASS: v[k] / v[k]; may overlap: true
+    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]; may overlap: true
+    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: integer parity" =
@@ -405,22 +617,22 @@ let%expect_test "Index overlap: integer parity" =
   check_may_idx_overlap "k + 1" "2 * j" ~expected:true;
   [%expect
     {|
-    PASS: v[(2 * k)] / v[((2 * j) + 1)]
-    PASS: v[((2 * j) + 1)] / v[(2 * k)]
-    PASS: v[(k * 2)] / v[((2 * j) - 1)]
-    PASS: v[((2 * j) - 1)] / v[(k * 2)]
-    PASS: v[-((2 * k))] / v[((2 * j) + 1)]
-    PASS: v[((2 * j) + 1)] / v[-((2 * k))]
-    PASS: v[((2 * k) + 1)] / v[((2 * j) + 3)]
-    PASS: v[((2 * j) + 3)] / v[((2 * k) + 1)]
-    PASS: v[(2 * k)] / v[(2 * j)]
-    PASS: v[(2 * j)] / v[(2 * k)]
-    PASS: v[(k * j)] / v[2]
-    PASS: v[2] / v[(k * j)]
-    PASS: v[(k * j)] / v[3]
-    PASS: v[3] / v[(k * j)]
-    PASS: v[(k + 1)] / v[(2 * j)]
-    PASS: v[(2 * j)] / v[(k + 1)]
+    PASS: v[(2 * k)] / v[((2 * j) + 1)]; may overlap: false
+    PASS: v[((2 * j) + 1)] / v[(2 * k)]; may overlap: false
+    PASS: v[(k * 2)] / v[((2 * j) - 1)]; may overlap: false
+    PASS: v[((2 * j) - 1)] / v[(k * 2)]; may overlap: false
+    PASS: v[-((2 * k))] / v[((2 * j) + 1)]; may overlap: false
+    PASS: v[((2 * j) + 1)] / v[-((2 * k))]; may overlap: false
+    PASS: v[((2 * k) + 1)] / v[((2 * j) + 3)]; may overlap: true
+    PASS: v[((2 * j) + 3)] / v[((2 * k) + 1)]; may overlap: true
+    PASS: v[(2 * k)] / v[(2 * j)]; may overlap: true
+    PASS: v[(2 * j)] / v[(2 * k)]; may overlap: true
+    PASS: v[(k * j)] / v[2]; may overlap: true
+    PASS: v[2] / v[(k * j)]; may overlap: true
+    PASS: v[(k * j)] / v[3]; may overlap: true
+    PASS: v[3] / v[(k * j)]; may overlap: true
+    PASS: v[(k + 1)] / v[(2 * j)]; may overlap: true
+    PASS: v[(2 * j)] / v[(k + 1)]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Single / Upfrom" =
@@ -434,22 +646,22 @@ let%expect_test "Index overlap: Single / Upfrom" =
   check_may_idx_overlap "k" "j:" ~expected:true;
   [%expect
     {|
-    PASS: v[2] / v[3:]
-    PASS: v[3:] / v[2]
-    PASS: v[4] / v[3:]
-    PASS: v[3:] / v[4]
-    PASS: v[3] / v[3:]
-    PASS: v[3:] / v[3]
-    PASS: v[10] / v[10:]
-    PASS: v[10:] / v[10]
-    PASS: v[1] / v[10:]
-    PASS: v[10:] / v[1]
-    PASS: v[k] / v[3:]
-    PASS: v[3:] / v[k]
-    PASS: v[3] / v[k:]
-    PASS: v[k:] / v[3]
-    PASS: v[k] / v[j:]
-    PASS: v[j:] / v[k]
+    PASS: v[2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[2]; may overlap: false
+    PASS: v[4] / v[3:]; may overlap: true
+    PASS: v[3:] / v[4]; may overlap: true
+    PASS: v[3] / v[3:]; may overlap: true
+    PASS: v[3:] / v[3]; may overlap: true
+    PASS: v[10] / v[10:]; may overlap: true
+    PASS: v[10:] / v[10]; may overlap: true
+    PASS: v[1] / v[10:]; may overlap: false
+    PASS: v[10:] / v[1]; may overlap: false
+    PASS: v[k] / v[3:]; may overlap: true
+    PASS: v[3:] / v[k]; may overlap: true
+    PASS: v[3] / v[k:]; may overlap: true
+    PASS: v[k:] / v[3]; may overlap: true
+    PASS: v[k] / v[j:]; may overlap: true
+    PASS: v[j:] / v[k]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Single / Between" =
@@ -466,28 +678,28 @@ let%expect_test "Index overlap: Single / Between" =
   check_may_idx_overlap "10" "k:9" ~expected:false;
   [%expect
     {|
-    PASS: v[2] / v[1:2]
-    PASS: v[1:2] / v[2]
-    PASS: v[3] / v[1:2]
-    PASS: v[1:2] / v[3]
-    PASS: v[1] / v[1:k]
-    PASS: v[1:k] / v[1]
-    PASS: v[2] / v[2:4]
-    PASS: v[2:4] / v[2]
-    PASS: v[4] / v[2:4]
-    PASS: v[2:4] / v[4]
-    PASS: v[1] / v[2:4]
-    PASS: v[2:4] / v[1]
-    PASS: v[3] / v[3:3]
-    PASS: v[3:3] / v[3]
-    PASS: v[3] / v[4:3]
-    PASS: v[4:3] / v[3]
-    PASS: v[k] / v[2:4]
-    PASS: v[2:4] / v[k]
-    PASS: v[1] / v[2:k]
-    PASS: v[2:k] / v[1]
-    PASS: v[10] / v[k:9]
-    PASS: v[k:9] / v[10]
+    PASS: v[2] / v[1:2]; may overlap: true
+    PASS: v[1:2] / v[2]; may overlap: true
+    PASS: v[3] / v[1:2]; may overlap: false
+    PASS: v[1:2] / v[3]; may overlap: false
+    PASS: v[1] / v[1:k]; may overlap: true
+    PASS: v[1:k] / v[1]; may overlap: true
+    PASS: v[2] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[2]; may overlap: true
+    PASS: v[4] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[4]; may overlap: true
+    PASS: v[1] / v[2:4]; may overlap: false
+    PASS: v[2:4] / v[1]; may overlap: false
+    PASS: v[3] / v[3:3]; may overlap: true
+    PASS: v[3:3] / v[3]; may overlap: true
+    PASS: v[3] / v[4:3]; may overlap: false
+    PASS: v[4:3] / v[3]; may overlap: false
+    PASS: v[k] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[k]; may overlap: true
+    PASS: v[1] / v[2:k]; may overlap: false
+    PASS: v[2:k] / v[1]; may overlap: false
+    PASS: v[10] / v[k:9]; may overlap: false
+    PASS: v[k:9] / v[10]; may overlap: false
     |}]
 
 let%expect_test "Index overlap: Single / MultiIndex" =
@@ -502,24 +714,24 @@ let%expect_test "Index overlap: Single / MultiIndex" =
   check_may_idx_overlap "2" "idx" ~expected:true;
   [%expect
     {|
-    PASS: v[2] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[2]
-    PASS: v[3] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[3]
-    PASS: v[2] / v[{1, k}]
-    PASS: v[{1, k}] / v[2]
-    PASS: v[1] / v[{1}]
-    PASS: v[{1}] / v[1]
-    PASS: v[2] / v[{1}]
-    PASS: v[{1}] / v[2]
-    PASS: v[10] / v[{10, 1, 10}]
-    PASS: v[{10, 1, 10}] / v[10]
-    PASS: v[10] / v[{1, 9}]
-    PASS: v[{1, 9}] / v[10]
-    PASS: v[k] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[k]
-    PASS: v[2] / v[idx]
-    PASS: v[idx] / v[2]
+    PASS: v[2] / v[{1, 3}]; may overlap: false
+    PASS: v[{1, 3}] / v[2]; may overlap: false
+    PASS: v[3] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[3]; may overlap: true
+    PASS: v[2] / v[{1, k}]; may overlap: true
+    PASS: v[{1, k}] / v[2]; may overlap: true
+    PASS: v[1] / v[{1}]; may overlap: true
+    PASS: v[{1}] / v[1]; may overlap: true
+    PASS: v[2] / v[{1}]; may overlap: false
+    PASS: v[{1}] / v[2]; may overlap: false
+    PASS: v[10] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[{10, 1, 10}] / v[10]; may overlap: true
+    PASS: v[10] / v[{1, 9}]; may overlap: false
+    PASS: v[{1, 9}] / v[10]; may overlap: false
+    PASS: v[k] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[k]; may overlap: true
+    PASS: v[2] / v[idx]; may overlap: true
+    PASS: v[idx] / v[2]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Upfrom / All" =
@@ -529,14 +741,14 @@ let%expect_test "Index overlap: Upfrom / All" =
   check_may_idx_overlap "k:" ":" ~expected:true;
   [%expect
     {|
-    PASS: v[3:] / v[:]
-    PASS: v[:] / v[3:]
-    PASS: v[1:] / v[:]
-    PASS: v[:] / v[1:]
-    PASS: v[10:] / v[:]
-    PASS: v[:] / v[10:]
-    PASS: v[k:] / v[:]
-    PASS: v[:] / v[k:]
+    PASS: v[3:] / v[:]; may overlap: true
+    PASS: v[:] / v[3:]; may overlap: true
+    PASS: v[1:] / v[:]; may overlap: true
+    PASS: v[:] / v[1:]; may overlap: true
+    PASS: v[10:] / v[:]; may overlap: true
+    PASS: v[:] / v[10:]; may overlap: true
+    PASS: v[k:] / v[:]; may overlap: true
+    PASS: v[:] / v[k:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Upfrom / Single" =
@@ -550,22 +762,22 @@ let%expect_test "Index overlap: Upfrom / Single" =
   check_may_idx_overlap "j:" "k" ~expected:true;
   [%expect
     {|
-    PASS: v[3:] / v[2]
-    PASS: v[2] / v[3:]
-    PASS: v[3:] / v[4]
-    PASS: v[4] / v[3:]
-    PASS: v[3:] / v[3]
-    PASS: v[3] / v[3:]
-    PASS: v[10:] / v[10]
-    PASS: v[10] / v[10:]
-    PASS: v[10:] / v[1]
-    PASS: v[1] / v[10:]
-    PASS: v[3:] / v[k]
-    PASS: v[k] / v[3:]
-    PASS: v[k:] / v[3]
-    PASS: v[3] / v[k:]
-    PASS: v[j:] / v[k]
-    PASS: v[k] / v[j:]
+    PASS: v[3:] / v[2]; may overlap: false
+    PASS: v[2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[4]; may overlap: true
+    PASS: v[4] / v[3:]; may overlap: true
+    PASS: v[3:] / v[3]; may overlap: true
+    PASS: v[3] / v[3:]; may overlap: true
+    PASS: v[10:] / v[10]; may overlap: true
+    PASS: v[10] / v[10:]; may overlap: true
+    PASS: v[10:] / v[1]; may overlap: false
+    PASS: v[1] / v[10:]; may overlap: false
+    PASS: v[3:] / v[k]; may overlap: true
+    PASS: v[k] / v[3:]; may overlap: true
+    PASS: v[k:] / v[3]; may overlap: true
+    PASS: v[3] / v[k:]; may overlap: true
+    PASS: v[j:] / v[k]; may overlap: true
+    PASS: v[k] / v[j:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Upfrom / Upfrom" =
@@ -577,18 +789,18 @@ let%expect_test "Index overlap: Upfrom / Upfrom" =
   check_may_idx_overlap "k:" "j:" ~expected:true;
   [%expect
     {|
-    PASS: v[2:] / v[3:]
-    PASS: v[3:] / v[2:]
-    PASS: v[1:] / v[1:]
-    PASS: v[1:] / v[1:]
-    PASS: v[3:] / v[3:]
-    PASS: v[3:] / v[3:]
-    PASS: v[1:] / v[10:]
-    PASS: v[10:] / v[1:]
-    PASS: v[10:] / v[10:]
-    PASS: v[10:] / v[10:]
-    PASS: v[k:] / v[j:]
-    PASS: v[j:] / v[k:]
+    PASS: v[2:] / v[3:]; may overlap: true
+    PASS: v[3:] / v[2:]; may overlap: true
+    PASS: v[1:] / v[1:]; may overlap: true
+    PASS: v[1:] / v[1:]; may overlap: true
+    PASS: v[3:] / v[3:]; may overlap: true
+    PASS: v[3:] / v[3:]; may overlap: true
+    PASS: v[1:] / v[10:]; may overlap: true
+    PASS: v[10:] / v[1:]; may overlap: true
+    PASS: v[10:] / v[10:]; may overlap: true
+    PASS: v[10:] / v[10:]; may overlap: true
+    PASS: v[k:] / v[j:]; may overlap: true
+    PASS: v[j:] / v[k:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Upfrom / Between" =
@@ -604,26 +816,26 @@ let%expect_test "Index overlap: Upfrom / Between" =
   check_may_idx_overlap "3:" "1:j" ~expected:true;
   [%expect
     {|
-    PASS: v[3:] / v[1:2]
-    PASS: v[1:2] / v[3:]
-    PASS: v[3:] / v[1:2]
-    PASS: v[1:2] / v[3:]
-    PASS: v[3:] / v[3:4]
-    PASS: v[3:4] / v[3:]
-    PASS: v[3:] / v[1:3]
-    PASS: v[1:3] / v[3:]
-    PASS: v[3:] / v[4:5]
-    PASS: v[4:5] / v[3:]
-    PASS: v[10:] / v[10:10]
-    PASS: v[10:10] / v[10:]
-    PASS: v[3:] / v[4:3]
-    PASS: v[4:3] / v[3:]
-    PASS: v[3:] / v[k:2]
-    PASS: v[k:2] / v[3:]
-    PASS: v[k:] / v[1:2]
-    PASS: v[1:2] / v[k:]
-    PASS: v[3:] / v[1:j]
-    PASS: v[1:j] / v[3:]
+    PASS: v[3:] / v[1:2]; may overlap: false
+    PASS: v[1:2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[1:2]; may overlap: false
+    PASS: v[1:2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[3:4]; may overlap: true
+    PASS: v[3:4] / v[3:]; may overlap: true
+    PASS: v[3:] / v[1:3]; may overlap: true
+    PASS: v[1:3] / v[3:]; may overlap: true
+    PASS: v[3:] / v[4:5]; may overlap: true
+    PASS: v[4:5] / v[3:]; may overlap: true
+    PASS: v[10:] / v[10:10]; may overlap: true
+    PASS: v[10:10] / v[10:]; may overlap: true
+    PASS: v[3:] / v[4:3]; may overlap: false
+    PASS: v[4:3] / v[3:]; may overlap: false
+    PASS: v[3:] / v[k:2]; may overlap: false
+    PASS: v[k:2] / v[3:]; may overlap: false
+    PASS: v[k:] / v[1:2]; may overlap: true
+    PASS: v[1:2] / v[k:]; may overlap: true
+    PASS: v[3:] / v[1:j]; may overlap: true
+    PASS: v[1:j] / v[3:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Upfrom / MultiIndex" =
@@ -637,22 +849,22 @@ let%expect_test "Index overlap: Upfrom / MultiIndex" =
   check_may_idx_overlap "3:" "{1, k}" ~expected:true;
   [%expect
     {|
-    PASS: v[3:] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[3:]
-    PASS: v[3:] / v[{1, 2}]
-    PASS: v[{1, 2}] / v[3:]
-    PASS: v[3:] / v[{4, 5}]
-    PASS: v[{4, 5}] / v[3:]
-    PASS: v[10:] / v[{10, 1, 10}]
-    PASS: v[{10, 1, 10}] / v[10:]
-    PASS: v[10:] / v[{1, 9}]
-    PASS: v[{1, 9}] / v[10:]
-    PASS: v[k:] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[k:]
-    PASS: v[3:] / v[idx]
-    PASS: v[idx] / v[3:]
-    PASS: v[3:] / v[{1, k}]
-    PASS: v[{1, k}] / v[3:]
+    PASS: v[3:] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[3:]; may overlap: true
+    PASS: v[3:] / v[{1, 2}]; may overlap: false
+    PASS: v[{1, 2}] / v[3:]; may overlap: false
+    PASS: v[3:] / v[{4, 5}]; may overlap: true
+    PASS: v[{4, 5}] / v[3:]; may overlap: true
+    PASS: v[10:] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[{10, 1, 10}] / v[10:]; may overlap: true
+    PASS: v[10:] / v[{1, 9}]; may overlap: false
+    PASS: v[{1, 9}] / v[10:]; may overlap: false
+    PASS: v[k:] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[k:]; may overlap: true
+    PASS: v[3:] / v[idx]; may overlap: true
+    PASS: v[idx] / v[3:]; may overlap: true
+    PASS: v[3:] / v[{1, k}]; may overlap: true
+    PASS: v[{1, k}] / v[3:]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Between / All" =
@@ -664,18 +876,18 @@ let%expect_test "Index overlap: Between / All" =
   check_may_idx_overlap "k:j" ":" ~expected:true;
   [%expect
     {|
-    PASS: v[1:2] / v[:]
-    PASS: v[:] / v[1:2]
-    PASS: v[3:2] / v[:]
-    PASS: v[:] / v[3:2]
-    PASS: v[1:10] / v[:]
-    PASS: v[:] / v[1:10]
-    PASS: v[5:5] / v[:]
-    PASS: v[:] / v[5:5]
-    PASS: v[10:1] / v[:]
-    PASS: v[:] / v[10:1]
-    PASS: v[k:j] / v[:]
-    PASS: v[:] / v[k:j]
+    PASS: v[1:2] / v[:]; may overlap: true
+    PASS: v[:] / v[1:2]; may overlap: true
+    PASS: v[3:2] / v[:]; may overlap: false
+    PASS: v[:] / v[3:2]; may overlap: false
+    PASS: v[1:10] / v[:]; may overlap: true
+    PASS: v[:] / v[1:10]; may overlap: true
+    PASS: v[5:5] / v[:]; may overlap: true
+    PASS: v[:] / v[5:5]; may overlap: true
+    PASS: v[10:1] / v[:]; may overlap: false
+    PASS: v[:] / v[10:1]; may overlap: false
+    PASS: v[k:j] / v[:]; may overlap: true
+    PASS: v[:] / v[k:j]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Between / Single" =
@@ -692,28 +904,28 @@ let%expect_test "Index overlap: Between / Single" =
   check_may_idx_overlap "k:9" "10" ~expected:false;
   [%expect
     {|
-    PASS: v[1:2] / v[2]
-    PASS: v[2] / v[1:2]
-    PASS: v[1:2] / v[3]
-    PASS: v[3] / v[1:2]
-    PASS: v[1:k] / v[1]
-    PASS: v[1] / v[1:k]
-    PASS: v[2:4] / v[2]
-    PASS: v[2] / v[2:4]
-    PASS: v[2:4] / v[4]
-    PASS: v[4] / v[2:4]
-    PASS: v[2:4] / v[1]
-    PASS: v[1] / v[2:4]
-    PASS: v[3:3] / v[3]
-    PASS: v[3] / v[3:3]
-    PASS: v[4:3] / v[3]
-    PASS: v[3] / v[4:3]
-    PASS: v[2:4] / v[k]
-    PASS: v[k] / v[2:4]
-    PASS: v[2:k] / v[1]
-    PASS: v[1] / v[2:k]
-    PASS: v[k:9] / v[10]
-    PASS: v[10] / v[k:9]
+    PASS: v[1:2] / v[2]; may overlap: true
+    PASS: v[2] / v[1:2]; may overlap: true
+    PASS: v[1:2] / v[3]; may overlap: false
+    PASS: v[3] / v[1:2]; may overlap: false
+    PASS: v[1:k] / v[1]; may overlap: true
+    PASS: v[1] / v[1:k]; may overlap: true
+    PASS: v[2:4] / v[2]; may overlap: true
+    PASS: v[2] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[4]; may overlap: true
+    PASS: v[4] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[1]; may overlap: false
+    PASS: v[1] / v[2:4]; may overlap: false
+    PASS: v[3:3] / v[3]; may overlap: true
+    PASS: v[3] / v[3:3]; may overlap: true
+    PASS: v[4:3] / v[3]; may overlap: false
+    PASS: v[3] / v[4:3]; may overlap: false
+    PASS: v[2:4] / v[k]; may overlap: true
+    PASS: v[k] / v[2:4]; may overlap: true
+    PASS: v[2:k] / v[1]; may overlap: false
+    PASS: v[1] / v[2:k]; may overlap: false
+    PASS: v[k:9] / v[10]; may overlap: false
+    PASS: v[10] / v[k:9]; may overlap: false
     |}]
 
 let%expect_test "Index overlap: Between / Upfrom" =
@@ -729,26 +941,26 @@ let%expect_test "Index overlap: Between / Upfrom" =
   check_may_idx_overlap "1:j" "3:" ~expected:true;
   [%expect
     {|
-    PASS: v[1:2] / v[3:]
-    PASS: v[3:] / v[1:2]
-    PASS: v[1:2] / v[3:]
-    PASS: v[3:] / v[1:2]
-    PASS: v[3:4] / v[3:]
-    PASS: v[3:] / v[3:4]
-    PASS: v[1:3] / v[3:]
-    PASS: v[3:] / v[1:3]
-    PASS: v[4:5] / v[3:]
-    PASS: v[3:] / v[4:5]
-    PASS: v[10:10] / v[10:]
-    PASS: v[10:] / v[10:10]
-    PASS: v[4:3] / v[3:]
-    PASS: v[3:] / v[4:3]
-    PASS: v[k:2] / v[3:]
-    PASS: v[3:] / v[k:2]
-    PASS: v[1:2] / v[k:]
-    PASS: v[k:] / v[1:2]
-    PASS: v[1:j] / v[3:]
-    PASS: v[3:] / v[1:j]
+    PASS: v[1:2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[1:2]; may overlap: false
+    PASS: v[1:2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[1:2]; may overlap: false
+    PASS: v[3:4] / v[3:]; may overlap: true
+    PASS: v[3:] / v[3:4]; may overlap: true
+    PASS: v[1:3] / v[3:]; may overlap: true
+    PASS: v[3:] / v[1:3]; may overlap: true
+    PASS: v[4:5] / v[3:]; may overlap: true
+    PASS: v[3:] / v[4:5]; may overlap: true
+    PASS: v[10:10] / v[10:]; may overlap: true
+    PASS: v[10:] / v[10:10]; may overlap: true
+    PASS: v[4:3] / v[3:]; may overlap: false
+    PASS: v[3:] / v[4:3]; may overlap: false
+    PASS: v[k:2] / v[3:]; may overlap: false
+    PASS: v[3:] / v[k:2]; may overlap: false
+    PASS: v[1:2] / v[k:]; may overlap: true
+    PASS: v[k:] / v[1:2]; may overlap: true
+    PASS: v[1:j] / v[3:]; may overlap: true
+    PASS: v[3:] / v[1:j]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: Between / Between" =
@@ -766,30 +978,30 @@ let%expect_test "Index overlap: Between / Between" =
   check_may_idx_overlap "5:k" "j:4" ~expected:false;
   [%expect
     {|
-    PASS: v[1:2] / v[3:4]
-    PASS: v[3:4] / v[1:2]
-    PASS: v[1:2] / v[2:4]
-    PASS: v[2:4] / v[1:2]
-    PASS: v[1:k] / v[j:4]
-    PASS: v[j:4] / v[1:k]
-    PASS: v[k:2] / v[3:j]
-    PASS: v[3:j] / v[k:2]
-    PASS: v[3:2] / v[1:4]
-    PASS: v[1:4] / v[3:2]
-    PASS: v[2:4] / v[2:4]
-    PASS: v[2:4] / v[2:4]
-    PASS: v[1:10] / v[2:3]
-    PASS: v[2:3] / v[1:10]
-    PASS: v[1:3] / v[3:5]
-    PASS: v[3:5] / v[1:3]
-    PASS: v[5:5] / v[1:10]
-    PASS: v[1:10] / v[5:5]
-    PASS: v[10:10] / v[10:10]
-    PASS: v[10:10] / v[10:10]
-    PASS: v[3:2] / v[4:3]
-    PASS: v[4:3] / v[3:2]
-    PASS: v[5:k] / v[j:4]
-    PASS: v[j:4] / v[5:k]
+    PASS: v[1:2] / v[3:4]; may overlap: false
+    PASS: v[3:4] / v[1:2]; may overlap: false
+    PASS: v[1:2] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[1:2]; may overlap: true
+    PASS: v[1:k] / v[j:4]; may overlap: true
+    PASS: v[j:4] / v[1:k]; may overlap: true
+    PASS: v[k:2] / v[3:j]; may overlap: false
+    PASS: v[3:j] / v[k:2]; may overlap: false
+    PASS: v[3:2] / v[1:4]; may overlap: false
+    PASS: v[1:4] / v[3:2]; may overlap: false
+    PASS: v[2:4] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[2:4]; may overlap: true
+    PASS: v[1:10] / v[2:3]; may overlap: true
+    PASS: v[2:3] / v[1:10]; may overlap: true
+    PASS: v[1:3] / v[3:5]; may overlap: true
+    PASS: v[3:5] / v[1:3]; may overlap: true
+    PASS: v[5:5] / v[1:10]; may overlap: true
+    PASS: v[1:10] / v[5:5]; may overlap: true
+    PASS: v[10:10] / v[10:10]; may overlap: true
+    PASS: v[10:10] / v[10:10]; may overlap: true
+    PASS: v[3:2] / v[4:3]; may overlap: false
+    PASS: v[4:3] / v[3:2]; may overlap: false
+    PASS: v[5:k] / v[j:4]; may overlap: false
+    PASS: v[j:4] / v[5:k]; may overlap: false
     |}]
 
 let%expect_test "Index overlap: Between / MultiIndex" =
@@ -806,28 +1018,28 @@ let%expect_test "Index overlap: Between / MultiIndex" =
   check_may_idx_overlap "3:j" "{1, 2}" ~expected:false;
   [%expect
     {|
-    PASS: v[2:2] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[2:2]
-    PASS: v[2:3] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[2:3]
-    PASS: v[1:2] / v[idx]
-    PASS: v[idx] / v[1:2]
-    PASS: v[2:4] / v[{2, 4}]
-    PASS: v[{2, 4}] / v[2:4]
-    PASS: v[2:4] / v[{3}]
-    PASS: v[{3}] / v[2:4]
-    PASS: v[2:4] / v[{1, 5}]
-    PASS: v[{1, 5}] / v[2:4]
-    PASS: v[2:4] / v[{4, 2, 4}]
-    PASS: v[{4, 2, 4}] / v[2:4]
-    PASS: v[3:2] / v[{2, 3}]
-    PASS: v[{2, 3}] / v[3:2]
-    PASS: v[2:4] / v[{k}]
-    PASS: v[{k}] / v[2:4]
-    PASS: v[k:2] / v[{3, 4}]
-    PASS: v[{3, 4}] / v[k:2]
-    PASS: v[3:j] / v[{1, 2}]
-    PASS: v[{1, 2}] / v[3:j]
+    PASS: v[2:2] / v[{1, 3}]; may overlap: false
+    PASS: v[{1, 3}] / v[2:2]; may overlap: false
+    PASS: v[2:3] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[2:3]; may overlap: true
+    PASS: v[1:2] / v[idx]; may overlap: true
+    PASS: v[idx] / v[1:2]; may overlap: true
+    PASS: v[2:4] / v[{2, 4}]; may overlap: true
+    PASS: v[{2, 4}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{3}]; may overlap: true
+    PASS: v[{3}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{1, 5}]; may overlap: false
+    PASS: v[{1, 5}] / v[2:4]; may overlap: false
+    PASS: v[2:4] / v[{4, 2, 4}]; may overlap: true
+    PASS: v[{4, 2, 4}] / v[2:4]; may overlap: true
+    PASS: v[3:2] / v[{2, 3}]; may overlap: false
+    PASS: v[{2, 3}] / v[3:2]; may overlap: false
+    PASS: v[2:4] / v[{k}]; may overlap: true
+    PASS: v[{k}] / v[2:4]; may overlap: true
+    PASS: v[k:2] / v[{3, 4}]; may overlap: false
+    PASS: v[{3, 4}] / v[k:2]; may overlap: false
+    PASS: v[3:j] / v[{1, 2}]; may overlap: false
+    PASS: v[{1, 2}] / v[3:j]; may overlap: false
     |}]
 
 let%expect_test "Index overlap: MultiIndex / All" =
@@ -838,16 +1050,16 @@ let%expect_test "Index overlap: MultiIndex / All" =
   check_may_idx_overlap "{k, j}" ":" ~expected:true;
   [%expect
     {|
-    PASS: v[{1, 3}] / v[:]
-    PASS: v[:] / v[{1, 3}]
-    PASS: v[{1}] / v[:]
-    PASS: v[:] / v[{1}]
-    PASS: v[{10, 1, 10}] / v[:]
-    PASS: v[:] / v[{10, 1, 10}]
-    PASS: v[idx] / v[:]
-    PASS: v[:] / v[idx]
-    PASS: v[{k, j}] / v[:]
-    PASS: v[:] / v[{k, j}]
+    PASS: v[{1, 3}] / v[:]; may overlap: true
+    PASS: v[:] / v[{1, 3}]; may overlap: true
+    PASS: v[{1}] / v[:]; may overlap: true
+    PASS: v[:] / v[{1}]; may overlap: true
+    PASS: v[{10, 1, 10}] / v[:]; may overlap: true
+    PASS: v[:] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[idx] / v[:]; may overlap: true
+    PASS: v[:] / v[idx]; may overlap: true
+    PASS: v[{k, j}] / v[:]; may overlap: true
+    PASS: v[:] / v[{k, j}]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: MultiIndex / Single" =
@@ -862,24 +1074,24 @@ let%expect_test "Index overlap: MultiIndex / Single" =
   check_may_idx_overlap "idx" "2" ~expected:true;
   [%expect
     {|
-    PASS: v[{1, 3}] / v[2]
-    PASS: v[2] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[3]
-    PASS: v[3] / v[{1, 3}]
-    PASS: v[{1, k}] / v[2]
-    PASS: v[2] / v[{1, k}]
-    PASS: v[{1}] / v[1]
-    PASS: v[1] / v[{1}]
-    PASS: v[{1}] / v[2]
-    PASS: v[2] / v[{1}]
-    PASS: v[{10, 1, 10}] / v[10]
-    PASS: v[10] / v[{10, 1, 10}]
-    PASS: v[{1, 9}] / v[10]
-    PASS: v[10] / v[{1, 9}]
-    PASS: v[{1, 3}] / v[k]
-    PASS: v[k] / v[{1, 3}]
-    PASS: v[idx] / v[2]
-    PASS: v[2] / v[idx]
+    PASS: v[{1, 3}] / v[2]; may overlap: false
+    PASS: v[2] / v[{1, 3}]; may overlap: false
+    PASS: v[{1, 3}] / v[3]; may overlap: true
+    PASS: v[3] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, k}] / v[2]; may overlap: true
+    PASS: v[2] / v[{1, k}]; may overlap: true
+    PASS: v[{1}] / v[1]; may overlap: true
+    PASS: v[1] / v[{1}]; may overlap: true
+    PASS: v[{1}] / v[2]; may overlap: false
+    PASS: v[2] / v[{1}]; may overlap: false
+    PASS: v[{10, 1, 10}] / v[10]; may overlap: true
+    PASS: v[10] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[{1, 9}] / v[10]; may overlap: false
+    PASS: v[10] / v[{1, 9}]; may overlap: false
+    PASS: v[{1, 3}] / v[k]; may overlap: true
+    PASS: v[k] / v[{1, 3}]; may overlap: true
+    PASS: v[idx] / v[2]; may overlap: true
+    PASS: v[2] / v[idx]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: MultiIndex / Upfrom" =
@@ -893,22 +1105,22 @@ let%expect_test "Index overlap: MultiIndex / Upfrom" =
   check_may_idx_overlap "{1, k}" "3:" ~expected:true;
   [%expect
     {|
-    PASS: v[{1, 3}] / v[3:]
-    PASS: v[3:] / v[{1, 3}]
-    PASS: v[{1, 2}] / v[3:]
-    PASS: v[3:] / v[{1, 2}]
-    PASS: v[{4, 5}] / v[3:]
-    PASS: v[3:] / v[{4, 5}]
-    PASS: v[{10, 1, 10}] / v[10:]
-    PASS: v[10:] / v[{10, 1, 10}]
-    PASS: v[{1, 9}] / v[10:]
-    PASS: v[10:] / v[{1, 9}]
-    PASS: v[{1, 3}] / v[k:]
-    PASS: v[k:] / v[{1, 3}]
-    PASS: v[idx] / v[3:]
-    PASS: v[3:] / v[idx]
-    PASS: v[{1, k}] / v[3:]
-    PASS: v[3:] / v[{1, k}]
+    PASS: v[{1, 3}] / v[3:]; may overlap: true
+    PASS: v[3:] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 2}] / v[3:]; may overlap: false
+    PASS: v[3:] / v[{1, 2}]; may overlap: false
+    PASS: v[{4, 5}] / v[3:]; may overlap: true
+    PASS: v[3:] / v[{4, 5}]; may overlap: true
+    PASS: v[{10, 1, 10}] / v[10:]; may overlap: true
+    PASS: v[10:] / v[{10, 1, 10}]; may overlap: true
+    PASS: v[{1, 9}] / v[10:]; may overlap: false
+    PASS: v[10:] / v[{1, 9}]; may overlap: false
+    PASS: v[{1, 3}] / v[k:]; may overlap: true
+    PASS: v[k:] / v[{1, 3}]; may overlap: true
+    PASS: v[idx] / v[3:]; may overlap: true
+    PASS: v[3:] / v[idx]; may overlap: true
+    PASS: v[{1, k}] / v[3:]; may overlap: true
+    PASS: v[3:] / v[{1, k}]; may overlap: true
     |}]
 
 let%expect_test "Index overlap: MultiIndex / Between" =
@@ -925,28 +1137,28 @@ let%expect_test "Index overlap: MultiIndex / Between" =
   check_may_idx_overlap "{1, 2}" "3:j" ~expected:false;
   [%expect
     {|
-    PASS: v[{1, 3}] / v[2:2]
-    PASS: v[2:2] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[2:3]
-    PASS: v[2:3] / v[{1, 3}]
-    PASS: v[idx] / v[1:2]
-    PASS: v[1:2] / v[idx]
-    PASS: v[{2, 4}] / v[2:4]
-    PASS: v[2:4] / v[{2, 4}]
-    PASS: v[{3}] / v[2:4]
-    PASS: v[2:4] / v[{3}]
-    PASS: v[{1, 5}] / v[2:4]
-    PASS: v[2:4] / v[{1, 5}]
-    PASS: v[{4, 2, 4}] / v[2:4]
-    PASS: v[2:4] / v[{4, 2, 4}]
-    PASS: v[{2, 3}] / v[3:2]
-    PASS: v[3:2] / v[{2, 3}]
-    PASS: v[{k}] / v[2:4]
-    PASS: v[2:4] / v[{k}]
-    PASS: v[{3, 4}] / v[k:2]
-    PASS: v[k:2] / v[{3, 4}]
-    PASS: v[{1, 2}] / v[3:j]
-    PASS: v[3:j] / v[{1, 2}]
+    PASS: v[{1, 3}] / v[2:2]; may overlap: false
+    PASS: v[2:2] / v[{1, 3}]; may overlap: false
+    PASS: v[{1, 3}] / v[2:3]; may overlap: true
+    PASS: v[2:3] / v[{1, 3}]; may overlap: true
+    PASS: v[idx] / v[1:2]; may overlap: true
+    PASS: v[1:2] / v[idx]; may overlap: true
+    PASS: v[{2, 4}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{2, 4}]; may overlap: true
+    PASS: v[{3}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{3}]; may overlap: true
+    PASS: v[{1, 5}] / v[2:4]; may overlap: false
+    PASS: v[2:4] / v[{1, 5}]; may overlap: false
+    PASS: v[{4, 2, 4}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{4, 2, 4}]; may overlap: true
+    PASS: v[{2, 3}] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[{2, 3}]; may overlap: false
+    PASS: v[{k}] / v[2:4]; may overlap: true
+    PASS: v[2:4] / v[{k}]; may overlap: true
+    PASS: v[{3, 4}] / v[k:2]; may overlap: false
+    PASS: v[k:2] / v[{3, 4}]; may overlap: false
+    PASS: v[{1, 2}] / v[3:j]; may overlap: false
+    PASS: v[3:j] / v[{1, 2}]; may overlap: false
     |}]
 
 let%expect_test "Index overlap: MultiIndex / MultiIndex" =
@@ -964,38 +1176,39 @@ let%expect_test "Index overlap: MultiIndex / MultiIndex" =
   check_may_idx_overlap "{1, k}" "{2, 3}" ~expected:true;
   [%expect
     {|
-    PASS: v[{1, 3}] / v[{2, 4}]
-    PASS: v[{2, 4}] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[{3, 4}]
-    PASS: v[{3, 4}] / v[{1, 3}]
-    PASS: v[{1, 1}] / v[{2, 2}]
-    PASS: v[{2, 2}] / v[{1, 1}]
-    PASS: v[idx] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[idx]
-    PASS: v[{1, 3}] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[{1, 3}]
-    PASS: v[{3, 1}] / v[{1, 3}]
-    PASS: v[{1, 3}] / v[{3, 1}]
-    PASS: v[{1, 1}] / v[{1, 1}]
-    PASS: v[{1, 1}] / v[{1, 1}]
-    PASS: v[{1}] / v[{2}]
-    PASS: v[{2}] / v[{1}]
-    PASS: v[{1}] / v[{1}]
-    PASS: v[{1}] / v[{1}]
-    PASS: v[idx] / v[idx]
-    PASS: v[idx] / v[idx]
-    PASS: v[{k}] / v[{j}]
-    PASS: v[{j}] / v[{k}]
-    PASS: v[{1, k}] / v[{2, 3}]
-    PASS: v[{2, 3}] / v[{1, k}]
+    PASS: v[{1, 3}] / v[{2, 4}]; may overlap: false
+    PASS: v[{2, 4}] / v[{1, 3}]; may overlap: false
+    PASS: v[{1, 3}] / v[{3, 4}]; may overlap: true
+    PASS: v[{3, 4}] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 1}] / v[{2, 2}]; may overlap: false
+    PASS: v[{2, 2}] / v[{1, 1}]; may overlap: false
+    PASS: v[idx] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[idx]; may overlap: true
+    PASS: v[{1, 3}] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[{1, 3}]; may overlap: true
+    PASS: v[{3, 1}] / v[{1, 3}]; may overlap: true
+    PASS: v[{1, 3}] / v[{3, 1}]; may overlap: true
+    PASS: v[{1, 1}] / v[{1, 1}]; may overlap: true
+    PASS: v[{1, 1}] / v[{1, 1}]; may overlap: true
+    PASS: v[{1}] / v[{2}]; may overlap: false
+    PASS: v[{2}] / v[{1}]; may overlap: false
+    PASS: v[{1}] / v[{1}]; may overlap: true
+    PASS: v[{1}] / v[{1}]; may overlap: true
+    PASS: v[idx] / v[idx]; may overlap: true
+    PASS: v[idx] / v[idx]; may overlap: true
+    PASS: v[{k}] / v[{j}]; may overlap: true
+    PASS: v[{j}] / v[{k}]; may overlap: true
+    PASS: v[{1, k}] / v[{2, 3}]; may overlap: true
+    PASS: v[{2, 3}] / v[{1, k}]; may overlap: true
     |}]
 
 let%expect_test "Different columns remain disjoint after All" =
   check_read_overlap
     {|model { matrix[4, 4] v; print(v[:, 1]); print(v[:, 2]); }|} false;
-  [%expect {|
-    PASS: v[:, 1] / v[:, 2]
-    PASS: v[:, 2] / v[:, 1]
+  [%expect
+    {|
+    PASS: v[:, 1] / v[:, 2]; may overlap: false
+    PASS: v[:, 2] / v[:, 1]; may overlap: false
     |}]
 
 let%expect_test "Overlapping row ranges share a column" =
@@ -1003,8 +1216,8 @@ let%expect_test "Overlapping row ranges share a column" =
     {|model { matrix[4, 4] v; print(v[1:2, 1]); print(v[2:3, 1]); }|} true;
   [%expect
     {|
-    PASS: v[1:2, 1] / v[2:3, 1]
-    PASS: v[2:3, 1] / v[1:2, 1]
+    PASS: v[1:2, 1] / v[2:3, 1]; may overlap: true
+    PASS: v[2:3, 1] / v[1:2, 1]; may overlap: true
     |}]
 
 let%expect_test "Different columns separate unknown row selections" =
@@ -1014,8 +1227,8 @@ let%expect_test "Different columns separate unknown row selections" =
     false;
   [%expect
     {|
-    PASS: v[idx, 1] / v[k:4, 2]
-    PASS: v[k:4, 2] / v[idx, 1]
+    PASS: v[idx, 1] / v[k:4, 2]; may overlap: false
+    PASS: v[k:4, 2] / v[idx, 1]; may overlap: false
     |}]
 
 let%expect_test "Disjoint column ranges separate matching row arrays" =
@@ -1024,36 +1237,57 @@ let%expect_test "Disjoint column ranges separate matching row arrays" =
     false;
   [%expect
     {|
-    PASS: v[{1, 3}, 1:2] / v[{1, 3}, 3:4]
-    PASS: v[{1, 3}, 3:4] / v[{1, 3}, 1:2]
+    PASS: v[{1, 3}, 1:2] / v[{1, 3}, 3:4]; may overlap: false
+    PASS: v[{1, 3}, 3:4] / v[{1, 3}, 1:2]; may overlap: false
     |}]
 
 let%expect_test "A whole column overlaps a whole row at their intersection" =
   check_read_overlap
     {|model { matrix[4, 4] v; print(v[:, 1]); print(v[1, :]); }|} true;
-  [%expect {|
-    PASS: v[:, 1] / v[1, :]
-    PASS: v[1, :] / v[:, 1]
+  [%expect
+    {|
+    PASS: v[:, 1] / v[1, :]; may overlap: true
+    PASS: v[1, :] / v[:, 1]; may overlap: true
     |}]
 
-let%expect_test "Nested slices retain coordinates of the original variable" =
+let%expect_test "Nested slice: position one overlaps original element two" =
+  (* The access collector conservatively retains v[2:4], not just v[2]. *)
   check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[2]); }|}
     true;
+  [%expect
+    {|
+    PASS: v[2:4] / v[2]; may overlap: true
+    PASS: v[2] / v[2:4]; may overlap: true
+    |}]
+
+let%expect_test "Nested slice: an element outside the base slice is disjoint" =
   check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[1]); }|}
     false;
   [%expect
     {|
-    PASS: v[2:4] / v[2]
-    PASS: v[2] / v[2:4]
-    PASS: v[2:4] / v[1]
-    PASS: v[1] / v[2:4]
+    PASS: v[2:4] / v[1]; may overlap: false
+    PASS: v[1] / v[2:4]; may overlap: false
+    |}]
+
+let%expect_test "Nested slice: the retained base slice can overestimate overlap"
+    =
+  (* v[2:4][1] selects element 2, but the collector retains the whole slice. Its
+     possible overlap with v[3] is intentionally conservative. *)
+  check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[3]); }|}
+    true;
+  [%expect
+    {|
+    PASS: v[2:4] / v[3]; may overlap: true
+    PASS: v[3] / v[2:4]; may overlap: true
     |}]
 
 let%expect_test "Empty selections never overlap any index form" =
   let empty_array =
     Expr.Helpers.internal_funapp FnMakeArray []
       {Expr.Typed.Meta.empty with type_= UArray UInt} in
-  let unknown_array = Expr.Helpers.variable "idx" in
+  let unknown_array =
+    { (Expr.Helpers.variable "idx") with
+      meta= {Expr.Typed.Meta.empty with type_= UArray UInt} } in
   let candidates =
     [ Index.All; Single (Expr.Helpers.int 2); Upfrom (Expr.Helpers.int 2)
     ; Between (Expr.Helpers.int 1, Expr.Helpers.int 3)
@@ -1068,32 +1302,32 @@ let%expect_test "Empty selections never overlap any index form" =
           check_overlap [other_index] [empty_index] false));
   [%expect
     {|
-    PASS: v[{}] / v[:]
-    PASS: v[:] / v[{}]
-    PASS: v[{}] / v[2]
-    PASS: v[2] / v[{}]
-    PASS: v[{}] / v[2:]
-    PASS: v[2:] / v[{}]
-    PASS: v[{}] / v[1:3]
-    PASS: v[1:3] / v[{}]
-    PASS: v[{}] / v[{2}]
-    PASS: v[{2}] / v[{}]
-    PASS: v[{}] / v[idx]
-    PASS: v[idx] / v[{}]
-    PASS: v[{}] / v[{}]
-    PASS: v[{}] / v[{}]
-    PASS: v[3:2] / v[:]
-    PASS: v[:] / v[3:2]
-    PASS: v[3:2] / v[2]
-    PASS: v[2] / v[3:2]
-    PASS: v[3:2] / v[2:]
-    PASS: v[2:] / v[3:2]
-    PASS: v[3:2] / v[1:3]
-    PASS: v[1:3] / v[3:2]
-    PASS: v[3:2] / v[{2}]
-    PASS: v[{2}] / v[3:2]
-    PASS: v[3:2] / v[idx]
-    PASS: v[idx] / v[3:2]
-    PASS: v[3:2] / v[{}]
-    PASS: v[{}] / v[3:2]
+    PASS: v[{}] / v[:]; may overlap: false
+    PASS: v[:] / v[{}]; may overlap: false
+    PASS: v[{}] / v[2]; may overlap: false
+    PASS: v[2] / v[{}]; may overlap: false
+    PASS: v[{}] / v[2:]; may overlap: false
+    PASS: v[2:] / v[{}]; may overlap: false
+    PASS: v[{}] / v[1:3]; may overlap: false
+    PASS: v[1:3] / v[{}]; may overlap: false
+    PASS: v[{}] / v[{2}]; may overlap: false
+    PASS: v[{2}] / v[{}]; may overlap: false
+    PASS: v[{}] / v[idx]; may overlap: false
+    PASS: v[idx] / v[{}]; may overlap: false
+    PASS: v[{}] / v[{}]; may overlap: false
+    PASS: v[{}] / v[{}]; may overlap: false
+    PASS: v[3:2] / v[:]; may overlap: false
+    PASS: v[:] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[2]; may overlap: false
+    PASS: v[2] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[2:]; may overlap: false
+    PASS: v[2:] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[1:3]; may overlap: false
+    PASS: v[1:3] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[{2}]; may overlap: false
+    PASS: v[{2}] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[idx]; may overlap: false
+    PASS: v[idx] / v[3:2]; may overlap: false
+    PASS: v[3:2] / v[{}]; may overlap: false
+    PASS: v[{}] / v[3:2]; may overlap: false
     |}]
