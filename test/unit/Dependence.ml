@@ -754,7 +754,8 @@ let check_read_overlap source expected_overlap =
   | _ -> failwith "Expected two reads of v"
 
 (* False proves disjointness; true means overlap cannot be ruled out. *)
-let check_may_idx_overlap first_index second_index ~expected =
+let check_may_idx_overlap ?(container_type = "vector[10]") first_index
+    second_index ~expected =
   let source =
     Fmt.str
       {|
@@ -764,12 +765,12 @@ let check_may_idx_overlap first_index second_index ~expected =
           array[10] int idx;
         }
         model {
-          vector[10] v;
+          %s v;
           print(v[%s]);
           print(v[%s]);
         }
       |}
-      first_index second_index in
+      container_type first_index second_index in
   check_read_overlap source expected
 
 let%expect_test "Index overlap: All / All" =
@@ -1507,15 +1508,8 @@ let%expect_test "Index overlap: MultiIndex / MultiIndex" =
     |}]
 
 let%expect_test "Different columns remain disjoint after All" =
-  check_read_overlap
-    {|
-      model {
-        matrix[4, 4] v;
-        print(v[:, 1]);
-        print(v[:, 2]);
-      }
-    |}
-    false;
+  check_may_idx_overlap ~container_type:"matrix[4, 4]" ":, 1" ":, 2"
+    ~expected:false;
   [%expect
     {|
     PASS: v[:, 1] / v[:, 2]; may overlap: false
@@ -1523,15 +1517,8 @@ let%expect_test "Different columns remain disjoint after All" =
     |}]
 
 let%expect_test "Overlapping row ranges share a column" =
-  check_read_overlap
-    {|
-      model {
-        matrix[4, 4] v;
-        print(v[1:2, 1]);
-        print(v[2:3, 1]);
-      }
-    |}
-    true;
+  check_may_idx_overlap ~container_type:"matrix[4, 4]" "1:2, 1" "2:3, 1"
+    ~expected:true;
   [%expect
     {|
     PASS: v[1:2, 1] / v[2:3, 1]; may overlap: true
@@ -1539,19 +1526,8 @@ let%expect_test "Overlapping row ranges share a column" =
     |}]
 
 let%expect_test "Different columns separate unknown row selections" =
-  check_read_overlap
-    {|
-      data {
-        int k;
-        array[2] int idx;
-      }
-      model {
-        matrix[4, 4] v;
-        print(v[idx, 1]);
-        print(v[k:4, 2]);
-      }
-    |}
-    false;
+  check_may_idx_overlap ~container_type:"matrix[4, 4]" "idx, 1" "k:4, 2"
+    ~expected:false;
   [%expect
     {|
     PASS: v[idx, 1] / v[k:4, 2]; may overlap: false
@@ -1559,15 +1535,8 @@ let%expect_test "Different columns separate unknown row selections" =
     |}]
 
 let%expect_test "Disjoint column ranges separate matching row arrays" =
-  check_read_overlap
-    {|
-      model {
-        matrix[4, 4] v;
-        print(v[{1, 3}, 1:2]);
-        print(v[{1, 3}, 3:4]);
-      }
-    |}
-    false;
+  check_may_idx_overlap ~container_type:"matrix[4, 4]" "{1, 3}, 1:2"
+    "{1, 3}, 3:4" ~expected:false;
   [%expect
     {|
     PASS: v[{1, 3}, 1:2] / v[{1, 3}, 3:4]; may overlap: false
@@ -1575,15 +1544,8 @@ let%expect_test "Disjoint column ranges separate matching row arrays" =
     |}]
 
 let%expect_test "A whole column overlaps a whole row at their intersection" =
-  check_read_overlap
-    {|
-      model {
-        matrix[4, 4] v;
-        print(v[:, 1]);
-        print(v[1, :]);
-      }
-    |}
-    true;
+  check_may_idx_overlap ~container_type:"matrix[4, 4]" ":, 1" "1, :"
+    ~expected:true;
   [%expect
     {|
     PASS: v[:, 1] / v[1, :]; may overlap: true
