@@ -195,7 +195,8 @@ let rec may_indices_overlap (first_index : Expr.Typed.t Index.t)
         | Between (_, _) -> array_may_overlap_index first_array second_index
         | MultiIndex _ -> array_may_overlap_index first_array second_index)
 
-and array_may_overlap_index array_expr other_index =
+and array_may_overlap_index (array_expr : Expr.Typed.t)
+    (other_index : Expr.Typed.t Index.t) =
   match Expr.Helpers.array_literal_elements array_expr with
   | None ->
       (* A runtime index array can contain an element selected by
