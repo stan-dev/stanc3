@@ -69,7 +69,7 @@ let is_ctrl_flow pattern =
     and the exit set of a statement. It's advantageous to build them together
     because they both rely on some of the same Break, Continue and Return
     bookkeeping. *)
-let build_control_flow ?(flatten_loops = false) ?(blocks_after_body = true)
+let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let rec build_cf_graph (enclosing : enclosing list)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
@@ -216,7 +216,7 @@ let enclosing_loop_ids (statement_id : label)
   @ match pattern with For _ | While _ -> [statement_id] | _ -> []
 
 let build_controls statement_map =
-  let _, _, controls = build_control_flow statement_map in
+  let _, _, controls = build_cf_graphs statement_map in
   controls
 
 (** See interface file *)
@@ -227,5 +227,5 @@ let build_cf_graph statement_map =
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let exits, pred_graph, _ =
-    build_control_flow ~flatten_loops ~blocks_after_body statement_map in
+    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map in
   (exits, pred_graph)

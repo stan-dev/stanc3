@@ -62,7 +62,7 @@ val build_statement_map :
     this statement's singleton pair, which is expressed in terms of the new
     label-containing statement. *)
 
-val build_control_flow :
+val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
   -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

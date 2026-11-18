@@ -202,7 +202,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let exits, preds, controls = build_control_flow statement_map in
+  let exits, preds, controls = build_cf_graphs statement_map in
   let accesses =
     LabelMap.map statement_map ~f:(fun (pattern, _) ->
         Dependence.collect_accesses pattern) in
