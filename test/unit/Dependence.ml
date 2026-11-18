@@ -22,11 +22,9 @@ let assignment_accesses source =
       | _ -> None)
 
 let location_text (location : Access.location) =
-  let step_text = function
-    | Access.Field field -> Fmt.str ".%d" field
-    | Subscript index -> Fmt.str "[%a]" (Index.pp Expr.Typed.pp) index in
+  let index_text index = Fmt.str "[%a]" (Index.pp Expr.Typed.pp) index in
   location.variable
-  ^ String.concat ~sep:"" (List.map location.path ~f:step_text)
+  ^ String.concat ~sep:"" (List.map location.path ~f:index_text)
 
 let print_locations name locations =
   let paths =
@@ -40,6 +38,7 @@ let%expect_test "Collect indexed reads, writes, tuple fields and slices" =
         tuple(vector[4], real) t;
         v[idx[1]] = w[idx[2] * idx[3]];
         t.1[idx[1]] = v[2];
+        t.1[1] = t.1[2];
         v[1:2] = w[2:3];
         v[1] += 1;
         real z = w[2:3][1];
@@ -52,7 +51,9 @@ let%expect_test "Collect indexed reads, writes, tuple fields and slices" =
     reads: idx[1], idx[2], idx[3], w[(idx[2] * idx[3])]
     writes: v[idx[1]]
     reads: idx[1], v[2]
-    writes: t.1[idx[1]]
+    writes: t[1][idx[1]]
+    reads: t[1][2]
+    writes: t[1][1]
     reads: w[2:3]
     writes: v[1:2]
     reads: v[1]
@@ -112,6 +113,18 @@ let%expect_test "Tuple fields and whole-variable writes" =
   check_paths Set.Poly.empty
     {|model { vector[4] v; v[1:2] = rep_vector(0, 2); v[3:4] = rep_vector(0, 2); }|}
     true false;
+  check_paths Set.Poly.empty
+    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[2].1 = 2; }|} false
+    false;
+  check_paths Set.Poly.empty
+    {|model { array[2] tuple(real, real) t; t[1].1 = 1; t[1].2 = 2; }|} false
+    false;
+  check_paths Set.Poly.empty
+    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[1].2 = 2; }|} true
+    true;
+  check_paths Set.Poly.empty
+    {|model { tuple(vector[4], real) t; t.1 = rep_vector(0, 4); t.1[2] = 1; }|}
+    true true;
   [%expect {| |}]
 
 let%expect_test "Loop headers write the induction variable" =

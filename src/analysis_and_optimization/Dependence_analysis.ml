@@ -203,7 +203,6 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{meta; _} -> meta)
       stmt in
   let exits, preds, controls = build_control_flow statement_map in
-  let parents = LabelMap.map controls ~f:control_dependency_ids in
   let accesses =
     LabelMap.map statement_map ~f:(fun (pattern, _) ->
         Dependence.collect_accesses pattern) in
@@ -227,13 +226,14 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       accesses defined_vars in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
       let rds = LabelMap.find label rd_map in
+      let statement_controls = LabelMap.find label controls in
       ( stmt
       , { predecessors= LabelMap.find label preds
-        ; parents= LabelMap.find label parents
+        ; parents= control_dependency_ids statement_controls
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
         ; accesses= LabelMap.find label accesses
-        ; loop_ids= enclosing_loop_ids label stmt (LabelMap.find label controls)
+        ; loop_ids= enclosing_loop_ids label stmt statement_controls
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :

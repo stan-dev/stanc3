@@ -2,47 +2,41 @@ open Std
 open Middle
 open Mir_utils
 
-type step = Subscript of Expr.Typed.t Index.t | Field of int
-type path = step list
+type path = Expr.Typed.t Index.t list
 type location = {variable: string; path: path}
 type accesses = {reads: location list; writes: location list}
 
 let empty = {reads= []; writes= []}
-let add_read location effects = {effects with reads= location :: effects.reads}
 
-let add_write location effects =
+let add_read (location : location) (effects : accesses) =
+  {effects with reads= location :: effects.reads}
+
+let add_write (location : location) (effects : accesses) =
   {effects with writes= location :: effects.writes}
 
-let is_single_element = function
-  | Subscript (Index.Single _) | Field _ -> true
-  | Subscript _ -> false
+let is_single_element = function Index.Single _ -> true | _ -> false
 
 let rec expression_path (expr : Expr.Typed.t) suffix =
   match expr.pattern with
   | Var variable -> Some {variable; path= suffix}
   | Indexed (base, indices) ->
-      let steps = List.map indices ~f:(fun index -> Subscript index) in
       if
         (not (List.is_empty suffix))
-        && not (List.for_all steps ~f:is_single_element)
+        && not (List.for_all indices ~f:is_single_element)
       then None (* Indexing a slice cannot be flattened into a base path. *)
-      else expression_path base (steps @ suffix)
-  | TupleProjection (base, field) -> expression_path base (Field field :: suffix)
+      else expression_path base (indices @ suffix)
+  | TupleProjection (base, field) ->
+      expression_path base (Index.Single (Expr.Helpers.int field) :: suffix)
   | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
 
-let rec lvalue_path ((base, indices) : Expr.Typed.t Stmt.Pattern.lvalue) suffix
-    =
-  let indexed_suffix =
-    List.map indices ~f:(fun index -> Subscript index) @ suffix in
+let rec lvalue_location ((base, indices) : Expr.Typed.t Stmt.Pattern.lvalue)
+    suffix =
+  let indexed_suffix = indices @ suffix in
   match base with
-  | LVariable _ -> indexed_suffix
+  | LVariable variable -> {variable; path= indexed_suffix}
   | LTupleProjection (inner, field) ->
-      lvalue_path inner (Field field :: indexed_suffix)
-
-let index_expressions path =
-  List.concat_map path ~f:(function
-    | Subscript index -> Index.bounds index
-    | Field _ -> [])
+      lvalue_location inner
+        (Index.Single (Expr.Helpers.int field) :: indexed_suffix)
 
 let is_target_increment = function
   | Fun_kind.UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian)
@@ -59,10 +53,9 @@ let rec collect_expr effects (expr : Expr.Typed.t) =
   | Indexed _ | TupleProjection _ -> (
       match expression_path expr [] with
       | Some location ->
-          List.fold_left
-            (index_expressions location.path)
+          List.fold_left location.path
             ~init:(add_read location effects)
-            ~f:collect_expr
+            ~f:(Index.fold collect_expr)
       | None -> collect_subexprs effects expr)
   | FunApp (StanLib (_, FnTarget), []) -> add_read target effects
   | FunApp (kind, _) when is_target_increment kind ->
@@ -76,13 +69,11 @@ and collect_subexprs effects (expr : Expr.Typed.t) =
 let collect_accesses (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) =
   match stmt with
   | Assignment (lhs, _, rhs) ->
-      let path = lvalue_path lhs [] in
+      let location = lvalue_location lhs [] in
       let effects =
-        List.fold_left (index_expressions path) ~init:empty ~f:collect_expr
+        List.fold_left location.path ~init:empty ~f:(Index.fold collect_expr)
       in
-      add_write
-        {variable= Stmt.Helpers.lhs_variable lhs; path}
-        (collect_expr effects rhs)
+      add_write location (collect_expr effects rhs)
   | _ -> (
       let effects = Stmt.Pattern.fold collect_expr Fun.const empty stmt in
       match stmt with
@@ -100,9 +91,7 @@ let literal_value (expr : Expr.Typed.t) =
 
 let rec paths_may_overlap first second =
   match (first, second) with
-  | Field a :: first_tail, Field b :: second_tail ->
-      a = b && paths_may_overlap first_tail second_tail
-  | Subscript (Single a) :: first_tail, Subscript (Single b) :: second_tail ->
+  | Index.Single a :: first_tail, Index.Single b :: second_tail ->
       let indices_may_equal =
         match (literal_value a, literal_value b) with
         | Some left, Some right -> left = right
@@ -114,15 +103,16 @@ let may_overlap (first : path) (second : path) =
   List.compare_lengths first second <> 0 || paths_may_overlap first second
 
 let is_stable defined_vars expr =
-  (not (cannot_duplicate_expr expr))
-  && Set.Poly.disjoint defined_vars (expr_var_names_set expr)
+  let is_written_variable (expression : Expr.Typed.t) =
+    match expression.pattern with
+    | Var name -> Set.Poly.mem name defined_vars
+    | _ -> false in
+  (not (cannot_duplicate_expr expr)) && not (expr_any is_written_variable expr)
 
 let rec definitely_overwrites defined_vars (killer : path) (killed : path) =
   match (killer, killed) with
   | [], _ -> true
-  | Field a :: killer_tail, Field b :: killed_tail ->
-      a = b && definitely_overwrites defined_vars killer_tail killed_tail
-  | Subscript (Single a) :: killer_tail, Subscript (Single b) :: killed_tail ->
+  | Index.Single a :: killer_tail, Index.Single b :: killed_tail ->
       is_stable defined_vars a
       && Expr.Helpers.compare_ignore_meta a b = 0
       && definitely_overwrites defined_vars killer_tail killed_tail

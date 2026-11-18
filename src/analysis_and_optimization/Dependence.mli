@@ -1,8 +1,10 @@
 open Std
 open Middle
 
-type step = Subscript of Expr.Typed.t Index.t | Field of int
-type path = step list
+(** Tuple fields use [Single] integer literals. Compare paths only within the
+    same base variable. *)
+type path = Expr.Typed.t Index.t list
+
 type location = {variable: string; path: path}
 type accesses = {reads: location list; writes: location list}
 
