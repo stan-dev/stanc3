@@ -784,41 +784,17 @@ let used_not_latest_expressions_transfer (used : ExprSet.t LabelMap.t)
     with type labels = int
      and type properties = ExprSet.t)
 
-(** The transfer function for the first forward analysis part of determining
-    optimal ad-levels for variables *)
-let minimal_variables_fwd_transfer
-    (gen_variable :
-         Stmt.Located.Non_recursive.t LabelMap.t
-      -> int
-      -> string Set.Poly.t
-      -> string Set.Poly.t)
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
-  (module struct
-    type labels = int
-    type properties = string Set.Poly.t
-
-    let transfer_function l p =
-      let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let gen = gen_variable flowgraph_to_mir l p in
-      let kill =
-        match mir_node with
-        (* This probably isn't necessary because Stan doesn't allow shadowing,
-           right? *)
-        | Decl {decl_id; decl_adtype= DataOnly; _} -> Set.Poly.singleton decl_id
-        | _ -> Set.Poly.empty in
-      transfer_gen_kill p gen kill
-  end : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = string Set.Poly.t)
-
 (** The nodes of a flowgraph in reverse postorder from the initials set.
 
     For motivation, see
-    {{:https://eli.thegreenplace.net/2015/directed-graph-traversal-orderings-and-applications-to-data-flow-analysis/} Eli Bendersky's post}:
-    {v the most efficient way to run forward data-flow analyses is in RPO. In the
+    {{:https://eli.thegreenplace.net/2015/directed-graph-traversal-orderings-and-applications-to-data-flow-analysis/}
+     Eli Bendersky's post}:
+    {v
+    the most efficient way to run forward data-flow analyses is in RPO. In the
     absence of cycles, RPO (topological order) makes sure we've seen all of a
     node's predecessors before we get to it. This means we can perform the
-    analysis in a single pass over the graph.} *)
+    analysis in a single pass over the graph.
+    v} *)
 let reverse_postorder (module F : FLOWGRAPH with type labels = int) =
   let visited = Hash_set.create (LabelMap.cardinal F.successors) in
   let nodes = ref [] in
@@ -1088,22 +1064,28 @@ let lazy_expressions_mfp
     @param Flowgraph The set of nodes to analyze
     @param flowgraph_to_mir Map of nodes to their actual values in the MIR
     @param initial_variables The set of variables to start in the set
-    @param gen_variable
-      Used in the transfer function to deduce variables that should be in the
-      set *)
+    @param transfer_variables
+      Computes the variables that should be in the set after each node *)
 let minimal_variables_mfp
     (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t)
     (initial_variables : string Set.Poly.t)
-    (gen_variable :
+    (transfer_variables :
          Stmt.Located.Non_recursive.t LabelMap.t
       -> int
       -> string Set.Poly.t
       -> string Set.Poly.t) =
   let (module Lattice) = minimal_variables_lattice initial_variables in
   let (module Transfer) =
-    minimal_variables_fwd_transfer gen_variable flowgraph_to_mir in
+    (module struct
+      type labels = int
+      type properties = string Set.Poly.t
+
+      let transfer_function = transfer_variables flowgraph_to_mir
+    end : TRANSFER_FUNCTION
+      with type labels = int
+       and type properties = string Set.Poly.t) in
   let (module Mf) =
     monotone_framework
       (module Circular_Fwd_Flowgraph)
