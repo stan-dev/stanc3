@@ -5,7 +5,8 @@ open Analysis_and_optimization.Dataflow_utils
 module Access = Analysis_and_optimization.Dependence
 
 let statement_map source =
-  let mir = Test_utils.mir_of_string source in
+  (* Line 1 is the first nonblank line of the Stan snippet. *)
+  let mir = Test_utils.mir_of_string (String.trim source) in
   let bodies =
     List.filter_map mir.functions_block ~f:(fun definition ->
         definition.Program.fdbody) in
@@ -14,11 +15,12 @@ let statement_map source =
     (fun Stmt.{meta; _} -> meta)
     Stmt.{meta= Location_span.empty; pattern= SList (bodies @ mir.log_prob)}
 
-let assignment_accesses source =
-  statement_map source |> LabelMap.bindings
-  |> List.filter_map ~f:(fun (_, (pattern, _)) ->
+let assignment_accesses statements =
+  LabelMap.bindings statements
+  |> List.filter_map ~f:(fun (_, (pattern, location)) ->
       match pattern with
-      | Stmt.Pattern.Assignment _ -> Some (Access.collect_accesses pattern)
+      | Stmt.Pattern.Assignment _ ->
+          Some (location, Access.collect_accesses pattern)
       | _ -> None)
 
 let pp_index_expr ppf (expr : Expr.Typed.t) =
@@ -27,94 +29,213 @@ let pp_index_expr ppf (expr : Expr.Typed.t) =
       Fmt.pf ppf "{%a}" (Fmt.list ~sep:Fmt.comma Expr.Typed.pp) elements
   | None -> Expr.Typed.pp ppf expr
 
-let location_text (accessed_location : Access.location) =
-  let index_text index = Fmt.str "[%a]" (Index.pp pp_index_expr) index in
-  accessed_location.variable
-  ^ String.concat ~sep:"" (List.map accessed_location.path ~f:index_text)
+let variable_types statements =
+  let rec collect_expr types (expr : Expr.Typed.t) =
+    let types =
+      match expr.pattern with
+      | Var name -> String.Map.add types ~key:name ~data:expr.meta.type_
+      | _ -> types in
+    Expr.Pattern.fold collect_expr types expr.pattern in
+  LabelMap.fold statements ~init:String.Map.empty
+    ~f:(fun ~key:_ ~data:(pattern, _) types ->
+      let types = Stmt.Pattern.fold collect_expr Fun.const types pattern in
+      match pattern with
+      | Decl {decl_id; decl_type; _} ->
+          String.Map.add types ~key:decl_id ~data:(Type.to_unsized decl_type)
+      | _ -> types)
 
-let print_locations heading locations =
-  let locations_text =
-    locations |> List.map ~f:location_text
-    |> List.sort ~cmp:String.compare
-    |> String.concat ~sep:", " in
-  Fmt.pr "%s: %s@." heading locations_text
+let location_text types (accessed_location : Access.location) =
+  let index_text index = Fmt.str "[%a]" (Index.pp pp_index_expr) index in
+  (* The analysis encodes tuple fields as Single indices. Use the base type to
+     recover Stan's field syntax without changing the collected access path. *)
+  let rec path_text type_ path =
+    match (type_, path) with
+    | _, [] -> ""
+    | UnsizedType.UTuple fields, Index.Single field :: rest ->
+        let field = Expr.Helpers.int_literal_value field |> Option.get in
+        Printf.sprintf ".%d%s" field
+          (path_text (List.nth fields (field - 1)) rest)
+    | UArray element, index :: rest -> index_text index ^ path_text element rest
+    | UTuple _, _ -> failwith "Expected a literal tuple field in access path"
+    | _, _ -> String.concat ~sep:"" (List.map path ~f:index_text) in
+  match accessed_location.path with
+  | [] -> accessed_location.variable
+  | path ->
+      accessed_location.variable
+      ^ path_text (String.Map.find accessed_location.variable types) path
+
+let print_accesses types statement_accesses =
+  let print_paths heading select =
+    Fmt.pr "%s:@." heading;
+    List.iter statement_accesses ~f:(fun (location, accesses) ->
+        let paths =
+          select accesses
+          |> List.map ~f:(location_text types)
+          |> List.sort ~cmp:String.compare
+          |> String.concat ~sep:", " in
+        Fmt.pr "  line %d: %s@." location.Location_span.begin_loc.line_num
+          (if String.is_empty paths then "none" else paths)) in
+  print_paths "read paths" (fun accesses -> accesses.Access.reads);
+  print_paths "write paths" (fun accesses -> accesses.Access.writes)
 
 let print_assignment_accesses source =
-  assignment_accesses source
-  |> List.iter ~f:(fun statement_accesses ->
-      print_locations "read paths" statement_accesses.Access.reads;
-      print_locations "write paths" statement_accesses.writes)
+  let statements = statement_map source in
+  assignment_accesses statements |> print_accesses (variable_types statements)
 
 let%expect_test
     "Access collection: index expressions contribute their own reads" =
   print_assignment_accesses
-    {|data { array[3] int<lower=1, upper=2> idx; vector[4] w; }
-      model { vector[4] v; v[idx[1]] = w[idx[2] * idx[3]]; }|};
+    {|
+      data {
+        array[3] int<lower=1, upper=2> idx;
+        vector[4] w;
+      }
+      model {
+        vector[4] v;
+        v[idx[1]] = w[idx[2] * idx[3]];
+      }
+    |};
   [%expect
     {|
-    read paths: idx[1], idx[2], idx[3], w[(idx[2] * idx[3])]
-    write paths: v[idx[1]]
+    read paths:
+      line 7: idx[1], idx[2], idx[3], w[(idx[2] * idx[3])]
+    write paths:
+      line 7: v[idx[1]]
     |}]
 
 let%expect_test "Access collection: tuple fields precede element indices" =
-  (* Tuple field numbers appear as Single indices in the access paths. *)
   print_assignment_accesses
-    {|data { array[1] int<lower=1, upper=4> idx; vector[4] v; }
-      model { tuple(vector[4], real) t; t.1[idx[1]] = v[2]; }|};
-  [%expect {|
-    read paths: idx[1], v[2]
-    write paths: t[1][idx[1]]
+    {|
+      data {
+        array[1] int<lower=1, upper=4> idx;
+        vector[4] v;
+      }
+      model {
+        tuple(vector[4], real) t;
+        t.1[idx[1]] = v[2];
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 7: idx[1], v[2]
+    write paths:
+      line 7: t.1[idx[1]]
     |}]
 
 let%expect_test "Access collection: tuple fields have separate paths" =
-  (* Tuple field numbers appear as Single indices in the access paths. *)
   print_assignment_accesses
-    {|data { tuple(real, real) source; }
-      model { tuple(real, real) t; t.1 = source.2; }|};
-  [%expect {|
-    read paths: source[2]
-    write paths: t[1]
+    {|
+      data {
+        tuple(real, real) source;
+      }
+      model {
+        tuple(real, real) t;
+        t.1 = source.2;
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 6: source.2
+    write paths:
+      line 6: t.1
     |}]
 
 let%expect_test
     "Access collection: tuple element reads keep the field and index" =
-  (* The first path index identifies the tuple field. *)
   print_assignment_accesses
-    {|data { tuple(vector[4], real) t; }
-      model { real x = t.1[2]; }|};
-  [%expect {|
-    read paths: t[1][2]
-    write paths: x
+    {|
+      data {
+        tuple(vector[4], real) t;
+      }
+      model {
+        real x = t.1[2];
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 5: t.1[2]
+    write paths:
+      line 5: x
+    |}]
+
+let%expect_test "Access collection: array elements and nested tuple fields" =
+  print_assignment_accesses
+    {|
+      data {
+        array[2] tuple(tuple(real, vector[3]), real) source;
+      }
+      model {
+        array[2] tuple(tuple(real, vector[3]), real) t;
+        t[2].1.2[3] = source[1].1.2[2];
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 6: source[1].1.2[2]
+    write paths:
+      line 6: t[2].1.2[3]
     |}]
 
 let%expect_test "Access collection: slices retain their bounds" =
   print_assignment_accesses
-    {|data { vector[4] w; }
-      model { vector[4] v; v[1:2] = w[2:3]; }|};
-  [%expect {|
-    read paths: w[2:3]
-    write paths: v[1:2]
+    {|
+      data {
+        vector[4] w;
+      }
+      model {
+        vector[4] v;
+        v[1:2] = w[2:3];
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 6: w[2:3]
+    write paths:
+      line 6: v[1:2]
     |}]
 
 let%expect_test "Access collection: compound assignment reads its destination" =
   print_assignment_accesses
-    {|parameters { vector[4] initial; }
-      model { vector[4] v = initial; v[1] += 1; }|};
+    {|
+      parameters {
+        vector[4] initial;
+      }
+      model {
+        vector[4] v = initial;
+        v[1] += 1;
+      }
+    |};
   [%expect
     {|
-    read paths: initial
-    write paths: v
-    read paths: v[1]
-    write paths: v[1]
+    read paths:
+      line 5: initial
+      line 6: v[1]
+    write paths:
+      line 5: v
+      line 6: v[1]
     |}]
 
 let%expect_test "Access collection: nested slices retain the base selection" =
   print_assignment_accesses
-    {|data { vector[4] w; }
-      model { real z = w[2:3][1]; }|};
-  [%expect {|
-    read paths: w[2:3]
-    write paths: z
+    {|
+      data {
+        vector[4] w;
+      }
+      model {
+        real z = w[2:3][1];
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 5: w[2:3]
+    write paths:
+      line 5: z
     |}]
 
 let check_overlap first_path second_path expected =
@@ -155,18 +276,20 @@ let print_write_comparison variables source =
           ~f:(fun collected write ->
             Set.Poly.add write.Access.variable collected)) in
   let assignments =
-    List.filter_map statements ~f:(fun (_, (pattern, _)) ->
+    List.filter_map statements ~f:(fun (_, (pattern, location)) ->
         match pattern with
         | Stmt.Pattern.Assignment _ -> (
             match (Access.collect_accesses pattern).writes with
             | [write] when List.mem write.variable ~set:variables ->
-                Some (pattern, write)
+                Some (pattern, location, write)
             | _ -> None)
         | _ -> None) in
   match assignments with
-  | [(previous_statement, previous); (next_statement, next_write)] ->
-      Fmt.pr "previous: %a@.next: %a@." pp_statement previous_statement
-        pp_statement next_statement;
+  | [ (previous_statement, previous_location, previous)
+    ; (next_statement, next_location, next_write) ] ->
+      Fmt.pr "previous (line %d): %a@.next (line %d): %a@."
+        previous_location.begin_loc.line_num pp_statement previous_statement
+        next_location.begin_loc.line_num pp_statement next_statement;
       Fmt.pr "may overlap: %b@.previous overwritten: %b@."
         (Access.Location.same_var previous next_write
         && Access.may_overlap previous.path next_write.path)
@@ -175,82 +298,139 @@ let print_write_comparison variables source =
 
 let%expect_test "Overwrite: different literal elements retain the earlier write"
     =
-  print_write_comparison ["v"] {|model { vector[4] v; v[1] = 1; v[2] = 2; }|};
+  print_write_comparison ["v"]
+    {|
+      model {
+        vector[4] v;
+        v[1] = 1;
+        v[2] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[1] = 1;
-    next: v[2] = 2;
+    previous (line 3): v[1] = 1;
+    next (line 4): v[2] = 2;
     may overlap: false
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: the same literal element replaces the earlier write"
     =
-  print_write_comparison ["v"] {|model { vector[4] v; v[1] = 1; v[1] = 2; }|};
+  print_write_comparison ["v"]
+    {|
+      model {
+        vector[4] v;
+        v[1] = 1;
+        v[1] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[1] = 1;
-    next: v[1] = 2;
+    previous (line 3): v[1] = 1;
+    next (line 4): v[1] = 2;
     may overlap: true
     previous overwritten: true
     |}]
 
 let%expect_test "Overwrite: the same stable index replaces the earlier write" =
   print_write_comparison ["v"]
-    {|data { int<lower=1, upper=4> k; }
-      model { vector[4] v; v[k] = 1; v[k] = 2; }|};
+    {|
+      data {
+        int<lower=1, upper=4> k;
+      }
+      model {
+        vector[4] v;
+        v[k] = 1;
+        v[k] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[k] = 1;
-    next: v[k] = 2;
+    previous (line 6): v[k] = 1;
+    next (line 7): v[k] = 2;
     may overlap: true
     previous overwritten: true
     |}]
 
 let%expect_test "Overwrite: different symbolic indices can alias" =
   print_write_comparison ["v"]
-    {|data { int<lower=1, upper=4> k; int<lower=1, upper=4> j; }
-      model { vector[4] v; v[k] = 1; v[j] = 2; }|};
+    {|
+      data {
+        int<lower=1, upper=4> k;
+        int<lower=1, upper=4> j;
+      }
+      model {
+        vector[4] v;
+        v[k] = 1;
+        v[j] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[k] = 1;
-    next: v[j] = 2;
+    previous (line 7): v[k] = 1;
+    next (line 8): v[j] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: algebraic equivalence is not yet used" =
   print_write_comparison ["v"]
-    {|data { int<lower=1, upper=2> k; }
-      model { vector[4] v; v[k + k] = 1; v[2 * k] = 2; }|};
+    {|
+      data {
+        int<lower=1, upper=2> k;
+      }
+      model {
+        vector[4] v;
+        v[k + k] = 1;
+        v[2 * k] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[(k + k)] = 1;
-    next: v[(2 * k)] = 2;
+    previous (line 6): v[(k + k)] = 1;
+    next (line 7): v[(2 * k)] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: stable indirect indices replace the earlier write" =
   print_write_comparison ["v"]
-    {|data { int<lower=1, upper=4> k; array[4] int<lower=1, upper=4> idx; }
-      model { vector[4] v; v[idx[k]] = 1; v[idx[k]] = 2; }|};
+    {|
+      data {
+        int<lower=1, upper=4> k;
+        array[4] int<lower=1, upper=4> idx;
+      }
+      model {
+        vector[4] v;
+        v[idx[k]] = 1;
+        v[idx[k]] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[idx[k]] = 1;
-    next: v[idx[k]] = 2;
+    previous (line 7): v[idx[k]] = 1;
+    next (line 8): v[idx[k]] = 2;
     may overlap: true
     previous overwritten: true
     |}]
 
 let%expect_test "Overwrite: nonlinear indices can alias a symbolic element" =
   print_write_comparison ["v"]
-    {|data { int<lower=1, upper=2> k; int<lower=1, upper=4> j; }
-      model { vector[4] v; v[k * k] = 1; v[j] = 2; }|};
+    {|
+      data {
+        int<lower=1, upper=2> k;
+        int<lower=1, upper=4> j;
+      }
+      model {
+        vector[4] v;
+        v[k * k] = 1;
+        v[j] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[(k * k)] = 1;
-    next: v[j] = 2;
+    previous (line 7): v[(k * k)] = 1;
+    next (line 8): v[j] = 2;
     may overlap: true
     previous overwritten: false
     |}]
@@ -258,11 +438,19 @@ let%expect_test "Overwrite: nonlinear indices can alias a symbolic element" =
 let%expect_test "Overwrite: changing the scalar index retains the earlier write"
     =
   print_write_comparison ["v"]
-    {|model { vector[4] v; int k = 1; v[k] = 1; k = 2; v[k] = 2; }|};
+    {|
+      model {
+        vector[4] v;
+        int k = 1;
+        v[k] = 1;
+        k = 2;
+        v[k] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[k] = 1;
-    next: v[k] = 2;
+    previous (line 4): v[k] = 1;
+    next (line 6): v[k] = 2;
     may overlap: true
     previous overwritten: false
     |}]
@@ -270,22 +458,36 @@ let%expect_test "Overwrite: changing the scalar index retains the earlier write"
 let%expect_test "Overwrite: changing the index array retains the earlier write"
     =
   print_write_comparison ["v"]
-    {|model { vector[4] v; array[1] int idx = {1}; v[idx[1]] = 1; idx[1] = 2; v[idx[1]] = 2; }|};
+    {|
+      model {
+        vector[4] v;
+        array[1] int idx = {1};
+        v[idx[1]] = 1;
+        idx[1] = 2;
+        v[idx[1]] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v[idx[1]] = 1;
-    next: v[idx[1]] = 2;
+    previous (line 4): v[idx[1]] = 1;
+    next (line 6): v[idx[1]] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: different tuple fields remain distinct" =
   print_write_comparison ["t"]
-    {|model { tuple(real, real) t; t.1 = 1; t.2 = 2; }|};
+    {|
+      model {
+        tuple(real, real) t;
+        t.1 = 1;
+        t.2 = 2;
+      }
+    |};
   [%expect
     {|
-    previous: t.1 = 1;
-    next: t.2 = 2;
+    previous (line 3): t.1 = 1;
+    next (line 4): t.2 = 2;
     may overlap: false
     previous overwritten: false
     |}]
@@ -293,33 +495,52 @@ let%expect_test "Overwrite: different tuple fields remain distinct" =
 let%expect_test "Overwrite: an element write does not replace the whole vector"
     =
   print_write_comparison ["v"]
-    {|model { vector[4] v; v = rep_vector(1, 4); v[1] = 2; }|};
+    {|
+      model {
+        vector[4] v;
+        v = rep_vector(1, 4);
+        v[1] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: v = rep_vector(1, 4);
-    next: v[1] = 2;
+    previous (line 3): v = rep_vector(1, 4);
+    next (line 4): v[1] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: a whole-vector write replaces an element" =
   print_write_comparison ["v"]
-    {|model { vector[4] v; v[1] = 1; v = rep_vector(2, 4); }|};
+    {|
+      model {
+        vector[4] v;
+        v[1] = 1;
+        v = rep_vector(2, 4);
+      }
+    |};
   [%expect
     {|
-    previous: v[1] = 1;
-    next: v = rep_vector(2, 4);
+    previous (line 3): v[1] = 1;
+    next (line 4): v = rep_vector(2, 4);
     may overlap: true
     previous overwritten: true
     |}]
 
 let%expect_test "Overwrite: different variables remain distinct" =
   print_write_comparison ["v"; "w"]
-    {|model { vector[4] v; vector[4] w; v[1] = 1; w = rep_vector(2, 4); }|};
+    {|
+      model {
+        vector[4] v;
+        vector[4] w;
+        v[1] = 1;
+        w = rep_vector(2, 4);
+      }
+    |};
   [%expect
     {|
-    previous: v[1] = 1;
-    next: w = rep_vector(2, 4);
+    previous (line 4): v[1] = 1;
+    next (line 5): w = rep_vector(2, 4);
     may overlap: false
     previous overwritten: false
     |}]
@@ -327,22 +548,35 @@ let%expect_test "Overwrite: different variables remain distinct" =
 let%expect_test "Overwrite: whole writes to different variables remain distinct"
     =
   print_write_comparison ["v"; "w"]
-    {|model { vector[4] v; vector[4] w; v = rep_vector(1, 4); w = rep_vector(2, 4); }|};
+    {|
+      model {
+        vector[4] v;
+        vector[4] w;
+        v = rep_vector(1, 4);
+        w = rep_vector(2, 4);
+      }
+    |};
   [%expect
     {|
-    previous: v = rep_vector(1, 4);
-    next: w = rep_vector(2, 4);
+    previous (line 4): v = rep_vector(1, 4);
+    next (line 5): w = rep_vector(2, 4);
     may overlap: false
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: disjoint slices retain the earlier write" =
   print_write_comparison ["v"]
-    {|model { vector[4] v; v[1:2] = rep_vector(1, 2); v[3:4] = rep_vector(2, 2); }|};
+    {|
+      model {
+        vector[4] v;
+        v[1:2] = rep_vector(1, 2);
+        v[3:4] = rep_vector(2, 2);
+      }
+    |};
   [%expect
     {|
-    previous: v[1:2] = rep_vector(1, 2);
-    next: v[3:4] = rep_vector(2, 2);
+    previous (line 3): v[1:2] = rep_vector(1, 2);
+    next (line 4): v[3:4] = rep_vector(2, 2);
     may overlap: false
     previous overwritten: false
     |}]
@@ -350,11 +584,17 @@ let%expect_test "Overwrite: disjoint slices retain the earlier write" =
 let%expect_test
     "Overwrite: tuple fields in different array elements remain distinct" =
   print_write_comparison ["t"]
-    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[2].1 = 2; }|};
+    {|
+      model {
+        array[2] tuple(real, real) t;
+        t[1].2 = 1;
+        t[2].1 = 2;
+      }
+    |};
   [%expect
     {|
-    previous: t[1].2 = 1;
-    next: t[2].1 = 2;
+    previous (line 3): t[1].2 = 1;
+    next (line 4): t[2].1 = 2;
     may overlap: false
     previous overwritten: false
     |}]
@@ -362,22 +602,34 @@ let%expect_test
 let%expect_test
     "Overwrite: tuple fields in the same array element remain distinct" =
   print_write_comparison ["t"]
-    {|model { array[2] tuple(real, real) t; t[1].1 = 1; t[1].2 = 2; }|};
+    {|
+      model {
+        array[2] tuple(real, real) t;
+        t[1].1 = 1;
+        t[1].2 = 2;
+      }
+    |};
   [%expect
     {|
-    previous: t[1].1 = 1;
-    next: t[1].2 = 2;
+    previous (line 3): t[1].1 = 1;
+    next (line 4): t[1].2 = 2;
     may overlap: false
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: the same tuple field replaces the earlier write" =
   print_write_comparison ["t"]
-    {|model { array[2] tuple(real, real) t; t[1].2 = 1; t[1].2 = 2; }|};
+    {|
+      model {
+        array[2] tuple(real, real) t;
+        t[1].2 = 1;
+        t[1].2 = 2;
+      }
+    |};
   [%expect
     {|
-    previous: t[1].2 = 1;
-    next: t[1].2 = 2;
+    previous (line 3): t[1].2 = 1;
+    next (line 4): t[1].2 = 2;
     may overlap: true
     previous overwritten: true
     |}]
@@ -385,66 +637,108 @@ let%expect_test "Overwrite: the same tuple field replaces the earlier write" =
 let%expect_test
     "Overwrite: an element does not replace its enclosing tuple field" =
   print_write_comparison ["t"]
-    {|model { tuple(vector[4], real) t; t.1 = rep_vector(1, 4); t.1[2] = 2; }|};
+    {|
+      model {
+        tuple(vector[4], real) t;
+        t.1 = rep_vector(1, 4);
+        t.1[2] = 2;
+      }
+    |};
   [%expect
     {|
-    previous: t.1 = rep_vector(1, 4);
-    next: t.1[2] = 2;
+    previous (line 3): t.1 = rep_vector(1, 4);
+    next (line 4): t.1[2] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Overwrite: a tuple field replaces its contained element" =
   print_write_comparison ["t"]
-    {|model { tuple(vector[4], real) t; t.1[2] = 1; t.1 = rep_vector(2, 4); }|};
+    {|
+      model {
+        tuple(vector[4], real) t;
+        t.1[2] = 1;
+        t.1 = rep_vector(2, 4);
+      }
+    |};
   [%expect
     {|
-    previous: t.1[2] = 1;
-    next: t.1 = rep_vector(2, 4);
+    previous (line 3): t.1[2] = 1;
+    next (line 4): t.1 = rep_vector(2, 4);
     may overlap: true
     previous overwritten: true
     |}]
 
 let%expect_test "Overwrite: repeated RNG calls can select different elements" =
   print_write_comparison ["v"]
-    {|functions { void f_rng(vector theta) {
-        vector[num_elements(theta)] v;
-        v[categorical_rng(theta)] = 1;
-        v[categorical_rng(theta)] = 2;
-      }} model {}|};
+    {|
+      functions {
+        void f_rng(vector theta) {
+          vector[num_elements(theta)] v;
+          v[categorical_rng(theta)] = 1;
+          v[categorical_rng(theta)] = 2;
+        }
+      }
+      model {}
+    |};
   [%expect
     {|
-    previous: v[categorical_rng(theta)] = 1;
-    next: v[categorical_rng(theta)] = 2;
+    previous (line 4): v[categorical_rng(theta)] = 1;
+    next (line 5): v[categorical_rng(theta)] = 2;
     may overlap: true
     previous overwritten: false
     |}]
 
 let%expect_test "Loop headers write the induction variable" =
   let statements =
-    statement_map {|data { int N; } model { for (n in 1:N) print(n); }|} in
-  LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, _) ->
+    statement_map
+      {|
+        data {
+          int N;
+        }
+        model {
+          for (n in 1:N) {
+            print(n);
+          }
+        }
+      |}
+  in
+  LabelMap.bindings statements
+  |> List.filter_map ~f:(fun (_, (pattern, location)) ->
       match pattern with
-      | Stmt.Pattern.For _ ->
-          let statement_accesses = Access.collect_accesses pattern in
-          print_locations "reads" statement_accesses.reads;
-          print_locations "writes" statement_accesses.writes
-      | _ -> ());
-  [%expect {|
-    reads: N
-    writes: n
+      | Stmt.Pattern.For _ -> Some (location, Access.collect_accesses pattern)
+      | _ -> None)
+  |> print_accesses (variable_types statements);
+  [%expect
+    {|
+    read paths:
+      line 5: N
+    write paths:
+      line 5: n
     |}]
 
 let%expect_test "Target-modifying calls retain the target read and write" =
-  assignment_accesses
-    {|functions { real f_lp(real a) { target += a; return a; } }
-      parameters { real a; } model { real b = f_lp(a); }|}
-  |> List.iter ~f:(fun statement_accesses ->
-      print_locations "reads" statement_accesses.Access.reads;
-      print_locations "writes" statement_accesses.writes);
-  [%expect {|
-    reads: a, target
-    writes: b, target
+  print_assignment_accesses
+    {|
+      functions {
+        real f_lp(real a) {
+          target += a;
+          return a;
+        }
+      }
+      parameters {
+        real a;
+      }
+      model {
+        real b = f_lp(a);
+      }
+    |};
+  [%expect
+    {|
+    read paths:
+      line 11: a, target
+    write paths:
+      line 11: b, target
     |}]
 
 let check_read_overlap source expected_overlap =
@@ -463,8 +757,18 @@ let check_read_overlap source expected_overlap =
 let check_may_idx_overlap first_index second_index ~expected =
   let source =
     Fmt.str
-      "data { int k; int j; array[10] int idx; } model { vector[10] v; \
-       print(v[%s]); print(v[%s]); }"
+      {|
+        data {
+          int k;
+          int j;
+          array[10] int idx;
+        }
+        model {
+          vector[10] v;
+          print(v[%s]);
+          print(v[%s]);
+        }
+      |}
       first_index second_index in
   check_read_overlap source expected
 
@@ -1204,7 +1508,14 @@ let%expect_test "Index overlap: MultiIndex / MultiIndex" =
 
 let%expect_test "Different columns remain disjoint after All" =
   check_read_overlap
-    {|model { matrix[4, 4] v; print(v[:, 1]); print(v[:, 2]); }|} false;
+    {|
+      model {
+        matrix[4, 4] v;
+        print(v[:, 1]);
+        print(v[:, 2]);
+      }
+    |}
+    false;
   [%expect
     {|
     PASS: v[:, 1] / v[:, 2]; may overlap: false
@@ -1213,7 +1524,14 @@ let%expect_test "Different columns remain disjoint after All" =
 
 let%expect_test "Overlapping row ranges share a column" =
   check_read_overlap
-    {|model { matrix[4, 4] v; print(v[1:2, 1]); print(v[2:3, 1]); }|} true;
+    {|
+      model {
+        matrix[4, 4] v;
+        print(v[1:2, 1]);
+        print(v[2:3, 1]);
+      }
+    |}
+    true;
   [%expect
     {|
     PASS: v[1:2, 1] / v[2:3, 1]; may overlap: true
@@ -1222,8 +1540,17 @@ let%expect_test "Overlapping row ranges share a column" =
 
 let%expect_test "Different columns separate unknown row selections" =
   check_read_overlap
-    {|data { int k; array[2] int idx; }
-      model { matrix[4, 4] v; print(v[idx, 1]); print(v[k:4, 2]); }|}
+    {|
+      data {
+        int k;
+        array[2] int idx;
+      }
+      model {
+        matrix[4, 4] v;
+        print(v[idx, 1]);
+        print(v[k:4, 2]);
+      }
+    |}
     false;
   [%expect
     {|
@@ -1233,7 +1560,13 @@ let%expect_test "Different columns separate unknown row selections" =
 
 let%expect_test "Disjoint column ranges separate matching row arrays" =
   check_read_overlap
-    {|model { matrix[4, 4] v; print(v[{1, 3}, 1:2]); print(v[{1, 3}, 3:4]); }|}
+    {|
+      model {
+        matrix[4, 4] v;
+        print(v[{1, 3}, 1:2]);
+        print(v[{1, 3}, 3:4]);
+      }
+    |}
     false;
   [%expect
     {|
@@ -1243,7 +1576,14 @@ let%expect_test "Disjoint column ranges separate matching row arrays" =
 
 let%expect_test "A whole column overlaps a whole row at their intersection" =
   check_read_overlap
-    {|model { matrix[4, 4] v; print(v[:, 1]); print(v[1, :]); }|} true;
+    {|
+      model {
+        matrix[4, 4] v;
+        print(v[:, 1]);
+        print(v[1, :]);
+      }
+    |}
+    true;
   [%expect
     {|
     PASS: v[:, 1] / v[1, :]; may overlap: true
@@ -1252,7 +1592,14 @@ let%expect_test "A whole column overlaps a whole row at their intersection" =
 
 let%expect_test "Nested slice: position one overlaps original element two" =
   (* The access collector conservatively retains v[2:4], not just v[2]. *)
-  check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[2]); }|}
+  check_read_overlap
+    {|
+      model {
+        vector[4] v;
+        print(v[2:4][1]);
+        print(v[2]);
+      }
+    |}
     true;
   [%expect
     {|
@@ -1261,7 +1608,14 @@ let%expect_test "Nested slice: position one overlaps original element two" =
     |}]
 
 let%expect_test "Nested slice: an element outside the base slice is disjoint" =
-  check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[1]); }|}
+  check_read_overlap
+    {|
+      model {
+        vector[4] v;
+        print(v[2:4][1]);
+        print(v[1]);
+      }
+    |}
     false;
   [%expect
     {|
@@ -1273,7 +1627,14 @@ let%expect_test "Nested slice: the retained base slice can overestimate overlap"
     =
   (* v[2:4][1] selects element 2, but the collector retains the whole slice. Its
      possible overlap with v[3] is intentionally conservative. *)
-  check_read_overlap {|model { vector[4] v; print(v[2:4][1]); print(v[3]); }|}
+  check_read_overlap
+    {|
+      model {
+        vector[4] v;
+        print(v[2:4][1]);
+        print(v[3]);
+      }
+    |}
     true;
   [%expect
     {|

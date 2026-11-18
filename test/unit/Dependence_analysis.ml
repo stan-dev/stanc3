@@ -4,40 +4,46 @@ open Analysis_and_optimization.Dependence_analysis
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
+let pp_statement ppf pattern =
+  let without_promotions =
+    Expr.rewrite_bottom_up ~f:(fun expr ->
+        match expr.Expr.pattern with
+        | Promotion (original, _, _) -> original
+        | _ -> expr) in
+  Stmt.Located.pp ppf
+    Stmt.
+      { pattern=
+          Pattern.map without_promotions
+            (fun _ -> {pattern= Skip; meta= Location_span.empty})
+            pattern
+      ; meta= Location_span.empty }
+
 let example1_program =
   Test_utils.mir_of_string
     {|
-        model
-        {                                // 1
-          int i                          // 2: 3
-              = 0;                       //    4
-          if (i < 0)                     // 5
-          {                              // 6
-            print(i);                    // 7
-          } else
-          {                              // 8
-            for (j in 1:10)              // 9
-            {                            // 10
-              if (j > 9)                 // 11
-              {                          // 12
-                break;                   // 13
-              }
-              if (j > 8 && i < -1)       // 14
-              {                          // 15
-                continue;                // 16
-              }
-              if (j > 5)                 // 17
-              {                          // 18
-                continue;                // 19
-              } else
-              {                          // 20
-                print("Badger", i + j);  // 21
-              }
-              print("Fin");              // 22
+      // Statement 1 is the outer statement list.
+      model {                           // 2
+        int i = 0;                      // 3 (declaration), 4 (assignment)
+        if (i < 0) {                    // 5, 6
+          print(i);                     // 7
+        } else {                        // 8
+          for (j in 1:10) {             // 9, 10
+            if (j > 9) {                // 11, 12
+              break;                    // 13
             }
+            if (j > 8 && i < -1) {       // 14, 15
+              continue;                 // 16
+            }
+            if (j > 5) {                // 17, 18
+              continue;                 // 19
+            } else {                    // 20
+              print("Badger", i + j);    // 21
+            }
+            print("Fin");               // 22
           }
         }
-      |}
+      }
+    |}
 
 let%expect_test "Dependency graph example" =
   let deps = log_prob_dependency_graph example1_program in
@@ -52,60 +58,183 @@ let%expect_test "Dependency graph example" =
        (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
     |}]
 
-let%expect_test "Reaching defns example" =
-  let deps =
-    LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) ->
-        ( reaching_defn_lookup x.reaching_defn_entry {variable= "j"; path= []}
-        , reaching_defn_lookup x.reaching_defn_exit {variable= "j"; path= []} ))
-  in
-  print_s [%sexp (deps : (label Set.Poly.t * label Set.Poly.t) LabelMap.t)];
+(* Statement IDs match the comments in [example1_program]. Include the MIR
+   statement beside each row so entry/exit sets can be read without decoding the
+   raw dataflow representation. *)
+let print_reaching_definitions definitions =
+  let statements = log_prob_build_dep_info_map example1_program in
+  print_endline "Entry/exit sets contain possible writer statement IDs.";
+  LabelMap.iter statements ~f:(fun ~key:id ~data:(pattern, info) ->
+      let statement =
+        match pattern with
+        | Stmt.Pattern.SList _ -> "<statement list>"
+        | Stmt.Pattern.Block _ -> "{ ... }"
+        | _ ->
+            Fmt.str "%a" pp_statement pattern
+            |> String.split_on_char ~sep:'\n'
+            |> List.map ~f:String.trim |> String.concat ~sep:" " in
+      Fmt.pr "Statement %d: `%s`@.  entry: %s@.  exit:  %s@." id statement
+        (definitions info.reaching_defn_entry)
+        (definitions info.reaching_defn_exit))
+
+let string_of_writer_ids writers =
+  Set.Poly.to_list writers |> List.map ~f:Int.to_string
+  |> String.concat ~sep:", " |> Printf.sprintf "[%s]"
+
+let%expect_test "Reaching definitions: writers of j at entry and exit" =
+  print_reaching_definitions (fun definitions ->
+      reaching_defn_lookup definitions {variable= "j"; path= []}
+      |> string_of_writer_ids |> Printf.sprintf "j <- %s");
   [%expect
     {|
-      ((1 (() ())) (2 ((9) (9))) (3 (() ())) (4 (() ())) (5 (() ())) (6 (() ()))
-       (7 (() ())) (8 ((9) (9))) (9 ((9) (9))) (10 ((9) (9))) (11 ((9) (9)))
-       (12 ((9) (9))) (13 ((9) (9))) (14 ((9) (9))) (15 ((9) (9))) (16 ((9) (9)))
-       (17 ((9) (9))) (18 ((9) (9))) (19 ((9) (9))) (20 ((9) (9))) (21 ((9) (9)))
-       (22 ((9) (9))))
+    Entry/exit sets contain possible writer statement IDs.
+    Statement 1: `<statement list>`
+      entry: j <- []
+      exit:  j <- []
+    Statement 2: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 3: `int i;`
+      entry: j <- []
+      exit:  j <- []
+    Statement 4: `i = 0;`
+      entry: j <- []
+      exit:  j <- []
+    Statement 5: `if((i < 0)) ; else ;`
+      entry: j <- []
+      exit:  j <- []
+    Statement 6: `{ ... }`
+      entry: j <- []
+      exit:  j <- []
+    Statement 7: `FnPrint__(i);`
+      entry: j <- []
+      exit:  j <- []
+    Statement 8: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 9: `for(j in 1:10) ;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 10: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 11: `if((j > 9)) ;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 12: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 13: `break;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 14: `if((j > 8) && (i < -(1))) ;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 15: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 16: `continue;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 17: `if((j > 5)) ; else ;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 18: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 19: `continue;`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 20: `{ ... }`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 21: `FnPrint__("Badger", (i + j));`
+      entry: j <- [9]
+      exit:  j <- [9]
+    Statement 22: `FnPrint__("Fin");`
+      entry: j <- [9]
+      exit:  j <- [9]
     |}]
 
-let%expect_test "Reaching defns example" =
-  let deps =
-    LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) ->
-        let variable_labels definitions =
-          Set.Poly.filter_map definitions ~f:(fun (write_location, writer_id) ->
-              Option.map writer_id ~f:(fun id ->
-                  ( VVar
-                      write_location
-                        .Analysis_and_optimization.Dependence.variable
-                  , id ))) in
-        ( variable_labels x.reaching_defn_entry
-        , variable_labels x.reaching_defn_exit )) in
-  print_s
-    [%sexp
-      (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
+let%expect_test "Reaching definitions: all variable writers at entry and exit" =
+  print_reaching_definitions (fun definitions ->
+      let writers =
+        Set.Poly.filter_map definitions ~f:(fun (location, writer_id) ->
+            Option.map writer_id ~f:(fun id ->
+                (location.Analysis_and_optimization.Dependence.variable, id)))
+        |> Set.Poly.to_list
+        |> List.map ~f:(fun (variable, id) ->
+            Printf.sprintf "%s <- %d" variable id) in
+      match writers with [] -> "none" | _ -> String.concat ~sep:", " writers);
   [%expect
     {|
-      ((1 (() ())) (2 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (3 (() (((VVar i) 3)))) (4 ((((VVar i) 3)) (((VVar i) 4))))
-       (5 ((((VVar i) 4)) (((VVar i) 4)))) (6 ((((VVar i) 4)) (((VVar i) 4))))
-       (7 ((((VVar i) 4)) (((VVar i) 4))))
-       (8 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (9 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (10 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (11 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (12 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (13 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (14 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (15 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (16 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (17 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (18 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (19 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (20 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (21 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (22 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9)))))
+    Entry/exit sets contain possible writer statement IDs.
+    Statement 1: `<statement list>`
+      entry: none
+      exit:  none
+    Statement 2: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 3: `int i;`
+      entry: none
+      exit:  i <- 3
+    Statement 4: `i = 0;`
+      entry: i <- 3
+      exit:  i <- 4
+    Statement 5: `if((i < 0)) ; else ;`
+      entry: i <- 4
+      exit:  i <- 4
+    Statement 6: `{ ... }`
+      entry: i <- 4
+      exit:  i <- 4
+    Statement 7: `FnPrint__(i);`
+      entry: i <- 4
+      exit:  i <- 4
+    Statement 8: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 9: `for(j in 1:10) ;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 10: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 11: `if((j > 9)) ;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 12: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 13: `break;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 14: `if((j > 8) && (i < -(1))) ;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 15: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 16: `continue;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 17: `if((j > 5)) ; else ;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 18: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 19: `continue;`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 20: `{ ... }`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 21: `FnPrint__("Badger", (i + j));`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
+    Statement 22: `FnPrint__("Fin");`
+      entry: i <- 4, j <- 9
+      exit:  i <- 4, j <- 9
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -201,55 +330,77 @@ let%expect_test "Uninitialized variables example" =
         k))
     |}]
 
-let pp_statement ppf pattern =
-  let without_promotions =
-    Expr.rewrite_bottom_up ~f:(fun expr ->
-        match expr.Expr.pattern with
-        | Promotion (original, _, _) -> original
-        | _ -> expr) in
-  Stmt.Located.pp ppf
-    Stmt.
-      { pattern=
-          Pattern.map without_promotions
-            (fun _ -> {pattern= Skip; meta= Location_span.empty})
-            pattern
-      ; meta= Location_span.empty }
-
 let print_parameter_dependencies body =
-  let mir =
-    Test_utils.mir_of_string
-      ("data { int<lower=1, upper=10> k; } parameters { real a; } model { \
-        vector[10] v = rep_vector(0, 10); " ^ body ^ " }") in
+  (* Number the first nonblank line of the supplied snippet as line 1. The
+     common declarations are not part of the reported snippet locations. *)
+  let body = String.trim body in
+  let prelude =
+    {|
+      data {
+        int<lower=1, upper=10> k;
+      }
+      parameters {
+        real a;
+      }
+      model {
+        vector[10] v = rep_vector(0, 10);
+    |}
+    |> String.trim in
+  let prelude = prelude ^ "\n" in
+  let prelude_lines = List.length (String.split_on_char ~sep:'\n' prelude) - 1 in
+  let source_lines = Array.of_list (String.split_on_char ~sep:'\n' body) in
+  let mir = Test_utils.mir_of_string (prelude ^ body ^ "\n}") in
   let prefix = "A control flow statement depends on parameter(s): " in
   let warnings =
     Analysis_and_optimization.Pedantic_analysis.warn_pedantic mir
-    |> List.filter_map ~f:(fun (_, message) ->
-        if String.starts_with ~prefix message then Some message else None) in
+    |> List.filter ~f:(fun (_, message) -> String.starts_with ~prefix message)
+  in
   match warnings with
   | [] -> print_endline "Control-flow warnings: none"
-  | messages -> List.iter messages ~f:print_endline
+  | messages ->
+      List.iter messages ~f:(fun (location, message) ->
+          let line = location.Location_span.begin_loc.line_num - prelude_lines in
+          Fmt.pr "line %d: `%s`@.  %s@." line
+            (String.trim source_lines.(line - 1))
+            message)
 
 let%expect_test "Dependencies: reading another literal element does not warn" =
-  print_parameter_dependencies {|v[1] = a;
-      if (v[2] > 0) target += 1;|};
+  print_parameter_dependencies
+    {|
+      v[1] = a;
+      if (v[2] > 0) {
+        target += 1;
+      }
+    |};
   [%expect {|
     Control-flow warnings: none
   |}]
 
 let%expect_test "Dependencies: reading the written element warns" =
-  print_parameter_dependencies {|v[1] = a;
-      if (v[1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+  print_parameter_dependencies
+    {|
+      v[1] = a;
+      if (v[1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 2: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Dependencies: overwriting a stable element removes its parameter \
      dependency" =
   print_parameter_dependencies
-    {|v[k] = a;
+    {|
+      v[k] = a;
       v[k] = 0;
-      if (v[k] > 0) target += 1;|};
+      if (v[k] > 0) {
+        target += 1;
+      }
+    |};
   [%expect {|
     Control-flow warnings: none
   |}]
@@ -257,94 +408,148 @@ let%expect_test
 let%expect_test "Dependencies: changing an index preserves the earlier element"
     =
   print_parameter_dependencies
-    {|int i = 1;
+    {|
+      int i = 1;
       v[i] = a;
       i = 2;
       v[i] = 0;
-      if (v[1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+      if (v[1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 5: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Dependencies: changing an index array preserves the earlier element" =
   print_parameter_dependencies
-    {|array[2] int idx = {1, 2};
+    {|
+      array[2] int idx = {1, 2};
       v[idx[1]] = a;
       idx[1] = 2;
       v[idx[1]] = 0;
-      if (v[1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+      if (v[1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 5: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Conservative dependencies: loop bounds do not yet prove disjointness" =
   print_parameter_dependencies
-    {|for (n in 1:5) {
+    {|
+      for (n in 1:5) {
         v[n + 5] = a;
-        if (v[n] > 0) target += 1;
-      }|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+        if (v[n] > 0) {
+          target += 1;
+        }
+      }
+    |};
+  [%expect
+    {|
+    line 3: `if (v[n] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test "Dependencies: an earlier iteration can supply a read" =
   print_parameter_dependencies
-    {|for (n in 2:5) {
-        if (v[n - 1] > 0) target += 1;
+    {|
+      for (n in 2:5) {
+        if (v[n - 1] > 0) {
+          target += 1;
+        }
         v[n] = a;
-      }|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+      }
+    |};
+  [%expect
+    {|
+    line 2: `if (v[n - 1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Conservative dependencies: same-iteration overwrites are not yet proved" =
   print_parameter_dependencies
-    {|for (n in 1:5) {
+    {|
+      for (n in 1:5) {
         v[n] = a;
         v[n] = 0;
-        if (v[n] > 0) target += 1;
-      }|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+        if (v[n] > 0) {
+          target += 1;
+        }
+      }
+    |};
+  [%expect
+    {|
+    line 4: `if (v[n] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test "Dependencies: a conditional overwrite might not execute" =
   print_parameter_dependencies
-    {|v[1] = a;
-      if (k > 1) v[1] = 0;
-      if (v[1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+    {|
+      v[1] = a;
+      if (k > 1) {
+        v[1] = 0;
+      }
+      if (v[1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 5: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test "Dependencies: nested slices still read the original vector" =
   print_parameter_dependencies
-    {|v[2] = a;
-      if (v[2:3][1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+    {|
+      v[2] = a;
+      if (v[2:3][1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 2: `if (v[2:3][1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Conservative dependencies: slice overwrites do not yet remove definitions"
     =
   print_parameter_dependencies
-    {|v[1] = a;
+    {|
+      v[1] = a;
       v[1:2] = rep_vector(0, 2);
-      if (v[1] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+      if (v[1] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 3: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test "Dependencies: writing another tuple field does not warn" =
   print_parameter_dependencies
-    {|tuple(real, real) t;
+    {|
+      tuple(real, real) t;
       t.1 = a;
       t.2 = 0;
-      if (t.2 > 0) target += 1;|};
+      if (t.2 > 0) {
+        target += 1;
+      }
+    |};
   [%expect {|
     Control-flow warnings: none
   |}]
@@ -352,59 +557,89 @@ let%expect_test "Dependencies: writing another tuple field does not warn" =
 let%expect_test
     "Dependencies: another tuple field does not overwrite the parameter" =
   print_parameter_dependencies
-    {|tuple(real, real) t;
+    {|
+      tuple(real, real) t;
       t.1 = a;
       t.2 = 0;
-      if (t.1 > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+      if (t.1 > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 4: `if (t.1 > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test "Dependencies: disjoint ranges do not warn" =
   print_parameter_dependencies
-    {|v[1:2] = rep_vector(a, 2);
-      if (sum(v[3:4]) > 0) target += 1;|};
+    {|
+      v[1:2] = rep_vector(a, 2);
+      if (sum(v[3:4]) > 0) {
+        target += 1;
+      }
+    |};
   [%expect {|
     Control-flow warnings: none
   |}]
 
 let%expect_test "Dependencies: disjoint index arrays do not warn" =
   print_parameter_dependencies
-    {|v[{1, 3}] = rep_vector(a, 2);
-      if (sum(v[{2, 4}]) > 0) target += 1;|};
+    {|
+      v[{1, 3}] = rep_vector(a, 2);
+      if (sum(v[{2, 4}]) > 0) {
+        target += 1;
+      }
+    |};
   [%expect {|
     Control-flow warnings: none
   |}]
 
 let%expect_test "Dependencies: ranges sharing an endpoint warn" =
   print_parameter_dependencies
-    {|v[1:2] = rep_vector(a, 2);
-      if (sum(v[2:3]) > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+    {|
+      v[1:2] = rep_vector(a, 2);
+      if (sum(v[2:3]) > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 2: `if (sum(v[2:3]) > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Dependencies: a symbolic array element can select the read position" =
   print_parameter_dependencies
-    {|v[{1, k}] = rep_vector(a, 2);
-      if (v[2] > 0) target += 1;|};
-  [%expect {|
-    A control flow statement depends on parameter(s): a.
-  |}]
+    {|
+      v[{1, k}] = rep_vector(a, 2);
+      if (v[2] > 0) {
+        target += 1;
+      }
+    |};
+  [%expect
+    {|
+    line 2: `if (v[2] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
 
 let%expect_test
     "Random subscripts: the actual indexed read retains all three writers" =
   let mir =
     Test_utils.mir_of_string
-      {|functions {
-        real pick_rng(vector theta) {
-          vector[num_elements(theta) + 1] v = rep_vector(0, num_elements(theta) + 1);
-          v[categorical_rng(theta)] = 1;
-          v[categorical_rng(theta)] = 2;
-          return v[categorical_rng(theta) + 1];
+      (String.trim
+         {|
+        functions {
+          real pick_rng(vector theta) {
+            vector[num_elements(theta) + 1] v = rep_vector(0, num_elements(theta) + 1);
+            v[categorical_rng(theta)] = 1;
+            v[categorical_rng(theta)] = 2;
+            return v[categorical_rng(theta) + 1];
+          }
         }
-      } model {}|}
+        model {}
+      |})
   in
   let body =
     Option.get
@@ -414,7 +649,8 @@ let%expect_test
   LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
       match pattern with
       | Stmt.Pattern.Return _ ->
-          Fmt.pr "%a@.Possible writers:@." pp_statement pattern;
+          Fmt.pr "line %d: `%a`@.Possible writers:@."
+            info.meta.begin_loc.line_num pp_statement pattern;
           let read =
             List.find_opt info.accesses.reads ~f:(fun location ->
                 String.equal
@@ -422,14 +658,15 @@ let%expect_test
             |> Option.get in
           reaching_defn_lookup info.reaching_defn_entry read
           |> Set.Poly.iter ~f:(fun writer_id ->
-              let writer, _ = LabelMap.find writer_id statements in
-              Fmt.pr "  %a@." pp_statement writer)
+              let writer, writer_info = LabelMap.find writer_id statements in
+              Fmt.pr "  line %d: `%a`@." writer_info.meta.begin_loc.line_num
+                pp_statement writer)
       | _ -> ());
   [%expect
     {|
-    return v[(categorical_rng(theta) + 1)];
+    line 6: `return v[(categorical_rng(theta) + 1)];`
     Possible writers:
-      v = rep_vector(0, (num_elements(theta) + 1));
-      v[categorical_rng(theta)] = 1;
-      v[categorical_rng(theta)] = 2;
+      line 3: `v = rep_vector(0, (num_elements(theta) + 1));`
+      line 4: `v[categorical_rng(theta)] = 1;`
+      line 5: `v[categorical_rng(theta)] = 2;`
     |}]
