@@ -8,8 +8,8 @@ stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 5> locations_array__ =
   {" (found before start of program)",
   " (in '../inline-expression-soa.stan', line 7, column 2 to column 19)",
-  " (in '../inline-expression-soa.stan', line 3, column 4 to column 17)",
   " (in '../inline-expression-soa.stan', line 10, column 2 to column 39)",
+  " (in '../inline-expression-soa.stan', line 3, column 4 to column 17)",
   " (in '../inline-expression-soa.stan', line 2, column 23 to line 4, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
@@ -34,7 +34,7 @@ foo(const T0__& i_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 2;
+    current_statement__ = 3;
     return stan::math::multiply(i, i);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -99,15 +99,17 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
+        current_statement__ = 2;
         decltype(auto) inline_foo_i_arg5__ =
           stan::math::to_ref(stan::math::add(p, p));
         Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return4__;
         {
-          current_statement__ = 2;
+          current_statement__ = 3;
           stan::model::assign(inline_foo_return4__,
             stan::math::multiply(inline_foo_i_arg5__, inline_foo_i_arg5__),
             "assigning variable inline_foo_return4__");
         }
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(inline_foo_return4__)));
       }
@@ -146,16 +148,18 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
+        current_statement__ = 2;
         decltype(auto) inline_foo_i_arg2__ =
           stan::math::to_ref(stan::math::add(p, p));
         stan::math::var_value<Eigen::Matrix<double,-1,-1>>
           inline_foo_return1__;
         {
-          current_statement__ = 2;
+          current_statement__ = 3;
           stan::model::assign(inline_foo_return1__,
             stan::math::multiply(inline_foo_i_arg2__, inline_foo_i_arg2__),
             "assigning variable inline_foo_return1__");
         }
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(inline_foo_return1__)));
       }

@@ -5,7 +5,7 @@ namespace expr_prop_fail6_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 157> locations_array__ =
+static constexpr std::array<const char*, 158> locations_array__ =
   {" (found before start of program)",
   " (in '../expr-prop-fail6.stan', line 160, column 2 to column 34)",
   " (in '../expr-prop-fail6.stan', line 161, column 2 to column 32)",
@@ -35,6 +35,7 @@ static constexpr std::array<const char*, 157> locations_array__ =
   " (in '../expr-prop-fail6.stan', line 190, column 4 to line 193, column 5)",
   " (in '../expr-prop-fail6.stan', line 194, column 4 to column 26)",
   " (in '../expr-prop-fail6.stan', line 186, column 2 to line 195, column 3)",
+  " (in '../expr-prop-fail6.stan', line 198, column 2 to column 32)",
   " (in '../expr-prop-fail6.stan', line 49, column 4 to column 24)",
   " (in '../expr-prop-fail6.stan', line 50, column 4 to column 30)",
   " (in '../expr-prop-fail6.stan', line 51, column 11 to column 16)",
@@ -221,15 +222,15 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 146;
+    current_statement__ = 147;
     for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 65;
+      current_statement__ = 66;
       if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 64;
+        current_statement__ = 65;
         return k;
       }
     }
-    current_statement__ = 147;
+    current_statement__ = 148;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -251,18 +252,18 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 152;
+    current_statement__ = 153;
     for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
       int k;
-      current_statement__ = 148;
+      current_statement__ = 149;
       k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 150;
+      current_statement__ = 151;
       if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 149;
+        current_statement__ = 150;
         return k;
       }
     }
-    current_statement__ = 153;
+    current_statement__ = 154;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -293,32 +294,32 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     int n_ind;
-    current_statement__ = 29;
+    current_statement__ = 30;
     n_ind = stan::math::rows(p);
     int n_occasions;
-    current_statement__ = 30;
-    n_occasions = stan::math::cols(p);
     current_statement__ = 31;
-    stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
+    n_occasions = stan::math::cols(p);
     current_statement__ = 32;
+    stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
+    current_statement__ = 33;
     stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
     Eigen::Matrix<local_scalar_t__,-1,-1> chi =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_ind, n_occasions,
         DUMMY_VAR__);
-    current_statement__ = 41;
+    current_statement__ = 42;
     for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 34;
+      current_statement__ = 35;
       stan::model::assign(chi, 1.0, "assigning variable chi",
         stan::model::index_uni(i), stan::model::index_uni(n_occasions));
-      current_statement__ = 39;
+      current_statement__ = 40;
       for (int t = 1; t <= (n_occasions - 1); ++t) {
         int t_curr;
-        current_statement__ = 35;
+        current_statement__ = 36;
         t_curr = (n_occasions - t);
         int t_next;
-        current_statement__ = 36;
-        t_next = (t_curr + 1);
         current_statement__ = 37;
+        t_next = (t_curr + 1);
+        current_statement__ = 38;
         stan::model::assign(chi,
           stan::math::fma(
             (stan::model::rvalue(phi, "phi", stan::model::index_uni(i),
@@ -332,7 +333,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
           stan::model::index_uni(i), stan::model::index_uni(t_curr));
       }
     }
-    current_statement__ = 42;
+    current_statement__ = 43;
     return chi;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -383,40 +384,40 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
   (void) DUMMY_VAR__;
   try {
     int n_ind;
-    current_statement__ = 83;
+    current_statement__ = 84;
     n_ind = stan::model::rvalue(stan::math::dims(y), "dims(y)",
               stan::model::index_uni(1));
     int n_occasions;
-    current_statement__ = 84;
+    current_statement__ = 85;
     n_occasions = stan::model::rvalue(stan::math::dims(y), "dims(y)",
                     stan::model::index_uni(2));
-    current_statement__ = 85;
+    current_statement__ = 86;
     stan::math::validate_non_negative_index("qnu", "n_occasions", n_occasions);
     Eigen::Matrix<local_scalar_t__,-1,1> qnu;
-    current_statement__ = 86;
+    current_statement__ = 87;
     stan::model::assign(qnu, stan::math::subtract(1.0, nu),
       "assigning variable qnu");
-    current_statement__ = 117;
+    current_statement__ = 118;
     for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 87;
+      current_statement__ = 88;
       stan::math::validate_non_negative_index("qp", "n_occasions",
         n_occasions);
       Eigen::Matrix<local_scalar_t__,-1,1> qp;
-      current_statement__ = 88;
+      current_statement__ = 89;
       stan::model::assign(qp,
         stan::math::subtract(1.0,
           stan::math::transpose(
             stan::model::rvalue(p, "p", stan::model::index_uni(i)))),
         "assigning variable qp");
-      current_statement__ = 115;
+      current_statement__ = 116;
       if (stan::model::rvalue(first, "first", stan::model::index_uni(i))) {
-        current_statement__ = 97;
+        current_statement__ = 98;
         lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1, psi));
-        current_statement__ = 108;
+        current_statement__ = 109;
         if (stan::math::logical_eq(
               stan::model::rvalue(first, "first", stan::model::index_uni(i)),
               1)) {
-          current_statement__ = 106;
+          current_statement__ = 107;
           lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                            (stan::model::rvalue(nu, "nu",
                               stan::model::index_uni(1)) *
@@ -424,15 +425,15 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                              stan::model::index_uni(i),
                              stan::model::index_uni(1)))));
         } else {
-          current_statement__ = 98;
+          current_statement__ = 99;
           int lp_1dim__ =
             stan::model::rvalue(first, "first", stan::model::index_uni(i));
-          current_statement__ = 98;
+          current_statement__ = 99;
           stan::math::validate_non_negative_index("lp", "first[i]", lp_1dim__);
           Eigen::Matrix<local_scalar_t__,-1,1> lp =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
               DUMMY_VAR__);
-          current_statement__ = 100;
+          current_statement__ = 101;
           stan::model::assign(lp,
             (((stan::math::bernoulli_lpmf<false>(1,
                  stan::model::rvalue(nu, "nu", stan::model::index_uni(1))) +
@@ -454,11 +455,11 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                   stan::model::rvalue(first, "first",
                     stan::model::index_uni(i)))))), "assigning variable lp",
             stan::model::index_uni(1));
-          current_statement__ = 102;
+          current_statement__ = 103;
           for (int t = 2; t <=
                (stan::model::rvalue(first, "first", stan::model::index_uni(i))
                - 1); ++t) {
-            current_statement__ = 101;
+            current_statement__ = 102;
             stan::model::assign(lp,
               ((((stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
@@ -485,7 +486,7 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                       stan::model::index_uni(i)))))),
               "assigning variable lp", stan::model::index_uni(t));
           }
-          current_statement__ = 103;
+          current_statement__ = 104;
           stan::model::assign(lp,
             ((stan::math::bernoulli_lpmf<false>(1,
                 stan::math::prod(
@@ -505,20 +506,20 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                     stan::model::index_uni(i)))))), "assigning variable lp",
             stan::model::index_uni(
               stan::model::rvalue(first, "first", stan::model::index_uni(i))));
-          current_statement__ = 104;
+          current_statement__ = 105;
           lp_accum__.add(stan::math::log_sum_exp(lp));
         }
-        current_statement__ = 112;
+        current_statement__ = 113;
         for (int t =
                (stan::model::rvalue(first, "first", stan::model::index_uni(i))
                + 1); t <=
              stan::model::rvalue(last, "last", stan::model::index_uni(i)); ++t) {
-          current_statement__ = 109;
+          current_statement__ = 110;
           lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                            stan::model::rvalue(phi, "phi",
                              stan::model::index_uni(i),
                              stan::model::index_uni((t - 1)))));
-          current_statement__ = 110;
+          current_statement__ = 111;
           lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(i),
@@ -527,7 +528,7 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                              stan::model::index_uni(i),
                              stan::model::index_uni(t))));
         }
-        current_statement__ = 113;
+        current_statement__ = 114;
         lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                          stan::model::rvalue(chi, "chi",
                            stan::model::index_uni(i),
@@ -535,15 +536,15 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                              stan::model::rvalue(last, "last",
                                stan::model::index_uni(i))))));
       } else {
-        current_statement__ = 89;
+        current_statement__ = 90;
         int lp_1dim__ = (n_occasions + 1);
-        current_statement__ = 89;
+        current_statement__ = 90;
         stan::math::validate_non_negative_index("lp", "n_occasions + 1",
           lp_1dim__);
         Eigen::Matrix<local_scalar_t__,-1,1> lp =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
             DUMMY_VAR__);
-        current_statement__ = 91;
+        current_statement__ = 92;
         stan::model::assign(lp, (((stan::math::bernoulli_lpmf<false>(1, psi)
           +
           stan::math::bernoulli_lpmf<false>(1,
@@ -555,9 +556,9 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
             stan::model::rvalue(chi, "chi", stan::model::index_uni(i),
               stan::model::index_uni(1)))), "assigning variable lp",
           stan::model::index_uni(1));
-        current_statement__ = 93;
+        current_statement__ = 94;
         for (int t = 2; t <= n_occasions; ++t) {
-          current_statement__ = 92;
+          current_statement__ = 93;
           stan::model::assign(lp,
             ((((stan::math::bernoulli_lpmf<false>(1, psi) +
             stan::math::bernoulli_lpmf<false>(1,
@@ -574,10 +575,10 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                 stan::model::index_uni(t)))), "assigning variable lp",
             stan::model::index_uni(t));
         }
-        current_statement__ = 94;
+        current_statement__ = 95;
         stan::model::assign(lp, stan::math::bernoulli_lpmf<false>(0, psi),
           "assigning variable lp", stan::model::index_uni((n_occasions + 1)));
-        current_statement__ = 95;
+        current_statement__ = 96;
         lp_accum__.add(stan::math::log_sum_exp(lp));
       }
     }
@@ -615,104 +616,104 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 119;
+      current_statement__ = 120;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 119;
-      stan::io::read_from_context(M, context__, "M");
-      current_statement__ = 119;
-      stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 120;
+      stan::io::read_from_context(M, context__, "M");
+      current_statement__ = 120;
+      stan::math::check_greater_or_equal(function__, "M", M, 0);
+      current_statement__ = 121;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
-      current_statement__ = 120;
+      current_statement__ = 121;
       stan::io::read_from_context(n_occasions, context__, "n_occasions");
-      current_statement__ = 120;
+      current_statement__ = 121;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 0);
-      current_statement__ = 121;
-      stan::math::validate_non_negative_index("y", "M", M);
       current_statement__ = 122;
-      stan::math::validate_non_negative_index("y", "n_occasions", n_occasions);
+      stan::math::validate_non_negative_index("y", "M", M);
       current_statement__ = 123;
+      stan::math::validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 124;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(M),
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      current_statement__ = 123;
-      stan::io::read_from_context(y, context__, "y");
-      current_statement__ = 123;
-      stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 123;
-      stan::math::check_less_or_equal(function__, "y", y, 1);
       current_statement__ = 124;
-      stan::math::validate_non_negative_index("first", "M", M);
+      stan::io::read_from_context(y, context__, "y");
+      current_statement__ = 124;
+      stan::math::check_greater_or_equal(function__, "y", y, 0);
+      current_statement__ = 124;
+      stan::math::check_less_or_equal(function__, "y", y, 1);
       current_statement__ = 125;
-      first = std::vector<int>(M, std::numeric_limits<int>::min());
+      stan::math::validate_non_negative_index("first", "M", M);
       current_statement__ = 126;
-      stan::math::validate_non_negative_index("last", "M", M);
+      first = std::vector<int>(M, std::numeric_limits<int>::min());
       current_statement__ = 127;
+      stan::math::validate_non_negative_index("last", "M", M);
+      current_statement__ = 128;
       last = std::vector<int>(M, std::numeric_limits<int>::min());
-      current_statement__ = 129;
+      current_statement__ = 130;
       for (int i = 1; i <= M; ++i) {
-        current_statement__ = 128;
+        current_statement__ = 129;
         stan::model::assign(first,
           first_capture(
             stan::model::rvalue(y, "y", stan::model::index_uni(i)), pstream__),
           "assigning variable first", stan::model::index_uni(i));
       }
-      current_statement__ = 131;
+      current_statement__ = 132;
       for (int i = 1; i <= M; ++i) {
-        current_statement__ = 130;
+        current_statement__ = 131;
         stan::model::assign(last,
           last_capture(
             stan::model::rvalue(y, "y", stan::model::index_uni(i)), pstream__),
           "assigning variable last", stan::model::index_uni(i));
       }
-      current_statement__ = 125;
+      current_statement__ = 126;
       stan::math::check_greater_or_equal(function__, "first", first, 0);
-      current_statement__ = 125;
+      current_statement__ = 126;
       stan::math::check_less_or_equal(function__, "first", first, n_occasions);
-      current_statement__ = 127;
+      current_statement__ = 128;
       stan::math::check_greater_or_equal(function__, "last", last, 0);
-      current_statement__ = 127;
+      current_statement__ = 128;
       stan::math::check_less_or_equal(function__, "last", last, n_occasions);
-      current_statement__ = 132;
+      current_statement__ = 133;
       stan::math::validate_non_negative_index("beta", "n_occasions",
         n_occasions);
-      current_statement__ = 133;
-      stan::math::validate_non_negative_index("epsilon", "M", M);
       current_statement__ = 134;
+      stan::math::validate_non_negative_index("epsilon", "M", M);
+      current_statement__ = 135;
       stan::math::validate_non_negative_index("phi", "M", M);
-      current_statement__ = 135;
+      current_statement__ = 136;
       phi_2dim__ = (n_occasions - 1);
-      current_statement__ = 135;
+      current_statement__ = 136;
       stan::math::validate_non_negative_index("phi", "n_occasions - 1",
         phi_2dim__);
-      current_statement__ = 136;
-      stan::math::validate_non_negative_index("p", "M", M);
       current_statement__ = 137;
-      stan::math::validate_non_negative_index("p", "n_occasions", n_occasions);
+      stan::math::validate_non_negative_index("p", "M", M);
       current_statement__ = 138;
-      stan::math::validate_non_negative_index("b", "n_occasions", n_occasions);
+      stan::math::validate_non_negative_index("p", "n_occasions", n_occasions);
       current_statement__ = 139;
+      stan::math::validate_non_negative_index("b", "n_occasions", n_occasions);
+      current_statement__ = 140;
       stan::math::validate_non_negative_index("nu", "n_occasions",
         n_occasions);
-      current_statement__ = 140;
-      stan::math::validate_non_negative_index("chi", "M", M);
       current_statement__ = 141;
+      stan::math::validate_non_negative_index("chi", "M", M);
+      current_statement__ = 142;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
-      current_statement__ = 142;
-      stan::math::validate_non_negative_index("N", "n_occasions", n_occasions);
       current_statement__ = 143;
-      stan::math::validate_non_negative_index("B", "n_occasions", n_occasions);
+      stan::math::validate_non_negative_index("N", "n_occasions", n_occasions);
       current_statement__ = 144;
-      stan::math::validate_non_negative_index("z", "M", M);
+      stan::math::validate_non_negative_index("B", "n_occasions", n_occasions);
       current_statement__ = 145;
+      stan::math::validate_non_negative_index("z", "M", M);
+      current_statement__ = 146;
       stan::math::validate_non_negative_index("z", "n_occasions", n_occasions);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -829,43 +830,43 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return33__;
       {
         int inline_prob_uncaptured_n_ind34__;
-        current_statement__ = 29;
+        current_statement__ = 30;
         inline_prob_uncaptured_n_ind34__ = stan::math::rows(p);
         int inline_prob_uncaptured_n_occasions35__;
-        current_statement__ = 30;
-        inline_prob_uncaptured_n_occasions35__ = stan::math::cols(p);
         current_statement__ = 31;
+        inline_prob_uncaptured_n_occasions35__ = stan::math::cols(p);
+        current_statement__ = 32;
         stan::math::validate_non_negative_index("chi", "n_ind",
           inline_prob_uncaptured_n_ind34__);
-        current_statement__ = 32;
+        current_statement__ = 33;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions35__);
         Eigen::Matrix<local_scalar_t__,-1,-1>
           inline_prob_uncaptured_chi36__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind34__,
             inline_prob_uncaptured_n_occasions35__, DUMMY_VAR__);
-        current_statement__ = 41;
+        current_statement__ = 42;
         for (int inline_prob_uncaptured_i40__ = 1; inline_prob_uncaptured_i40__
              <=
              inline_prob_uncaptured_n_ind34__; ++inline_prob_uncaptured_i40__) {
-          current_statement__ = 34;
+          current_statement__ = 35;
           stan::model::assign(inline_prob_uncaptured_chi36__, 1.0,
             "assigning variable inline_prob_uncaptured_chi36__",
             stan::model::index_uni(inline_prob_uncaptured_i40__),
             stan::model::index_uni(inline_prob_uncaptured_n_occasions35__));
-          current_statement__ = 39;
+          current_statement__ = 40;
           for (int inline_prob_uncaptured_t39__ = 1; inline_prob_uncaptured_t39__
                <= (inline_prob_uncaptured_n_occasions35__ -
                1); ++inline_prob_uncaptured_t39__) {
             int inline_prob_uncaptured_t_curr37__;
-            current_statement__ = 35;
+            current_statement__ = 36;
             inline_prob_uncaptured_t_curr37__ = (inline_prob_uncaptured_n_occasions35__
               - inline_prob_uncaptured_t39__);
             int inline_prob_uncaptured_t_next38__;
-            current_statement__ = 36;
+            current_statement__ = 37;
             inline_prob_uncaptured_t_next38__ = (inline_prob_uncaptured_t_curr37__
               + 1);
-            current_statement__ = 37;
+            current_statement__ = 38;
             stan::model::assign(inline_prob_uncaptured_chi36__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
@@ -888,11 +889,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               stan::model::index_uni(inline_prob_uncaptured_t_curr37__));
           }
         }
-        current_statement__ = 42;
+        current_statement__ = 43;
         stan::model::assign(inline_prob_uncaptured_return33__,
           inline_prob_uncaptured_chi36__,
           "assigning variable inline_prob_uncaptured_return33__");
       }
+      current_statement__ = 29;
       stan::model::assign(chi, inline_prob_uncaptured_return33__,
         "assigning variable chi");
       current_statement__ = 7;
@@ -914,54 +916,54 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 11;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
-        current_statement__ = 81;
+        current_statement__ = 82;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
-        current_statement__ = 82;
+        current_statement__ = 83;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta,
                          static_cast<double>(1), static_cast<double>(1)));
         {
           int inline_js_super_lp_n_ind42__;
-          current_statement__ = 83;
+          current_statement__ = 84;
           inline_js_super_lp_n_ind42__ = stan::model::rvalue(
                                            stan::math::dims(y), "dims(y)",
                                            stan::model::index_uni(1));
           int inline_js_super_lp_n_occasions43__;
-          current_statement__ = 84;
+          current_statement__ = 85;
           inline_js_super_lp_n_occasions43__ = stan::model::rvalue(
                                                  stan::math::dims(y),
                                                  "dims(y)",
                                                  stan::model::index_uni(2));
-          current_statement__ = 85;
+          current_statement__ = 86;
           stan::math::validate_non_negative_index("qnu", "n_occasions",
             inline_js_super_lp_n_occasions43__);
           Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_qnu44__;
-          current_statement__ = 86;
+          current_statement__ = 87;
           stan::model::assign(inline_js_super_lp_qnu44__,
             stan::math::subtract(1.0, nu),
             "assigning variable inline_js_super_lp_qnu44__");
-          current_statement__ = 117;
+          current_statement__ = 118;
           for (int inline_js_super_lp_i49__ = 1; inline_js_super_lp_i49__ <=
                inline_js_super_lp_n_ind42__; ++inline_js_super_lp_i49__) {
-            current_statement__ = 87;
+            current_statement__ = 88;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               inline_js_super_lp_n_occasions43__);
             Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_qp45__;
-            current_statement__ = 88;
+            current_statement__ = 89;
             stan::model::assign(inline_js_super_lp_qp45__,
               stan::math::subtract(1.0,
                 stan::math::transpose(
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(inline_js_super_lp_i49__)))),
               "assigning variable inline_js_super_lp_qp45__");
-            current_statement__ = 115;
+            current_statement__ = 116;
             if (first[(inline_js_super_lp_i49__ - 1)]) {
-              current_statement__ = 97;
+              current_statement__ = 98;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1, psi));
-              current_statement__ = 108;
+              current_statement__ = 109;
               if (stan::math::logical_eq(first[(inline_js_super_lp_i49__ -
                     1)], 1)) {
-                current_statement__ = 106;
+                current_statement__ = 107;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  (stan::model::rvalue(nu, "nu",
                                     stan::model::index_uni(1)) *
@@ -970,17 +972,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                      inline_js_super_lp_i49__),
                                    stan::model::index_uni(1)))));
               } else {
-                current_statement__ = 98;
+                current_statement__ = 99;
                 int inline_js_super_lp_lp_1dim__46__ =
                   first[(inline_js_super_lp_i49__ - 1)];
-                current_statement__ = 98;
+                current_statement__ = 99;
                 stan::math::validate_non_negative_index("lp", "first[i]",
                   inline_js_super_lp_lp_1dim__46__);
                 Eigen::Matrix<local_scalar_t__,-1,1>
                   inline_js_super_lp_lp47__ =
                   Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_js_super_lp_lp_1dim__46__,
                     DUMMY_VAR__);
-                current_statement__ = 100;
+                current_statement__ = 101;
                 stan::model::assign(inline_js_super_lp_lp47__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::model::rvalue(nu, "nu",
@@ -1004,11 +1006,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                         - 1)])))),
                   "assigning variable inline_js_super_lp_lp47__",
                   stan::model::index_uni(1));
-                current_statement__ = 102;
+                current_statement__ = 103;
                 for (int inline_js_super_lp_t48__ = 2; inline_js_super_lp_t48__
                      <= (first[(inline_js_super_lp_i49__ - 1)] -
                      1); ++inline_js_super_lp_t48__) {
-                  current_statement__ = 101;
+                  current_statement__ = 102;
                   stan::model::assign(inline_js_super_lp_lp47__,
                     ((((stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
@@ -1042,7 +1044,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     "assigning variable inline_js_super_lp_lp47__",
                     stan::model::index_uni(inline_js_super_lp_t48__));
                 }
-                current_statement__ = 103;
+                current_statement__ = 104;
                 stan::model::assign(inline_js_super_lp_lp47__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
@@ -1062,23 +1064,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   "assigning variable inline_js_super_lp_lp47__",
                   stan::model::index_uni(first[(inline_js_super_lp_i49__ -
                     1)]));
-                current_statement__ = 104;
+                current_statement__ = 105;
                 lp_accum__.add(stan::math::log_sum_exp(
                                  inline_js_super_lp_lp47__));
               }
-              current_statement__ = 112;
+              current_statement__ = 113;
               for (int inline_js_super_lp_t48__ =
                      (first[(inline_js_super_lp_i49__ - 1)] + 1); inline_js_super_lp_t48__
                    <= last[(inline_js_super_lp_i49__ -
                    1)]; ++inline_js_super_lp_t48__) {
-                current_statement__ = 109;
+                current_statement__ = 110;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(
                                      inline_js_super_lp_i49__),
                                    stan::model::index_uni(
                                      (inline_js_super_lp_t48__ - 1)))));
-                current_statement__ = 110;
+                current_statement__ = 111;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                  y[(inline_js_super_lp_i49__ -
                                  1)][(inline_js_super_lp_t48__ - 1)],
@@ -1088,7 +1090,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                    stan::model::index_uni(
                                      inline_js_super_lp_t48__))));
               }
-              current_statement__ = 113;
+              current_statement__ = 114;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(chi, "chi",
                                  stan::model::index_uni(
@@ -1096,17 +1098,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                  stan::model::index_uni(
                                    last[(inline_js_super_lp_i49__ - 1)]))));
             } else {
-              current_statement__ = 89;
+              current_statement__ = 90;
               int inline_js_super_lp_lp_1dim__46__ =
                 (inline_js_super_lp_n_occasions43__ + 1);
-              current_statement__ = 89;
+              current_statement__ = 90;
               stan::math::validate_non_negative_index("lp",
                 "n_occasions + 1", inline_js_super_lp_lp_1dim__46__);
               Eigen::Matrix<local_scalar_t__,-1,1>
                 inline_js_super_lp_lp47__ =
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_js_super_lp_lp_1dim__46__,
                   DUMMY_VAR__);
-              current_statement__ = 91;
+              current_statement__ = 92;
               stan::model::assign(inline_js_super_lp_lp47__,
                 (((stan::math::bernoulli_lpmf<false>(1, psi) +
                 stan::math::bernoulli_lpmf<false>(1,
@@ -1122,11 +1124,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     stan::model::index_uni(1)))),
                 "assigning variable inline_js_super_lp_lp47__",
                 stan::model::index_uni(1));
-              current_statement__ = 93;
+              current_statement__ = 94;
               for (int inline_js_super_lp_t48__ = 2; inline_js_super_lp_t48__
                    <=
                    inline_js_super_lp_n_occasions43__; ++inline_js_super_lp_t48__) {
-                current_statement__ = 92;
+                current_statement__ = 93;
                 stan::model::assign(inline_js_super_lp_lp47__,
                   ((((stan::math::bernoulli_lpmf<false>(1, psi) +
                   stan::math::bernoulli_lpmf<false>(1,
@@ -1148,13 +1150,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   "assigning variable inline_js_super_lp_lp47__",
                   stan::model::index_uni(inline_js_super_lp_t48__));
               }
-              current_statement__ = 94;
+              current_statement__ = 95;
               stan::model::assign(inline_js_super_lp_lp47__,
                 stan::math::bernoulli_lpmf<false>(0, psi),
                 "assigning variable inline_js_super_lp_lp47__",
                 stan::model::index_uni((inline_js_super_lp_n_occasions43__ +
                   1)));
-              current_statement__ = 95;
+              current_statement__ = 96;
               lp_accum__.add(stan::math::log_sum_exp(
                                inline_js_super_lp_lp47__));
             }
@@ -1270,43 +1272,43 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return15__;
       {
         int inline_prob_uncaptured_n_ind16__;
-        current_statement__ = 29;
+        current_statement__ = 30;
         inline_prob_uncaptured_n_ind16__ = stan::math::rows(p);
         int inline_prob_uncaptured_n_occasions17__;
-        current_statement__ = 30;
-        inline_prob_uncaptured_n_occasions17__ = stan::math::cols(p);
         current_statement__ = 31;
+        inline_prob_uncaptured_n_occasions17__ = stan::math::cols(p);
+        current_statement__ = 32;
         stan::math::validate_non_negative_index("chi", "n_ind",
           inline_prob_uncaptured_n_ind16__);
-        current_statement__ = 32;
+        current_statement__ = 33;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions17__);
         Eigen::Matrix<local_scalar_t__,-1,-1>
           inline_prob_uncaptured_chi18__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind16__,
             inline_prob_uncaptured_n_occasions17__, DUMMY_VAR__);
-        current_statement__ = 41;
+        current_statement__ = 42;
         for (int inline_prob_uncaptured_i22__ = 1; inline_prob_uncaptured_i22__
              <=
              inline_prob_uncaptured_n_ind16__; ++inline_prob_uncaptured_i22__) {
-          current_statement__ = 34;
+          current_statement__ = 35;
           stan::model::assign(inline_prob_uncaptured_chi18__, 1.0,
             "assigning variable inline_prob_uncaptured_chi18__",
             stan::model::index_uni(inline_prob_uncaptured_i22__),
             stan::model::index_uni(inline_prob_uncaptured_n_occasions17__));
-          current_statement__ = 39;
+          current_statement__ = 40;
           for (int inline_prob_uncaptured_t21__ = 1; inline_prob_uncaptured_t21__
                <= (inline_prob_uncaptured_n_occasions17__ -
                1); ++inline_prob_uncaptured_t21__) {
             int inline_prob_uncaptured_t_curr19__;
-            current_statement__ = 35;
+            current_statement__ = 36;
             inline_prob_uncaptured_t_curr19__ = (inline_prob_uncaptured_n_occasions17__
               - inline_prob_uncaptured_t21__);
             int inline_prob_uncaptured_t_next20__;
-            current_statement__ = 36;
+            current_statement__ = 37;
             inline_prob_uncaptured_t_next20__ = (inline_prob_uncaptured_t_curr19__
               + 1);
-            current_statement__ = 37;
+            current_statement__ = 38;
             stan::model::assign(inline_prob_uncaptured_chi18__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
@@ -1329,11 +1331,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               stan::model::index_uni(inline_prob_uncaptured_t_curr19__));
           }
         }
-        current_statement__ = 42;
+        current_statement__ = 43;
         stan::model::assign(inline_prob_uncaptured_return15__,
           inline_prob_uncaptured_chi18__,
           "assigning variable inline_prob_uncaptured_return15__");
       }
+      current_statement__ = 29;
       stan::model::assign(chi, inline_prob_uncaptured_return15__,
         "assigning variable chi");
       current_statement__ = 7;
@@ -1355,54 +1358,54 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 11;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
-        current_statement__ = 81;
+        current_statement__ = 82;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
-        current_statement__ = 82;
+        current_statement__ = 83;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta,
                          static_cast<double>(1), static_cast<double>(1)));
         {
           int inline_js_super_lp_n_ind24__;
-          current_statement__ = 83;
+          current_statement__ = 84;
           inline_js_super_lp_n_ind24__ = stan::model::rvalue(
                                            stan::math::dims(y), "dims(y)",
                                            stan::model::index_uni(1));
           int inline_js_super_lp_n_occasions25__;
-          current_statement__ = 84;
+          current_statement__ = 85;
           inline_js_super_lp_n_occasions25__ = stan::model::rvalue(
                                                  stan::math::dims(y),
                                                  "dims(y)",
                                                  stan::model::index_uni(2));
-          current_statement__ = 85;
+          current_statement__ = 86;
           stan::math::validate_non_negative_index("qnu", "n_occasions",
             inline_js_super_lp_n_occasions25__);
           Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_qnu26__;
-          current_statement__ = 86;
+          current_statement__ = 87;
           stan::model::assign(inline_js_super_lp_qnu26__,
             stan::math::subtract(1.0, nu),
             "assigning variable inline_js_super_lp_qnu26__");
-          current_statement__ = 117;
+          current_statement__ = 118;
           for (int inline_js_super_lp_i31__ = 1; inline_js_super_lp_i31__ <=
                inline_js_super_lp_n_ind24__; ++inline_js_super_lp_i31__) {
-            current_statement__ = 87;
+            current_statement__ = 88;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               inline_js_super_lp_n_occasions25__);
             Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_qp27__;
-            current_statement__ = 88;
+            current_statement__ = 89;
             stan::model::assign(inline_js_super_lp_qp27__,
               stan::math::subtract(1.0,
                 stan::math::transpose(
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(inline_js_super_lp_i31__)))),
               "assigning variable inline_js_super_lp_qp27__");
-            current_statement__ = 115;
+            current_statement__ = 116;
             if (first[(inline_js_super_lp_i31__ - 1)]) {
-              current_statement__ = 97;
+              current_statement__ = 98;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1, psi));
-              current_statement__ = 108;
+              current_statement__ = 109;
               if (stan::math::logical_eq(first[(inline_js_super_lp_i31__ -
                     1)], 1)) {
-                current_statement__ = 106;
+                current_statement__ = 107;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  (stan::model::rvalue(nu, "nu",
                                     stan::model::index_uni(1)) *
@@ -1411,17 +1414,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                      inline_js_super_lp_i31__),
                                    stan::model::index_uni(1)))));
               } else {
-                current_statement__ = 98;
+                current_statement__ = 99;
                 int inline_js_super_lp_lp_1dim__28__ =
                   first[(inline_js_super_lp_i31__ - 1)];
-                current_statement__ = 98;
+                current_statement__ = 99;
                 stan::math::validate_non_negative_index("lp", "first[i]",
                   inline_js_super_lp_lp_1dim__28__);
                 Eigen::Matrix<local_scalar_t__,-1,1>
                   inline_js_super_lp_lp29__ =
                   Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_js_super_lp_lp_1dim__28__,
                     DUMMY_VAR__);
-                current_statement__ = 100;
+                current_statement__ = 101;
                 stan::model::assign(inline_js_super_lp_lp29__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::model::rvalue(nu, "nu",
@@ -1445,11 +1448,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                         - 1)])))),
                   "assigning variable inline_js_super_lp_lp29__",
                   stan::model::index_uni(1));
-                current_statement__ = 102;
+                current_statement__ = 103;
                 for (int inline_js_super_lp_t30__ = 2; inline_js_super_lp_t30__
                      <= (first[(inline_js_super_lp_i31__ - 1)] -
                      1); ++inline_js_super_lp_t30__) {
-                  current_statement__ = 101;
+                  current_statement__ = 102;
                   stan::model::assign(inline_js_super_lp_lp29__,
                     ((((stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
@@ -1483,7 +1486,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     "assigning variable inline_js_super_lp_lp29__",
                     stan::model::index_uni(inline_js_super_lp_t30__));
                 }
-                current_statement__ = 103;
+                current_statement__ = 104;
                 stan::model::assign(inline_js_super_lp_lp29__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
@@ -1503,23 +1506,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   "assigning variable inline_js_super_lp_lp29__",
                   stan::model::index_uni(first[(inline_js_super_lp_i31__ -
                     1)]));
-                current_statement__ = 104;
+                current_statement__ = 105;
                 lp_accum__.add(stan::math::log_sum_exp(
                                  inline_js_super_lp_lp29__));
               }
-              current_statement__ = 112;
+              current_statement__ = 113;
               for (int inline_js_super_lp_t30__ =
                      (first[(inline_js_super_lp_i31__ - 1)] + 1); inline_js_super_lp_t30__
                    <= last[(inline_js_super_lp_i31__ -
                    1)]; ++inline_js_super_lp_t30__) {
-                current_statement__ = 109;
+                current_statement__ = 110;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(
                                      inline_js_super_lp_i31__),
                                    stan::model::index_uni(
                                      (inline_js_super_lp_t30__ - 1)))));
-                current_statement__ = 110;
+                current_statement__ = 111;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                  y[(inline_js_super_lp_i31__ -
                                  1)][(inline_js_super_lp_t30__ - 1)],
@@ -1529,7 +1532,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                    stan::model::index_uni(
                                      inline_js_super_lp_t30__))));
               }
-              current_statement__ = 113;
+              current_statement__ = 114;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(chi, "chi",
                                  stan::model::index_uni(
@@ -1537,17 +1540,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                  stan::model::index_uni(
                                    last[(inline_js_super_lp_i31__ - 1)]))));
             } else {
-              current_statement__ = 89;
+              current_statement__ = 90;
               int inline_js_super_lp_lp_1dim__28__ =
                 (inline_js_super_lp_n_occasions25__ + 1);
-              current_statement__ = 89;
+              current_statement__ = 90;
               stan::math::validate_non_negative_index("lp",
                 "n_occasions + 1", inline_js_super_lp_lp_1dim__28__);
               Eigen::Matrix<local_scalar_t__,-1,1>
                 inline_js_super_lp_lp29__ =
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_js_super_lp_lp_1dim__28__,
                   DUMMY_VAR__);
-              current_statement__ = 91;
+              current_statement__ = 92;
               stan::model::assign(inline_js_super_lp_lp29__,
                 (((stan::math::bernoulli_lpmf<false>(1, psi) +
                 stan::math::bernoulli_lpmf<false>(1,
@@ -1563,11 +1566,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     stan::model::index_uni(1)))),
                 "assigning variable inline_js_super_lp_lp29__",
                 stan::model::index_uni(1));
-              current_statement__ = 93;
+              current_statement__ = 94;
               for (int inline_js_super_lp_t30__ = 2; inline_js_super_lp_t30__
                    <=
                    inline_js_super_lp_n_occasions25__; ++inline_js_super_lp_t30__) {
-                current_statement__ = 92;
+                current_statement__ = 93;
                 stan::model::assign(inline_js_super_lp_lp29__,
                   ((((stan::math::bernoulli_lpmf<false>(1, psi) +
                   stan::math::bernoulli_lpmf<false>(1,
@@ -1589,13 +1592,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   "assigning variable inline_js_super_lp_lp29__",
                   stan::model::index_uni(inline_js_super_lp_t30__));
               }
-              current_statement__ = 94;
+              current_statement__ = 95;
               stan::model::assign(inline_js_super_lp_lp29__,
                 stan::math::bernoulli_lpmf<false>(0, psi),
                 "assigning variable inline_js_super_lp_lp29__",
                 stan::model::index_uni((inline_js_super_lp_n_occasions25__ +
                   1)));
-              current_statement__ = 95;
+              current_statement__ = 96;
               lp_accum__.add(stan::math::log_sum_exp(
                                inline_js_super_lp_lp29__));
             }
@@ -1733,42 +1736,42 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_return1__;
       {
         int inline_prob_uncaptured_n_ind2__;
-        current_statement__ = 29;
+        current_statement__ = 30;
         inline_prob_uncaptured_n_ind2__ = stan::math::rows(p);
         int inline_prob_uncaptured_n_occasions3__;
-        current_statement__ = 30;
-        inline_prob_uncaptured_n_occasions3__ = stan::math::cols(p);
         current_statement__ = 31;
+        inline_prob_uncaptured_n_occasions3__ = stan::math::cols(p);
+        current_statement__ = 32;
         stan::math::validate_non_negative_index("chi", "n_ind",
           inline_prob_uncaptured_n_ind2__);
-        current_statement__ = 32;
+        current_statement__ = 33;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions3__);
         Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi4__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind2__,
             inline_prob_uncaptured_n_occasions3__, DUMMY_VAR__);
-        current_statement__ = 41;
+        current_statement__ = 42;
         for (int inline_prob_uncaptured_i8__ = 1; inline_prob_uncaptured_i8__
              <=
              inline_prob_uncaptured_n_ind2__; ++inline_prob_uncaptured_i8__) {
-          current_statement__ = 34;
+          current_statement__ = 35;
           stan::model::assign(inline_prob_uncaptured_chi4__, 1.0,
             "assigning variable inline_prob_uncaptured_chi4__",
             stan::model::index_uni(inline_prob_uncaptured_i8__),
             stan::model::index_uni(inline_prob_uncaptured_n_occasions3__));
-          current_statement__ = 39;
+          current_statement__ = 40;
           for (int inline_prob_uncaptured_t7__ = 1; inline_prob_uncaptured_t7__
                <= (inline_prob_uncaptured_n_occasions3__ -
                1); ++inline_prob_uncaptured_t7__) {
             int inline_prob_uncaptured_t_curr5__;
-            current_statement__ = 35;
+            current_statement__ = 36;
             inline_prob_uncaptured_t_curr5__ = (inline_prob_uncaptured_n_occasions3__
               - inline_prob_uncaptured_t7__);
             int inline_prob_uncaptured_t_next6__;
-            current_statement__ = 36;
+            current_statement__ = 37;
             inline_prob_uncaptured_t_next6__ = (inline_prob_uncaptured_t_curr5__
               + 1);
-            current_statement__ = 37;
+            current_statement__ = 38;
             stan::model::assign(inline_prob_uncaptured_chi4__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
@@ -1791,11 +1794,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               stan::model::index_uni(inline_prob_uncaptured_t_curr5__));
           }
         }
-        current_statement__ = 42;
+        current_statement__ = 43;
         stan::model::assign(inline_prob_uncaptured_return1__,
           inline_prob_uncaptured_chi4__,
           "assigning variable inline_prob_uncaptured_return1__");
       }
+      current_statement__ = 29;
       stan::model::assign(chi, inline_prob_uncaptured_return1__,
         "assigning variable chi");
       current_statement__ = 7;
@@ -1835,28 +1839,28 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       std::vector<std::vector<int>> z =
         std::vector<std::vector<int>>(M,
           std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      current_statement__ = 43;
+      current_statement__ = 44;
       sigma2 = stan::math::square(sigma);
-      current_statement__ = 55;
+      current_statement__ = 56;
       for (int i = 1; i <= M; ++i) {
         int q;
-        current_statement__ = 44;
+        current_statement__ = 45;
         q = 1;
-        current_statement__ = 53;
+        current_statement__ = 54;
         if (stan::math::bernoulli_rng(psi, base_rng__)) {
-          current_statement__ = 47;
+          current_statement__ = 48;
           stan::model::assign(z,
             stan::math::bernoulli_rng(
               stan::model::rvalue(nu, "nu", stan::model::index_uni(1)),
               base_rng__), "assigning variable z", stan::model::index_uni(i),
             stan::model::index_uni(1));
-          current_statement__ = 51;
+          current_statement__ = 52;
           for (int t = 2; t <= n_occasions; ++t) {
-            current_statement__ = 48;
+            current_statement__ = 49;
             q = (q * (1 -
               stan::model::rvalue(z, "z", stan::model::index_uni(i),
                 stan::model::index_uni((t - 1)))));
-            current_statement__ = 49;
+            current_statement__ = 50;
             stan::model::assign(z,
               stan::math::bernoulli_rng(
                 stan::math::fma(
@@ -1870,36 +1874,37 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               stan::model::index_uni(i), stan::model::index_uni(t));
           }
         } else {
-          current_statement__ = 45;
+          current_statement__ = 46;
           stan::model::assign(z, stan::math::rep_array(0, n_occasions),
             "assigning variable z", stan::model::index_uni(i),
             stan::model::index_omni());
         }
       }
       {
-        current_statement__ = 56;
-        stan::math::validate_non_negative_index("recruit", "M", M);
         current_statement__ = 57;
+        stan::math::validate_non_negative_index("recruit", "M", M);
+        current_statement__ = 58;
         stan::math::validate_non_negative_index("recruit", "n_occasions",
           n_occasions);
         std::vector<std::vector<int>> recruit =
           std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-        current_statement__ = 58;
+        current_statement__ = 59;
         stan::model::assign(recruit,
           stan::math::rep_array(0, M, n_occasions),
           "assigning variable recruit");
-        current_statement__ = 59;
+        current_statement__ = 60;
         stan::math::validate_non_negative_index("Nind", "M", M);
         std::vector<int> Nind =
           std::vector<int>(M, std::numeric_limits<int>::min());
-        current_statement__ = 61;
+        current_statement__ = 62;
         stan::math::validate_non_negative_index("Nalive", "M", M);
         std::vector<int> Nalive =
           std::vector<int>(M, std::numeric_limits<int>::min());
-        current_statement__ = 70;
+        current_statement__ = 71;
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
+          current_statement__ = 64;
           const std::vector<int>& inline_first_capture_y_i_arg11__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));
           int inline_first_capture_return10__;
@@ -1910,7 +1915,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             for (int inline_first_capture_k12__ = 1; inline_first_capture_k12__
                  <=
                  stan::math::size(inline_first_capture_y_i_arg11__); ++inline_first_capture_k12__) {
-              current_statement__ = 65;
+              current_statement__ = 66;
               if (inline_first_capture_y_i_arg11__[(inline_first_capture_k12__
                   - 1)]) {
                 inline_first_capture_early_ret_check13__ = 1;
@@ -1925,43 +1930,43 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             inline_first_capture_return10__ = 0;
             break;
           }
-          current_statement__ = 68;
+          current_statement__ = 69;
           if (stan::math::logical_gt(inline_first_capture_return10__, 0)) {
-            current_statement__ = 67;
+            current_statement__ = 68;
             stan::model::assign(recruit, 1, "assigning variable recruit",
               stan::model::index_uni(i),
               stan::model::index_uni(inline_first_capture_return10__));
           }
         }
-        current_statement__ = 74;
+        current_statement__ = 75;
         for (int t = 1; t <= n_occasions; ++t) {
-          current_statement__ = 71;
+          current_statement__ = 72;
           stan::model::assign(N,
             stan::math::sum(
               stan::model::rvalue(z, "z", stan::model::index_omni(),
                 stan::model::index_uni(t))), "assigning variable N",
             stan::model::index_uni(t));
-          current_statement__ = 72;
+          current_statement__ = 73;
           stan::model::assign(B,
             stan::math::sum(
               stan::model::rvalue(recruit, "recruit",
                 stan::model::index_omni(), stan::model::index_uni(t))),
             "assigning variable B", stan::model::index_uni(t));
         }
-        current_statement__ = 78;
+        current_statement__ = 79;
         for (int i = 1; i <= M; ++i) {
-          current_statement__ = 75;
+          current_statement__ = 76;
           stan::model::assign(Nind,
             stan::math::sum(
               stan::model::rvalue(z, "z", stan::model::index_uni(i))),
             "assigning variable Nind", stan::model::index_uni(i));
-          current_statement__ = 76;
+          current_statement__ = 77;
           stan::model::assign(Nalive,
             stan::math::logical_gt(
               stan::model::rvalue(Nind, "Nind", stan::model::index_uni(i)), 0),
             "assigning variable Nalive", stan::model::index_uni(i));
         }
-        current_statement__ = 79;
+        current_statement__ = 80;
         Nsuper = stan::math::sum(Nalive);
       }
       current_statement__ = 12;

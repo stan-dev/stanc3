@@ -155,6 +155,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       Eigen::Matrix<double,-1,1> inline_single_ret_fun_return13__;
+      current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<local_scalar_t__,-1,1> tp_multi_ret_vec =
@@ -182,6 +183,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
           break;
         }
       }
+      current_statement__ = 4;
       stan::model::assign(tp_multi_ret_vec, inline_multi_ret_fun_return15__,
         "assigning variable tp_multi_ret_vec");
     } catch (const std::exception& e) {
@@ -228,6 +230,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
       Eigen::Matrix<double,-1,1> inline_single_ret_fun_return7__;
+      current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_multi_ret_vec =
@@ -258,6 +261,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
           break;
         }
       }
+      current_statement__ = 4;
       stan::model::assign(tp_multi_ret_vec, inline_multi_ret_fun_return9__,
         "assigning variable tp_multi_ret_vec");
     } catch (const std::exception& e) {
@@ -324,6 +328,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         return ;
       }
       Eigen::Matrix<double,-1,1> inline_single_ret_fun_return1__;
+      current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<double,-1,1> inline_multi_ret_fun_return3__;
@@ -349,6 +354,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
           break;
         }
       }
+      current_statement__ = 4;
       stan::model::assign(tp_multi_ret_vec, inline_multi_ret_fun_return3__,
         "assigning variable tp_multi_ret_vec");
       if (emit_transformed_parameters__) {

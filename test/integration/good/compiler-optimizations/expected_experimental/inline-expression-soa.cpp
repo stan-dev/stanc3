@@ -105,6 +105,7 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
+        current_statement__ = 2;
         decltype(auto) inline_foo_i_arg5__ =
           stan::math::to_ref(stan::math::add(p, p));
         Eigen::Matrix<double,-1,-1> inline_foo_return4__;
@@ -113,6 +114,7 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
             stan::math::multiply(inline_foo_i_arg5__, inline_foo_i_arg5__),
             "assigning variable lcm8__");
         }
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(lcm8__)));
       }
@@ -153,6 +155,7 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
+        current_statement__ = 2;
         decltype(auto) inline_foo_i_arg2__ =
           stan::math::to_ref(stan::math::add(p, p));
         Eigen::Matrix<double,-1,-1> inline_foo_return1__;
@@ -161,6 +164,7 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
             stan::math::multiply(inline_foo_i_arg2__, inline_foo_i_arg2__),
             "assigning variable lcm5__");
         }
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(lcm5__)));
       }

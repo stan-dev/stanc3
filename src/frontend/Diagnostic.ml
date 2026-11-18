@@ -55,8 +55,8 @@ let range_of_loc_span ?printed_filename ?code (loc : Middle.Location_span.t) :
     Range.t * Diagnostic.Label.t list =
   if loc = Middle.Location_span.empty then
     (* These should only occur when we're raising warnings for things like
-       optimization hazards, since the IR pre-optimization always has the
-       locations from the user *)
+       optimization hazards after running lazy code motion, since the IR
+       pre-optimization always has the locations from the user *)
     ( Range.initial
         Source.(`String {name= Some "<unknown location>"; content= ""})
     , [] )
