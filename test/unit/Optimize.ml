@@ -1826,7 +1826,7 @@ let%expect_test "copy propagation after assigning a global" =
         data real c;
         c = a;
         a = y;
-        b = a;
+        b = c;
       }
     }
 
