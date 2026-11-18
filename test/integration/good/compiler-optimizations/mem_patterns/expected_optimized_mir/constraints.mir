@@ -24,7 +24,6 @@ vector[Nr] h_i_mean: SoA
 vector[Nr] h_i_sigma: SoA
 vector[Nr] h_sigma: SoA
 vector[N] means_ordered: SoA
-
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt) (K <opaque> SInt)

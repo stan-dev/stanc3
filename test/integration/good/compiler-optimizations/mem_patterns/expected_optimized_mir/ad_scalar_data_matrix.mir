@@ -10,14 +10,6 @@ matrix[N, N] soa_mat_rep: SoA
 matrix[N, N] soa_mat_rep_vec: SoA
 matrix[N, N] aos_mat_rep: AoS
 matrix[2, 2] aos_mat_from_vecs: AoS
-Optimization hazard warning (Line 13): SoA warning: Right hand side contains only AoS expressions: aos_deep
-Optimization hazard warning (Line 13): SoA warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep
-Optimization hazard warning (Line 17): SoA warning: Right hand side contains only AoS expressions: aos_from_data
-Optimization hazard warning (Line 17): SoA warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_from_data
-Optimization hazard warning (Line 20): SoA warning: Right hand side contains AoS expressions (aos_deep): aos_mat_rep
-Optimization hazard warning (Line 20): SoA warning: Right hand side contains only AoS expressions: aos_mat_rep
-Optimization hazard warning (Line 21): SoA warning: Right hand side contains only AoS expressions: aos_mat_from_vecs
-Optimization hazard warning (Line 21): SoA warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_mat_from_vecs
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt)
@@ -1497,3 +1489,13 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))))
  (prog_name ad_scalar_data_matrix_model) (prog_path ../ad_scalar_data_matrix.stan))
+/*
+../ad_scalar_data_matrix.stan:13:3: warning: Optimization hazard (SoA): The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep
+../ad_scalar_data_matrix.stan:13:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_deep
+../ad_scalar_data_matrix.stan:17:3: warning: Optimization hazard (SoA): The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_from_data
+../ad_scalar_data_matrix.stan:17:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_from_data
+../ad_scalar_data_matrix.stan:20:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_mat_rep
+../ad_scalar_data_matrix.stan:20:3: warning: Optimization hazard (SoA): Right hand side contains AoS expressions (aos_deep): aos_mat_rep
+../ad_scalar_data_matrix.stan:21:3: warning: Optimization hazard (SoA): The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_mat_from_vecs
+../ad_scalar_data_matrix.stan:21:3: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: aos_mat_from_vecs
+*/

@@ -1,10 +1,6 @@
 /* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../tuple_test.stan : [exit 0] */
 tuple(array[matrix[1, 1], 1], matrix[1, 2], matrix[1, 3]) xx: AoS
 matrix[1, 1] x: AoS
-Optimization hazard warning (Line 3): SoA warning: Right hand side contains only AoS expressions: xx
-Optimization hazard warning (Line 6): SoA warning: Right hand side contains only AoS expressions: x
-Optimization hazard warning (Line 6): SoA warning: Right hand side of assignment is all AoS: x, xx
-Optimization hazard warning (Line 6): SoA warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: x, xx
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -726,3 +722,9 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_test_model) (prog_path ../tuple_test.stan))
+/*
+../tuple_test.stan:3:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: xx
+../tuple_test.stan:6:5: warning: Optimization hazard (SoA): Right hand side of assignment is all AoS: x, xx
+../tuple_test.stan:6:5: warning: Optimization hazard (SoA): The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: x, xx
+../tuple_test.stan:6:5: warning: Optimization hazard (SoA): Right hand side contains only AoS expressions: x
+*/
