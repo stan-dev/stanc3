@@ -670,13 +670,7 @@ let control_statement_map ~block source =
   let body =
     match block with
     | `Model -> Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob}
-    | `Function name -> (
-        match
-          List.find_map mir.functions_block ~f:(fun f ->
-              if String.equal f.Program.fdname name then f.fdbody else None)
-        with
-        | Some body -> body
-        | None -> Fmt.failwith "No body for function %s" name) in
+    | `Function name -> Test_utils.function_body_exn mir name in
   build_statement_map
     (fun Stmt.{pattern; _} -> pattern)
     (fun Stmt.{meta; _} -> meta)

@@ -11,11 +11,6 @@ val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
     [~preserve_stability:true] also rejects autodiffable computations. *)
 
 val cannot_remove_expr : ExprSet.elt -> bool
-
-val expr_reads_any_of : string Set.Poly.t -> Expr.Typed.t -> bool
-(** [expr_reads_any_of variables e] checks whether [e] contains a reference to
-    any name in [variables], including in its subscripts. *)
-
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
 

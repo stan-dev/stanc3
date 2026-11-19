@@ -231,13 +231,8 @@ let check_read_writers ~block ~variable ~read_line ~expected_writer_lines source
   let statements =
     match block with
     | `Model -> log_prob_build_dep_info_map mir
-    | `Function name -> (
-        match
-          List.find_map mir.functions_block ~f:(fun f ->
-              if String.equal f.Program.fdname name then f.fdbody else None)
-        with
-        | Some body -> build_dep_info_map mir body
-        | None -> Fmt.failwith "No body for function %s" name) in
+    | `Function name ->
+        build_dep_info_map mir (Test_utils.function_body_exn mir name) in
   let reads =
     LabelMap.bindings statements
     |> List.concat_map ~f:(function

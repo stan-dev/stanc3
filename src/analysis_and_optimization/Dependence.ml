@@ -146,13 +146,7 @@ let may_be_less_or_equal first_expr second_expr =
   | Some _, None | None, Some _ | None, None -> true
 
 let is_definitely_empty_index = function
-  | Index.Between (lower, upper) -> (
-      match
-        ( Expr.Helpers.int_literal_value lower
-        , Expr.Helpers.int_literal_value upper )
-      with
-      | Some lower_value, Some upper_value -> lower_value > upper_value
-      | _ -> false)
+  | Index.Between (lower, upper) -> not (may_be_less_or_equal lower upper)
   | MultiIndex array_expr -> (
       match Expr.Helpers.array_literal_elements array_expr with
       | Some [] -> true
@@ -242,7 +236,8 @@ let rec is_path_overwritten (written_vars : string Set.Poly.t)
     , Subscript (Index.Single write_index) :: write_tail ) ->
       Expr.Helpers.compare_ignore_meta write_index previous_index = 0
       && (not (Mir_utils.cannot_duplicate_expr write_index))
-      && (not (Mir_utils.expr_reads_any_of written_vars write_index))
+      && Set.Poly.disjoint written_vars
+           (Mir_utils.expr_var_names_set write_index)
       && is_path_overwritten written_vars previous_tail write_tail
   | _ -> false
 

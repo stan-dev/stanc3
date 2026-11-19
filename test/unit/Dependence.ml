@@ -368,6 +368,20 @@ let%test_unit "Overwrite: stable indirect indices replace the earlier write" =
       }
     |}
 
+let%test_unit "Overwrite: changing k in v[idx[k]] retains the earlier write" =
+  check_write_comparison ["v"] ~previous_line:5 ~next_line:7 ~may_overlap:true
+    ~previous_overwritten:false
+    {|
+      data { array[2] int<lower=1, upper=4> idx; }
+      model {
+        vector[4] v;
+        int k = 1;
+        v[idx[k]] = 1;
+        k = 2;
+        v[idx[k]] = 2;
+      }
+    |}
+
 let%test_unit "Overwrite: nonlinear indices can alias a symbolic element" =
   check_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
     ~previous_overwritten:false
@@ -1051,32 +1065,4 @@ let%expect_test
     line 6: print(f_lp(1.0)); -> may update target: true
     line 7: print(target()); -> may update target: false
     line 8: print(f(1.0)); -> may update target: false
-    |}]
-
-let%expect_test
-    "expr_reads_any_of finds variables in the base and inside a subscript" =
-  for_each_print_argument
-    {|data { vector[4] v; array[4] int idx; int k; }
-      model {
-        print(v[idx[k]]);
-      }|}
-    ~f:(fun arg ->
-      Fmt.pr "@.";
-      List.iter
-        [["v"]; ["idx"]; ["k"]; ["other"]; ["other"; "k"]]
-        ~f:(fun names ->
-          let reads =
-            Analysis_and_optimization.Mir_utils.expr_reads_any_of
-              (Set.Poly.of_list names) arg in
-          Fmt.pr "  reads any of [%s]: %b@."
-            (String.concat ~sep:", " names)
-            reads));
-  [%expect
-    {|
-    line 3: print(v[idx[k]]); ->
-      reads any of [v]: true
-      reads any of [idx]: true
-      reads any of [k]: true
-      reads any of [other]: false
-      reads any of [other, k]: true
     |}]

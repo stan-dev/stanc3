@@ -18,12 +18,9 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
   (* the only StanLib FnTarget function is target() which has no side effects
      but can return a different result every time *)
   match e.pattern with
-  | FunApp
-      ((UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian)), _)
-    ->
-      true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
+  | FunApp (kind, _) -> Fun_kind.may_update_target kind
   | _ -> false
 
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
@@ -38,12 +35,6 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   expr_any pred e
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
-
-let expr_reads_any_of (variables : string Set.Poly.t) (expr : Expr.Typed.t) =
-  let reads_variable (e : Expr.Typed.t) =
-    match e.pattern with Var name -> Set.Poly.mem name variables | _ -> false
-  in
-  expr_any reads_variable expr
 
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
   Expr.Pattern.fold

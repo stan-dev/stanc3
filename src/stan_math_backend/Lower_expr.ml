@@ -96,8 +96,6 @@ let transform_args = function
   | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
   | transform -> Transformation.fold (fun args arg -> args @ [arg]) [] transform
 
-let is_single_index = function Index.Single _ -> true | _ -> false
-
 let dont_need_range_check = function
   | Index.Single Expr.{pattern= Var id; _} -> not (Utils.is_user_ident id)
   | _ -> false
