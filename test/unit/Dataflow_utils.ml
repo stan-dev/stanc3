@@ -713,7 +713,7 @@ let check_control_contexts ~block ~at ~enclosing ~loops ~dependencies source =
                   | Some Else -> " (else)") in
             let loops = names (enclosing_loop_ids id pattern controls) in
             let dependencies =
-              names (Set.Poly.to_list (control_dependency_ids controls)) in
+              names (Set.Poly.to_list (control_parent_ids controls)) in
             Some (statement_name id, (enclosing, loops, dependencies))
         | _ -> None) in
   let show = String.concat ~sep:"; " in

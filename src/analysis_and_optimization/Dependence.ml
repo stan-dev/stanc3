@@ -1,9 +1,21 @@
 open Std
 open Middle
 
-type access_path = Expr.Typed.t Index.t list
+type access_step = Subscript of Expr.Typed.t Index.t | TupleField of int
+type access_path = access_step list
 type location = {variable: string; path: access_path}
 type accesses = {reads: location list; writes: location list}
+
+let pp_access_path pp_expr ppf path =
+  let pp_indices reversed = Index.pp_indices pp_expr ppf (List.rev reversed) in
+  let rec pp_steps indices = function
+    | Subscript index :: rest -> pp_steps (index :: indices) rest
+    | TupleField field :: rest ->
+        pp_indices indices;
+        Fmt.pf ppf ".%d" field;
+        pp_steps [] rest
+    | [] -> pp_indices indices in
+  pp_steps [] path
 
 module Location = struct
   let same_var (first : location) (second : location) =
@@ -22,29 +34,17 @@ let add_read_write (updated_location : location) (collected_accesses : accesses)
     =
   collected_accesses |> add_read updated_location |> add_write updated_location
 
-let rec location_of_expr_opt (expr : Expr.Typed.t)
-    (trailing_indices : access_path) =
-  match expr.pattern with
-  | Var variable -> Some {variable; path= trailing_indices}
-  | Indexed (base, indices) ->
-      if
-        (not (List.is_empty trailing_indices))
-        && not (List.for_all indices ~f:Index.is_single)
-      then None (* Indexing a slice cannot be flattened into a base path. *)
-      else location_of_expr_opt base (indices @ trailing_indices)
-  | TupleProjection (base, field) ->
-      location_of_expr_opt base
-        (Index.Single (Expr.Helpers.int field) :: trailing_indices)
-  | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
+let prepend_subscripts indices path =
+  List.fold_right indices ~init:path ~f:(fun index rest ->
+      Subscript index :: rest)
 
 let rec location_of_lvalue ((base, indices) : Expr.Typed.t Stmt.Pattern.lvalue)
-    (trailing_indices : access_path) =
-  let combined_indices = indices @ trailing_indices in
+    (suffix : access_path) =
+  let path = prepend_subscripts indices suffix in
   match base with
-  | LVariable variable -> {variable; path= combined_indices}
+  | LVariable variable -> {variable; path}
   | LTupleProjection (inner, field) ->
-      location_of_lvalue inner
-        (Index.Single (Expr.Helpers.int field) :: combined_indices)
+      location_of_lvalue inner (TupleField field :: path)
 
 let target = {variable= "target"; path= []}
 
@@ -53,41 +53,52 @@ let rec collect_expr_accesses (collected_accesses : accesses)
   match expr.pattern with
   | Var variable -> add_read {variable; path= []} collected_accesses
   | Indexed _ | TupleProjection _ -> (
+      let rec location_of_expr_opt (expr : Expr.Typed.t) (suffix : access_path)
+          =
+        match expr.pattern with
+        | Var variable -> Some {variable; path= suffix}
+        | Indexed (base, indices) ->
+            if
+              (not (List.is_empty suffix))
+              && not (List.for_all indices ~f:Index.is_single)
+            then
+              None (* Indexing a slice cannot be flattened into a base path. *)
+            else location_of_expr_opt base (prepend_subscripts indices suffix)
+        | TupleProjection (base, field) ->
+            location_of_expr_opt base (TupleField field :: suffix)
+        | FunApp _ | TernaryIf _ | Lit _ | EAnd _ | EOr _ | Promotion _ -> None
+      in
       match location_of_expr_opt expr [] with
       | Some read_location ->
           List.fold_left read_location.path
             ~init:(add_read read_location collected_accesses)
-            ~f:(Index.fold collect_expr_accesses)
-      | None -> collect_subexpr_accesses collected_accesses expr)
+            ~f:(fun accesses -> function
+            | Subscript index -> Index.fold collect_expr_accesses accesses index
+            | TupleField _ -> accesses)
+      | None ->
+          Expr.Pattern.fold collect_expr_accesses collected_accesses
+            expr.pattern)
   | FunApp (StanLib (_, FnTarget), []) -> add_read target collected_accesses
   | FunApp (kind, _) when Fun_kind.is_target_increment kind ->
-      collect_subexpr_accesses collected_accesses expr |> add_read_write target
+      Expr.Pattern.fold collect_expr_accesses collected_accesses expr.pattern
+      |> add_read_write target
   | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
-      collect_subexpr_accesses collected_accesses expr
-
-and collect_subexpr_accesses collected_accesses (expr : Expr.Typed.t) =
-  Expr.Pattern.fold collect_expr_accesses collected_accesses expr.pattern
+      Expr.Pattern.fold collect_expr_accesses collected_accesses expr.pattern
 
 let collect_accesses (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) =
+  let expression_accesses =
+    Stmt.Pattern.fold collect_expr_accesses Fun.const empty stmt in
   match stmt with
-  | Assignment (lhs, _, rhs) ->
-      let write_location = location_of_lvalue lhs [] in
-      let index_accesses =
-        List.fold_left write_location.path ~init:empty
-          ~f:(Index.fold collect_expr_accesses) in
-      collect_expr_accesses index_accesses rhs |> add_write write_location
-  | _ -> (
-      let expression_accesses =
-        Stmt.Pattern.fold collect_expr_accesses Fun.const empty stmt in
-      match stmt with
-      | Decl {decl_id; _} ->
-          add_write {variable= decl_id; path= []} expression_accesses
-      | For {loopvar; _} ->
-          add_write {variable= loopvar; path= []} expression_accesses
-      | TargetPE _ | JacobianPE _ -> add_read_write target expression_accesses
-      | NRFunApp (kind, _) when Fun_kind.is_target_increment kind ->
-          add_read_write target expression_accesses
-      | _ -> expression_accesses)
+  | Assignment (lhs, _, _) ->
+      add_write (location_of_lvalue lhs []) expression_accesses
+  | Decl {decl_id; _} ->
+      add_write {variable= decl_id; path= []} expression_accesses
+  | For {loopvar; _} ->
+      add_write {variable= loopvar; path= []} expression_accesses
+  | TargetPE _ | JacobianPE _ -> add_read_write target expression_accesses
+  | NRFunApp (kind, _) when Fun_kind.is_target_increment kind ->
+      add_read_write target expression_accesses
+  | _ -> expression_accesses
 
 (* v[2 * i] and v[2 * j + 1] cannot select the same element. The first index is
    always even (Some 0) and the second always odd (Some 1). Working modulo 2
@@ -209,9 +220,12 @@ and array_may_overlap_index (array_expr : Expr.Typed.t)
 let may_overlap (first_path : access_path) (second_path : access_path) : bool =
   let rec paths_overlap remaining_first remaining_second =
     match (remaining_first, remaining_second) with
-    | first_index :: first_tail, second_index :: second_tail ->
+    | Subscript first_index :: first_tail, Subscript second_index :: second_tail
+      ->
         may_indices_overlap first_index second_index
         && paths_overlap first_tail second_tail
+    | TupleField first :: first_tail, TupleField second :: second_tail ->
+        first = second && paths_overlap first_tail second_tail
     | _ -> true in
   List.compare_lengths first_path second_path <> 0
   || paths_overlap first_path second_path
@@ -220,8 +234,11 @@ let rec is_path_overwritten (written_vars : string Set.Poly.t)
     (previous_path : access_path) (write_path : access_path) : bool =
   match (previous_path, write_path) with
   | _, [] -> true
-  | ( Index.Single previous_index :: previous_tail
-    , Index.Single write_index :: write_tail ) ->
+  | TupleField previous :: previous_tail, TupleField write :: write_tail ->
+      previous = write
+      && is_path_overwritten written_vars previous_tail write_tail
+  | ( Subscript (Index.Single previous_index) :: previous_tail
+    , Subscript (Index.Single write_index) :: write_tail ) ->
       Mir_utils.is_stable_expr written_vars write_index
       && Expr.Helpers.compare_ignore_meta write_index previous_index = 0
       && is_path_overwritten written_vars previous_tail write_tail

@@ -1,13 +1,17 @@
 open Std
 open Middle
 
-(** The steps from a variable to the part being read or written. An empty path
-    selects the whole variable. For [t.2[i]], the steps are [Single 2] for the
-    tuple field followed by [Single i] for the subscript. *)
-type access_path = Expr.Typed.t Index.t list
+type access_step = Subscript of Expr.Typed.t Index.t | TupleField of int
+
+(** Selections in order from the base variable. The empty path selects the whole
+    variable. For [t.2[i]] the path is [[TupleField 2; Subscript (Single i)]].
+*)
+type access_path = access_step list
 
 type location = {variable: string; path: access_path}
 type accesses = {reads: location list; writes: location list}
+
+val pp_access_path : Expr.Typed.t Fmt.t -> access_path Fmt.t
 
 module Location : sig
   val same_var : location -> location -> bool
@@ -18,8 +22,10 @@ val collect_accesses : (Expr.Typed.t, 'substatement) Stmt.Pattern.t -> accesses
 (** Includes reads in index expressions; reads and writes are unordered. *)
 
 val may_overlap : access_path -> access_path -> bool
-(** False proves disjoint paths. Compares literal indices, range bounds and
-    index-array elements, and integer parity; unknown values permit overlap. *)
+(** [may_overlap p q] checks whether two reads or writes to the same variable
+    could select a common element. For example, [v[1:2]] and [v[2:3]] share
+    element 2. For [v[i]] and [v[j]], the result is also true when the analysis
+    cannot rule out [i = j]. *)
 
 val is_overwritten : string Set.Poly.t -> location -> location -> bool
 (** [is_overwritten written_vars previous write] proves that [write] covers

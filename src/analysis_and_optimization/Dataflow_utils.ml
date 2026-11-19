@@ -81,13 +81,10 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       ((in_state, in_map) : cf_state * cf_edges LabelMap.t) (label : label) :
       cf_state * cf_edges LabelMap.t =
     let stmt, _ = LabelMap.find label statement_map in
-    let enclosing_for_children =
-      match stmt with
-      | Stmt.Pattern.For _ | While _ -> enclosing @ [{id= label; side= None}]
-      | _ -> enclosing in
     let substmt_preds =
       match stmt with
-      | (Block _ | Profile _) when blocks_after_body -> in_state.exits
+      | (Stmt.Pattern.Block _ | Profile _) when blocks_after_body ->
+          in_state.exits
       | _ -> Set.Poly.singleton label in
     (* The accumulated state after traversing substatements *)
     let child_init = {in_state with exits= substmt_preds} in
@@ -112,6 +109,10 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
                   else_s in
               (join_cf_states then_state else_state, after_both_map))
       | _ ->
+          let enclosing_for_children =
+            match stmt with
+            | For _ | While _ -> enclosing @ [{id= label; side= None}]
+            | _ -> enclosing in
           fst
             (fwd_traverse_statement stmt ~init:(child_init, in_map)
                ~f:(fun state child ->
@@ -209,8 +210,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
   , LabelMap.map edges ~f:(fun e -> e.predecessors)
   , LabelMap.map edges ~f:(fun e -> e.controls) )
 
-let control_dependency_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t
-    =
+let control_parent_ids ({enclosing; jump_ids} : controls) : label Set.Poly.t =
   match List.hd (List.rev enclosing) with
   | Some {id; _} -> Set.Poly.add id jump_ids
   | None -> jump_ids
@@ -229,7 +229,7 @@ let build_controls statement_map =
 
 (** See interface file *)
 let build_cf_graph statement_map =
-  build_controls statement_map |> LabelMap.map ~f:control_dependency_ids
+  build_controls statement_map |> LabelMap.map ~f:control_parent_ids
 
 (** See interface file *)
 let build_predecessor_graph ?(flatten_loops = false) ?(blocks_after_body = true)

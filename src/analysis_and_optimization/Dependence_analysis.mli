@@ -12,6 +12,8 @@ open Dataflow_types
       be using the same labeling scheme.
     - No probabilistic dependency, I'll do that elsewhere **)
 
+(** A location and the statement that may have written it. [None] denotes the
+    initial definition at entry to the analysis. *)
 type reaching_definition = Dependence.location * label option
 
 (** Sufficient information about each node to build the dependency graph.

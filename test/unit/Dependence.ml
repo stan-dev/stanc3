@@ -22,51 +22,19 @@ let pp_index_expr ppf (expr : Expr.Typed.t) =
       Fmt.pf ppf "{%a}" (Fmt.list ~sep:Fmt.comma Expr.Typed.pp) elements
   | None -> Expr.Typed.pp ppf expr
 
-let variable_types statements =
-  let rec collect_expr types (expr : Expr.Typed.t) =
-    let types =
-      match expr.pattern with
-      | Var name -> String.Map.add types ~key:name ~data:expr.meta.type_
-      | _ -> types in
-    Expr.Pattern.fold collect_expr types expr.pattern in
-  LabelMap.fold statements ~init:String.Map.empty
-    ~f:(fun ~key:_ ~data:(pattern, _) types ->
-      let types = Stmt.Pattern.fold collect_expr Fun.const types pattern in
-      match pattern with
-      | Decl {decl_id; decl_type; _} ->
-          String.Map.add types ~key:decl_id ~data:(Type.to_unsized decl_type)
-      | _ -> types)
-
-let location_text types (accessed_location : Access.location) =
-  let index_text index = Fmt.str "[%a]" (Index.pp pp_index_expr) index in
-  (* Both t.1 and v[1] have a Single 1 in their path. The type tells us which
-     syntax to print at each step. *)
-  let rec path_text type_ path =
-    match (type_, path) with
-    | _, [] -> ""
-    | UnsizedType.UTuple fields, Index.Single field :: rest ->
-        let field = Expr.Helpers.int_literal_value field |> Option.get in
-        Printf.sprintf ".%d%s" field
-          (path_text (List.nth fields (field - 1)) rest)
-    | UArray element, index :: rest -> index_text index ^ path_text element rest
-    | UTuple _, _ -> failwith "Expected a literal tuple field in access path"
-    | _, _ -> String.concat ~sep:"" (List.map path ~f:index_text) in
-  match accessed_location.path with
-  | [] -> accessed_location.variable
-  | path ->
-      accessed_location.variable
-      ^ path_text (String.Map.find accessed_location.variable types) path
+let location_text (location : Access.location) =
+  Fmt.str "%s%a" location.variable
+    (Access.pp_access_path pp_index_expr)
+    location.path
 
 type statement_accesses =
   {statement: string; reads: string list; writes: string list}
 
 let check_accesses ~statements:kind ~expected source =
   let statements = statement_map source in
-  let types = variable_types statements in
   let lines = String.split_lines (String.trim source) |> Array.of_list in
   let paths locations =
-    List.map locations ~f:(location_text types) |> List.sort ~cmp:String.compare
-  in
+    List.map locations ~f:location_text |> List.sort ~cmp:String.compare in
   let actual =
     LabelMap.bindings statements
     |> List.filter_map ~f:(fun (_, (pattern, loc)) ->
@@ -267,9 +235,9 @@ let check_overlap first_path second_path expected =
   let actual = Access.may_overlap first_path second_path in
   if actual <> expected then
     Fmt.failwith "Overlap of v%a and v%a: expected %b, got %b"
-      (Index.pp_indices pp_index_expr)
+      (Access.pp_access_path pp_index_expr)
       first_path
-      (Index.pp_indices pp_index_expr)
+      (Access.pp_access_path pp_index_expr)
       second_path expected actual
 
 let check_write_comparison variables ~previous_line ~next_line ~may_overlap
@@ -964,8 +932,8 @@ let%test_unit "Nested slice: the retained base slice can overestimate overlap" =
 let check_index_pairs ~first ~second ~expected =
   List.iter first ~f:(fun a ->
       List.iter second ~f:(fun b ->
-          check_overlap [a] [b] expected;
-          check_overlap [b] [a] expected))
+          check_overlap [Access.Subscript a] [Access.Subscript b] expected;
+          check_overlap [Access.Subscript b] [Access.Subscript a] expected))
 
 let%test_unit "Empty selections never overlap any index form" =
   let open Expr.Helpers in

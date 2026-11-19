@@ -21,12 +21,14 @@ val build_controls :
   ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t -> controls LabelMap.t
 (** Returns the controls of each label of the statement map. *)
 
-val control_dependency_ids : controls -> label Set.Poly.t
-(** Returns the labels of the control parents of a statement, given the controls
-    of the statement. *)
+val control_parent_ids : controls -> label Set.Poly.t
+(** The innermost enclosing [if] or loop, when present, and the jumps that can
+    affect whether the statement executes. *)
 
 val enclosing_loop_ids :
   label -> ('e, 's) Stmt.Pattern.t -> controls -> label list
+(** Loop labels from outermost to innermost. For a [for] or [while] header, the
+    last label is the header itself. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

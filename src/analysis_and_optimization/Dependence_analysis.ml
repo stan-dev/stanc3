@@ -229,7 +229,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       let statement_controls = LabelMap.find label controls_by_statement in
       ( stmt
       , { predecessors= LabelMap.find label preds
-        ; parents= control_dependency_ids statement_controls
+        ; parents= control_parent_ids statement_controls
         ; reaching_defn_entry= definitions.entry
         ; reaching_defn_exit= definitions.exit
         ; accesses= LabelMap.find label accesses_by_statement
