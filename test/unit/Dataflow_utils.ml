@@ -665,17 +665,23 @@ let%expect_test "Predecessor graph example 5" =
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
 
-let print_control_contexts source =
+let check_control_contexts ~block ~at ~enclosing ~loops ~dependencies source =
   let mir = Test_utils.mir_of_string source in
-  let bodies =
-    List.filter_map mir.functions_block ~f:(fun definition ->
-        definition.Program.fdbody) in
+  let body =
+    match block with
+    | `Model -> Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob}
+    | `Function name -> (
+        match
+          List.find_map mir.functions_block ~f:(fun f ->
+              if String.equal f.Program.fdname name then f.fdbody else None)
+        with
+        | Some body -> body
+        | None -> Fmt.failwith "No body for function %s" name) in
   let statements =
     build_statement_map
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
-      Stmt.{meta= Location_span.empty; pattern= SList (bodies @ mir.log_prob)}
-  in
+      body in
   let controls_by_statement = build_controls statements in
   let statement_name id =
     match fst (LabelMap.find id statements) with
@@ -689,32 +695,51 @@ let print_control_contexts source =
     | Return (Some result) -> Fmt.str "return %a" Expr.Typed.pp result
     | Return None -> "return"
     | _ -> failwith "Expected a control statement or print" in
-  let names ids = List.map ids ~f:statement_name |> String.concat ~sep:"; " in
-  LabelMap.iter statements ~f:(fun ~key:id ~data:(pattern, _) ->
-      match pattern with
-      | Stmt.Pattern.For _ | While _ | NRFunApp (CompilerInternal FnPrint, _) ->
-          let statement_controls = LabelMap.find id controls_by_statement in
-          let enclosing =
-            List.map statement_controls.enclosing ~f:(fun {id= parent; side} ->
-                statement_name parent
-                ^
-                match side with
-                | None -> ""
-                | Some Then -> " (then)"
-                | Some Else -> " (else)")
-            |> String.concat ~sep:"; " in
-          Fmt.pr
-            "%s@.  enclosing: [%s]@.  loops: [%s]@.  control dependencies: \
-             [%s]@."
-            (statement_name id) enclosing
-            (names (enclosing_loop_ids id pattern statement_controls))
-            (names
-               (Set.Poly.to_list (control_dependency_ids statement_controls)))
-      | _ -> ())
+  let names ids = List.map ids ~f:statement_name in
+  let rows =
+    LabelMap.bindings statements
+    |> List.filter_map ~f:(fun (id, (pattern, _)) ->
+        match pattern with
+        | Stmt.Pattern.For _ | While _ | NRFunApp (CompilerInternal FnPrint, _)
+          ->
+            let controls = LabelMap.find id controls_by_statement in
+            let enclosing =
+              List.map controls.enclosing ~f:(fun {id; side} ->
+                  statement_name id
+                  ^
+                  match side with
+                  | None -> ""
+                  | Some Then -> " (then)"
+                  | Some Else -> " (else)") in
+            let loops = names (enclosing_loop_ids id pattern controls) in
+            let dependencies =
+              names (Set.Poly.to_list (control_dependency_ids controls)) in
+            Some (statement_name id, (enclosing, loops, dependencies))
+        | _ -> None) in
+  let show = String.concat ~sep:"; " in
+  List.iter rows ~f:(fun (stmt, (parents, loops, dependencies)) ->
+      Fmt.pr
+        "%s@.  enclosing: [%s]@.  loops: [%s]@.  control dependencies: [%s]@."
+        stmt (show parents) (show loops) (show dependencies));
+  match List.filter rows ~f:(fun (stmt, _) -> String.equal stmt at) with
+  | [(_, (actual_enclosing, actual_loops, actual_dependencies))] ->
+      let check field expected actual =
+        if actual <> expected then
+          Fmt.failwith "%s at %s: expected [%s], got [%s]" field at
+            (show expected) (show actual) in
+      check "Enclosing statements" enclosing actual_enclosing;
+      check "Loops" loops actual_loops;
+      check "Control dependencies" dependencies actual_dependencies
+  | matches ->
+      Fmt.failwith "Expected one statement named %s, found %d" at
+        (List.length matches)
 
 let%expect_test
     "Controls: nested for and while loops retain outer-to-inner ancestry" =
-  print_control_contexts
+  check_control_contexts ~block:`Model ~at:"print(\"inside while\")"
+    ~enclosing:["for n"; "while (remaining > 0)"]
+    ~loops:["for n"; "while (remaining > 0)"]
+    ~dependencies:["while (remaining > 0)"]
     {|data { int<lower=0> N; }
       model {
         for (n in 1:N) {
@@ -752,7 +777,9 @@ let%expect_test
     |}]
 
 let%expect_test "Controls: then and else branches stay distinct" =
-  print_control_contexts
+  check_control_contexts ~block:`Model ~at:"print(\"else branch\")"
+    ~enclosing:["if choose_then (else)"] ~loops:[]
+    ~dependencies:["if choose_then"]
     {|data { int choose_then; }
       model {
         if (choose_then) print("then branch");
@@ -776,7 +803,8 @@ let%expect_test "Controls: then and else branches stay distinct" =
     |}]
 
 let%expect_test "Controls: continue controls the rest of the iteration" =
-  print_control_contexts
+  check_control_contexts ~block:`Model ~at:"print(\"after continue\")"
+    ~enclosing:["for n"] ~loops:["for n"] ~dependencies:["for n"; "continue"]
     {|data { int skip; }
       model {
         for (n in 1:3) {
@@ -802,7 +830,8 @@ let%expect_test "Controls: continue controls the rest of the iteration" =
     |}]
 
 let%expect_test "Controls: break is a dependency of the loop header" =
-  print_control_contexts
+  check_control_contexts ~block:`Model ~at:"for n" ~enclosing:[]
+    ~loops:["for n"] ~dependencies:["break"]
     {|data { int stop; }
       model {
         for (n in 1:3) {
@@ -828,7 +857,8 @@ let%expect_test "Controls: break is a dependency of the loop header" =
     |}]
 
 let%expect_test "Controls: return controls later statements in the function" =
-  print_control_contexts
+  check_control_contexts ~block:(`Function "f") ~at:"print(\"after return\")"
+    ~enclosing:[] ~loops:[] ~dependencies:["return 0"]
     {|functions {
         int f(int stop) {
           if (stop) return 0;
@@ -846,7 +876,10 @@ let%expect_test "Controls: return controls later statements in the function" =
 
 let%expect_test
     "Controls: an outer continue remains visible inside nested controls" =
-  print_control_contexts
+  check_control_contexts ~block:`Model ~at:"print(\"nested then\")"
+    ~enclosing:["for n"; "while (remaining > 0)"; "if choose_then (then)"]
+    ~loops:["for n"; "while (remaining > 0)"]
+    ~dependencies:["continue"; "if choose_then"]
     {|data { int skip; int choose_then; }
       model {
         for (n in 1:3) {

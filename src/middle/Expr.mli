@@ -52,8 +52,8 @@ module Helpers : sig
   val int : int -> Typed.t
 
   val int_literal_value : 'a t -> int option
-  (** Read an integer literal; return [None] for other expressions or values
-      outside the OCaml integer range. *)
+  (** The value of a MIR integer literal, if it fits in an OCaml [int]. Returns
+      [None] for other expressions. *)
 
   val float : float -> Typed.t
   val complex : float * float -> Typed.t
@@ -75,8 +75,8 @@ module Helpers : sig
   val array_expr : Typed.t list -> Typed.t
 
   val array_literal_elements : 'a t -> 'a t list option
-  (** Returns the elements of an inline array, or [None] for other expressions.
-  *)
+  (** The element expressions of a Stan array literal such as [{1, i}]. Returns
+      [None] for other expressions, including array variables. *)
 
   val tuple_expr : Typed.t list -> Typed.t
   val loop_bottom : Typed.t

@@ -1,8 +1,9 @@
 open Std
 open Middle
 
-(** Ordered selections from a base variable. Tuple fields use [Single] integer
-    literals. Compare access paths only within the same base variable. *)
+(** The steps from a variable to the part being read or written. An empty path
+    selects the whole variable. For [t.2[i]], the steps are [Single 2] for the
+    tuple field followed by [Single i] for the subscript. *)
 type access_path = Expr.Typed.t Index.t list
 
 type location = {variable: string; path: access_path}
@@ -10,7 +11,7 @@ type accesses = {reads: location list; writes: location list}
 
 module Location : sig
   val same_var : location -> location -> bool
-  (** Compares variable names only, ignoring access paths. *)
+  (** Compare the base variable names of two locations. *)
 end
 
 val collect_accesses : (Expr.Typed.t, 'substatement) Stmt.Pattern.t -> accesses

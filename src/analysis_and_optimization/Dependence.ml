@@ -89,8 +89,10 @@ let collect_accesses (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) =
           add_read_write target expression_accesses
       | _ -> expression_accesses)
 
-(* Some 0 means always even; Some 1 means always odd. None permits both. Keeping
-   only parity avoids arithmetic overflow in the analysis. *)
+(* v[2 * i] and v[2 * j + 1] cannot select the same element. The first index is
+   always even (Some 0) and the second always odd (Some 1). Working modulo 2
+   lets us check this without overflowing on intermediate sums or products. None
+   means we couldn't determine whether the index is even or odd. *)
 let rec integer_parity (expr : Expr.Typed.t) =
   match expr.pattern with
   | Lit (Int, _) ->
@@ -122,7 +124,6 @@ let may_equal_int first_expr second_expr =
     | Some _, None | None, Some _ | None, None -> (
         match (integer_parity first_expr, integer_parity second_expr) with
         | Some first_parity, Some second_parity -> first_parity = second_parity
-        (* An unknown parity permits either even or odd values. *)
         | Some _, None | None, Some _ | None, None -> true)
 
 let may_be_less_or_equal first_expr second_expr =
@@ -131,7 +132,6 @@ let may_be_less_or_equal first_expr second_expr =
     , Expr.Helpers.int_literal_value second_expr )
   with
   | Some first_value, Some second_value -> first_value <= second_value
-  (* Without a value for either bound, their order is not established. *)
   | Some _, None | None, Some _ | None, None -> true
 
 let is_empty_index = function
@@ -169,7 +169,8 @@ let rec may_indices_overlap (first_index : Expr.Typed.t Index.t)
         | All -> true
         | Single second_value -> may_be_less_or_equal first_lower second_value
         | Upfrom _ ->
-            (* Both nonempty suffixes contain the dimension's final element. *)
+            (* If v[i:] and v[j:] are both nonempty, both include the last
+               element of v. *)
             true
         | Between (_, second_upper) ->
             may_be_less_or_equal first_lower second_upper
@@ -199,8 +200,7 @@ and array_may_overlap_index (array_expr : Expr.Typed.t)
     (other_index : Expr.Typed.t Index.t) =
   match Expr.Helpers.array_literal_elements array_expr with
   | None ->
-      (* A runtime index array can contain an element selected by
-         other_index. *)
+      (* For v[idx] we don't know which elements idx selects until runtime. *)
       true
   | Some elements ->
       List.exists elements ~f:(fun element ->

@@ -4,238 +4,123 @@ open Analysis_and_optimization.Dependence_analysis
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-let pp_statement ppf pattern =
-  let without_promotions =
-    Expr.rewrite_bottom_up ~f:(fun expr ->
-        match expr.Expr.pattern with
-        | Promotion (original, _, _) -> original
-        | _ -> expr) in
-  Stmt.Located.pp ppf
-    Stmt.
-      { pattern=
-          Pattern.map without_promotions
-            (fun _ -> {pattern= Skip; meta= Location_span.empty})
-            pattern
-      ; meta= Location_span.empty }
+let check_dependency_graph ~source ~outer_dependencies ~dependencies_by_line =
+  let mir = Test_utils.mir_of_string source in
+  let graph = log_prob_dependency_graph mir in
+  let statements =
+    Analysis_and_optimization.Dataflow_utils.build_statement_map
+      (fun Stmt.{pattern; _} -> pattern)
+      (fun Stmt.{meta; _} -> meta.Location_span.begin_loc.line_num)
+      Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
+  let root, model =
+    match LabelMap.min_binding statements with
+    | root, (Stmt.Pattern.SList [model], _) -> (root, model)
+    | _ -> failwith "Expected a single model block" in
+  (* The outer statement list has no source line. The model block starts on line
+     1 in this fixture, but MIR gives it the location of its first child. *)
+  let source_line id =
+    if id = root then None
+    else if id = model then Some 1
+    else Some (snd (LabelMap.find id statements)) in
+  let actual =
+    LabelMap.bindings graph
+    |> List.map ~f:(fun (id, dependencies) ->
+        (source_line id, List.map (Set.Poly.to_list dependencies) ~f:source_line))
+  in
+  let lines = String.split_lines source |> Array.of_list in
+  let line_number = function None -> "-" | Some n -> Int.to_string n in
+  let print rows =
+    Fmt.pr "%4s  %-32s  %s@." "Line" "Stan source" "Depends on lines";
+    List.iter rows ~f:(fun (line, dependencies) ->
+        let code =
+          match line with
+          | None -> "<outer statement list>"
+          | Some n -> lines.(n - 1) in
+        let refs =
+          match dependencies with
+          | [] -> "none"
+          | ds -> List.map ds ~f:line_number |> String.concat ~sep:", " in
+        Fmt.pr "%4s  %-32s  %s@." (line_number line) code refs) in
+  print actual;
+  let expected =
+    (None, List.map outer_dependencies ~f:Option.some)
+    :: List.map dependencies_by_line ~f:(fun (line, deps) ->
+        (Some line, List.map deps ~f:Option.some)) in
+  if actual <> expected then (
+    print_endline "Expected:";
+    print expected;
+    failwith "Dependency graph differs from the expected graph")
 
-let example1_program =
-  Test_utils.mir_of_string
-    {|
-      // Statement 1 is the outer statement list.
-      model {                           // 2
-        int i = 0;                      // 3 (declaration), 4 (assignment)
-        if (i < 0) {                    // 5, 6
-          print(i);                     // 7
-        } else {                        // 8
-          for (j in 1:10) {             // 9, 10
-            if (j > 9) {                // 11, 12
-              break;                    // 13
-            }
-            if (j > 8 && i < -1) {       // 14, 15
-              continue;                 // 16
-            }
-            if (j > 5) {                // 17, 18
-              continue;                 // 19
-            } else {                    // 20
-              print("Badger", i + j);    // 21
-            }
-            print("Fin");               // 22
-          }
-        }
+let loop_with_break_and_continue =
+  {|model {
+  int i;
+  i = 0;
+  if (i < 0)
+  {
+    print(i);
+  } else {
+    for (j in 1:10)
+    {
+      if (j > 9)
+      {
+        break;
       }
-    |}
+      if (j > 8 && i < -1)
+      {
+        continue;
+      }
+      if (j > 5)
+      {
+        continue;
+      } else {
+        print("Badger", i + j);
+      }
+      print("Fin");
+    }
+  }
+}|}
 
-let%expect_test "Dependency graph example" =
-  let deps = log_prob_dependency_graph example1_program in
-  print_s [%sexp (deps : label Set.Poly.t LabelMap.t)];
+let%expect_test "Transitive dependencies through a loop with break and continue"
+    =
+  check_dependency_graph ~source:loop_with_break_and_continue
+    ~outer_dependencies:[]
+    ~dependencies_by_line:
+      [ (1, []); (2, []); (3, []); (4, [3]); (5, [3; 4]); (6, [3; 4])
+      ; (7, [3; 4]); (8, [3; 4; 10; 12]); (9, [3; 4; 8; 10; 12])
+      ; (10, [3; 4; 8; 12]); (11, [3; 4; 8; 10; 12]); (12, [3; 4; 8; 10])
+      ; (14, [3; 4; 8; 10; 12]); (15, [3; 4; 8; 10; 12; 14])
+      ; (16, [3; 4; 8; 10; 12; 14]); (18, [3; 4; 8; 10; 12; 14; 16])
+      ; (19, [3; 4; 8; 10; 12; 14; 16; 18]); (20, [3; 4; 8; 10; 12; 14; 16; 18])
+      ; (21, [3; 4; 8; 10; 12; 14; 16; 18]); (22, [3; 4; 8; 10; 12; 14; 16; 18])
+      ; (24, [3; 4; 8; 10; 12; 14; 16; 18; 20]) ];
   [%expect
     {|
-      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4 5)) (7 (4 5)) (8 (4 5))
-       (9 (4 5 11 13)) (10 (4 5 9 11 13)) (11 (4 5 9 13)) (12 (4 5 9 11 13))
-       (13 (4 5 9 11)) (14 (4 5 9 11 13)) (15 (4 5 9 11 13 14))
-       (16 (4 5 9 11 13 14)) (17 (4 5 9 11 13 14 16)) (18 (4 5 9 11 13 14 16 17))
-       (19 (4 5 9 11 13 14 16 17)) (20 (4 5 9 11 13 14 16 17))
-       (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
+    Line  Stan source                       Depends on lines
+       -  <outer statement list>            none
+       1  model {                           none
+       2    int i;                          none
+       3    i = 0;                          none
+       4    if (i < 0)                      3
+       5    {                               3, 4
+       6      print(i);                     3, 4
+       7    } else {                        3, 4
+       8      for (j in 1:10)               3, 4, 10, 12
+       9      {                             3, 4, 8, 10, 12
+      10        if (j > 9)                  3, 4, 8, 12
+      11        {                           3, 4, 8, 10, 12
+      12          break;                    3, 4, 8, 10
+      14        if (j > 8 && i < -1)        3, 4, 8, 10, 12
+      15        {                           3, 4, 8, 10, 12, 14
+      16          continue;                 3, 4, 8, 10, 12, 14
+      18        if (j > 5)                  3, 4, 8, 10, 12, 14, 16
+      19        {                           3, 4, 8, 10, 12, 14, 16, 18
+      20          continue;                 3, 4, 8, 10, 12, 14, 16, 18
+      21        } else {                    3, 4, 8, 10, 12, 14, 16, 18
+      22          print("Badger", i + j);   3, 4, 8, 10, 12, 14, 16, 18
+      24        print("Fin");               3, 4, 8, 10, 12, 14, 16, 18, 20
     |}]
 
-(* Statement IDs match the comments in [example1_program]. Include the MIR
-   statement beside each row so entry/exit sets can be read without decoding the
-   raw dataflow representation. *)
-let print_reaching_definitions definitions =
-  let statements = log_prob_build_dep_info_map example1_program in
-  print_endline "Entry/exit sets contain possible writer statement IDs.";
-  LabelMap.iter statements ~f:(fun ~key:id ~data:(pattern, info) ->
-      let statement =
-        match pattern with
-        | Stmt.Pattern.SList _ -> "<statement list>"
-        | Stmt.Pattern.Block _ -> "{ ... }"
-        | _ ->
-            Fmt.str "%a" pp_statement pattern
-            |> String.split_on_char ~sep:'\n'
-            |> List.map ~f:String.trim |> String.concat ~sep:" " in
-      Fmt.pr "Statement %d: `%s`@.  entry: %s@.  exit:  %s@." id statement
-        (definitions info.reaching_defn_entry)
-        (definitions info.reaching_defn_exit))
-
-let string_of_writer_ids writers =
-  Set.Poly.to_list writers |> List.map ~f:Int.to_string
-  |> String.concat ~sep:", " |> Printf.sprintf "[%s]"
-
-let%expect_test "Reaching definitions: writers of j at entry and exit" =
-  print_reaching_definitions (fun definitions ->
-      reaching_defn_lookup definitions {variable= "j"; path= []}
-      |> string_of_writer_ids |> Printf.sprintf "j <- %s");
-  [%expect
-    {|
-    Entry/exit sets contain possible writer statement IDs.
-    Statement 1: `<statement list>`
-      entry: j <- []
-      exit:  j <- []
-    Statement 2: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 3: `int i;`
-      entry: j <- []
-      exit:  j <- []
-    Statement 4: `i = 0;`
-      entry: j <- []
-      exit:  j <- []
-    Statement 5: `if((i < 0)) ; else ;`
-      entry: j <- []
-      exit:  j <- []
-    Statement 6: `{ ... }`
-      entry: j <- []
-      exit:  j <- []
-    Statement 7: `FnPrint__(i);`
-      entry: j <- []
-      exit:  j <- []
-    Statement 8: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 9: `for(j in 1:10) ;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 10: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 11: `if((j > 9)) ;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 12: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 13: `break;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 14: `if((j > 8) && (i < -(1))) ;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 15: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 16: `continue;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 17: `if((j > 5)) ; else ;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 18: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 19: `continue;`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 20: `{ ... }`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 21: `FnPrint__("Badger", (i + j));`
-      entry: j <- [9]
-      exit:  j <- [9]
-    Statement 22: `FnPrint__("Fin");`
-      entry: j <- [9]
-      exit:  j <- [9]
-    |}]
-
-let%expect_test "Reaching definitions: all variable writers at entry and exit" =
-  print_reaching_definitions (fun definitions ->
-      let writers =
-        Set.Poly.filter_map definitions ~f:(fun (location, writer_id) ->
-            Option.map writer_id ~f:(fun id ->
-                (location.Analysis_and_optimization.Dependence.variable, id)))
-        |> Set.Poly.to_list
-        |> List.map ~f:(fun (variable, id) ->
-            Printf.sprintf "%s <- %d" variable id) in
-      match writers with [] -> "none" | _ -> String.concat ~sep:", " writers);
-  [%expect
-    {|
-    Entry/exit sets contain possible writer statement IDs.
-    Statement 1: `<statement list>`
-      entry: none
-      exit:  none
-    Statement 2: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 3: `int i;`
-      entry: none
-      exit:  i <- 3
-    Statement 4: `i = 0;`
-      entry: i <- 3
-      exit:  i <- 4
-    Statement 5: `if((i < 0)) ; else ;`
-      entry: i <- 4
-      exit:  i <- 4
-    Statement 6: `{ ... }`
-      entry: i <- 4
-      exit:  i <- 4
-    Statement 7: `FnPrint__(i);`
-      entry: i <- 4
-      exit:  i <- 4
-    Statement 8: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 9: `for(j in 1:10) ;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 10: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 11: `if((j > 9)) ;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 12: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 13: `break;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 14: `if((j > 8) && (i < -(1))) ;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 15: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 16: `continue;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 17: `if((j > 5)) ; else ;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 18: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 19: `continue;`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 20: `{ ... }`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 21: `FnPrint__("Badger", (i + j));`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    Statement 22: `FnPrint__("Fin");`
-      entry: i <- 4, j <- 9
-      exit:  i <- 4, j <- 9
-    |}]
+let example1_program = Test_utils.mir_of_string loop_with_break_and_continue
 
 let%expect_test "Variable dependency example" =
   let deps =
@@ -330,46 +215,44 @@ let%expect_test "Uninitialized variables example" =
         k))
     |}]
 
-let print_parameter_dependencies body =
-  (* Number the first nonblank line of the supplied snippet as line 1. The
-     common declarations are not part of the reported snippet locations. *)
-  let body = String.trim body in
-  let prelude =
-    {|
-      data {
-        int<lower=1, upper=10> k;
-      }
-      parameters {
-        real a;
-      }
-      model {
-        vector[10] v = rep_vector(0, 10);
-    |}
-    |> String.trim in
-  let prelude = prelude ^ "\n" in
-  let prelude_lines = List.length (String.split_on_char ~sep:'\n' prelude) - 1 in
-  let source_lines = Array.of_list (String.split_on_char ~sep:'\n' body) in
-  let mir = Test_utils.mir_of_string (prelude ^ body ^ "\n}") in
+let source_lines source =
+  String.split_lines source |> List.map ~f:String.trim |> Array.of_list
+
+let check_lines ~what ~expected actual =
+  if actual <> expected then
+    let pp = Fmt.list ~sep:(Fmt.any ", ") Fmt.int in
+    Fmt.failwith "%s: expected lines [%a], got [%a]" what pp expected pp actual
+
+let check_parameter_warnings ~expected_lines source =
+  let source = String.trim source in
+  let lines = source_lines source in
+  let mir = Test_utils.mir_of_string source in
   let prefix = "A control flow statement depends on parameter(s): " in
   let warnings =
     Analysis_and_optimization.Pedantic_analysis.warn_pedantic mir
     |> List.filter ~f:(fun (_, message) -> String.starts_with ~prefix message)
   in
-  match warnings with
+  let warnings =
+    List.map warnings ~f:(fun (loc, message) ->
+        (loc.Location_span.begin_loc.line_num, message)) in
+  (match warnings with
   | [] -> print_endline "Control-flow warnings: none"
-  | messages ->
-      List.iter messages ~f:(fun (location, message) ->
-          let line = location.Location_span.begin_loc.line_num - prelude_lines in
-          Fmt.pr "line %d: `%s`@.  %s@." line
-            (String.trim source_lines.(line - 1))
-            message)
+  | _ ->
+      List.iter warnings ~f:(fun (line, message) ->
+          Fmt.pr "line %d: `%s`@.  %s@." line lines.(line - 1) message));
+  check_lines ~what:"Control-flow warnings" ~expected:expected_lines
+    (List.map warnings ~f:fst)
 
 let%expect_test "Dependencies: reading another literal element does not warn" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[]
     {|
-      v[1] = a;
-      if (v[2] > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1] = a;
+        if (v[2] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect {|
@@ -377,28 +260,37 @@ let%expect_test "Dependencies: reading another literal element does not warn" =
   |}]
 
 let%expect_test "Dependencies: reading the written element warns" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[5]
     {|
-      v[1] = a;
-      if (v[1] > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1] = a;
+        if (v[1] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 2: `if (v[1] > 0) {`
+    line 5: `if (v[1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test
     "Dependencies: overwriting a stable element removes its parameter \
      dependency" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[]
     {|
-      v[k] = a;
-      v[k] = 0;
-      if (v[k] > 0) {
-        target += 1;
+      data { int<lower=1, upper=10> k; }
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[k] = a;
+        v[k] = 0;
+        if (v[k] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect {|
@@ -407,147 +299,183 @@ let%expect_test
 
 let%expect_test "Dependencies: changing an index preserves the earlier element"
     =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[8]
     {|
-      int i = 1;
-      v[i] = a;
-      i = 2;
-      v[i] = 0;
-      if (v[1] > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        int i = 1;
+        v[i] = a;
+        i = 2;
+        v[i] = 0;
+        if (v[1] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 5: `if (v[1] > 0) {`
+    line 8: `if (v[1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test
     "Dependencies: changing an index array preserves the earlier element" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[8]
     {|
-      array[2] int idx = {1, 2};
-      v[idx[1]] = a;
-      idx[1] = 2;
-      v[idx[1]] = 0;
-      if (v[1] > 0) {
-        target += 1;
-      }
-    |};
-  [%expect
-    {|
-    line 5: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
-
-let%expect_test
-    "Conservative dependencies: loop bounds do not yet prove disjointness" =
-  print_parameter_dependencies
-    {|
-      for (n in 1:5) {
-        v[n + 5] = a;
-        if (v[n] > 0) {
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        array[2] int idx = {1, 2};
+        v[idx[1]] = a;
+        idx[1] = 2;
+        v[idx[1]] = 0;
+        if (v[1] > 0) {
           target += 1;
         }
       }
     |};
   [%expect
     {|
-    line 3: `if (v[n] > 0) {`
+    line 8: `if (v[1] > 0) {`
+      A control flow statement depends on parameter(s): a.
+    |}]
+
+let%expect_test "Loop bounds: reading v[1:5] still warns after writing v[6:10]"
+    =
+  check_parameter_warnings ~expected_lines:[6]
+    {|
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        for (n in 1:5) {
+          v[n + 5] = a;
+          if (v[n] > 0) {
+            target += 1;
+          }
+        }
+      }
+    |};
+  [%expect
+    {|
+    line 6: `if (v[n] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test "Dependencies: an earlier iteration can supply a read" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[5]
     {|
-      for (n in 2:5) {
-        if (v[n - 1] > 0) {
-          target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        for (n in 2:5) {
+          if (v[n - 1] > 0) {
+            target += 1;
+          }
+          v[n] = a;
         }
-        v[n] = a;
       }
     |};
   [%expect
     {|
-    line 2: `if (v[n - 1] > 0) {`
+    line 5: `if (v[n - 1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test
-    "Conservative dependencies: same-iteration overwrites are not yet proved" =
-  print_parameter_dependencies
+    "Loop index: reading v[n] still warns after overwriting it in the same \
+     iteration" =
+  check_parameter_warnings ~expected_lines:[7]
     {|
-      for (n in 1:5) {
-        v[n] = a;
-        v[n] = 0;
-        if (v[n] > 0) {
-          target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        for (n in 1:5) {
+          v[n] = a;
+          v[n] = 0;
+          if (v[n] > 0) {
+            target += 1;
+          }
         }
       }
     |};
   [%expect
     {|
-    line 4: `if (v[n] > 0) {`
+    line 7: `if (v[n] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test "Dependencies: a conditional overwrite might not execute" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[9]
     {|
-      v[1] = a;
-      if (k > 1) {
-        v[1] = 0;
-      }
-      if (v[1] > 0) {
-        target += 1;
+      data { int<lower=1, upper=10> k; }
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1] = a;
+        if (k > 1) {
+          v[1] = 0;
+        }
+        if (v[1] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 5: `if (v[1] > 0) {`
+    line 9: `if (v[1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test "Dependencies: nested slices still read the original vector" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[5]
     {|
-      v[2] = a;
-      if (v[2:3][1] > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[2] = a;
+        if (v[2:3][1] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 2: `if (v[2:3][1] > 0) {`
+    line 5: `if (v[2:3][1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test
-    "Conservative dependencies: slice overwrites do not yet remove definitions"
-    =
-  print_parameter_dependencies
+    "Slice overwrite: reading v[1] still warns after clearing v[1:2]" =
+  check_parameter_warnings ~expected_lines:[6]
     {|
-      v[1] = a;
-      v[1:2] = rep_vector(0, 2);
-      if (v[1] > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1] = a;
+        v[1:2] = rep_vector(0, 2);
+        if (v[1] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 3: `if (v[1] > 0) {`
+    line 6: `if (v[1] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test "Dependencies: writing another tuple field does not warn" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[]
     {|
-      tuple(real, real) t;
-      t.1 = a;
-      t.2 = 0;
-      if (t.2 > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        tuple(real, real) t;
+        t.1 = a;
+        t.2 = 0;
+        if (t.2 > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect {|
@@ -556,27 +484,34 @@ let%expect_test "Dependencies: writing another tuple field does not warn" =
 
 let%expect_test
     "Dependencies: another tuple field does not overwrite the parameter" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[6]
     {|
-      tuple(real, real) t;
-      t.1 = a;
-      t.2 = 0;
-      if (t.1 > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        tuple(real, real) t;
+        t.1 = a;
+        t.2 = 0;
+        if (t.1 > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 4: `if (t.1 > 0) {`
+    line 6: `if (t.1 > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test "Dependencies: disjoint ranges do not warn" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[]
     {|
-      v[1:2] = rep_vector(a, 2);
-      if (sum(v[3:4]) > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1:2] = rep_vector(a, 2);
+        if (sum(v[3:4]) > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect {|
@@ -584,11 +519,15 @@ let%expect_test "Dependencies: disjoint ranges do not warn" =
   |}]
 
 let%expect_test "Dependencies: disjoint index arrays do not warn" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[]
     {|
-      v[{1, 3}] = rep_vector(a, 2);
-      if (sum(v[{2, 4}]) > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[{1, 3}] = rep_vector(a, 2);
+        if (sum(v[{2, 4}]) > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect {|
@@ -596,77 +535,213 @@ let%expect_test "Dependencies: disjoint index arrays do not warn" =
   |}]
 
 let%expect_test "Dependencies: ranges sharing an endpoint warn" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[5]
     {|
-      v[1:2] = rep_vector(a, 2);
-      if (sum(v[2:3]) > 0) {
-        target += 1;
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[1:2] = rep_vector(a, 2);
+        if (sum(v[2:3]) > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 2: `if (sum(v[2:3]) > 0) {`
+    line 5: `if (sum(v[2:3]) > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
 let%expect_test
     "Dependencies: a symbolic array element can select the read position" =
-  print_parameter_dependencies
+  check_parameter_warnings ~expected_lines:[6]
     {|
-      v[{1, k}] = rep_vector(a, 2);
-      if (v[2] > 0) {
-        target += 1;
+      data { int<lower=1, upper=10> k; }
+      parameters { real a; }
+      model {
+        vector[10] v = rep_vector(0, 10);
+        v[{1, k}] = rep_vector(a, 2);
+        if (v[2] > 0) {
+          target += 1;
+        }
       }
     |};
   [%expect
     {|
-    line 2: `if (v[2] > 0) {`
+    line 6: `if (v[2] > 0) {`
       A control flow statement depends on parameter(s): a.
     |}]
 
-let%expect_test
-    "Random subscripts: the actual indexed read retains all three writers" =
-  let mir =
-    Test_utils.mir_of_string
-      (String.trim
-         {|
-        functions {
-          real pick_rng(vector theta) {
-            vector[num_elements(theta) + 1] v = rep_vector(0, num_elements(theta) + 1);
-            v[categorical_rng(theta)] = 1;
-            v[categorical_rng(theta)] = 2;
-            return v[categorical_rng(theta) + 1];
-          }
+let check_read_writers ~block ~variable ~read_line ~expected_writer_lines source
+    =
+  let source = String.trim source in
+  let lines = source_lines source in
+  let mir = Test_utils.mir_of_string source in
+  let statements =
+    match block with
+    | `Model -> log_prob_build_dep_info_map mir
+    | `Function name -> (
+        match
+          List.find_map mir.functions_block ~f:(fun f ->
+              if String.equal f.Program.fdname name then f.fdbody else None)
+        with
+        | Some body -> build_dep_info_map mir body
+        | None -> Fmt.failwith "No body for function %s" name) in
+  let reads =
+    LabelMap.bindings statements
+    |> List.concat_map ~f:(function
+      | _, (_, info) when info.meta.begin_loc.line_num = read_line ->
+          List.filter_map info.accesses.reads ~f:(fun read ->
+              if
+                String.equal read.Analysis_and_optimization.Dependence.variable
+                  variable
+              then Some (info.reaching_defn_entry, read)
+              else None)
+      | _ -> []) in
+  match reads with
+  | [(definitions, read)] ->
+      Fmt.pr "line %d: %s@.Read: %s%a@.Possible writers of %s:@." read_line
+        lines.(read_line - 1)
+        read.variable
+        (Index.pp_indices Expr.Typed.pp)
+        read.path variable;
+      let writer_lines =
+        reaching_defn_lookup definitions read
+        |> Set.Poly.to_list
+        |> List.map ~f:(fun id ->
+            (snd (LabelMap.find id statements)).meta.begin_loc.line_num)
+        |> List.sort ~cmp:Int.compare in
+      List.iter writer_lines ~f:(fun line ->
+          Fmt.pr "  line %d: %s@." line lines.(line - 1));
+      check_lines
+        ~what:(Fmt.str "Writers of %s at line %d" variable read_line)
+        ~expected:expected_writer_lines writer_lines
+  | _ ->
+      Fmt.failwith "Expected one read of %s on line %d, found %d in:\n%s"
+        variable read_line (List.length reads) source
+
+let%expect_test "The for header supplies j to print(j)" =
+  check_read_writers ~block:`Model ~variable:"j" ~read_line:3
+    ~expected_writer_lines:[2]
+    {|
+      model {
+        for (j in 1:10) {
+          print(j);
         }
-        model {}
-      |})
-  in
-  let body =
-    Option.get
-      (List.find_map mir.functions_block ~f:(fun definition ->
-           definition.Program.fdbody)) in
-  let statements = build_dep_info_map mir body in
-  LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
-      match pattern with
-      | Stmt.Pattern.Return _ ->
-          Fmt.pr "line %d: `%a`@.Possible writers:@."
-            info.meta.begin_loc.line_num pp_statement pattern;
-          let read =
-            List.find_opt info.accesses.reads ~f:(fun location ->
-                String.equal
-                  location.Analysis_and_optimization.Dependence.variable "v")
-            |> Option.get in
-          reaching_defn_lookup info.reaching_defn_entry read
-          |> Set.Poly.iter ~f:(fun writer_id ->
-              let writer, writer_info = LabelMap.find writer_id statements in
-              Fmt.pr "  line %d: `%a`@." writer_info.meta.begin_loc.line_num
-                pp_statement writer)
-      | _ -> ());
+      }
+    |};
   [%expect
     {|
-    line 6: `return v[(categorical_rng(theta) + 1)];`
-    Possible writers:
-      line 3: `v = rep_vector(0, (num_elements(theta) + 1));`
-      line 4: `v[categorical_rng(theta)] = 1;`
-      line 5: `v[categorical_rng(theta)] = 2;`
+    line 3: print(j);
+    Read: j
+    Possible writers of j:
+      line 2: for (j in 1:10) {
+    |}]
+
+let%expect_test "A continue can carry x = 1 past the later write of x = 2" =
+  check_read_writers ~block:`Model ~variable:"x" ~read_line:4
+    ~expected_writer_lines:[2; 5; 7]
+    {|
+      model {
+        int x = 0;
+        for (j in 1:3) {
+          print(x);
+          x = 1;
+          if (j == 1) continue;
+          x = 2;
+        }
+      }
+    |};
+  [%expect
+    {|
+    line 4: print(x);
+    Read: x
+    Possible writers of x:
+      line 2: int x = 0;
+      line 5: x = 1;
+      line 7: x = 2;
+    |}]
+
+let%expect_test
+    "Random subscripts: the return can read the initial vector or either \
+     element write" =
+  check_read_writers ~block:(`Function "pick_rng") ~variable:"v" ~read_line:7
+    ~expected_writer_lines:[4; 5; 6]
+    {|
+      functions {
+        real pick_rng(vector theta) {
+          vector[num_elements(theta) + 1] v;
+          v = rep_vector(0, num_elements(theta) + 1);
+          v[categorical_rng(theta)] = 1;
+          v[categorical_rng(theta)] = 2;
+          return v[categorical_rng(theta) + 1];
+        }
+      }
+      model {}
+    |};
+  [%expect
+    {|
+    line 7: return v[categorical_rng(theta) + 1];
+    Read: v[(categorical_rng(theta) + 1)]
+    Possible writers of v:
+      line 4: v = rep_vector(0, num_elements(theta) + 1);
+      line 5: v[categorical_rng(theta)] = 1;
+      line 6: v[categorical_rng(theta)] = 2;
+    |}]
+
+let check_assignment_writers ~at_line ~entry ~exit source =
+  let source = String.trim source in
+  let lines = source_lines source in
+  let statements =
+    log_prob_build_dep_info_map (Test_utils.mir_of_string source) in
+  let assignments =
+    LabelMap.bindings statements
+    |> List.filter_map ~f:(function
+      | _, (Stmt.Pattern.Assignment _, info)
+        when info.meta.begin_loc.line_num = at_line ->
+          Some info
+      | _ -> None) in
+  let check phase expected definitions =
+    let actual =
+      Set.Poly.filter_map definitions ~f:(fun (location, writer) ->
+          Option.map writer ~f:(fun id ->
+              let _, info = LabelMap.find id statements in
+              ( location.Analysis_and_optimization.Dependence.variable
+              , info.meta.begin_loc.line_num )))
+      |> Set.Poly.to_list in
+    let pp =
+      Fmt.list ~sep:(Fmt.any ", ") (fun ppf (variable, line) ->
+          Fmt.pf ppf "%s from line %d" variable line) in
+    Fmt.pr "%s: [%a]@." phase pp actual;
+    if actual <> expected then
+      Fmt.failwith "%s at line %d: expected [%a], got [%a]" phase at_line pp
+        expected pp actual in
+  match assignments with
+  | [info] ->
+      Fmt.pr "line %d: %s@." at_line lines.(at_line - 1);
+      check "entry" entry info.reaching_defn_entry;
+      check "exit" exit info.reaching_defn_exit
+  | _ ->
+      Fmt.failwith "Expected one assignment on line %d, found %d" at_line
+        (List.length assignments)
+
+let%expect_test
+    "Reassigning i replaces its writer and preserves the writer of j" =
+  check_assignment_writers ~at_line:6
+    ~entry:[("i", 4); ("j", 5)]
+    ~exit:[("i", 6); ("j", 5)]
+    {|
+      model {
+        int i;
+        int j;
+        i = 0;
+        j = 1;
+        i = j;
+      }
+    |};
+  [%expect
+    {|
+    line 6: i = j;
+    entry: [i from line 4, j from line 5]
+    exit: [i from line 6, j from line 5]
     |}]

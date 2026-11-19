@@ -8,8 +8,10 @@ val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
 val cannot_remove_expr : ExprSet.elt -> bool
 
 val is_stable_expr : string Set.Poly.t -> Expr.Typed.t -> bool
-(** Proves stability when the supplied set includes every variable written in
-    the analyzed region. *)
+(** [is_stable_expr written_vars e] checks whether we can evaluate [e] again and
+    get the same value. For example, a call to an RNG can change value even if
+    its arguments stay the same. [written_vars] must include every variable
+    written in the region across which we compare evaluations. *)
 
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
