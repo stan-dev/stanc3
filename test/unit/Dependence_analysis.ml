@@ -223,28 +223,38 @@ let check_lines ~what ~expected actual =
     let pp = Fmt.list ~sep:(Fmt.any ", ") Fmt.int in
     Fmt.failwith "%s: expected lines [%a], got [%a]" what pp expected pp actual
 
-let check_parameter_warnings ~expected_lines source =
+type parameter_warning = {line: int; statement: string; message: string}
+
+let check_parameter_warnings ~expected source =
   let source = String.trim source in
   let lines = source_lines source in
   let mir = Test_utils.mir_of_string source in
   let prefix = "A control flow statement depends on parameter(s): " in
-  let warnings =
+  let actual =
     Analysis_and_optimization.Pedantic_analysis.warn_pedantic mir
-    |> List.filter ~f:(fun (_, message) -> String.starts_with ~prefix message)
-  in
-  let warnings =
-    List.map warnings ~f:(fun (loc, message) ->
-        (loc.Location_span.begin_loc.line_num, message)) in
-  (match warnings with
-  | [] -> print_endline "Control-flow warnings: none"
-  | _ ->
-      List.iter warnings ~f:(fun (line, message) ->
-          Fmt.pr "line %d: `%s`@.  %s@." line lines.(line - 1) message));
-  check_lines ~what:"Control-flow warnings" ~expected:expected_lines
-    (List.map warnings ~f:fst)
+    |> List.filter_map ~f:(fun (loc, message) ->
+        if String.starts_with ~prefix message then
+          let line = loc.Location_span.begin_loc.line_num in
+          let statement =
+            if line >= 1 && line <= Array.length lines then lines.(line - 1)
+            else "<outside the Stan source>" in
+          Some {line; statement; message}
+        else None) in
+  if actual <> expected then
+    let pp_warning ppf {line; statement; message} =
+      Fmt.pf ppf "line %d: %s@,  %s" line statement message in
+    let pp_warnings ppf = function
+      | [] -> Fmt.string ppf "none"
+      | warnings -> Fmt.list ~sep:Fmt.cut pp_warning ppf warnings in
+    Fmt.failwith
+      "@[<v>Expected control-flow warnings:@,\
+       %a@,\
+       Actual control-flow warnings:@,\
+       %a@]"
+      pp_warnings expected pp_warnings actual
 
-let%expect_test "Dependencies: reading another literal element does not warn" =
-  check_parameter_warnings ~expected_lines:[]
+let%test_unit "Dependencies: reading another literal element does not warn" =
+  check_parameter_warnings ~expected:[]
     {|
       parameters { real a; }
       model {
@@ -254,13 +264,14 @@ let%expect_test "Dependencies: reading another literal element does not warn" =
           target += 1;
         }
       }
-    |};
-  [%expect {|
-    Control-flow warnings: none
-  |}]
+    |}
 
-let%expect_test "Dependencies: reading the written element warns" =
-  check_parameter_warnings ~expected_lines:[5]
+let%test_unit "Dependencies: reading the written element warns" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 5
+        ; statement= "if (v[1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -270,17 +281,12 @@ let%expect_test "Dependencies: reading the written element warns" =
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 5: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Dependencies: overwriting a stable element removes its parameter \
      dependency" =
-  check_parameter_warnings ~expected_lines:[]
+  check_parameter_warnings ~expected:[]
     {|
       data { int<lower=1, upper=10> k; }
       parameters { real a; }
@@ -292,14 +298,14 @@ let%expect_test
           target += 1;
         }
       }
-    |};
-  [%expect {|
-    Control-flow warnings: none
-  |}]
+    |}
 
-let%expect_test "Dependencies: changing an index preserves the earlier element"
-    =
-  check_parameter_warnings ~expected_lines:[8]
+let%test_unit "Dependencies: changing an index preserves the earlier element" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 8
+        ; statement= "if (v[1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -312,16 +318,15 @@ let%expect_test "Dependencies: changing an index preserves the earlier element"
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 8: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Dependencies: changing an index array preserves the earlier element" =
-  check_parameter_warnings ~expected_lines:[8]
+  check_parameter_warnings
+    ~expected:
+      [ { line= 8
+        ; statement= "if (v[1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -334,16 +339,14 @@ let%expect_test
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 8: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Loop bounds: reading v[1:5] still warns after writing v[6:10]"
-    =
-  check_parameter_warnings ~expected_lines:[6]
+let%test_unit "Loop bounds: reading v[1:5] still warns after writing v[6:10]" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 6
+        ; statement= "if (v[n] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -355,15 +358,14 @@ let%expect_test "Loop bounds: reading v[1:5] still warns after writing v[6:10]"
           }
         }
       }
-    |};
-  [%expect
-    {|
-    line 6: `if (v[n] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Dependencies: an earlier iteration can supply a read" =
-  check_parameter_warnings ~expected_lines:[5]
+let%test_unit "Dependencies: an earlier iteration can supply a read" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 5
+        ; statement= "if (v[n - 1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -375,17 +377,16 @@ let%expect_test "Dependencies: an earlier iteration can supply a read" =
           v[n] = a;
         }
       }
-    |};
-  [%expect
-    {|
-    line 5: `if (v[n - 1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Loop index: reading v[n] still warns after overwriting it in the same \
      iteration" =
-  check_parameter_warnings ~expected_lines:[7]
+  check_parameter_warnings
+    ~expected:
+      [ { line= 7
+        ; statement= "if (v[n] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -398,15 +399,14 @@ let%expect_test
           }
         }
       }
-    |};
-  [%expect
-    {|
-    line 7: `if (v[n] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Dependencies: a conditional overwrite might not execute" =
-  check_parameter_warnings ~expected_lines:[9]
+let%test_unit "Dependencies: a conditional overwrite might not execute" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 9
+        ; statement= "if (v[1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       data { int<lower=1, upper=10> k; }
       parameters { real a; }
@@ -420,15 +420,14 @@ let%expect_test "Dependencies: a conditional overwrite might not execute" =
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 9: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Dependencies: nested slices still read the original vector" =
-  check_parameter_warnings ~expected_lines:[5]
+let%test_unit "Dependencies: nested slices still read the original vector" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 5
+        ; statement= "if (v[2:3][1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -438,16 +437,15 @@ let%expect_test "Dependencies: nested slices still read the original vector" =
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 5: `if (v[2:3][1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test
-    "Slice overwrite: reading v[1] still warns after clearing v[1:2]" =
-  check_parameter_warnings ~expected_lines:[6]
+let%test_unit "Slice overwrite: reading v[1] still warns after clearing v[1:2]"
+    =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 6
+        ; statement= "if (v[1] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -458,15 +456,10 @@ let%expect_test
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 6: `if (v[1] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Dependencies: writing another tuple field does not warn" =
-  check_parameter_warnings ~expected_lines:[]
+let%test_unit "Dependencies: writing another tuple field does not warn" =
+  check_parameter_warnings ~expected:[]
     {|
       parameters { real a; }
       model {
@@ -477,14 +470,15 @@ let%expect_test "Dependencies: writing another tuple field does not warn" =
           target += 1;
         }
       }
-    |};
-  [%expect {|
-    Control-flow warnings: none
-  |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Dependencies: another tuple field does not overwrite the parameter" =
-  check_parameter_warnings ~expected_lines:[6]
+  check_parameter_warnings
+    ~expected:
+      [ { line= 6
+        ; statement= "if (t.1 > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -495,15 +489,10 @@ let%expect_test
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 6: `if (t.1 > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test "Dependencies: disjoint ranges do not warn" =
-  check_parameter_warnings ~expected_lines:[]
+let%test_unit "Dependencies: disjoint ranges do not warn" =
+  check_parameter_warnings ~expected:[]
     {|
       parameters { real a; }
       model {
@@ -513,13 +502,10 @@ let%expect_test "Dependencies: disjoint ranges do not warn" =
           target += 1;
         }
       }
-    |};
-  [%expect {|
-    Control-flow warnings: none
-  |}]
+    |}
 
-let%expect_test "Dependencies: disjoint index arrays do not warn" =
-  check_parameter_warnings ~expected_lines:[]
+let%test_unit "Dependencies: disjoint index arrays do not warn" =
+  check_parameter_warnings ~expected:[]
     {|
       parameters { real a; }
       model {
@@ -529,13 +515,14 @@ let%expect_test "Dependencies: disjoint index arrays do not warn" =
           target += 1;
         }
       }
-    |};
-  [%expect {|
-    Control-flow warnings: none
-  |}]
+    |}
 
-let%expect_test "Dependencies: ranges sharing an endpoint warn" =
-  check_parameter_warnings ~expected_lines:[5]
+let%test_unit "Dependencies: ranges sharing an endpoint warn" =
+  check_parameter_warnings
+    ~expected:
+      [ { line= 5
+        ; statement= "if (sum(v[2:3]) > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       parameters { real a; }
       model {
@@ -545,16 +532,15 @@ let%expect_test "Dependencies: ranges sharing an endpoint warn" =
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 5: `if (sum(v[2:3]) > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Dependencies: a symbolic array element can select the read position" =
-  check_parameter_warnings ~expected_lines:[6]
+  check_parameter_warnings
+    ~expected:
+      [ { line= 6
+        ; statement= "if (v[2] > 0) {"
+        ; message= "A control flow statement depends on parameter(s): a." } ]
     {|
       data { int<lower=1, upper=10> k; }
       parameters { real a; }
@@ -565,12 +551,7 @@ let%expect_test
           target += 1;
         }
       }
-    |};
-  [%expect
-    {|
-    line 6: `if (v[2] > 0) {`
-      A control flow statement depends on parameter(s): a.
-    |}]
+    |}
 
 let check_read_writers ~block ~variable ~read_line ~expected_writer_lines source
     =

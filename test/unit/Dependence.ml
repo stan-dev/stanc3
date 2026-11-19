@@ -271,28 +271,8 @@ let check_overlap first_path second_path expected =
       first_path
       (Index.pp_indices pp_index_expr)
       second_path expected actual
-  else
-    Fmt.pr "PASS: v%a / v%a; may overlap: %b@."
-      (Index.pp_indices pp_index_expr)
-      first_path
-      (Index.pp_indices pp_index_expr)
-      second_path actual
 
-let pp_statement ppf pattern =
-  let without_promotions =
-    Expr.rewrite_bottom_up ~f:(fun expr ->
-        match expr.Expr.pattern with
-        | Promotion (original, _, _) -> original
-        | _ -> expr) in
-  Stmt.Located.pp ppf
-    Stmt.
-      { pattern=
-          Pattern.map without_promotions
-            (fun _ -> {pattern= Skip; meta= Location_span.empty})
-            pattern
-      ; meta= Location_span.empty }
-
-let print_write_comparison variables ~previous_line ~next_line ~may_overlap
+let check_write_comparison variables ~previous_line ~next_line ~may_overlap
     ~previous_overwritten source =
   let statements = statement_map source |> LabelMap.bindings in
   let written_vars =
@@ -307,42 +287,41 @@ let print_write_comparison variables ~previous_line ~next_line ~may_overlap
           match pattern with
           | Stmt.Pattern.Assignment _
             when location.Location_span.begin_loc.line_num = line ->
-              List.filter_map (Access.collect_accesses pattern).writes
-                ~f:(fun write ->
-                  if List.mem write.Access.variable ~set:variables then
-                    Some (pattern, write)
-                  else None)
+              List.filter (Access.collect_accesses pattern).writes
+                ~f:(fun write -> List.mem write.Access.variable ~set:variables)
           | _ -> []) in
     match writes with
     | [write] -> write
     | _ ->
-        Fmt.failwith "Expected one write to %s on line %d, found %d"
+        Fmt.failwith "Expected one write to %s on line %d, found %d in:\n%s"
           (String.concat ~sep:", " variables)
-          line (List.length writes) in
+          line (List.length writes) (String.trim source) in
   if previous_line >= next_line then
     Fmt.failwith "Expected previous line %d to precede next line %d"
       previous_line next_line;
-  let previous_statement, previous = write_on_line previous_line in
-  let next_statement, next_write = write_on_line next_line in
+  let previous = write_on_line previous_line in
+  let next_write = write_on_line next_line in
   let actual_overlap =
     Access.Location.same_var previous next_write
     && Access.may_overlap previous.path next_write.path in
   let actual_overwritten =
     Access.is_overwritten written_vars previous next_write in
-  Fmt.pr "previous (line %d): %a@.next (line %d): %a@." previous_line
-    pp_statement previous_statement next_line pp_statement next_statement;
-  Fmt.pr "may overlap: %b@.previous overwritten: %b@." actual_overlap
-    actual_overwritten;
   let check name expected actual =
     if expected <> actual then
-      Fmt.failwith "%s for lines %d and %d: expected %b, got %b" name
-        previous_line next_line expected actual in
+      let lines = String.split_lines (String.trim source) |> Array.of_list in
+      Fmt.failwith
+        "%s: expected %b, got %b\n\
+        \  previous (line %d): %s\n\
+        \  next (line %d): %s"
+        name expected actual previous_line
+        (String.trim lines.(previous_line - 1))
+        next_line
+        (String.trim lines.(next_line - 1)) in
   check "may_overlap" may_overlap actual_overlap;
   check "previous_overwritten" previous_overwritten actual_overwritten
 
-let%expect_test "Overwrite: different literal elements retain the earlier write"
-    =
-  print_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:false
+let%test_unit "Overwrite: different literal elements retain the earlier write" =
+  check_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:false
     ~previous_overwritten:false
     {|
       model {
@@ -350,18 +329,10 @@ let%expect_test "Overwrite: different literal elements retain the earlier write"
         v[1] = 1;
         v[2] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): v[1] = 1;
-    next (line 4): v[2] = 2;
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: the same literal element replaces the earlier write"
-    =
-  print_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: the same literal element replaces the earlier write" =
+  check_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:true
     {|
       model {
@@ -369,17 +340,10 @@ let%expect_test "Overwrite: the same literal element replaces the earlier write"
         v[1] = 1;
         v[1] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): v[1] = 1;
-    next (line 4): v[1] = 2;
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test "Overwrite: the same stable index replaces the earlier write" =
-  print_write_comparison ["v"] ~previous_line:6 ~next_line:7 ~may_overlap:true
+let%test_unit "Overwrite: the same stable index replaces the earlier write" =
+  check_write_comparison ["v"] ~previous_line:6 ~next_line:7 ~may_overlap:true
     ~previous_overwritten:true
     {|
       data {
@@ -390,17 +354,10 @@ let%expect_test "Overwrite: the same stable index replaces the earlier write" =
         v[k] = 1;
         v[k] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 6): v[k] = 1;
-    next (line 7): v[k] = 2;
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test "Overwrite: different symbolic indices can alias" =
-  print_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
+let%test_unit "Overwrite: different symbolic indices can alias" =
+  check_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
     ~previous_overwritten:false
     {|
       data {
@@ -412,17 +369,10 @@ let%expect_test "Overwrite: different symbolic indices can alias" =
         v[k] = 1;
         v[j] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 7): v[k] = 1;
-    next (line 8): v[j] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: algebraic equivalence is not yet used" =
-  print_write_comparison ["v"] ~previous_line:6 ~next_line:7 ~may_overlap:true
+let%test_unit "Overwrite: algebraic equivalence is not yet used" =
+  check_write_comparison ["v"] ~previous_line:6 ~next_line:7 ~may_overlap:true
     ~previous_overwritten:false
     {|
       data {
@@ -433,17 +383,10 @@ let%expect_test "Overwrite: algebraic equivalence is not yet used" =
         v[k + k] = 1;
         v[2 * k] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 6): v[(k + k)] = 1;
-    next (line 7): v[(2 * k)] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: stable indirect indices replace the earlier write" =
-  print_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
+let%test_unit "Overwrite: stable indirect indices replace the earlier write" =
+  check_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
     ~previous_overwritten:true
     {|
       data {
@@ -455,17 +398,10 @@ let%expect_test "Overwrite: stable indirect indices replace the earlier write" =
         v[idx[k]] = 1;
         v[idx[k]] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 7): v[idx[k]] = 1;
-    next (line 8): v[idx[k]] = 2;
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test "Overwrite: nonlinear indices can alias a symbolic element" =
-  print_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
+let%test_unit "Overwrite: nonlinear indices can alias a symbolic element" =
+  check_write_comparison ["v"] ~previous_line:7 ~next_line:8 ~may_overlap:true
     ~previous_overwritten:false
     {|
       data {
@@ -477,18 +413,10 @@ let%expect_test "Overwrite: nonlinear indices can alias a symbolic element" =
         v[k * k] = 1;
         v[j] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 7): v[(k * k)] = 1;
-    next (line 8): v[j] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: changing the scalar index retains the earlier write"
-    =
-  print_write_comparison ["v"] ~previous_line:4 ~next_line:6 ~may_overlap:true
+let%test_unit "Overwrite: changing the scalar index retains the earlier write" =
+  check_write_comparison ["v"] ~previous_line:4 ~next_line:6 ~may_overlap:true
     ~previous_overwritten:false
     {|
       model {
@@ -498,18 +426,10 @@ let%expect_test "Overwrite: changing the scalar index retains the earlier write"
         k = 2;
         v[k] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 4): v[k] = 1;
-    next (line 6): v[k] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: changing the index array retains the earlier write"
-    =
-  print_write_comparison ["v"] ~previous_line:4 ~next_line:6 ~may_overlap:true
+let%test_unit "Overwrite: changing the index array retains the earlier write" =
+  check_write_comparison ["v"] ~previous_line:4 ~next_line:6 ~may_overlap:true
     ~previous_overwritten:false
     {|
       model {
@@ -519,17 +439,10 @@ let%expect_test "Overwrite: changing the index array retains the earlier write"
         idx[1] = 2;
         v[idx[1]] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 4): v[idx[1]] = 1;
-    next (line 6): v[idx[1]] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: different tuple fields remain distinct" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
+let%test_unit "Overwrite: different tuple fields remain distinct" =
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
     ~previous_overwritten:false
     {|
       model {
@@ -537,18 +450,10 @@ let%expect_test "Overwrite: different tuple fields remain distinct" =
         t.1 = 1;
         t.2 = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t.1 = 1;
-    next (line 4): t.2 = 2;
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: an element write does not replace the whole vector"
-    =
-  print_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: an element write does not replace the whole vector" =
+  check_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:false
     {|
       model {
@@ -556,17 +461,10 @@ let%expect_test "Overwrite: an element write does not replace the whole vector"
         v = rep_vector(1, 4);
         v[1] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): v = rep_vector(1, 4);
-    next (line 4): v[1] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: a whole-vector write replaces an element" =
-  print_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: a whole-vector write replaces an element" =
+  check_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:true
     {|
       model {
@@ -574,17 +472,10 @@ let%expect_test "Overwrite: a whole-vector write replaces an element" =
         v[1] = 1;
         v = rep_vector(2, 4);
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): v[1] = 1;
-    next (line 4): v = rep_vector(2, 4);
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test "Overwrite: different variables remain distinct" =
-  print_write_comparison ["v"; "w"] ~previous_line:4 ~next_line:5
+let%test_unit "Overwrite: different variables remain distinct" =
+  check_write_comparison ["v"; "w"] ~previous_line:4 ~next_line:5
     ~may_overlap:false ~previous_overwritten:false
     {|
       model {
@@ -593,18 +484,10 @@ let%expect_test "Overwrite: different variables remain distinct" =
         v[1] = 1;
         w = rep_vector(2, 4);
       }
-    |};
-  [%expect
-    {|
-    previous (line 4): v[1] = 1;
-    next (line 5): w = rep_vector(2, 4);
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: whole writes to different variables remain distinct"
-    =
-  print_write_comparison ["v"; "w"] ~previous_line:4 ~next_line:5
+let%test_unit "Overwrite: whole writes to different variables remain distinct" =
+  check_write_comparison ["v"; "w"] ~previous_line:4 ~next_line:5
     ~may_overlap:false ~previous_overwritten:false
     {|
       model {
@@ -613,17 +496,10 @@ let%expect_test "Overwrite: whole writes to different variables remain distinct"
         v = rep_vector(1, 4);
         w = rep_vector(2, 4);
       }
-    |};
-  [%expect
-    {|
-    previous (line 4): v = rep_vector(1, 4);
-    next (line 5): w = rep_vector(2, 4);
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: disjoint slices retain the earlier write" =
-  print_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:false
+let%test_unit "Overwrite: disjoint slices retain the earlier write" =
+  check_write_comparison ["v"] ~previous_line:3 ~next_line:4 ~may_overlap:false
     ~previous_overwritten:false
     {|
       model {
@@ -631,18 +507,11 @@ let%expect_test "Overwrite: disjoint slices retain the earlier write" =
         v[1:2] = rep_vector(1, 2);
         v[3:4] = rep_vector(2, 2);
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): v[1:2] = rep_vector(1, 2);
-    next (line 4): v[3:4] = rep_vector(2, 2);
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Overwrite: tuple fields in different array elements remain distinct" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
     ~previous_overwritten:false
     {|
       model {
@@ -650,18 +519,11 @@ let%expect_test
         t[1].2 = 1;
         t[2].1 = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t[1].2 = 1;
-    next (line 4): t[2].1 = 2;
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test
+let%test_unit
     "Overwrite: tuple fields in the same array element remain distinct" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:false
     ~previous_overwritten:false
     {|
       model {
@@ -669,17 +531,10 @@ let%expect_test
         t[1].1 = 1;
         t[1].2 = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t[1].1 = 1;
-    next (line 4): t[1].2 = 2;
-    may overlap: false
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: the same tuple field replaces the earlier write" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: the same tuple field replaces the earlier write" =
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:true
     {|
       model {
@@ -687,18 +542,11 @@ let%expect_test "Overwrite: the same tuple field replaces the earlier write" =
         t[1].2 = 1;
         t[1].2 = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t[1].2 = 1;
-    next (line 4): t[1].2 = 2;
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test
-    "Overwrite: an element does not replace its enclosing tuple field" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: an element does not replace its enclosing tuple field"
+    =
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:false
     {|
       model {
@@ -706,17 +554,10 @@ let%expect_test
         t.1 = rep_vector(1, 4);
         t.1[2] = 2;
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t.1 = rep_vector(1, 4);
-    next (line 4): t.1[2] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
-let%expect_test "Overwrite: a tuple field replaces its contained element" =
-  print_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
+let%test_unit "Overwrite: a tuple field replaces its contained element" =
+  check_write_comparison ["t"] ~previous_line:3 ~next_line:4 ~may_overlap:true
     ~previous_overwritten:true
     {|
       model {
@@ -724,17 +565,10 @@ let%expect_test "Overwrite: a tuple field replaces its contained element" =
         t.1[2] = 1;
         t.1 = rep_vector(2, 4);
       }
-    |};
-  [%expect
-    {|
-    previous (line 3): t.1[2] = 1;
-    next (line 4): t.1 = rep_vector(2, 4);
-    may overlap: true
-    previous overwritten: true
-    |}]
+    |}
 
-let%expect_test "Overwrite: repeated RNG calls can select different elements" =
-  print_write_comparison ["v"] ~previous_line:4 ~next_line:5 ~may_overlap:true
+let%test_unit "Overwrite: repeated RNG calls can select different elements" =
+  check_write_comparison ["v"] ~previous_line:4 ~next_line:5 ~may_overlap:true
     ~previous_overwritten:false
     {|
       functions {
@@ -745,14 +579,7 @@ let%expect_test "Overwrite: repeated RNG calls can select different elements" =
         }
       }
       model {}
-    |};
-  [%expect
-    {|
-    previous (line 4): v[categorical_rng(theta)] = 1;
-    next (line 5): v[categorical_rng(theta)] = 2;
-    may overlap: true
-    previous overwritten: false
-    |}]
+    |}
 
 let%expect_test "Loop headers write the induction variable" =
   check_accesses ~statements:`Loop_headers
@@ -834,109 +661,43 @@ let index_read_program ~container_type first_index second_index =
 let vector_reads = index_read_program ~container_type:"vector[10]"
 let matrix_reads = index_read_program ~container_type:"matrix[4, 4]"
 
-let%expect_test "Index overlap: All / All" =
-  check_read_overlap (vector_reads ":" ":") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:] / v[:]; may overlap: true
-    PASS: v[:] / v[:]; may overlap: true
-    |}]
+let%test_unit "Index overlap: All / All" =
+  check_read_overlap (vector_reads ":" ":") ~expected:true
 
-let%expect_test "Index overlap: All / Single" =
+let%test_unit "Index overlap: All / Single" =
   check_read_overlap (vector_reads ":" "2") ~expected:true;
   check_read_overlap (vector_reads ":" "1") ~expected:true;
   check_read_overlap (vector_reads ":" "10") ~expected:true;
-  check_read_overlap (vector_reads ":" "k") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:] / v[2]; may overlap: true
-    PASS: v[2] / v[:]; may overlap: true
-    PASS: v[:] / v[1]; may overlap: true
-    PASS: v[1] / v[:]; may overlap: true
-    PASS: v[:] / v[10]; may overlap: true
-    PASS: v[10] / v[:]; may overlap: true
-    PASS: v[:] / v[k]; may overlap: true
-    PASS: v[k] / v[:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads ":" "k") ~expected:true
 
-let%expect_test "Index overlap: All / Upfrom" =
+let%test_unit "Index overlap: All / Upfrom" =
   check_read_overlap (vector_reads ":" "3:") ~expected:true;
   check_read_overlap (vector_reads ":" "1:") ~expected:true;
   check_read_overlap (vector_reads ":" "10:") ~expected:true;
-  check_read_overlap (vector_reads ":" "k:") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:] / v[3:]; may overlap: true
-    PASS: v[3:] / v[:]; may overlap: true
-    PASS: v[:] / v[1:]; may overlap: true
-    PASS: v[1:] / v[:]; may overlap: true
-    PASS: v[:] / v[10:]; may overlap: true
-    PASS: v[10:] / v[:]; may overlap: true
-    PASS: v[:] / v[k:]; may overlap: true
-    PASS: v[k:] / v[:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads ":" "k:") ~expected:true
 
-let%expect_test "Index overlap: All / Between" =
+let%test_unit "Index overlap: All / Between" =
   check_read_overlap (vector_reads ":" "1:2") ~expected:true;
   check_read_overlap (vector_reads ":" "3:2") ~expected:false;
   check_read_overlap (vector_reads ":" "1:10") ~expected:true;
   check_read_overlap (vector_reads ":" "5:5") ~expected:true;
   check_read_overlap (vector_reads ":" "10:1") ~expected:false;
-  check_read_overlap (vector_reads ":" "k:j") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:] / v[1:2]; may overlap: true
-    PASS: v[1:2] / v[:]; may overlap: true
-    PASS: v[:] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[:]; may overlap: false
-    PASS: v[:] / v[1:10]; may overlap: true
-    PASS: v[1:10] / v[:]; may overlap: true
-    PASS: v[:] / v[5:5]; may overlap: true
-    PASS: v[5:5] / v[:]; may overlap: true
-    PASS: v[:] / v[10:1]; may overlap: false
-    PASS: v[10:1] / v[:]; may overlap: false
-    PASS: v[:] / v[k:j]; may overlap: true
-    PASS: v[k:j] / v[:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads ":" "k:j") ~expected:true
 
-let%expect_test "Index overlap: All / MultiIndex" =
+let%test_unit "Index overlap: All / MultiIndex" =
   check_read_overlap (vector_reads ":" "{1, 3}") ~expected:true;
   check_read_overlap (vector_reads ":" "{1}") ~expected:true;
   check_read_overlap (vector_reads ":" "{10, 1, 10}") ~expected:true;
   check_read_overlap (vector_reads ":" "idx") ~expected:true;
-  check_read_overlap (vector_reads ":" "{k, j}") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[:]; may overlap: true
-    PASS: v[:] / v[{1}]; may overlap: true
-    PASS: v[{1}] / v[:]; may overlap: true
-    PASS: v[:] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[{10, 1, 10}] / v[:]; may overlap: true
-    PASS: v[:] / v[idx]; may overlap: true
-    PASS: v[idx] / v[:]; may overlap: true
-    PASS: v[:] / v[{k, j}]; may overlap: true
-    PASS: v[{k, j}] / v[:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads ":" "{k, j}") ~expected:true
 
-let%expect_test "Index overlap: Single / All" =
+let%test_unit "Index overlap: Single / All" =
   check_read_overlap (vector_reads "2" ":") ~expected:true;
   check_read_overlap (vector_reads "1" ":") ~expected:true;
   check_read_overlap (vector_reads "10" ":") ~expected:true;
-  check_read_overlap (vector_reads "k" ":") ~expected:true;
-  [%expect
-    {|
-    PASS: v[2] / v[:]; may overlap: true
-    PASS: v[:] / v[2]; may overlap: true
-    PASS: v[1] / v[:]; may overlap: true
-    PASS: v[:] / v[1]; may overlap: true
-    PASS: v[10] / v[:]; may overlap: true
-    PASS: v[:] / v[10]; may overlap: true
-    PASS: v[k] / v[:]; may overlap: true
-    PASS: v[:] / v[k]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k" ":") ~expected:true
 
-let%expect_test "Index overlap: Single / Single" =
+let%test_unit "Index overlap: Single / Single" =
   check_read_overlap (vector_reads "1" "1") ~expected:true;
   check_read_overlap (vector_reads "1" "2") ~expected:false;
   check_read_overlap (vector_reads "2 * k" "2 * k") ~expected:true;
@@ -946,32 +707,9 @@ let%expect_test "Index overlap: Single / Single" =
   check_read_overlap (vector_reads "1" "10") ~expected:false;
   check_read_overlap (vector_reads "1" "k") ~expected:true;
   check_read_overlap (vector_reads "k" "k") ~expected:true;
-  check_read_overlap (vector_reads "k + 1 * j" "k + 1 * j") ~expected:true;
-  [%expect
-    {|
-    PASS: v[1] / v[1]; may overlap: true
-    PASS: v[1] / v[1]; may overlap: true
-    PASS: v[1] / v[2]; may overlap: false
-    PASS: v[2] / v[1]; may overlap: false
-    PASS: v[(2 * k)] / v[(2 * k)]; may overlap: true
-    PASS: v[(2 * k)] / v[(2 * k)]; may overlap: true
-    PASS: v[k] / v[j]; may overlap: true
-    PASS: v[j] / v[k]; may overlap: true
-    PASS: v[(2 * k)] / v[((2 * k) + 1)]; may overlap: false
-    PASS: v[((2 * k) + 1)] / v[(2 * k)]; may overlap: false
-    PASS: v[10] / v[10]; may overlap: true
-    PASS: v[10] / v[10]; may overlap: true
-    PASS: v[1] / v[10]; may overlap: false
-    PASS: v[10] / v[1]; may overlap: false
-    PASS: v[1] / v[k]; may overlap: true
-    PASS: v[k] / v[1]; may overlap: true
-    PASS: v[k] / v[k]; may overlap: true
-    PASS: v[k] / v[k]; may overlap: true
-    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]; may overlap: true
-    PASS: v[(k + (1 * j))] / v[(k + (1 * j))]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k + 1 * j" "k + 1 * j") ~expected:true
 
-let%expect_test "Index overlap: integer parity" =
+let%test_unit "Index overlap: integer parity" =
   check_read_overlap (vector_reads "2 * k" "2 * j + 1") ~expected:false;
   check_read_overlap (vector_reads "k * 2" "2 * j - 1") ~expected:false;
   check_read_overlap (vector_reads "-(2 * k)" "2 * j + 1") ~expected:false;
@@ -979,28 +717,9 @@ let%expect_test "Index overlap: integer parity" =
   check_read_overlap (vector_reads "2 * k" "2 * j") ~expected:true;
   check_read_overlap (vector_reads "k * j" "2") ~expected:true;
   check_read_overlap (vector_reads "k * j" "3") ~expected:true;
-  check_read_overlap (vector_reads "k + 1" "2 * j") ~expected:true;
-  [%expect
-    {|
-    PASS: v[(2 * k)] / v[((2 * j) + 1)]; may overlap: false
-    PASS: v[((2 * j) + 1)] / v[(2 * k)]; may overlap: false
-    PASS: v[(k * 2)] / v[((2 * j) - 1)]; may overlap: false
-    PASS: v[((2 * j) - 1)] / v[(k * 2)]; may overlap: false
-    PASS: v[-((2 * k))] / v[((2 * j) + 1)]; may overlap: false
-    PASS: v[((2 * j) + 1)] / v[-((2 * k))]; may overlap: false
-    PASS: v[((2 * k) + 1)] / v[((2 * j) + 3)]; may overlap: true
-    PASS: v[((2 * j) + 3)] / v[((2 * k) + 1)]; may overlap: true
-    PASS: v[(2 * k)] / v[(2 * j)]; may overlap: true
-    PASS: v[(2 * j)] / v[(2 * k)]; may overlap: true
-    PASS: v[(k * j)] / v[2]; may overlap: true
-    PASS: v[2] / v[(k * j)]; may overlap: true
-    PASS: v[(k * j)] / v[3]; may overlap: true
-    PASS: v[3] / v[(k * j)]; may overlap: true
-    PASS: v[(k + 1)] / v[(2 * j)]; may overlap: true
-    PASS: v[(2 * j)] / v[(k + 1)]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k + 1" "2 * j") ~expected:true
 
-let%expect_test "Index overlap: Single / Upfrom" =
+let%test_unit "Index overlap: Single / Upfrom" =
   check_read_overlap (vector_reads "2" "3:") ~expected:false;
   check_read_overlap (vector_reads "4" "3:") ~expected:true;
   check_read_overlap (vector_reads "3" "3:") ~expected:true;
@@ -1008,28 +727,9 @@ let%expect_test "Index overlap: Single / Upfrom" =
   check_read_overlap (vector_reads "1" "10:") ~expected:false;
   check_read_overlap (vector_reads "k" "3:") ~expected:true;
   check_read_overlap (vector_reads "3" "k:") ~expected:true;
-  check_read_overlap (vector_reads "k" "j:") ~expected:true;
-  [%expect
-    {|
-    PASS: v[2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[2]; may overlap: false
-    PASS: v[4] / v[3:]; may overlap: true
-    PASS: v[3:] / v[4]; may overlap: true
-    PASS: v[3] / v[3:]; may overlap: true
-    PASS: v[3:] / v[3]; may overlap: true
-    PASS: v[10] / v[10:]; may overlap: true
-    PASS: v[10:] / v[10]; may overlap: true
-    PASS: v[1] / v[10:]; may overlap: false
-    PASS: v[10:] / v[1]; may overlap: false
-    PASS: v[k] / v[3:]; may overlap: true
-    PASS: v[3:] / v[k]; may overlap: true
-    PASS: v[3] / v[k:]; may overlap: true
-    PASS: v[k:] / v[3]; may overlap: true
-    PASS: v[k] / v[j:]; may overlap: true
-    PASS: v[j:] / v[k]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k" "j:") ~expected:true
 
-let%expect_test "Index overlap: Single / Between" =
+let%test_unit "Index overlap: Single / Between" =
   check_read_overlap (vector_reads "2" "1:2") ~expected:true;
   check_read_overlap (vector_reads "3" "1:2") ~expected:false;
   check_read_overlap (vector_reads "1" "1:k") ~expected:true;
@@ -1040,34 +740,9 @@ let%expect_test "Index overlap: Single / Between" =
   check_read_overlap (vector_reads "3" "4:3") ~expected:false;
   check_read_overlap (vector_reads "k" "2:4") ~expected:true;
   check_read_overlap (vector_reads "1" "2:k") ~expected:false;
-  check_read_overlap (vector_reads "10" "k:9") ~expected:false;
-  [%expect
-    {|
-    PASS: v[2] / v[1:2]; may overlap: true
-    PASS: v[1:2] / v[2]; may overlap: true
-    PASS: v[3] / v[1:2]; may overlap: false
-    PASS: v[1:2] / v[3]; may overlap: false
-    PASS: v[1] / v[1:k]; may overlap: true
-    PASS: v[1:k] / v[1]; may overlap: true
-    PASS: v[2] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[2]; may overlap: true
-    PASS: v[4] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[4]; may overlap: true
-    PASS: v[1] / v[2:4]; may overlap: false
-    PASS: v[2:4] / v[1]; may overlap: false
-    PASS: v[3] / v[3:3]; may overlap: true
-    PASS: v[3:3] / v[3]; may overlap: true
-    PASS: v[3] / v[4:3]; may overlap: false
-    PASS: v[4:3] / v[3]; may overlap: false
-    PASS: v[k] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[k]; may overlap: true
-    PASS: v[1] / v[2:k]; may overlap: false
-    PASS: v[2:k] / v[1]; may overlap: false
-    PASS: v[10] / v[k:9]; may overlap: false
-    PASS: v[k:9] / v[10]; may overlap: false
-    |}]
+  check_read_overlap (vector_reads "10" "k:9") ~expected:false
 
-let%expect_test "Index overlap: Single / MultiIndex" =
+let%test_unit "Index overlap: Single / MultiIndex" =
   check_read_overlap (vector_reads "2" "{1, 3}") ~expected:false;
   check_read_overlap (vector_reads "3" "{1, 3}") ~expected:true;
   check_read_overlap (vector_reads "2" "{1, k}") ~expected:true;
@@ -1076,47 +751,15 @@ let%expect_test "Index overlap: Single / MultiIndex" =
   check_read_overlap (vector_reads "10" "{10, 1, 10}") ~expected:true;
   check_read_overlap (vector_reads "10" "{1, 9}") ~expected:false;
   check_read_overlap (vector_reads "k" "{1, 3}") ~expected:true;
-  check_read_overlap (vector_reads "2" "idx") ~expected:true;
-  [%expect
-    {|
-    PASS: v[2] / v[{1, 3}]; may overlap: false
-    PASS: v[{1, 3}] / v[2]; may overlap: false
-    PASS: v[3] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[3]; may overlap: true
-    PASS: v[2] / v[{1, k}]; may overlap: true
-    PASS: v[{1, k}] / v[2]; may overlap: true
-    PASS: v[1] / v[{1}]; may overlap: true
-    PASS: v[{1}] / v[1]; may overlap: true
-    PASS: v[2] / v[{1}]; may overlap: false
-    PASS: v[{1}] / v[2]; may overlap: false
-    PASS: v[10] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[{10, 1, 10}] / v[10]; may overlap: true
-    PASS: v[10] / v[{1, 9}]; may overlap: false
-    PASS: v[{1, 9}] / v[10]; may overlap: false
-    PASS: v[k] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[k]; may overlap: true
-    PASS: v[2] / v[idx]; may overlap: true
-    PASS: v[idx] / v[2]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "2" "idx") ~expected:true
 
-let%expect_test "Index overlap: Upfrom / All" =
+let%test_unit "Index overlap: Upfrom / All" =
   check_read_overlap (vector_reads "3:" ":") ~expected:true;
   check_read_overlap (vector_reads "1:" ":") ~expected:true;
   check_read_overlap (vector_reads "10:" ":") ~expected:true;
-  check_read_overlap (vector_reads "k:" ":") ~expected:true;
-  [%expect
-    {|
-    PASS: v[3:] / v[:]; may overlap: true
-    PASS: v[:] / v[3:]; may overlap: true
-    PASS: v[1:] / v[:]; may overlap: true
-    PASS: v[:] / v[1:]; may overlap: true
-    PASS: v[10:] / v[:]; may overlap: true
-    PASS: v[:] / v[10:]; may overlap: true
-    PASS: v[k:] / v[:]; may overlap: true
-    PASS: v[:] / v[k:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k:" ":") ~expected:true
 
-let%expect_test "Index overlap: Upfrom / Single" =
+let%test_unit "Index overlap: Upfrom / Single" =
   check_read_overlap (vector_reads "3:" "2") ~expected:false;
   check_read_overlap (vector_reads "3:" "4") ~expected:true;
   check_read_overlap (vector_reads "3:" "3") ~expected:true;
@@ -1124,51 +767,17 @@ let%expect_test "Index overlap: Upfrom / Single" =
   check_read_overlap (vector_reads "10:" "1") ~expected:false;
   check_read_overlap (vector_reads "3:" "k") ~expected:true;
   check_read_overlap (vector_reads "k:" "3") ~expected:true;
-  check_read_overlap (vector_reads "j:" "k") ~expected:true;
-  [%expect
-    {|
-    PASS: v[3:] / v[2]; may overlap: false
-    PASS: v[2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[4]; may overlap: true
-    PASS: v[4] / v[3:]; may overlap: true
-    PASS: v[3:] / v[3]; may overlap: true
-    PASS: v[3] / v[3:]; may overlap: true
-    PASS: v[10:] / v[10]; may overlap: true
-    PASS: v[10] / v[10:]; may overlap: true
-    PASS: v[10:] / v[1]; may overlap: false
-    PASS: v[1] / v[10:]; may overlap: false
-    PASS: v[3:] / v[k]; may overlap: true
-    PASS: v[k] / v[3:]; may overlap: true
-    PASS: v[k:] / v[3]; may overlap: true
-    PASS: v[3] / v[k:]; may overlap: true
-    PASS: v[j:] / v[k]; may overlap: true
-    PASS: v[k] / v[j:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "j:" "k") ~expected:true
 
-let%expect_test "Index overlap: Upfrom / Upfrom" =
+let%test_unit "Index overlap: Upfrom / Upfrom" =
   check_read_overlap (vector_reads "2:" "3:") ~expected:true;
   check_read_overlap (vector_reads "1:" "1:") ~expected:true;
   check_read_overlap (vector_reads "3:" "3:") ~expected:true;
   check_read_overlap (vector_reads "1:" "10:") ~expected:true;
   check_read_overlap (vector_reads "10:" "10:") ~expected:true;
-  check_read_overlap (vector_reads "k:" "j:") ~expected:true;
-  [%expect
-    {|
-    PASS: v[2:] / v[3:]; may overlap: true
-    PASS: v[3:] / v[2:]; may overlap: true
-    PASS: v[1:] / v[1:]; may overlap: true
-    PASS: v[1:] / v[1:]; may overlap: true
-    PASS: v[3:] / v[3:]; may overlap: true
-    PASS: v[3:] / v[3:]; may overlap: true
-    PASS: v[1:] / v[10:]; may overlap: true
-    PASS: v[10:] / v[1:]; may overlap: true
-    PASS: v[10:] / v[10:]; may overlap: true
-    PASS: v[10:] / v[10:]; may overlap: true
-    PASS: v[k:] / v[j:]; may overlap: true
-    PASS: v[j:] / v[k:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k:" "j:") ~expected:true
 
-let%expect_test "Index overlap: Upfrom / Between" =
+let%test_unit "Index overlap: Upfrom / Between" =
   check_read_overlap (vector_reads "3:" "1:2") ~expected:false;
   check_read_overlap (vector_reads "3:" ":2") ~expected:false;
   check_read_overlap (vector_reads "3:" "3:4") ~expected:true;
@@ -1178,32 +787,9 @@ let%expect_test "Index overlap: Upfrom / Between" =
   check_read_overlap (vector_reads "3:" "4:3") ~expected:false;
   check_read_overlap (vector_reads "3:" "k:2") ~expected:false;
   check_read_overlap (vector_reads "k:" "1:2") ~expected:true;
-  check_read_overlap (vector_reads "3:" "1:j") ~expected:true;
-  [%expect
-    {|
-    PASS: v[3:] / v[1:2]; may overlap: false
-    PASS: v[1:2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[1:2]; may overlap: false
-    PASS: v[1:2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[3:4]; may overlap: true
-    PASS: v[3:4] / v[3:]; may overlap: true
-    PASS: v[3:] / v[1:3]; may overlap: true
-    PASS: v[1:3] / v[3:]; may overlap: true
-    PASS: v[3:] / v[4:5]; may overlap: true
-    PASS: v[4:5] / v[3:]; may overlap: true
-    PASS: v[10:] / v[10:10]; may overlap: true
-    PASS: v[10:10] / v[10:]; may overlap: true
-    PASS: v[3:] / v[4:3]; may overlap: false
-    PASS: v[4:3] / v[3:]; may overlap: false
-    PASS: v[3:] / v[k:2]; may overlap: false
-    PASS: v[k:2] / v[3:]; may overlap: false
-    PASS: v[k:] / v[1:2]; may overlap: true
-    PASS: v[1:2] / v[k:]; may overlap: true
-    PASS: v[3:] / v[1:j]; may overlap: true
-    PASS: v[1:j] / v[3:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "3:" "1:j") ~expected:true
 
-let%expect_test "Index overlap: Upfrom / MultiIndex" =
+let%test_unit "Index overlap: Upfrom / MultiIndex" =
   check_read_overlap (vector_reads "3:" "{1, 3}") ~expected:true;
   check_read_overlap (vector_reads "3:" "{1, 2}") ~expected:false;
   check_read_overlap (vector_reads "3:" "{4, 5}") ~expected:true;
@@ -1211,51 +797,17 @@ let%expect_test "Index overlap: Upfrom / MultiIndex" =
   check_read_overlap (vector_reads "10:" "{1, 9}") ~expected:false;
   check_read_overlap (vector_reads "k:" "{1, 3}") ~expected:true;
   check_read_overlap (vector_reads "3:" "idx") ~expected:true;
-  check_read_overlap (vector_reads "3:" "{1, k}") ~expected:true;
-  [%expect
-    {|
-    PASS: v[3:] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[3:]; may overlap: true
-    PASS: v[3:] / v[{1, 2}]; may overlap: false
-    PASS: v[{1, 2}] / v[3:]; may overlap: false
-    PASS: v[3:] / v[{4, 5}]; may overlap: true
-    PASS: v[{4, 5}] / v[3:]; may overlap: true
-    PASS: v[10:] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[{10, 1, 10}] / v[10:]; may overlap: true
-    PASS: v[10:] / v[{1, 9}]; may overlap: false
-    PASS: v[{1, 9}] / v[10:]; may overlap: false
-    PASS: v[k:] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[k:]; may overlap: true
-    PASS: v[3:] / v[idx]; may overlap: true
-    PASS: v[idx] / v[3:]; may overlap: true
-    PASS: v[3:] / v[{1, k}]; may overlap: true
-    PASS: v[{1, k}] / v[3:]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "3:" "{1, k}") ~expected:true
 
-let%expect_test "Index overlap: Between / All" =
+let%test_unit "Index overlap: Between / All" =
   check_read_overlap (vector_reads "1:2" ":") ~expected:true;
   check_read_overlap (vector_reads "3:2" ":") ~expected:false;
   check_read_overlap (vector_reads "1:10" ":") ~expected:true;
   check_read_overlap (vector_reads "5:5" ":") ~expected:true;
   check_read_overlap (vector_reads "10:1" ":") ~expected:false;
-  check_read_overlap (vector_reads "k:j" ":") ~expected:true;
-  [%expect
-    {|
-    PASS: v[1:2] / v[:]; may overlap: true
-    PASS: v[:] / v[1:2]; may overlap: true
-    PASS: v[3:2] / v[:]; may overlap: false
-    PASS: v[:] / v[3:2]; may overlap: false
-    PASS: v[1:10] / v[:]; may overlap: true
-    PASS: v[:] / v[1:10]; may overlap: true
-    PASS: v[5:5] / v[:]; may overlap: true
-    PASS: v[:] / v[5:5]; may overlap: true
-    PASS: v[10:1] / v[:]; may overlap: false
-    PASS: v[:] / v[10:1]; may overlap: false
-    PASS: v[k:j] / v[:]; may overlap: true
-    PASS: v[:] / v[k:j]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "k:j" ":") ~expected:true
 
-let%expect_test "Index overlap: Between / Single" =
+let%test_unit "Index overlap: Between / Single" =
   check_read_overlap (vector_reads "1:2" "2") ~expected:true;
   check_read_overlap (vector_reads "1:2" "3") ~expected:false;
   check_read_overlap (vector_reads "1:k" "1") ~expected:true;
@@ -1266,34 +818,9 @@ let%expect_test "Index overlap: Between / Single" =
   check_read_overlap (vector_reads "4:3" "3") ~expected:false;
   check_read_overlap (vector_reads "2:4" "k") ~expected:true;
   check_read_overlap (vector_reads "2:k" "1") ~expected:false;
-  check_read_overlap (vector_reads "k:9" "10") ~expected:false;
-  [%expect
-    {|
-    PASS: v[1:2] / v[2]; may overlap: true
-    PASS: v[2] / v[1:2]; may overlap: true
-    PASS: v[1:2] / v[3]; may overlap: false
-    PASS: v[3] / v[1:2]; may overlap: false
-    PASS: v[1:k] / v[1]; may overlap: true
-    PASS: v[1] / v[1:k]; may overlap: true
-    PASS: v[2:4] / v[2]; may overlap: true
-    PASS: v[2] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[4]; may overlap: true
-    PASS: v[4] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[1]; may overlap: false
-    PASS: v[1] / v[2:4]; may overlap: false
-    PASS: v[3:3] / v[3]; may overlap: true
-    PASS: v[3] / v[3:3]; may overlap: true
-    PASS: v[4:3] / v[3]; may overlap: false
-    PASS: v[3] / v[4:3]; may overlap: false
-    PASS: v[2:4] / v[k]; may overlap: true
-    PASS: v[k] / v[2:4]; may overlap: true
-    PASS: v[2:k] / v[1]; may overlap: false
-    PASS: v[1] / v[2:k]; may overlap: false
-    PASS: v[k:9] / v[10]; may overlap: false
-    PASS: v[10] / v[k:9]; may overlap: false
-    |}]
+  check_read_overlap (vector_reads "k:9" "10") ~expected:false
 
-let%expect_test "Index overlap: Between / Upfrom" =
+let%test_unit "Index overlap: Between / Upfrom" =
   check_read_overlap (vector_reads "1:2" "3:") ~expected:false;
   check_read_overlap (vector_reads ":2" "3:") ~expected:false;
   check_read_overlap (vector_reads "3:4" "3:") ~expected:true;
@@ -1303,32 +830,9 @@ let%expect_test "Index overlap: Between / Upfrom" =
   check_read_overlap (vector_reads "4:3" "3:") ~expected:false;
   check_read_overlap (vector_reads "k:2" "3:") ~expected:false;
   check_read_overlap (vector_reads "1:2" "k:") ~expected:true;
-  check_read_overlap (vector_reads "1:j" "3:") ~expected:true;
-  [%expect
-    {|
-    PASS: v[1:2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[1:2]; may overlap: false
-    PASS: v[1:2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[1:2]; may overlap: false
-    PASS: v[3:4] / v[3:]; may overlap: true
-    PASS: v[3:] / v[3:4]; may overlap: true
-    PASS: v[1:3] / v[3:]; may overlap: true
-    PASS: v[3:] / v[1:3]; may overlap: true
-    PASS: v[4:5] / v[3:]; may overlap: true
-    PASS: v[3:] / v[4:5]; may overlap: true
-    PASS: v[10:10] / v[10:]; may overlap: true
-    PASS: v[10:] / v[10:10]; may overlap: true
-    PASS: v[4:3] / v[3:]; may overlap: false
-    PASS: v[3:] / v[4:3]; may overlap: false
-    PASS: v[k:2] / v[3:]; may overlap: false
-    PASS: v[3:] / v[k:2]; may overlap: false
-    PASS: v[1:2] / v[k:]; may overlap: true
-    PASS: v[k:] / v[1:2]; may overlap: true
-    PASS: v[1:j] / v[3:]; may overlap: true
-    PASS: v[3:] / v[1:j]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "1:j" "3:") ~expected:true
 
-let%expect_test "Index overlap: Between / Between" =
+let%test_unit "Index overlap: Between / Between" =
   check_read_overlap (vector_reads "1:2" "3:4") ~expected:false;
   check_read_overlap (vector_reads "1:2" "2:4") ~expected:true;
   check_read_overlap (vector_reads "1:k" "j:4") ~expected:true;
@@ -1340,36 +844,9 @@ let%expect_test "Index overlap: Between / Between" =
   check_read_overlap (vector_reads "5:5" "1:10") ~expected:true;
   check_read_overlap (vector_reads "10:10" "10:10") ~expected:true;
   check_read_overlap (vector_reads "3:2" "4:3") ~expected:false;
-  check_read_overlap (vector_reads "5:k" "j:4") ~expected:false;
-  [%expect
-    {|
-    PASS: v[1:2] / v[3:4]; may overlap: false
-    PASS: v[3:4] / v[1:2]; may overlap: false
-    PASS: v[1:2] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[1:2]; may overlap: true
-    PASS: v[1:k] / v[j:4]; may overlap: true
-    PASS: v[j:4] / v[1:k]; may overlap: true
-    PASS: v[k:2] / v[3:j]; may overlap: false
-    PASS: v[3:j] / v[k:2]; may overlap: false
-    PASS: v[3:2] / v[1:4]; may overlap: false
-    PASS: v[1:4] / v[3:2]; may overlap: false
-    PASS: v[2:4] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[2:4]; may overlap: true
-    PASS: v[1:10] / v[2:3]; may overlap: true
-    PASS: v[2:3] / v[1:10]; may overlap: true
-    PASS: v[1:3] / v[3:5]; may overlap: true
-    PASS: v[3:5] / v[1:3]; may overlap: true
-    PASS: v[5:5] / v[1:10]; may overlap: true
-    PASS: v[1:10] / v[5:5]; may overlap: true
-    PASS: v[10:10] / v[10:10]; may overlap: true
-    PASS: v[10:10] / v[10:10]; may overlap: true
-    PASS: v[3:2] / v[4:3]; may overlap: false
-    PASS: v[4:3] / v[3:2]; may overlap: false
-    PASS: v[5:k] / v[j:4]; may overlap: false
-    PASS: v[j:4] / v[5:k]; may overlap: false
-    |}]
+  check_read_overlap (vector_reads "5:k" "j:4") ~expected:false
 
-let%expect_test "Index overlap: Between / MultiIndex" =
+let%test_unit "Index overlap: Between / MultiIndex" =
   check_read_overlap (vector_reads "2:2" "{1, 3}") ~expected:false;
   check_read_overlap (vector_reads "2:3" "{1, 3}") ~expected:true;
   check_read_overlap (vector_reads "1:2" "idx") ~expected:true;
@@ -1380,54 +857,16 @@ let%expect_test "Index overlap: Between / MultiIndex" =
   check_read_overlap (vector_reads "3:2" "{2, 3}") ~expected:false;
   check_read_overlap (vector_reads "2:4" "{k}") ~expected:true;
   check_read_overlap (vector_reads "k:2" "{3, 4}") ~expected:false;
-  check_read_overlap (vector_reads "3:j" "{1, 2}") ~expected:false;
-  [%expect
-    {|
-    PASS: v[2:2] / v[{1, 3}]; may overlap: false
-    PASS: v[{1, 3}] / v[2:2]; may overlap: false
-    PASS: v[2:3] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[2:3]; may overlap: true
-    PASS: v[1:2] / v[idx]; may overlap: true
-    PASS: v[idx] / v[1:2]; may overlap: true
-    PASS: v[2:4] / v[{2, 4}]; may overlap: true
-    PASS: v[{2, 4}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{3}]; may overlap: true
-    PASS: v[{3}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{1, 5}]; may overlap: false
-    PASS: v[{1, 5}] / v[2:4]; may overlap: false
-    PASS: v[2:4] / v[{4, 2, 4}]; may overlap: true
-    PASS: v[{4, 2, 4}] / v[2:4]; may overlap: true
-    PASS: v[3:2] / v[{2, 3}]; may overlap: false
-    PASS: v[{2, 3}] / v[3:2]; may overlap: false
-    PASS: v[2:4] / v[{k}]; may overlap: true
-    PASS: v[{k}] / v[2:4]; may overlap: true
-    PASS: v[k:2] / v[{3, 4}]; may overlap: false
-    PASS: v[{3, 4}] / v[k:2]; may overlap: false
-    PASS: v[3:j] / v[{1, 2}]; may overlap: false
-    PASS: v[{1, 2}] / v[3:j]; may overlap: false
-    |}]
+  check_read_overlap (vector_reads "3:j" "{1, 2}") ~expected:false
 
-let%expect_test "Index overlap: MultiIndex / All" =
+let%test_unit "Index overlap: MultiIndex / All" =
   check_read_overlap (vector_reads "{1, 3}" ":") ~expected:true;
   check_read_overlap (vector_reads "{1}" ":") ~expected:true;
   check_read_overlap (vector_reads "{10, 1, 10}" ":") ~expected:true;
   check_read_overlap (vector_reads "idx" ":") ~expected:true;
-  check_read_overlap (vector_reads "{k, j}" ":") ~expected:true;
-  [%expect
-    {|
-    PASS: v[{1, 3}] / v[:]; may overlap: true
-    PASS: v[:] / v[{1, 3}]; may overlap: true
-    PASS: v[{1}] / v[:]; may overlap: true
-    PASS: v[:] / v[{1}]; may overlap: true
-    PASS: v[{10, 1, 10}] / v[:]; may overlap: true
-    PASS: v[:] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[idx] / v[:]; may overlap: true
-    PASS: v[:] / v[idx]; may overlap: true
-    PASS: v[{k, j}] / v[:]; may overlap: true
-    PASS: v[:] / v[{k, j}]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "{k, j}" ":") ~expected:true
 
-let%expect_test "Index overlap: MultiIndex / Single" =
+let%test_unit "Index overlap: MultiIndex / Single" =
   check_read_overlap (vector_reads "{1, 3}" "2") ~expected:false;
   check_read_overlap (vector_reads "{1, 3}" "3") ~expected:true;
   check_read_overlap (vector_reads "{1, k}" "2") ~expected:true;
@@ -1436,30 +875,9 @@ let%expect_test "Index overlap: MultiIndex / Single" =
   check_read_overlap (vector_reads "{10, 1, 10}" "10") ~expected:true;
   check_read_overlap (vector_reads "{1, 9}" "10") ~expected:false;
   check_read_overlap (vector_reads "{1, 3}" "k") ~expected:true;
-  check_read_overlap (vector_reads "idx" "2") ~expected:true;
-  [%expect
-    {|
-    PASS: v[{1, 3}] / v[2]; may overlap: false
-    PASS: v[2] / v[{1, 3}]; may overlap: false
-    PASS: v[{1, 3}] / v[3]; may overlap: true
-    PASS: v[3] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, k}] / v[2]; may overlap: true
-    PASS: v[2] / v[{1, k}]; may overlap: true
-    PASS: v[{1}] / v[1]; may overlap: true
-    PASS: v[1] / v[{1}]; may overlap: true
-    PASS: v[{1}] / v[2]; may overlap: false
-    PASS: v[2] / v[{1}]; may overlap: false
-    PASS: v[{10, 1, 10}] / v[10]; may overlap: true
-    PASS: v[10] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[{1, 9}] / v[10]; may overlap: false
-    PASS: v[10] / v[{1, 9}]; may overlap: false
-    PASS: v[{1, 3}] / v[k]; may overlap: true
-    PASS: v[k] / v[{1, 3}]; may overlap: true
-    PASS: v[idx] / v[2]; may overlap: true
-    PASS: v[2] / v[idx]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "idx" "2") ~expected:true
 
-let%expect_test "Index overlap: MultiIndex / Upfrom" =
+let%test_unit "Index overlap: MultiIndex / Upfrom" =
   check_read_overlap (vector_reads "{1, 3}" "3:") ~expected:true;
   check_read_overlap (vector_reads "{1, 2}" "3:") ~expected:false;
   check_read_overlap (vector_reads "{4, 5}" "3:") ~expected:true;
@@ -1467,28 +885,9 @@ let%expect_test "Index overlap: MultiIndex / Upfrom" =
   check_read_overlap (vector_reads "{1, 9}" "10:") ~expected:false;
   check_read_overlap (vector_reads "{1, 3}" "k:") ~expected:true;
   check_read_overlap (vector_reads "idx" "3:") ~expected:true;
-  check_read_overlap (vector_reads "{1, k}" "3:") ~expected:true;
-  [%expect
-    {|
-    PASS: v[{1, 3}] / v[3:]; may overlap: true
-    PASS: v[3:] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 2}] / v[3:]; may overlap: false
-    PASS: v[3:] / v[{1, 2}]; may overlap: false
-    PASS: v[{4, 5}] / v[3:]; may overlap: true
-    PASS: v[3:] / v[{4, 5}]; may overlap: true
-    PASS: v[{10, 1, 10}] / v[10:]; may overlap: true
-    PASS: v[10:] / v[{10, 1, 10}]; may overlap: true
-    PASS: v[{1, 9}] / v[10:]; may overlap: false
-    PASS: v[10:] / v[{1, 9}]; may overlap: false
-    PASS: v[{1, 3}] / v[k:]; may overlap: true
-    PASS: v[k:] / v[{1, 3}]; may overlap: true
-    PASS: v[idx] / v[3:]; may overlap: true
-    PASS: v[3:] / v[idx]; may overlap: true
-    PASS: v[{1, k}] / v[3:]; may overlap: true
-    PASS: v[3:] / v[{1, k}]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "{1, k}" "3:") ~expected:true
 
-let%expect_test "Index overlap: MultiIndex / Between" =
+let%test_unit "Index overlap: MultiIndex / Between" =
   check_read_overlap (vector_reads "{1, 3}" "2:2") ~expected:false;
   check_read_overlap (vector_reads "{1, 3}" "2:3") ~expected:true;
   check_read_overlap (vector_reads "idx" "1:2") ~expected:true;
@@ -1499,34 +898,9 @@ let%expect_test "Index overlap: MultiIndex / Between" =
   check_read_overlap (vector_reads "{2, 3}" "3:2") ~expected:false;
   check_read_overlap (vector_reads "{k}" "2:4") ~expected:true;
   check_read_overlap (vector_reads "{3, 4}" "k:2") ~expected:false;
-  check_read_overlap (vector_reads "{1, 2}" "3:j") ~expected:false;
-  [%expect
-    {|
-    PASS: v[{1, 3}] / v[2:2]; may overlap: false
-    PASS: v[2:2] / v[{1, 3}]; may overlap: false
-    PASS: v[{1, 3}] / v[2:3]; may overlap: true
-    PASS: v[2:3] / v[{1, 3}]; may overlap: true
-    PASS: v[idx] / v[1:2]; may overlap: true
-    PASS: v[1:2] / v[idx]; may overlap: true
-    PASS: v[{2, 4}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{2, 4}]; may overlap: true
-    PASS: v[{3}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{3}]; may overlap: true
-    PASS: v[{1, 5}] / v[2:4]; may overlap: false
-    PASS: v[2:4] / v[{1, 5}]; may overlap: false
-    PASS: v[{4, 2, 4}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{4, 2, 4}]; may overlap: true
-    PASS: v[{2, 3}] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[{2, 3}]; may overlap: false
-    PASS: v[{k}] / v[2:4]; may overlap: true
-    PASS: v[2:4] / v[{k}]; may overlap: true
-    PASS: v[{3, 4}] / v[k:2]; may overlap: false
-    PASS: v[k:2] / v[{3, 4}]; may overlap: false
-    PASS: v[{1, 2}] / v[3:j]; may overlap: false
-    PASS: v[3:j] / v[{1, 2}]; may overlap: false
-    |}]
+  check_read_overlap (vector_reads "{1, 2}" "3:j") ~expected:false
 
-let%expect_test "Index overlap: MultiIndex / MultiIndex" =
+let%test_unit "Index overlap: MultiIndex / MultiIndex" =
   check_read_overlap (vector_reads "{1, 3}" "{2, 4}") ~expected:false;
   check_read_overlap (vector_reads "{1, 3}" "{3, 4}") ~expected:true;
   check_read_overlap (vector_reads "{1, 1}" "{2, 2}") ~expected:false;
@@ -1538,76 +912,24 @@ let%expect_test "Index overlap: MultiIndex / MultiIndex" =
   check_read_overlap (vector_reads "{1}" "{1}") ~expected:true;
   check_read_overlap (vector_reads "idx" "idx") ~expected:true;
   check_read_overlap (vector_reads "{k}" "{j}") ~expected:true;
-  check_read_overlap (vector_reads "{1, k}" "{2, 3}") ~expected:true;
-  [%expect
-    {|
-    PASS: v[{1, 3}] / v[{2, 4}]; may overlap: false
-    PASS: v[{2, 4}] / v[{1, 3}]; may overlap: false
-    PASS: v[{1, 3}] / v[{3, 4}]; may overlap: true
-    PASS: v[{3, 4}] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 1}] / v[{2, 2}]; may overlap: false
-    PASS: v[{2, 2}] / v[{1, 1}]; may overlap: false
-    PASS: v[idx] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[idx]; may overlap: true
-    PASS: v[{1, 3}] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[{1, 3}]; may overlap: true
-    PASS: v[{3, 1}] / v[{1, 3}]; may overlap: true
-    PASS: v[{1, 3}] / v[{3, 1}]; may overlap: true
-    PASS: v[{1, 1}] / v[{1, 1}]; may overlap: true
-    PASS: v[{1, 1}] / v[{1, 1}]; may overlap: true
-    PASS: v[{1}] / v[{2}]; may overlap: false
-    PASS: v[{2}] / v[{1}]; may overlap: false
-    PASS: v[{1}] / v[{1}]; may overlap: true
-    PASS: v[{1}] / v[{1}]; may overlap: true
-    PASS: v[idx] / v[idx]; may overlap: true
-    PASS: v[idx] / v[idx]; may overlap: true
-    PASS: v[{k}] / v[{j}]; may overlap: true
-    PASS: v[{j}] / v[{k}]; may overlap: true
-    PASS: v[{1, k}] / v[{2, 3}]; may overlap: true
-    PASS: v[{2, 3}] / v[{1, k}]; may overlap: true
-    |}]
+  check_read_overlap (vector_reads "{1, k}" "{2, 3}") ~expected:true
 
-let%expect_test "Different columns remain disjoint after All" =
-  check_read_overlap (matrix_reads ":, 1" ":, 2") ~expected:false;
-  [%expect
-    {|
-    PASS: v[:, 1] / v[:, 2]; may overlap: false
-    PASS: v[:, 2] / v[:, 1]; may overlap: false
-    |}]
+let%test_unit "Different columns remain disjoint after All" =
+  check_read_overlap (matrix_reads ":, 1" ":, 2") ~expected:false
 
-let%expect_test "Overlapping row ranges share a column" =
-  check_read_overlap (matrix_reads "1:2, 1" "2:3, 1") ~expected:true;
-  [%expect
-    {|
-    PASS: v[1:2, 1] / v[2:3, 1]; may overlap: true
-    PASS: v[2:3, 1] / v[1:2, 1]; may overlap: true
-    |}]
+let%test_unit "Overlapping row ranges share a column" =
+  check_read_overlap (matrix_reads "1:2, 1" "2:3, 1") ~expected:true
 
-let%expect_test "Different columns separate unknown row selections" =
-  check_read_overlap (matrix_reads "idx, 1" "k:4, 2") ~expected:false;
-  [%expect
-    {|
-    PASS: v[idx, 1] / v[k:4, 2]; may overlap: false
-    PASS: v[k:4, 2] / v[idx, 1]; may overlap: false
-    |}]
+let%test_unit "Different columns separate unknown row selections" =
+  check_read_overlap (matrix_reads "idx, 1" "k:4, 2") ~expected:false
 
-let%expect_test "Disjoint column ranges separate matching row arrays" =
-  check_read_overlap (matrix_reads "{1, 3}, 1:2" "{1, 3}, 3:4") ~expected:false;
-  [%expect
-    {|
-    PASS: v[{1, 3}, 1:2] / v[{1, 3}, 3:4]; may overlap: false
-    PASS: v[{1, 3}, 3:4] / v[{1, 3}, 1:2]; may overlap: false
-    |}]
+let%test_unit "Disjoint column ranges separate matching row arrays" =
+  check_read_overlap (matrix_reads "{1, 3}, 1:2" "{1, 3}, 3:4") ~expected:false
 
-let%expect_test "A whole column overlaps a whole row at their intersection" =
-  check_read_overlap (matrix_reads ":, 1" "1, :") ~expected:true;
-  [%expect
-    {|
-    PASS: v[:, 1] / v[1, :]; may overlap: true
-    PASS: v[1, :] / v[:, 1]; may overlap: true
-    |}]
+let%test_unit "A whole column overlaps a whole row at their intersection" =
+  check_read_overlap (matrix_reads ":, 1" "1, :") ~expected:true
 
-let%expect_test "Nested slice: position one overlaps original element two" =
+let%test_unit "Nested slice: position one overlaps original element two" =
   check_read_overlap ~expected:true
     {|
       model {
@@ -1615,14 +937,9 @@ let%expect_test "Nested slice: position one overlaps original element two" =
         print(v[2:4][1]);
         print(v[2]);
       }
-    |};
-  [%expect
-    {|
-    PASS: v[2:4] / v[2]; may overlap: true
-    PASS: v[2] / v[2:4]; may overlap: true
-    |}]
+    |}
 
-let%expect_test "Nested slice: an element outside the base slice is disjoint" =
+let%test_unit "Nested slice: an element outside the base slice is disjoint" =
   check_read_overlap ~expected:false
     {|
       model {
@@ -1630,15 +947,9 @@ let%expect_test "Nested slice: an element outside the base slice is disjoint" =
         print(v[2:4][1]);
         print(v[1]);
       }
-    |};
-  [%expect
-    {|
-    PASS: v[2:4] / v[1]; may overlap: false
-    PASS: v[1] / v[2:4]; may overlap: false
-    |}]
+    |}
 
-let%expect_test "Nested slice: the retained base slice can overestimate overlap"
-    =
+let%test_unit "Nested slice: the retained base slice can overestimate overlap" =
   (* The first element of v[2:4] is v[2]. We record the whole slice as a read,
      so v[3] also shows up as a possible overlap. *)
   check_read_overlap ~expected:true
@@ -1648,12 +959,7 @@ let%expect_test "Nested slice: the retained base slice can overestimate overlap"
         print(v[2:4][1]);
         print(v[3]);
       }
-    |};
-  [%expect
-    {|
-    PASS: v[2:4] / v[3]; may overlap: true
-    PASS: v[3] / v[2:4]; may overlap: true
-    |}]
+    |}
 
 let check_index_pairs ~first ~second ~expected =
   List.iter first ~f:(fun a ->
@@ -1661,7 +967,7 @@ let check_index_pairs ~first ~second ~expected =
           check_overlap [a] [b] expected;
           check_overlap [b] [a] expected))
 
-let%expect_test "Empty selections never overlap any index form" =
+let%test_unit "Empty selections never overlap any index form" =
   let open Expr.Helpers in
   let int_array_meta = {Expr.Typed.Meta.empty with type_= UArray UInt} in
   let empty = Index.MultiIndex (internal_funapp FnMakeArray [] int_array_meta) in
@@ -1671,35 +977,4 @@ let%expect_test "Empty selections never overlap any index form" =
     ~second:
       [ All; Single (int 2); Upfrom (int 2); Between (int 1, int 3)
       ; MultiIndex (array_expr [int 2]); idx; empty ]
-    ~expected:false;
-  [%expect
-    {|
-    PASS: v[{}] / v[:]; may overlap: false
-    PASS: v[:] / v[{}]; may overlap: false
-    PASS: v[{}] / v[2]; may overlap: false
-    PASS: v[2] / v[{}]; may overlap: false
-    PASS: v[{}] / v[2:]; may overlap: false
-    PASS: v[2:] / v[{}]; may overlap: false
-    PASS: v[{}] / v[1:3]; may overlap: false
-    PASS: v[1:3] / v[{}]; may overlap: false
-    PASS: v[{}] / v[{2}]; may overlap: false
-    PASS: v[{2}] / v[{}]; may overlap: false
-    PASS: v[{}] / v[idx]; may overlap: false
-    PASS: v[idx] / v[{}]; may overlap: false
-    PASS: v[{}] / v[{}]; may overlap: false
-    PASS: v[{}] / v[{}]; may overlap: false
-    PASS: v[3:2] / v[:]; may overlap: false
-    PASS: v[:] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[2]; may overlap: false
-    PASS: v[2] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[2:]; may overlap: false
-    PASS: v[2:] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[1:3]; may overlap: false
-    PASS: v[1:3] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[{2}]; may overlap: false
-    PASS: v[{2}] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[idx]; may overlap: false
-    PASS: v[idx] / v[3:2]; may overlap: false
-    PASS: v[3:2] / v[{}]; may overlap: false
-    PASS: v[{}] / v[3:2]; may overlap: false
-    |}]
+    ~expected:false
