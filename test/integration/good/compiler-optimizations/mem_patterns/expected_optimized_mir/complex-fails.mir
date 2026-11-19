@@ -1,8 +1,5 @@
 /* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../complex-fails.stan : [exit 0] */
 matrix[10, 10] A_p: AoS
-Optimization hazard warning (Line 2): SoA warning: Right hand side contains only AoS expressions: A_p
-Optimization hazard warning (Line 6): SoA warning: Complex-valued types cannot be SoA: A_complex_tp
-Optimization hazard warning (Line 6): SoA warning: Right hand side contains only AoS expressions: A_complex_tp
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -260,3 +257,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name complex_fails_model) (prog_path ../complex-fails.stan))
+/*
+../complex-fails.stan:6:4: warning: Optimization hazard (SoA): Complex-valued types cannot be SoA: A_complex_tp
+../complex-fails.stan:6:4: warning: Optimization hazard (SoA): The left hand side 'A_complex_tp' is AoS, so the following values from the right hand side will be demoted: A_p
+*/

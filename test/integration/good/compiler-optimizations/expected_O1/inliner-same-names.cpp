@@ -5,10 +5,11 @@ namespace inliner_same_names_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ =
+static constexpr std::array<const char*, 12> locations_array__ =
   {" (found before start of program)",
   " (in '../inliner-same-names.stan', line 16, column 2 to column 14)",
   " (in '../inliner-same-names.stan', line 17, column 2 to column 16)",
+  " (in '../inliner-same-names.stan', line 18, column 2 to column 15)",
   " (in '../inliner-same-names.stan', line 5, column 4 to column 30)",
   " (in '../inliner-same-names.stan', line 7, column 11 to column 13)",
   " (in '../inliner-same-names.stan', line 7, column 4 to column 22)",
@@ -41,14 +42,14 @@ foo(const T0__& oR_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     int ot;
-    current_statement__ = 3;
-    ot = stan::math::num_elements(oR);
     current_statement__ = 4;
+    ot = stan::math::num_elements(oR);
+    current_statement__ = 5;
     stan::math::validate_non_negative_index("R", "ot", ot);
     Eigen::Matrix<local_scalar_t__,-1,1> R;
-    current_statement__ = 5;
+    current_statement__ = 6;
     stan::model::assign(R, oR, "assigning variable R");
-    current_statement__ = 9;
+    current_statement__ = 10;
     return R;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -77,15 +78,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 6;
+      current_statement__ = 7;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 6;
-      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 7;
-      stan::math::validate_non_negative_index("R", "N", N);
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 8;
+      stan::math::validate_non_negative_index("R", "N", N);
+      current_statement__ = 9;
       stan::math::validate_non_negative_index("out", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -130,14 +131,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_return9__;
       {
         int inline_foo_ot10__;
-        current_statement__ = 3;
-        inline_foo_ot10__ = stan::math::num_elements(R);
         current_statement__ = 4;
+        inline_foo_ot10__ = stan::math::num_elements(R);
+        current_statement__ = 5;
         stan::math::validate_non_negative_index("R", "ot", inline_foo_ot10__);
         Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R11__ =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot10__,
             DUMMY_VAR__);
       }
+      current_statement__ = 3;
       stan::model::assign(out, R, "assigning variable out");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -180,15 +182,16 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       stan::math::var_value<Eigen::Matrix<double,-1,1>> inline_foo_return5__;
       {
         int inline_foo_ot6__;
-        current_statement__ = 3;
-        inline_foo_ot6__ = stan::math::num_elements(R);
         current_statement__ = 4;
+        inline_foo_ot6__ = stan::math::num_elements(R);
+        current_statement__ = 5;
         stan::math::validate_non_negative_index("R", "ot", inline_foo_ot6__);
         stan::math::var_value<Eigen::Matrix<double,-1,1>> inline_foo_R7__ =
           stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(inline_foo_ot6__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
       }
+      current_statement__ = 3;
       stan::model::assign(out, R, "assigning variable out");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -245,14 +248,15 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       Eigen::Matrix<double,-1,1> inline_foo_return1__;
       {
         int inline_foo_ot2__;
-        current_statement__ = 3;
-        inline_foo_ot2__ = stan::math::num_elements(R);
         current_statement__ = 4;
+        inline_foo_ot2__ = stan::math::num_elements(R);
+        current_statement__ = 5;
         stan::math::validate_non_negative_index("R", "ot", inline_foo_ot2__);
         Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R3__ =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot2__,
             DUMMY_VAR__);
       }
+      current_statement__ = 3;
       stan::model::assign(out, R, "assigning variable out");
       if (emit_transformed_parameters__) {
         out__.write(R);

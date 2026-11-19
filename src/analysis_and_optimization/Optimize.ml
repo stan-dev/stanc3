@@ -68,13 +68,13 @@ let transform_program_blockwise (mir : Program.Typed.t)
   ; reverse_mode_log_prob= transform' None mir.reverse_mode_log_prob
   ; generate_quantities= transform' None mir.generate_quantities }
 
-let map_no_loc l =
-  List.map ~f:(fun s -> Stmt.{pattern= s; meta= Location_span.empty}) l
+let map_no_loc ?(meta = Location_span.empty) l =
+  List.map ~f:(fun s -> Stmt.{pattern= s; meta}) l
 
-let slist_no_loc l = Stmt.Pattern.SList (map_no_loc l)
-let block_no_loc l = Stmt.Pattern.Block (map_no_loc l)
+let block_no_loc ?meta l = Stmt.Pattern.Block (map_no_loc ?meta l)
 
-let slist_concat_no_loc l stmt =
+let slist_concat ~meta l stmt =
+  let slist_no_loc l = Stmt.Pattern.SList (map_no_loc ~meta l) in
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
 let gen_inline_var (name : string) (id_var : string) =
@@ -424,25 +424,25 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                   ICE.internal_error
                     "Internal error in inline optimization: lhs could not be \
                      converted round-trip to expression" [@coverage off] in
-            slist_concat_no_loc
+            slist_concat ~meta
               (dl2 @ dl1 @ sl2 @ sl1)
               (Assignment (lhs', ut, e2))
         | TargetPE e ->
             let d, s, e = inline_expr e in
-            slist_concat_no_loc (d @ s) (TargetPE e)
+            slist_concat ~meta (d @ s) (TargetPE e)
         | JacobianPE e ->
             let d, s, e = inline_expr e in
-            slist_concat_no_loc (d @ s) (JacobianPE e)
+            slist_concat ~meta (d @ s) (JacobianPE e)
         | NRFunApp
             (((CompilerInternal _ | StanLib _ | Operator _) as kind), exprs) ->
             let d, s, es = inline_list inline_expr exprs in
-            slist_concat_no_loc (d @ s) (NRFunApp (kind, es))
+            slist_concat ~meta (d @ s) (NRFunApp (kind, es))
         | NRFunApp (UserDefined (fname, sfx), exprs) -> (
             let sfx, fim' = compute_suffix_and_map propto sfx fim in
             match String.Map.find_opt fname fim' with
             | None ->
                 let d, s, es = inline_list inline_expr exprs in
-                slist_concat_no_loc (d @ s)
+                slist_concat ~meta (d @ s)
                   (NRFunApp (UserDefined (fname, sfx), es))
             | Some (_, args, b) ->
                 let b = replace_fresh_local_vars fname b in
@@ -450,17 +450,17 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                 let d, s, es =
                   inline_function_arguments fname propto adt fim args exprs
                 in
-                slist_concat_no_loc (d @ s)
+                slist_concat ~meta (d @ s)
                   (subst_args_stmt args es
                      {pattern= b; meta= Location_span.empty})
                     .pattern)
         | Return None -> Return None
         | Return (Some expr) ->
             let d, s, e = inline_expr expr in
-            slist_concat_no_loc (d @ s) (Return (Some e))
+            slist_concat ~meta (d @ s) (Return (Some e))
         | IfElse (expr, s1, s2) ->
             let d, s, e = inline_expr expr in
-            slist_concat_no_loc (d @ s)
+            slist_concat ~meta (d @ s)
               (IfElse
                  ( e
                  , inline_function_statement propto adt fim s1
@@ -468,7 +468,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ))
         | While (expr, stmt) ->
             let d', s', e = inline_expr expr in
-            slist_concat_no_loc (d' @ s')
+            slist_concat ~meta (d' @ s')
               (While
                  ( e
                  , if List.is_empty s' then
@@ -482,7 +482,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | For {loopvar; lower; upper; body} ->
             let d_lower, s_lower, lower = inline_expr lower in
             let d_upper, s_upper, upper = inline_expr upper in
-            slist_concat_no_loc
+            slist_concat ~meta
               (d_lower @ d_upper @ s_lower @ s_upper)
               (For
                  { loopvar
@@ -506,7 +506,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             SList (List.map l ~f:(inline_function_statement propto adt fim))
         | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
             let d, s, e = inline_expr expr in
-            slist_concat_no_loc (d @ s)
+            slist_concat ~meta (d @ s)
               (Decl {decl_adtype; decl_id; decl_type; initialize= Assign e})
         | Decl r -> Decl r
         | Skip -> Skip
@@ -1502,6 +1502,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 
     @param mir: The program's whole MIR. *)
 let optimize_soa (mir : Program.Typed.t) =
+  Memory_patterns.reset_warnings ();
   let transfer_aos_variables
       (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
       (aos_variables : string Set.Poly.t) =
@@ -1514,12 +1515,10 @@ let optimize_soa (mir : Program.Typed.t) =
       mir.reverse_mode_log_prob in
   let mod_exprs aos_exits mod_expr =
     map_rec_expr (Memory_patterns.modify_expr_pattern aos_exits) mod_expr in
-  let modify_stmt_patt stmt_pattern variable_set =
-    Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
   let transform stmt =
     optimize_minimal_variables ~transfer_variables:transfer_aos_variables
-      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
-      stmt in
+      ~update_expr:mod_exprs ~update_stmt:Memory_patterns.modify_stmt_pattern
+      ~initial_variables stmt in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l

@@ -3,7 +3,6 @@ matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
 row_vector[10] tp_row_vector_from_soa_loop: SoA
 matrix[10, 10] tp_matrix_from_soa_loop: SoA
-Optimization hazard warning (Line 6): SoA warning: Right hand side contains only AoS expressions: aos_p
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -594,3 +593,6 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name single_indexing_model) (prog_path ../single_indexing.stan))
+/*
+../single_indexing.stan:16:8: warning: Optimization hazard (SoA): Accessed by element in a for loop: aos_p
+*/

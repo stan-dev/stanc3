@@ -5,19 +5,20 @@ namespace lupdf_inlining_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 13> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
   " (in '../lupdf-inlining.stan', line 16, column 4 to column 12)",
   " (in '../lupdf-inlining.stan', line 19, column 4 to column 32)",
   " (in '../lupdf-inlining.stan', line 26, column 4 to column 30)",
   " (in '../lupdf-inlining.stan', line 27, column 4 to column 31)",
+  " (in '../lupdf-inlining.stan', line 9, column 8 to column 32)",
   " (in '../lupdf-inlining.stan', line 22, column 4 to column 29)",
+  " (in '../lupdf-inlining.stan', line 23, column 4 to column 31)",
   " (in '../lupdf-inlining.stan', line 13, column 4 to column 10)",
   " (in '../lupdf-inlining.stan', line 3, column 8 to column 36)",
   " (in '../lupdf-inlining.stan', line 2, column 35 to line 4, column 5)",
   " (in '../lupdf-inlining.stan', line 6, column 8 to column 35)",
   " (in '../lupdf-inlining.stan', line 5, column 34 to line 7, column 5)",
-  " (in '../lupdf-inlining.stan', line 9, column 8 to column 32)",
   " (in '../lupdf-inlining.stan', line 8, column 26 to line 10, column 5)"};
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
@@ -54,7 +55,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   try {
     local_scalar_t__ lcm1__;
     {
-      current_statement__ = 7;
+      current_statement__ = 9;
       return stan::math::normal_lpdf<propto__>(x, mu, static_cast<double>(1));
     }
   } catch (const std::exception& e) {
@@ -78,7 +79,7 @@ bar_lpmf(const T0__& n, const T1__& mu, std::ostream* pstream__) {
   try {
     local_scalar_t__ lcm2__;
     {
-      current_statement__ = 9;
+      current_statement__ = 11;
       return stan::math::poisson_lpmf<propto__>(n, mu);
     }
   } catch (const std::exception& e) {
@@ -100,7 +101,7 @@ stan::return_type_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__) {
   try {
     local_scalar_t__ lcm3__;
     {
-      current_statement__ = 11;
+      current_statement__ = 5;
       return foo_lpdf<propto__>(x, 0.5, pstream__);
     }
   } catch (const std::exception& e) {
@@ -130,11 +131,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 6;
+      current_statement__ = 8;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
-      current_statement__ = 6;
+      current_statement__ = 8;
       stan::io::read_from_context(n, context__, "n");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -183,6 +184,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         lcm12__ = stan::math::normal_lpdf<false>(mu, 1.0,
                     static_cast<double>(1));
       }
+      current_statement__ = 2;
       tp = lcm12__;
       {
         double inline_baz_lpdf_return25__;
@@ -193,11 +195,13 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                         static_cast<double>(1));
           }
         }
+        current_statement__ = 6;
         lp_accum__.add(lcm13__);
         double inline_bar_lpmf_return28__;
         {
           lcm14__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
+        current_statement__ = 7;
         lp_accum__.add(lcm14__);
       }
     } catch (const std::exception& e) {
@@ -241,6 +245,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         lcm9__ = stan::math::normal_lpdf<false>(mu, 1.0,
                    static_cast<double>(1));
       }
+      current_statement__ = 2;
       tp = lcm9__;
       {
         double inline_baz_lpdf_return18__;
@@ -251,11 +256,13 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                         static_cast<double>(1));
           }
         }
+        current_statement__ = 6;
         lp_accum__.add(lcm10__);
         double inline_bar_lpmf_return21__;
         {
           lcm11__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
+        current_statement__ = 7;
         lp_accum__.add(lcm11__);
       }
     } catch (const std::exception& e) {
@@ -318,6 +325,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         lcm5__ = stan::math::normal_lpdf<false>(mu, 1.0,
                    static_cast<double>(1));
       }
+      current_statement__ = 2;
       tp = lcm5__;
       if (emit_transformed_parameters__) {
         out__.write(lcm5__);
@@ -334,12 +342,14 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                      static_cast<double>(1));
         }
       }
+      current_statement__ = 3;
       lbaz = lcm4__;
       double lbar = std::numeric_limits<double>::quiet_NaN();
       double inline_bar_lpmf_return14__;
       {
         lcm6__ = stan::math::poisson_lpmf<false>(n, mu);
       }
+      current_statement__ = 4;
       lbar = lcm6__;
       out__.write(lcm4__);
       out__.write(lcm6__);

@@ -4,14 +4,6 @@ matrix[5, 10] aos_x: AoS
 matrix[5, 10] aos_y: AoS
 matrix[5, 10] tp_matrix_aos_from_mix: AoS
 matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
-Optimization hazard warning (Line 17): SoA warning: Right hand side contains only AoS expressions: aos_x
-Optimization hazard warning (Line 18): SoA warning: Right hand side contains only AoS expressions: aos_y
-Optimization hazard warning (Line 23): SoA warning: Right hand side contains only AoS expressions: tp_matrix_aos_from_mix
-Optimization hazard warning (Line 23): SoA warning: Right hand side of assignment is all AoS: aos_x, aos_y, tp_matrix_aos_from_mix
-Optimization hazard warning (Line 24): SoA warning: Function 'okay_reduction' on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_from_udf_reduced_soa
-Optimization hazard warning (Line 24): SoA warning: Right hand side contains only AoS expressions: tp_matrix_from_udf_reduced_soa
-Optimization hazard warning (Line 24): SoA warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_from_udf_reduced_soa
-Optimization hazard warning (Line 24): SoA warning: Used in user defined function: aos_x, aos_y, tp_matrix_aos_from_mix
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UMatrix)))
@@ -828,3 +820,11 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name reductions_allowed_model) (prog_path ../reductions_allowed.stan))
+/*
+../reductions_allowed.stan:23:5: warning: Optimization hazard (SoA): Used in a ternary operator which is not allowed: aos_x, aos_y
+../reductions_allowed.stan:23:5: warning: Optimization hazard (SoA): Right hand side of assignment to 'tp_matrix_aos_from_mix' is all AoS: aos_x, aos_y
+../reductions_allowed.stan:23:5: warning: Optimization hazard (SoA): The left hand side 'tp_matrix_aos_from_mix' is AoS, so the following values from the right hand side will be demoted: aos_x, aos_y
+../reductions_allowed.stan:24:5: warning: Optimization hazard (SoA): Right hand side of assignment to 'tp_matrix_from_udf_reduced_soa' is all AoS: aos_x
+../reductions_allowed.stan:24:5: warning: Optimization hazard (SoA): Function 'okay_reduction' on right hand side of assignment to 'tp_matrix_from_udf_reduced_soa' is not supported by SoA: aos_x
+../reductions_allowed.stan:24:5: warning: Optimization hazard (SoA): The left hand side 'tp_matrix_from_udf_reduced_soa' is AoS, so the following values from the right hand side will be demoted: aos_x
+*/

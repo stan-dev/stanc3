@@ -51,19 +51,27 @@ let included_diagnostic ?printed_filename ?code loc : Diagnostic.Label.t list =
         label :: go loc in
   go loc
 
-let range_of_loc_span ?printed_filename ?code
-    ({begin_loc; end_loc} : Middle.Location_span.t) :
+let range_of_loc_span ?printed_filename ?code (loc : Middle.Location_span.t) :
     Range.t * Diagnostic.Label.t list =
-  let source = get_source ?printed_filename ?code begin_loc in
-  let max = Source.length source in
-  let start =
-    (* clamp handles errors at end of source *)
-    clamp_int ~min:0 ~max begin_loc.byte_num in
-  let end_ =
-    (* can be needed if error crosses include boundary *)
-    clamp_int ~min:start ~max end_loc.byte_num in
-  ( Range.create ~source (Byte_index.of_int start) (Byte_index.of_int end_)
-  , included_diagnostic ?printed_filename ?code begin_loc )
+  if loc = Middle.Location_span.empty then
+    (* These should only occur when we're raising warnings for things like
+       optimization hazards after running lazy code motion, since the IR
+       pre-optimization always has the locations from the user *)
+    ( Range.initial
+        Source.(`String {name= Some "<unknown location>"; content= ""})
+    , [] )
+  else
+    let Middle.Location_span.{begin_loc; end_loc} = loc in
+    let source = get_source ?printed_filename ?code begin_loc in
+    let max = Source.length source in
+    let start =
+      (* clamp handles errors at end of source *)
+      clamp_int ~min:0 ~max begin_loc.byte_num in
+    let end_ =
+      (* can be needed if error crosses include boundary *)
+      clamp_int ~min:start ~max end_loc.byte_num in
+    ( Range.create ~source (Byte_index.of_int start) (Byte_index.of_int end_)
+    , included_diagnostic ?printed_filename ?code begin_loc )
 
 let box (l : Diagnostic.Label.t) =
   {l with message= (fun ppf -> (Fmt.hovbox Diagnostic.Message.pp) ppf l.message)}

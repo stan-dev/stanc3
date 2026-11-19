@@ -19,6 +19,7 @@ type t =
   | FunctionDeprecation of Location_span.t * string * (int * int) * string
   | OdeDeprecation of Location_span.t * string * (int * int) * string
   | Pedantic of Location_span.t * string
+  | OptimizationHazard of Location_span.t * string * (Format.formatter -> unit)
 
 let stancjs_bad_include msg = StancJsInclude msg
 let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
@@ -40,6 +41,7 @@ let ode_deprecation loc name version rename =
   OdeDeprecation (loc, name, version, rename)
 
 let pedantic_warning (span, msg) = Pedantic (span, msg)
+let optimization_hazard (loc, pass, pp) = OptimizationHazard (loc, pass, pp)
 
 let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
@@ -188,11 +190,13 @@ let to_grace ?printed_filename ?code warn =
           "%s is deprecated and will be removed in Stan %d.%d. Use %s instead."
           name major minor rename in
       make_warning ~notes ~summary loc "Use %s instead." rename
+  | OptimizationHazard (loc, pass, pp) ->
+      make_warning loc "Optimization hazard (%s): %t" pass pp
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in
   match warn with
-  | EmptyFile _ | Pedantic _ ->
+  | EmptyFile _ | Pedantic _ | OptimizationHazard _ ->
       Fmt.pf ppf "%a@." Diagnostic.pp_compact diagnostic
   | _ -> Fmt.pf ppf "%a@." Diagnostic.pp diagnostic
 

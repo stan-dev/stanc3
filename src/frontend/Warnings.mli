@@ -25,6 +25,10 @@ val lkj_cov_deprecation : Location_span.t -> t
 val function_deprecation : Location_span.t -> string -> int * int -> string -> t
 val ode_deprecation : Location_span.t -> string -> int * int -> string -> t
 val pedantic_warning : Location_span.t * string -> t
+
+val optimization_hazard :
+  Location_span.t * string * (Format.formatter -> unit) -> t
+
 val pp : ?printed_filename:string -> ?code:string -> t Fmt.t
 val pp_warnings : ?printed_filename:string -> ?code:string -> t list Fmt.t
 

@@ -283,6 +283,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         return ;
       }
       double z = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 1;
       double inline_self_diff_x_arg2__ =
         stan::math::normal_rng(0, 1, base_rng__);
       double inline_self_diff_return1__;
@@ -291,10 +292,12 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         inline_self_diff_return1__ = (inline_self_diff_x_arg2__ -
           inline_self_diff_x_arg2__);
       }
+      current_statement__ = 1;
       z = inline_self_diff_return1__;
       Eigen::Matrix<double,-1,-1> a =
         Eigen::Matrix<double,-1,-1>::Constant(d, d,
           std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 2;
       decltype(auto) inline_sign_fix_a_arg5__ =
         stan::math::to_ref(stan::math::multiply(L, U));
       Eigen::Matrix<double,-1,-1> inline_sign_fix_return4__;
@@ -336,6 +339,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
           inline_sign_fix_out7__,
           "assigning variable inline_sign_fix_return4__");
       }
+      current_statement__ = 2;
       stan::model::assign(a, inline_sign_fix_return4__,
         "assigning variable a");
       out__.write(z);

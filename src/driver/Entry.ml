@@ -132,13 +132,15 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
     Optimize.optimization_suite
       ~settings:(Flags.get_optimization_settings flags)
       tx_mir in
-  if flags.debug_settings.print_mem_patterns then
+  if flags.debug_settings.print_mem_patterns then (
     output
-      (Memory_patterns
-         (Fmt.str "%a%a@\n" Memory_patterns.pp_mem_patterns opt_mir
-            (* TODO should be better associated with the names from above? *)
-            Fmt.(list string)
-            (Memory_patterns.get_warnings ())));
+      (Memory_patterns (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir));
+    output
+      (Warnings
+         (Memory_patterns.get_warnings ()
+         |> List.map ~f:(fun (loc, reason) ->
+             Warnings.optimization_hazard
+               (loc, "SoA", fun ppf -> Memory_patterns.pp_reason ppf reason)))));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   opt_mir
 
