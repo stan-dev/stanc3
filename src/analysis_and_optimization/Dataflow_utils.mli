@@ -22,8 +22,14 @@ val build_controls :
 (** Returns the controls of each label of the statement map. *)
 
 val control_parent_ids : controls -> label Set.Poly.t
-(** The innermost enclosing [if] or loop, when present, and the jumps that can
-    affect whether the statement executes. *)
+(** [control_parent_ids controls] returns the labels of the statements that
+    directly control whether a given statement runs. It takes the [break],
+    [continue], and [return] labels recorded in [controls.jump_ids] and adds the
+    label of the nearest enclosing [if], [for], or [while], if there is one.
+
+    For example, in [for (i in 1:N) { if (skip) continue; print(i); }], the
+    result for [print(i)] contains the labels of the [for] and the [continue].
+    The loop starts the iteration, and the [continue] can skip the print. *)
 
 val enclosing_loop_ids :
   label -> ('e, 's) Stmt.Pattern.t -> controls -> label list

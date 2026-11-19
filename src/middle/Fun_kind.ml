@@ -29,7 +29,7 @@ type 'e t =
   | UserDefined of string * suffix
 [@@deriving compare, sexp_of, map, fold]
 
-let is_target_increment = function
+let may_update_target = function
   | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
   | _ -> false
 

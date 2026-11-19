@@ -39,13 +39,11 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
-let is_stable_expr (written_vars : string Set.Poly.t) (expr : Expr.Typed.t) :
-    bool =
-  let is_written_variable (expression : Expr.Typed.t) =
-    match expression.pattern with
-    | Var name -> Set.Poly.mem name written_vars
-    | _ -> false in
-  (not (cannot_duplicate_expr expr)) && not (expr_any is_written_variable expr)
+let expr_reads_any_of (variables : string Set.Poly.t) (expr : Expr.Typed.t) =
+  let reads_variable (e : Expr.Typed.t) =
+    match e.pattern with Var name -> Set.Poly.mem name variables | _ -> false
+  in
+  expr_any reads_variable expr
 
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
   Expr.Pattern.fold

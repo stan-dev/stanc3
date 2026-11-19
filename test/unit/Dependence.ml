@@ -897,6 +897,12 @@ let%test_unit "Disjoint column ranges separate matching row arrays" =
 let%test_unit "A whole column overlaps a whole row at their intersection" =
   check_read_overlap (matrix_reads ":, 1" "1, :") ~expected:true
 
+let%test_unit "A whole row is disjoint from an element in another row" =
+  check_read_overlap (matrix_reads "1" "2, 1") ~expected:false
+
+let%test_unit "A whole row overlaps an element in that row" =
+  check_read_overlap (matrix_reads "1" "1, 2") ~expected:true
+
 let%test_unit "Nested slice: position one overlaps original element two" =
   check_read_overlap ~expected:true
     {|
@@ -946,3 +952,131 @@ let%test_unit "Empty selections never overlap any index form" =
       [ All; Single (int 2); Upfrom (int 2); Between (int 1, int 3)
       ; MultiIndex (array_expr [int 2]); idx; empty ]
     ~expected:false
+
+let for_each_print_argument source ~f =
+  let source = String.trim source in
+  let lines = String.split_lines source |> Array.of_list in
+  LabelMap.iter (statement_map source) ~f:(fun ~key:_ ~data:(pattern, loc) ->
+      match pattern with
+      | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [arg]) ->
+          let line = loc.Location_span.begin_loc.line_num in
+          Fmt.pr "line %d: %s -> " line (String.trim lines.(line - 1));
+          f arg
+      | _ -> ())
+
+let%expect_test "int_literal_value returns the integer written in the source" =
+  for_each_print_argument
+    {|data { int k; }
+      model {
+        print(42);
+        print(k);
+        print(2 + 3);
+      }|}
+    ~f:(fun arg ->
+      match Expr.Helpers.int_literal_value arg with
+      | Some i -> Fmt.pr "%d@." i
+      | None -> Fmt.pr "no integer literal@.");
+  [%expect
+    {|
+    line 3: print(42); -> 42
+    line 4: print(k); -> no integer literal
+    line 5: print(2 + 3); -> no integer literal
+    |}]
+
+let%expect_test "array_literal_elements returns the elements in source order" =
+  for_each_print_argument
+    {|data { int k; array[2] int idx; }
+      model {
+        print({3, k});
+        print(idx);
+      }|}
+    ~f:(fun arg ->
+      match Expr.Helpers.array_literal_elements arg with
+      | Some elements ->
+          Fmt.pr "elements [%a]@."
+            (Fmt.list ~sep:(Fmt.any ", ") Expr.Typed.pp)
+            elements
+      | None -> Fmt.pr "no array literal@.");
+  [%expect
+    {|
+    line 3: print({3, k}); -> elements [3, k]
+    line 4: print(idx); -> no array literal
+    |}]
+
+let%expect_test
+    "Index.is_single distinguishes a scalar index from a range or index array" =
+  for_each_print_argument
+    {|data { vector[4] v; array[1] int idx; }
+      model {
+        print(v[2]);
+        print(v[:]);
+        print(v[2:]);
+        print(v[2:2]);
+        print(v[idx]);
+      }|}
+    ~f:(fun arg ->
+      match arg.pattern with
+      | Indexed (_, [index]) ->
+          Fmt.pr "single index: %b@." (Index.is_single index)
+      | _ -> failwith "Expected an indexed expression");
+  [%expect
+    {|
+    line 3: print(v[2]); -> single index: true
+    line 4: print(v[:]); -> single index: false
+    line 5: print(v[2:]); -> single index: false
+    line 6: print(v[2:2]); -> single index: false
+    line 7: print(v[idx]); -> single index: false
+    |}]
+
+let%expect_test
+    "may_update_target distinguishes an _lp call from a target read or a plain \
+     call" =
+  for_each_print_argument
+    {|functions {
+        real f_lp(real x) { target += x; return x; }
+        real f(real x) { return x; }
+      }
+      model {
+        print(f_lp(1.0));
+        print(target());
+        print(f(1.0));
+      }|}
+    ~f:(fun arg ->
+      match arg.pattern with
+      | FunApp (kind, _) ->
+          Fmt.pr "may update target: %b@." (Fun_kind.may_update_target kind)
+      | _ -> failwith "Expected a function call");
+  [%expect
+    {|
+    line 6: print(f_lp(1.0)); -> may update target: true
+    line 7: print(target()); -> may update target: false
+    line 8: print(f(1.0)); -> may update target: false
+    |}]
+
+let%expect_test
+    "expr_reads_any_of finds variables in the base and inside a subscript" =
+  for_each_print_argument
+    {|data { vector[4] v; array[4] int idx; int k; }
+      model {
+        print(v[idx[k]]);
+      }|}
+    ~f:(fun arg ->
+      Fmt.pr "@.";
+      List.iter
+        [["v"]; ["idx"]; ["k"]; ["other"]; ["other"; "k"]]
+        ~f:(fun names ->
+          let reads =
+            Analysis_and_optimization.Mir_utils.expr_reads_any_of
+              (Set.Poly.of_list names) arg in
+          Fmt.pr "  reads any of [%s]: %b@."
+            (String.concat ~sep:", " names)
+            reads));
+  [%expect
+    {|
+    line 3: print(v[idx[k]]); ->
+      reads any of [v]: true
+      reads any of [idx]: true
+      reads any of [k]: true
+      reads any of [other]: false
+      reads any of [other, k]: true
+    |}]

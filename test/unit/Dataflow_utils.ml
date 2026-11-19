@@ -665,7 +665,7 @@ let%expect_test "Predecessor graph example 5" =
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
 
-let check_control_contexts ~block ~at ~enclosing ~loops ~dependencies source =
+let control_statement_map ~block source =
   let mir = Test_utils.mir_of_string source in
   let body =
     match block with
@@ -677,11 +677,200 @@ let check_control_contexts ~block ~at ~enclosing ~loops ~dependencies source =
         with
         | Some body -> body
         | None -> Fmt.failwith "No body for function %s" name) in
-  let statements =
-    build_statement_map
-      (fun Stmt.{pattern; _} -> pattern)
-      (fun Stmt.{meta; _} -> meta)
-      body in
+  build_statement_map
+    (fun Stmt.{pattern; _} -> pattern)
+    (fun Stmt.{meta; _} -> meta)
+    body
+
+let check_enclosing_loops ~expected_by_line source =
+  let statements = control_statement_map ~block:`Model source in
+  let controls = build_controls statements in
+  let lines = String.split_lines source |> Array.of_list in
+  let line_of id =
+    (snd (LabelMap.find id statements)).Location_span.begin_loc.line_num in
+  let actual =
+    LabelMap.bindings statements
+    |> List.filter_map ~f:(fun (id, (pattern, _)) ->
+        match pattern with
+        | Stmt.Pattern.For _ | While _ | NRFunApp (CompilerInternal FnPrint, _)
+          ->
+            let line = line_of id in
+            let loops =
+              enclosing_loop_ids id pattern (LabelMap.find id controls) in
+            let loop_lines = List.map loops ~f:line_of in
+            Fmt.pr "line %d: %s -> loop lines [%a]@." line
+              (String.trim lines.(line - 1))
+              (Fmt.list ~sep:(Fmt.any ", ") Fmt.int)
+              loop_lines;
+            Some (line, loop_lines)
+        | _ -> None) in
+  if actual <> expected_by_line then
+    let pp_row ppf (line, loops) =
+      Fmt.pf ppf "line %d -> [%a]" line
+        (Fmt.list ~sep:(Fmt.any ", ") Fmt.int)
+        loops in
+    let pp = Fmt.list ~sep:Fmt.cut pp_row in
+    Fmt.failwith "@[<v>Expected loop lines:@,%a@,Got:@,%a@]" pp expected_by_line
+      pp actual
+
+let%expect_test
+    "enclosing_loop_ids includes the loop header itself and excludes \
+     intervening ifs" =
+  check_enclosing_loops
+    ~expected_by_line:[(2, [2]); (4, [2; 4]); (6, [2; 4]); (9, [2]); (11, [])]
+    {|model {
+        for (i in 1:2) {
+          int j = i;
+          while (j > 0) {
+            if (i == j)
+              print(j);
+            j -= 1;
+          }
+          print(i);
+        }
+        print("done");
+      }|};
+  [%expect
+    {|
+    line 2: for (i in 1:2) { -> loop lines [2]
+    line 4: while (j > 0) { -> loop lines [2, 4]
+    line 6: print(j); -> loop lines [2, 4]
+    line 9: print(i); -> loop lines [2]
+    line 11: print("done"); -> loop lines []
+    |}]
+
+let print_controls_for_print_statements source =
+  let statements = control_statement_map ~block:`Model source in
+  let controls = build_controls statements in
+  let line_of id =
+    (snd (LabelMap.find id statements)).Location_span.begin_loc.line_num in
+  let pp_enclosing ppf {id; side} =
+    let kind =
+      match side with
+      | None -> "loop"
+      | Some Then -> "then"
+      | Some Else -> "else" in
+    Fmt.pf ppf "%s on line %d" kind (line_of id) in
+  LabelMap.iter statements ~f:(fun ~key:id ~data:(pattern, _) ->
+      match pattern with
+      | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [arg]) ->
+          let {enclosing; jump_ids} = LabelMap.find id controls in
+          Fmt.pr "print(%a): enclosing [%a], jumps on lines [%a]@."
+            Expr.Typed.pp arg
+            (Fmt.list ~sep:(Fmt.any ", ") pp_enclosing)
+            enclosing
+            (Fmt.list ~sep:(Fmt.any ", ") Fmt.int)
+            (List.map (Set.Poly.to_list jump_ids) ~f:line_of)
+      | _ -> ())
+
+let%expect_test
+    "build_controls records enclosing branches and jumps that can skip a print"
+    =
+  print_controls_for_print_statements
+    {|data { int skip; }
+    model {
+      for (i in 1:2) {
+        if (skip)
+          continue;
+        if (i == 1)
+          print("first");
+        else
+          print("second");
+      }
+    }|};
+  [%expect
+    {|
+    print("first"): enclosing [loop on line 3, then on line 6], jumps on lines [5]
+    print("second"): enclosing [loop on line 3, else on line 6], jumps on lines [5]
+    |}]
+
+let check_control_parents ~block ~expected_parents_by_line source =
+  let source = String.trim source in
+  let lines = String.split_lines source |> Array.of_list in
+  let statements = control_statement_map ~block source in
+  let controls = build_controls statements in
+  let describe line =
+    Fmt.str "line %d: %s" line (String.trim lines.(line - 1)) in
+  List.iter expected_parents_by_line ~f:(fun (line, expected) ->
+      let matches =
+        LabelMap.bindings statements
+        |> List.filter_map ~f:(fun (id, (pattern, loc)) ->
+            match pattern with
+            | Stmt.Pattern.Block _ | SList _ -> None
+            | _ when loc.Location_span.begin_loc.line_num = line -> Some id
+            | _ -> None) in
+      match matches with
+      | [id] ->
+          let actual =
+            control_parent_ids (LabelMap.find id controls)
+            |> Set.Poly.to_list
+            |> List.map ~f:(fun parent ->
+                let _, loc = LabelMap.find parent statements in
+                loc.begin_loc.line_num)
+            |> List.sort ~cmp:Int.compare in
+          if actual <> expected then
+            let show = function
+              | [] -> "none"
+              | parents ->
+                  String.concat ~sep:"\n  " (List.map parents ~f:describe) in
+            Fmt.failwith
+              "Direct control parents of %s\nExpected:\n  %s\nGot:\n  %s"
+              (describe line) (show expected) (show actual)
+      | _ ->
+          Fmt.failwith "Expected one statement on %s, found %d" (describe line)
+            (List.length matches))
+
+let%test_unit "control_parent_ids: a continue can skip print(i)" =
+  check_control_parents ~block:`Model
+    ~expected_parents_by_line:[(7, [3; 5]); (9, [5; 8])]
+    {|data { int N; int skip; int show; }
+      model {
+        for (i in 1:N) {
+          if (skip) {
+            continue;
+          }
+          print(i);
+          if (show) {
+            print(-i);
+          }
+        }
+      }|}
+
+let%test_unit "control_parent_ids: a parameter can cause seen = 1 to be skipped"
+    =
+  check_control_parents ~block:`Model
+    ~expected_parents_by_line:[(6, [5]); (8, [4; 6])]
+    {|parameters { real a; }
+      model {
+        int seen = 0;
+        for (i in 1:2) {
+          if (a > 0) {
+            continue;
+          }
+          seen = 1;
+        }
+        if (seen) target += 1;
+      }|}
+
+let%test_unit "control_parent_ids: either earlier return can skip the print" =
+  check_control_parents ~block:(`Function "f")
+    ~expected_parents_by_line:[(9, [4; 7])]
+    {|functions {
+        int f(int x) {
+          if (x < 0) {
+            return -1;
+          }
+          if (x > 0) {
+            return 1;
+          }
+          print(x);
+          return 0;
+        }
+      }
+      model {}|}
+
+let check_control_contexts ~block ~at ~enclosing ~loops ~dependencies source =
+  let statements = control_statement_map ~block source in
   let controls_by_statement = build_controls statements in
   let statement_name id =
     match fst (LabelMap.find id statements) with

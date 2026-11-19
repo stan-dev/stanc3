@@ -4,14 +4,17 @@ open Dataflow_types
 
 val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
+
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
+(** True if a call in the expression can have side effects or return different
+    values for the same arguments, as with an RNG or [target()]. Passing
+    [~preserve_stability:true] also rejects autodiffable computations. *)
+
 val cannot_remove_expr : ExprSet.elt -> bool
 
-val is_stable_expr : string Set.Poly.t -> Expr.Typed.t -> bool
-(** [is_stable_expr written_vars e] checks whether we can evaluate [e] again and
-    get the same value. For example, a call to an RNG can change value even if
-    its arguments stay the same. [written_vars] must include every variable
-    written in the region across which we compare evaluations. *)
+val expr_reads_any_of : string Set.Poly.t -> Expr.Typed.t -> bool
+(** [expr_reads_any_of variables e] checks whether [e] contains a reference to
+    any name in [variables], including in its subscripts. *)
 
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option

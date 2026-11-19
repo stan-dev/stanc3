@@ -32,12 +32,10 @@ let reaching_defn_lookup (definitions : reaching_definition Set.Poly.t)
           Set.Poly.add statement_id writer_labels
       | _ -> writer_labels)
 
-let read_dependencies statement_info blockers reads =
-  List.fold_left reads ~init:statement_info.parents ~f:(fun dependencies read ->
-      if Set.Poly.mem (VVar read.Dependence.variable) blockers then dependencies
-      else
-        Set.Poly.union dependencies
-          (reaching_defn_lookup statement_info.reaching_defn_entry read))
+let writers_of_reads definitions ~blockers reads =
+  List.fold_left reads ~init:Set.Poly.empty ~f:(fun writers read ->
+      if Set.Poly.mem (VVar read.Dependence.variable) blockers then writers
+      else Set.Poly.union writers (reaching_defn_lookup definitions read))
 
 let node_immediate_dependencies
     (statement_map :
@@ -45,7 +43,10 @@ let node_immediate_dependencies
     ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
     label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
-  read_dependencies info blockers info.accesses.reads
+  let writers =
+    writers_of_reads info.reaching_defn_entry ~blockers info.accesses.reads
+  in
+  Set.Poly.union info.parents writers
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
@@ -80,7 +81,8 @@ let node_vars_dependencies
         match matching_reads with
         | [] -> Dependence.{variable; path= []} :: selected_reads
         | _ -> matching_reads @ selected_reads) in
-  read_dependencies info blockers reads
+  let writers = writers_of_reads info.reaching_defn_entry ~blockers reads in
+  Set.Poly.union info.parents writers
   |> Set.Poly.fold ~init:Set.Poly.empty
        ~f:(node_dependencies_rec statement_map ~blockers)
 
@@ -246,3 +248,57 @@ let log_prob_dependency_graph (mir : Program.Typed.t) :
     label Set.Poly.t LabelMap.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map
+
+let%test_module "writers_of_reads" =
+  (module struct
+    let print_writers ~blocked source =
+      let open Frontend in
+      let ast = Parse.parse_program (`Code source) |> fst |> Result.get_ok in
+      let typed = Typechecker.check_program ast |> Result.get_ok |> fst in
+      let statements =
+        log_prob_build_dep_info_map (Ast_to_Mir.trans_prog "" typed) in
+      let lines = String.split_lines source |> Array.of_list in
+      let describe line =
+        Fmt.str "line %d: %s" line (String.trim lines.(line - 1)) in
+      LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
+          match pattern with
+          | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, _) ->
+              Fmt.pr "%s@." (describe info.meta.begin_loc.line_num);
+              List.iter blocked ~f:(fun variables ->
+                  let blockers =
+                    Set.Poly.of_list (List.map variables ~f:(fun v -> VVar v))
+                  in
+                  let writers =
+                    writers_of_reads info.reaching_defn_entry ~blockers
+                      info.accesses.reads in
+                  Fmt.pr "  blocked [%s]" (String.concat ~sep:", " variables);
+                  if Set.Poly.is_empty writers then Fmt.pr " -> no writers@."
+                  else (
+                    Fmt.pr " -> writers@.";
+                    Set.Poly.iter writers ~f:(fun id ->
+                        let _, writer = LabelMap.find id statements in
+                        Fmt.pr "    %s@."
+                          (describe writer.meta.begin_loc.line_num))))
+          | _ -> ())
+
+    let%expect_test
+        "writers_of_reads excludes blocked variables from the writers of \
+         print(x, y)" =
+      print_writers
+        ~blocked:[[]; ["x"]; ["x"; "y"]]
+        {|model {
+            int x = 3;
+            int y = 5;
+            print(x, y);
+          }|};
+      [%expect
+        {|
+        line 4: print(x, y);
+          blocked [] -> writers
+            line 2: int x = 3;
+            line 3: int y = 5;
+          blocked [x] -> writers
+            line 3: int y = 5;
+          blocked [x, y] -> no writers
+        |}]
+  end)
