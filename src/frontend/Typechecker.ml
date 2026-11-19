@@ -37,16 +37,22 @@ let needs_higher_order_autodiff fn =
 let model_name = ref ""
 
 let classify_annotations : Annotation.annotation_classifier ref =
-  ref (fun _ _ _ -> Ok `Unknown)
+  ref (fun _ _ _ -> Error None)
 
-let verify_decl_annotations anns target =
-  List.iter
-    ~f:(fun (a : Annotation.t) ->
+let check_decl_annotations id loc anns target =
+  List.fold_left anns ~init:false ~f:(fun acc (a : Annotation.t) ->
       match !classify_annotations a.name a.args target with
-      | Ok `Accepted -> ()
-      | Ok `Unknown -> add_warning (Warnings.unknown_annotation (a.loc, a.name))
-      | Error pp -> add_warning (Warnings.unsupported_annotation (a.loc, pp)))
-    anns
+      | Ok () -> true
+      | Error None ->
+          add_warning (Warnings.unknown_annotation (a.loc, a.name));
+          acc
+      | Error (Some pp) -> (
+          match target with
+          | Function {has_body= true; _} when a.name = "extern" ->
+              Semantic_error.fn_extern_defined loc id.name a.loc |> error
+          | _ ->
+              add_warning (Warnings.unsupported_annotation (a.loc, pp));
+              acc))
 
 type function_indicator =
   | NotInFunction
@@ -2017,9 +2023,11 @@ and check_var_decl loc cf tenv sized_ty trans
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans;
   verify_transformed_param_ty loc cf is_global unsized_type;
-  verify_decl_annotations annotations
-    Annotation.(
-      Variable {type_= unsized_type; block= cf.current_block; is_global});
+  let _ : bool =
+    check_decl_annotations (List.hd_exn variables).identifier loc annotations
+      Annotation.(
+        Variable {type_= unsized_type; block= cf.current_block; is_global})
+  in
   let stmt =
     VarDecl
       { decl_type= checked_type
@@ -2075,37 +2083,31 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
 
 and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
     annotations =
-  let is_extern =
-    match
-      (* Somewhat hacky: because @extern turns _off_ a piece of typechecking, it
-         is difficult to modularize *)
-      !classify_annotations "extern" []
-        Annotation.(
-          Function
-            { type_=
-                UnsizedType.UFun
-                  ( arg_tys
-                  , rt
-                  , Fun_kind.suffix_from_name id.Ast.name
-                  , Mem_pattern.AoS )
-            ; has_body= false })
-    with
-    | Ok `Accepted ->
-        fun Annotation.{name; args; _} -> name = "extern" && args = []
-    | _ -> Fun.const false in
+  let verify_fun_annotations has_body =
+    check_decl_annotations id body.smeta.loc annotations
+      Annotation.(
+        Function
+          { type_=
+              UnsizedType.UFun
+                ( arg_tys
+                , rt
+                , Fun_kind.suffix_from_name id.Ast.name
+                , Mem_pattern.AoS )
+          ; has_body }) in
   match body with
   | {stmt= Skip; _} -> (
       match exists_matching_fn_declared tenv id arg_tys rt with
       | Some prev -> Semantic_error.fn_decl_exists loc id.name prev |> error
       | None ->
-          if List.exists annotations ~f:is_extern then `UserDefined id.id_loc
+          (* Forward declarations are deprecated and cannot have annotations. A
+             valid annotation means the backend knows where to find the function
+             definition. Invalid annotations are ignored so that they do not
+             prevent the error on missing function defintion. *)
+          if verify_fun_annotations false then `UserDefined id.id_loc
           else `UserDeclared id.id_loc)
-  | _ -> (
-      match List.find_opt annotations ~f:is_extern with
-      | Some annotation ->
-          Semantic_error.fn_extern_defined body.smeta.loc id.name annotation.loc
-          |> error
-      | _ -> `UserDefined id.id_loc)
+  | _ ->
+      let _ : bool = verify_fun_annotations true in
+      `UserDefined id.id_loc
 
 and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
@@ -2202,16 +2204,6 @@ and check_fundef loc cf tenv return_ty id args annotations body =
             Returning (kind, r)) } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body;
-  verify_decl_annotations annotations
-    Annotation.(
-      Function
-        { type_=
-            UnsizedType.UFun
-              ( arg_types
-              , return_ty
-              , Fun_kind.suffix_from_name id.Ast.name
-              , Mem_pattern.AoS )
-        ; has_body= not (checked_body.stmt = Ast.Skip) });
   let stmt =
     FunDef
       { returntype= return_ty
@@ -2350,7 +2342,7 @@ let check_program_exn ~allow_undefined_functions
 
 let check_program ?(allow_undefined_functions = false)
     ?(allowed_annotations : Annotation.annotation_classifier =
-      fun _ _ _ -> Ok `Unknown) ast =
+      fun _ _ _ -> Error None) ast =
   classify_annotations := allowed_annotations;
   try Result.Ok (check_program_exn ~allow_undefined_functions ast)
   with TypecheckerException err -> Result.Error err

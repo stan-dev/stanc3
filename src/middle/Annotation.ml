@@ -17,4 +17,4 @@ type target =
   | Variable of {type_: UnsizedType.t; is_global: bool; block: Block.t}
 
 type annotation_classifier =
-  string -> string list -> target -> ([`Accepted | `Unknown], unit Fmt.t) result
+  string -> string list -> target -> (unit, unit Fmt.t option) result
