@@ -12,10 +12,9 @@ let pp ppf {name; args; loc= _} =
   | [] -> Fmt.pf ppf "%@%s" name
   | _ -> Fmt.pf ppf "%@%s(@[%a)@]" name Fmt.(list ~sep:comma string) args
 
+type target =
+  | Function of {type_: UnsizedType.t; has_body: bool}
+  | Variable of {type_: UnsizedType.t; is_global: bool; block: Block.t}
+
 type annotation_classifier =
-     string
-  -> string list
-  -> UnsizedType.t
-  -> Block.t
-  -> is_global:bool
-  -> [`Fine | `Unknown | `Wrong of unit Fmt.t]
+  string -> string list -> target -> ([`Accepted | `Unknown], unit Fmt.t) result
