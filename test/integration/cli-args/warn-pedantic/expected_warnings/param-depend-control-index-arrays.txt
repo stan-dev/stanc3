@@ -1,0 +1,3 @@
+/* $ stanc --warn-pedantic ../param-depend-control-index-arrays.stan : [exit 0] */
+../param-depend-control-index-arrays.stan:20:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-index-arrays.stan:26:3: warning: A control flow statement depends on parameter(s): a.

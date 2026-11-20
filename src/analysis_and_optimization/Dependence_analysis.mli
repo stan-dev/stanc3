@@ -10,11 +10,11 @@ open Dataflow_types
       dependencies at all, since it can't use reaching deps, and prog_dependency
       graph only builds the graph for log_prob, but the user isn't guaranteed to
       be using the same labeling scheme.
-    - Currently, dependencies on global or uninitialized data are written as
-      depending on node '0'. This should probably be option or some type that
-      indicates global dependence.
-    - Indexed variables are currently handled as monoliths
     - No probabilistic dependency, I'll do that elsewhere **)
+
+(** A location and the statement that may have written it. [None] denotes the
+    initial definition at entry to the analysis. *)
+type reaching_definition = Dependence.location * label option
 
 (** Sufficient information about each node to build the dependency graph.
 
@@ -23,8 +23,10 @@ open Dataflow_types
 type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
-  ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; reaching_defn_entry: reaching_definition Set.Poly.t
+  ; reaching_defn_exit: reaching_definition Set.Poly.t
+  ; accesses: Dependence.accesses
+  ; loop_ids: label list
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
@@ -80,7 +82,8 @@ val log_prob_dependency_graph : Program.Typed.t -> label Set.Poly.t LabelMap.t
 (** Build the dependency graph for the log_prob section of a program, where
     labels correspond to the labels built by statement_map. *)
 
-val reaching_defn_lookup : reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t
+val reaching_defn_lookup :
+  reaching_definition Set.Poly.t -> Dependence.location -> label Set.Poly.t
 
 val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t

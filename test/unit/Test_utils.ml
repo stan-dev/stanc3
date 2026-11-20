@@ -19,6 +19,14 @@ let typed_ast_of_string_exn code =
 
 let mir_of_string s = typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 
+let function_body_exn (mir : Middle.Program.Typed.t) name =
+  match
+    List.find_map mir.functions_block ~f:(fun f ->
+        if String.equal f.Middle.Program.fdname name then f.fdbody else None)
+  with
+  | Some body -> body
+  | None -> Fmt.failwith "No body for function %s" name
+
 (** Compile a program to optimized MIR through the same driver path as stanc, so
     [flags] selects the optimizations exactly like the command line does. *)
 let compile_mir code flags =

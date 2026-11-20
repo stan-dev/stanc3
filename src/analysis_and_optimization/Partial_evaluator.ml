@@ -96,9 +96,7 @@ let stan_math_return_type name args =
   let arg_types = List.map ~f:Expr.Typed.fun_arg args in
   Frontend.Typechecker.stan_math_return_type name arg_types
 
-let is_multi_index = function
-  | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
-  | Single _ -> false
+let is_multi_index index = not (Index.is_single index)
 
 let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   { e with

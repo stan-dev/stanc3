@@ -172,7 +172,7 @@ let lower_bool_expr expr =
 let rec lower_nonrange_lvalue lvalue =
   match lvalue with
   | lbase, [] -> lower_nonrange_lbase lbase
-  | lv, idcs when List.for_all ~f:is_single_index idcs ->
+  | lv, idcs when List.for_all ~f:Index.is_single idcs ->
       lower_indexed_simple (lower_nonrange_lbase lv) idcs
   | _, _ ->
       Common.ICE.internal_error
@@ -249,7 +249,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       ) ->
       Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
   | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
-    when List.for_all ~f:is_single_index idcs ->
+    when List.for_all ~f:Index.is_single idcs ->
       Assign (lower_indexed_simple (Var assignee) idcs, lower_expr rhs)
       |> wrap_e
   | Assignment (lhs, _, rhs) ->

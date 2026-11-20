@@ -4,7 +4,12 @@ open Dataflow_types
 
 val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
+
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
+(** True if a call in the expression can have side effects or return different
+    values for the same arguments, as with an RNG or [target()]. Passing
+    [~preserve_stability:true] also rejects autodiffable computations. *)
+
 val cannot_remove_expr : ExprSet.elt -> bool
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option

@@ -10,30 +10,43 @@ open Monotone_framework
 (* Dependency analysis & interface *)
 (***********************************)
 
+type reaching_definition = Dependence.location * label option
+
 type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
-  ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; reaching_defn_entry: reaching_definition Set.Poly.t
+  ; reaching_defn_exit: reaching_definition Set.Poly.t
+  ; accesses: Dependence.accesses
+  ; loop_ids: label list
   ; meta: Location_span.t }
 
-(** Find all of the reaching definitions of a variable in an RD set *)
-let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
-    label Set.Poly.t =
-  Set.Poly.map (Set.Poly.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
+let reaching_defn_lookup (definitions : reaching_definition Set.Poly.t)
+    (read : Dependence.location) : label Set.Poly.t =
+  Set.Poly.fold definitions ~init:Set.Poly.empty
+    ~f:(fun ((write : Dependence.location), writer_id) writer_labels ->
+      match writer_id with
+      | Some statement_id
+        when Dependence.Location.same_var write read
+             && Dependence.may_overlap write.path read.path ->
+          Set.Poly.add statement_id writer_labels
+      | _ -> writer_labels)
+
+let writers_of_reads definitions ~blockers reads =
+  List.fold_left reads ~init:Set.Poly.empty ~f:(fun writers read ->
+      if Set.Poly.mem (VVar read.Dependence.variable) blockers then writers
+      else Set.Poly.union writers (reaching_defn_lookup definitions read))
 
 let node_immediate_dependencies
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
     ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
     label Set.Poly.t =
-  let stmt, info = LabelMap.find label statement_map in
-  let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
-  let rhs_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff rhs_set blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
-  Set.Poly.union info.parents rhs_deps
+  let _, info = LabelMap.find label statement_map in
+  let writers =
+    writers_of_reads info.reaching_defn_entry ~blockers info.accesses.reads
+  in
+  Set.Poly.union info.parents writers
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
@@ -60,14 +73,18 @@ let node_vars_dependencies
     ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (vars : vexpr Set.Poly.t)
     (label : label) : label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
-  let var_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff vars blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
-  Set.Poly.fold
-    (Set.Poly.union info.parents var_deps)
-    ~init:Set.Poly.empty
-    ~f:(node_dependencies_rec statement_map ~blockers)
+  let reads =
+    Set.Poly.fold vars ~init:[] ~f:(fun (VVar variable) selected_reads ->
+        let matching_reads =
+          List.filter info.accesses.reads ~f:(fun read ->
+              String.equal read.Dependence.variable variable) in
+        match matching_reads with
+        | [] -> Dependence.{variable; path= []} :: selected_reads
+        | _ -> matching_reads @ selected_reads) in
+  let writers = writers_of_reads info.reaching_defn_entry ~blockers reads in
+  Set.Poly.union info.parents writers
+  |> Set.Poly.fold ~init:Set.Poly.empty
+       ~f:(node_dependencies_rec statement_map ~blockers)
 
 (* The strategy here is to write an update function on the whole dependency
    graph in terms of node_immediate_dependencies, and then to find a
@@ -94,19 +111,6 @@ let all_node_dependencies
     let m' = step_map m in
     if map_equal m m' then m else step_until_fixed m' in
   step_until_fixed immediate_map
-
-let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
-    reaching_defn Set.Poly.t entry_exit LabelMap.t =
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt in
-  let (module Flowgraph) = flowgraph in
-  let rd_map =
-    reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir in
-  let to_rd_set set =
-    Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:1)) in
-  LabelMap.map rd_map ~f:(fun {entry; exit} ->
-      {entry= to_rd_set entry; exit= to_rd_set exit})
 
 let all_labels
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -200,15 +204,38 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let _, preds, parents = build_cf_graphs statement_map in
-  let rd_map = mir_reaching_definitions mir stmt in
+  let exits, preds, controls_by_statement = build_cf_graphs statement_map in
+  let accesses_by_statement =
+    LabelMap.map statement_map ~f:(fun (pattern, _) ->
+        Dependence.collect_accesses pattern) in
+  let written_vars =
+    LabelMap.fold accesses_by_statement ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:statement_accesses collected_variables ->
+        List.fold_left statement_accesses.Dependence.writes
+          ~init:collected_variables ~f:(fun variables write_location ->
+            Set.Poly.add write_location.Dependence.variable variables)) in
+  let inverse_flowgraph =
+    (module struct
+      type labels = int
+
+      let initials = exits
+      let successors = preds
+    end : FLOWGRAPH
+      with type labels = int) in
+  let rd_map =
+    reaching_definitions_mfp mir
+      (Monotone_framework.reverse inverse_flowgraph)
+      accesses_by_statement written_vars in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
-      let rds = LabelMap.find label rd_map in
+      let definitions = LabelMap.find label rd_map in
+      let statement_controls = LabelMap.find label controls_by_statement in
       ( stmt
       , { predecessors= LabelMap.find label preds
-        ; parents= LabelMap.find label parents
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit
+        ; parents= control_parent_ids statement_controls
+        ; reaching_defn_entry= definitions.entry
+        ; reaching_defn_exit= definitions.exit
+        ; accesses= LabelMap.find label accesses_by_statement
+        ; loop_ids= enclosing_loop_ids label stmt statement_controls
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :
@@ -221,3 +248,57 @@ let log_prob_dependency_graph (mir : Program.Typed.t) :
     label Set.Poly.t LabelMap.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map
+
+let%test_module "writers_of_reads" =
+  (module struct
+    let print_writers ~blocked source =
+      let open Frontend in
+      let ast = Parse.parse_program (`Code source) |> fst |> Result.get_ok in
+      let typed = Typechecker.check_program ast |> Result.get_ok |> fst in
+      let statements =
+        log_prob_build_dep_info_map (Ast_to_Mir.trans_prog "" typed) in
+      let lines = String.split_lines source |> Array.of_list in
+      let describe line =
+        Fmt.str "line %d: %s" line (String.trim lines.(line - 1)) in
+      LabelMap.iter statements ~f:(fun ~key:_ ~data:(pattern, info) ->
+          match pattern with
+          | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, _) ->
+              Fmt.pr "%s@." (describe info.meta.begin_loc.line_num);
+              List.iter blocked ~f:(fun variables ->
+                  let blockers =
+                    Set.Poly.of_list (List.map variables ~f:(fun v -> VVar v))
+                  in
+                  let writers =
+                    writers_of_reads info.reaching_defn_entry ~blockers
+                      info.accesses.reads in
+                  Fmt.pr "  blocked [%s]" (String.concat ~sep:", " variables);
+                  if Set.Poly.is_empty writers then Fmt.pr " -> no writers@."
+                  else (
+                    Fmt.pr " -> writers@.";
+                    Set.Poly.iter writers ~f:(fun id ->
+                        let _, writer = LabelMap.find id statements in
+                        Fmt.pr "    %s@."
+                          (describe writer.meta.begin_loc.line_num))))
+          | _ -> ())
+
+    let%expect_test
+        "writers_of_reads excludes blocked variables from the writers of \
+         print(x, y)" =
+      print_writers
+        ~blocked:[[]; ["x"]; ["x"; "y"]]
+        {|model {
+            int x = 3;
+            int y = 5;
+            print(x, y);
+          }|};
+      [%expect
+        {|
+        line 4: print(x, y);
+          blocked [] -> writers
+            line 2: int x = 3;
+            line 3: int y = 5;
+          blocked [x] -> writers
+            line 3: int y = 5;
+          blocked [x, y] -> no writers
+        |}]
+  end)

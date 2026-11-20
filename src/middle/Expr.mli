@@ -50,6 +50,11 @@ end
 
 module Helpers : sig
   val int : int -> Typed.t
+
+  val int_literal_value : 'a t -> int option
+  (** The value of a MIR integer literal, if it fits in an OCaml [int]. Returns
+      [None] for other expressions. *)
+
   val float : float -> Typed.t
   val complex : float * float -> Typed.t
   val str : string -> Typed.t
@@ -68,6 +73,11 @@ module Helpers : sig
   val complex_matrix_from_rows : Typed.t list -> Typed.t
   val transpose : Typed.t -> Typed.t
   val array_expr : Typed.t list -> Typed.t
+
+  val array_literal_elements : 'a t -> 'a t list option
+  (** The element expressions of a Stan array literal such as [{1, i}]. Returns
+      [None] for other expressions, including array variables. *)
+
   val tuple_expr : Typed.t list -> Typed.t
   val loop_bottom : Typed.t
   val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t

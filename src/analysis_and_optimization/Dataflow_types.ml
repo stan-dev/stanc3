@@ -13,15 +13,25 @@ type label = int [@@deriving sexp_of]
     able to represent indexed variables, but we don't support that yet. *)
 type vexpr = VVar of string [@@deriving sexp_of]
 
-(** A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that
-    the variable v could have been affected at the label l. *)
-type reaching_defn = vexpr * label [@@deriving sexp_of]
-
 (** The most recently nested control flow (block start, if/then, or loop)
 
     This isn't included in the traversal_state because it only flows downward
     through the tree, not across and up like everything else *)
 type cf_state = label
+
+(** The side of an [if] that holds a statement. *)
+type branch_side = Then | Else
+
+type enclosing_control = {id: label; side: branch_side option}
+
+type controls =
+  { enclosing: enclosing_control list
+        (** The index of ifs and loops around the statement, outermost first. *)
+  ; jump_ids: label Set.Poly.t
+        (** Labels of [break], [continue], and [return] statements that can
+            affect whether this statement executes. A [continue] can skip a
+            later statement in the loop body, and a [break] can prevent the loop
+            header from running again. *) }
 
 module LabelMap = struct
   include Int.Map

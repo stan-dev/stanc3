@@ -18,12 +18,9 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
   (* the only StanLib FnTarget function is target() which has no side effects
      but can return a different result every time *)
   match e.pattern with
-  | FunApp
-      ((UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian)), _)
-    ->
-      true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
+  | FunApp (kind, _) -> Fun_kind.may_update_target kind
   | _ -> false
 
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
