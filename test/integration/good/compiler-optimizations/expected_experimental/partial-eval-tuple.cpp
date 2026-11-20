@@ -66,7 +66,6 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm6__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x;
       current_statement__ = 2;
       std::get<0>(x) = 0.4;
@@ -106,7 +105,6 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x;
       current_statement__ = 2;
       std::get<0>(x) = 0.4;
@@ -157,10 +155,6 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm4__;
-      double lcm3__;
-      int lcm2__;
-      int lcm1__;
       std::tuple<double, Eigen::Matrix<double,-1,-1>> x =
         std::tuple<double, Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
                                                           ),

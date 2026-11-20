@@ -91,7 +91,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm4__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -129,7 +128,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm3__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -178,8 +176,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       out__.write(theta);

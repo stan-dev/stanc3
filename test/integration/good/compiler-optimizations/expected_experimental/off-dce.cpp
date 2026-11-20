@@ -5,7 +5,7 @@ namespace off_dce_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 52> locations_array__ =
+static constexpr std::array<const char*, 49> locations_array__ =
   {" (found before start of program)",
   " (in '../off-dce.stan', line 21, column 2 to column 17)",
   " (in '../off-dce.stan', line 22, column 2 to column 16)",
@@ -18,10 +18,7 @@ static constexpr std::array<const char*, 52> locations_array__ =
   " (in '../off-dce.stan', line 56, column 2 to column 17)",
   " (in '../off-dce.stan', line 69, column 6 to column 15)",
   " (in '../off-dce.stan', line 66, column 11 to line 70, column 5)",
-  " (in '../off-dce.stan', line 61, column 6 to column 41)",
   " (in '../off-dce.stan', line 62, column 13 to column 14)",
-  " (in '../off-dce.stan', line 62, column 6 to column 44)",
-  " (in '../off-dce.stan', line 63, column 6 to column 29)",
   " (in '../off-dce.stan', line 65, column 6 to column 39)",
   " (in '../off-dce.stan', line 59, column 23 to line 66, column 5)",
   " (in '../off-dce.stan', line 59, column 4 to line 70, column 5)",
@@ -95,96 +92,96 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 31;
+      current_statement__ = 28;
       context__.validate_dims("data initialization", "R", "int",
         std::vector<size_t>{});
       R = std::numeric_limits<int>::min();
-      current_statement__ = 31;
+      current_statement__ = 28;
       stan::io::read_from_context(R, context__, "R");
-      current_statement__ = 31;
+      current_statement__ = 28;
       stan::math::check_greater_or_equal(function__, "R", R, 1);
-      current_statement__ = 32;
+      current_statement__ = 29;
       context__.validate_dims("data initialization", "T", "int",
         std::vector<size_t>{});
       T = std::numeric_limits<int>::min();
-      current_statement__ = 32;
+      current_statement__ = 29;
       stan::io::read_from_context(T, context__, "T");
-      current_statement__ = 32;
+      current_statement__ = 29;
       stan::math::check_greater_or_equal(function__, "T", T, 1);
-      current_statement__ = 33;
+      current_statement__ = 30;
       stan::math::validate_non_negative_index("y", "R", R);
-      current_statement__ = 34;
+      current_statement__ = 31;
       stan::math::validate_non_negative_index("y", "T", T);
-      current_statement__ = 35;
+      current_statement__ = 32;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(R), static_cast<size_t>(T)});
       y = std::vector<std::vector<int>>(R,
             std::vector<int>(T, std::numeric_limits<int>::min()));
-      current_statement__ = 35;
+      current_statement__ = 32;
       stan::io::read_from_context(y, context__, "y");
-      current_statement__ = 35;
+      current_statement__ = 32;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 35;
+      current_statement__ = 32;
       stan::math::check_less_or_equal(function__, "y", y, 1);
-      current_statement__ = 36;
+      current_statement__ = 33;
       stan::math::validate_non_negative_index("X", "R", R);
-      current_statement__ = 37;
+      current_statement__ = 34;
       context__.validate_dims("data initialization", "X", "double",
         std::vector<size_t>{static_cast<size_t>(R)});
       X_data__ = Eigen::Matrix<double,-1,1>::Constant(R,
                    std::numeric_limits<double>::quiet_NaN());
       new (&X) Eigen::Map<Eigen::Matrix<double,-1,1>>(X_data__.data(), R);
-      current_statement__ = 37;
+      current_statement__ = 34;
       stan::io::read_from_context(X, context__, "X");
-      current_statement__ = 38;
+      current_statement__ = 35;
       stan::math::validate_non_negative_index("sum_y", "R", R);
-      current_statement__ = 39;
+      current_statement__ = 36;
       sum_y = std::vector<int>(R, std::numeric_limits<int>::min());
-      current_statement__ = 40;
-      current_statement__ = 41;
+      current_statement__ = 37;
+      current_statement__ = 38;
       occ_obs = 0;
-      current_statement__ = 46;
+      current_statement__ = 43;
       if (stan::math::logical_gte(R, 1)) {
-        current_statement__ = 42;
+        current_statement__ = 39;
         stan::model::assign(sum_y,
           stan::math::sum(
             stan::model::rvalue(y, "y", stan::model::index_uni(1))),
           "assigning variable sum_y", stan::model::index_uni(1));
-        current_statement__ = 44;
+        current_statement__ = 41;
         if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(1))) {
-          current_statement__ = 43;
+          current_statement__ = 40;
           occ_obs = 1;
         }
         for (int i = 2; i <= R; ++i) {
-          current_statement__ = 42;
+          current_statement__ = 39;
           stan::model::assign(sum_y,
             stan::math::sum(
               stan::model::rvalue(y, "y", stan::model::index_uni(i))),
             "assigning variable sum_y", stan::model::index_uni(i));
-          current_statement__ = 44;
+          current_statement__ = 41;
           if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(i))) {
-            current_statement__ = 43;
+            current_statement__ = 40;
             occ_obs = (occ_obs + 1);
           }
         }
       }
-      current_statement__ = 39;
+      current_statement__ = 36;
       stan::math::check_greater_or_equal(function__, "sum_y", sum_y, 0);
-      current_statement__ = 39;
+      current_statement__ = 36;
       stan::math::check_less_or_equal(function__, "sum_y", sum_y, T);
-      current_statement__ = 40;
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "occ_obs", occ_obs, 0);
-      current_statement__ = 40;
+      current_statement__ = 37;
       stan::math::check_less_or_equal(function__, "occ_obs", occ_obs, R);
-      current_statement__ = 47;
+      current_statement__ = 44;
       stan::math::validate_non_negative_index("logit_psi", "R", R);
-      current_statement__ = 48;
+      current_statement__ = 45;
       stan::math::validate_non_negative_index("logit_p", "R", R);
-      current_statement__ = 49;
+      current_statement__ = 46;
       stan::math::validate_non_negative_index("logit_p", "T", T);
-      current_statement__ = 50;
+      current_statement__ = 47;
       stan::math::validate_non_negative_index("psi_con", "R", R);
-      current_statement__ = 51;
+      current_statement__ = 48;
       stan::math::validate_non_negative_index("z", "R", R);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -222,17 +219,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm41__;
-      int lcm40__;
-      int lcm39__;
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm38__;
-      double lcm37__;
-      double lcm36__;
       Eigen::Matrix<local_scalar_t__,-1,1> lcm35__;
-      double lcm34__;
-      double lcm33__;
-      double lcm32__;
-      double lcm31__;
       current_statement__ = 1;
       auto alpha_occ = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -253,22 +241,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         "assigning variable lcm38__");
       stan::model::assign(logit_p, lcm38__, "assigning variable logit_p");
       {
-        current_statement__ = 30;
+        current_statement__ = 27;
         if (stan::math::logical_gte(R, 1)) {
-          current_statement__ = 28;
+          current_statement__ = 25;
           if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(1))) {
-            current_statement__ = 25;
+            current_statement__ = 22;
             lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(1,
                              stan::model::rvalue(lcm35__, "lcm35__",
                                stan::model::index_uni(1))));
-            current_statement__ = 26;
+            current_statement__ = 23;
             lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(1)),
                              stan::model::rvalue(lcm38__, "lcm38__",
                                stan::model::index_uni(1))));
           } else {
-            current_statement__ = 23;
+            current_statement__ = 20;
             lp_accum__.add(stan::math::log_sum_exp(
                              (stan::math::bernoulli_logit_lpmf<false>(1,
                                 stan::model::rvalue(lcm35__, "lcm35__",
@@ -281,20 +269,20 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                                  stan::model::index_uni(1)))));
           }
           for (int i = 2; i <= R; ++i) {
-            current_statement__ = 28;
+            current_statement__ = 25;
             if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(i))) {
-              current_statement__ = 25;
+              current_statement__ = 22;
               lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(1,
                                stan::model::rvalue(lcm35__, "lcm35__",
                                  stan::model::index_uni(i))));
-              current_statement__ = 26;
+              current_statement__ = 23;
               lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(
                                stan::model::rvalue(y, "y",
                                  stan::model::index_uni(i)),
                                stan::model::rvalue(lcm38__, "lcm38__",
                                  stan::model::index_uni(i))));
             } else {
-              current_statement__ = 23;
+              current_statement__ = 20;
               lp_accum__.add(stan::math::log_sum_exp(
                                (stan::math::bernoulli_logit_lpmf<false>(1,
                                   stan::model::rvalue(lcm35__, "lcm35__",
@@ -339,17 +327,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm30__;
-      int lcm29__;
-      int lcm28__;
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm27__;
-      double lcm26__;
-      double lcm25__;
       Eigen::Matrix<local_scalar_t__,-1,1> lcm24__;
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
       current_statement__ = 1;
       auto alpha_occ = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -370,22 +349,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         "assigning variable lcm27__");
       stan::model::assign(logit_p, lcm27__, "assigning variable logit_p");
       {
-        current_statement__ = 30;
+        current_statement__ = 27;
         if (stan::math::logical_gte(R, 1)) {
-          current_statement__ = 28;
+          current_statement__ = 25;
           if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(1))) {
-            current_statement__ = 25;
+            current_statement__ = 22;
             lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(1,
                              stan::model::rvalue(lcm24__, "lcm24__",
                                stan::model::index_uni(1))));
-            current_statement__ = 26;
+            current_statement__ = 23;
             lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(1)),
                              stan::model::rvalue(lcm27__, "lcm27__",
                                stan::model::index_uni(1))));
           } else {
-            current_statement__ = 23;
+            current_statement__ = 20;
             lp_accum__.add(stan::math::log_sum_exp(
                              (stan::math::bernoulli_logit_lpmf<false>(1,
                                 stan::model::rvalue(lcm24__, "lcm24__",
@@ -398,20 +377,20 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                                  stan::model::index_uni(1)))));
           }
           for (int i = 2; i <= R; ++i) {
-            current_statement__ = 28;
+            current_statement__ = 25;
             if (stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(i))) {
-              current_statement__ = 25;
+              current_statement__ = 22;
               lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(1,
                                stan::model::rvalue(lcm24__, "lcm24__",
                                  stan::model::index_uni(i))));
-              current_statement__ = 26;
+              current_statement__ = 23;
               lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(
                                stan::model::rvalue(y, "y",
                                  stan::model::index_uni(i)),
                                stan::model::rvalue(lcm27__, "lcm27__",
                                  stan::model::index_uni(i))));
             } else {
-              current_statement__ = 23;
+              current_statement__ = 20;
               lp_accum__.add(stan::math::log_sum_exp(
                                (stan::math::bernoulli_logit_lpmf<false>(1,
                                   stan::model::rvalue(lcm24__, "lcm24__",
@@ -467,18 +446,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm19__;
-      double lcm2__;
-      double lcm1__;
       Eigen::Matrix<double,-1,1> lcm18__;
       Eigen::Matrix<double,-1,1> lcm17__;
-      int lcm16__;
-      int lcm15__;
-      int lcm14__;
-      int lcm13__;
-      int lcm12__;
-      double lcm11__;
-      double lcm10__;
       int lcm9__;
       Eigen::Matrix<double,-1,-1> lcm8__;
       double lcm7__;
@@ -528,21 +497,17 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
       std::vector<int> z =
         std::vector<int>(R, std::numeric_limits<int>::min());
-      current_statement__ = 22;
+      current_statement__ = 19;
       if (stan::math::logical_gte(R, 1)) {
-        current_statement__ = 18;
+        current_statement__ = 15;
         if (stan::math::logical_eq(
               stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(1)),
               0)) {
-          double psi = std::numeric_limits<double>::quiet_NaN();
           lcm5__ = stan::math::inv_logit(
                      stan::model::rvalue(lcm3__, "lcm3__",
                        stan::model::index_uni(1)));
-          current_statement__ = 13;
+          current_statement__ = 12;
           stan::math::validate_non_negative_index("q", "T", T);
-          Eigen::Matrix<double,-1,1> q =
-            Eigen::Matrix<double,-1,1>::Constant(T,
-              std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm18__,
             stan::math::transpose(
               stan::math::inv_logit(
@@ -550,12 +515,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                   stan::model::rvalue(lcm8__, "lcm8__",
                     stan::model::index_uni(1))))),
             "assigning variable lcm18__");
-          double qT = std::numeric_limits<double>::quiet_NaN();
           lcm7__ = stan::math::prod(lcm18__);
           stan::model::assign(psi_con, ((lcm5__ * lcm7__) /
             stan::math::fma(lcm5__, lcm7__, (1 - lcm5__))),
             "assigning variable psi_con", stan::model::index_uni(1));
-          current_statement__ = 16;
+          current_statement__ = 13;
           stan::model::assign(z,
             stan::math::bernoulli_rng(
               stan::model::rvalue(psi_con, "psi_con",
@@ -569,19 +533,15 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             stan::model::index_uni(1));
         }
         for (int i = 2; i <= R; ++i) {
-          current_statement__ = 18;
+          current_statement__ = 15;
           if (stan::math::logical_eq(
                 stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(i)),
                 0)) {
-            double psi = std::numeric_limits<double>::quiet_NaN();
             lcm4__ = stan::math::inv_logit(
                        stan::model::rvalue(lcm3__, "lcm3__",
                          stan::model::index_uni(i)));
-            current_statement__ = 13;
+            current_statement__ = 12;
             stan::math::validate_non_negative_index("q", "T", T);
-            Eigen::Matrix<double,-1,1> q =
-              Eigen::Matrix<double,-1,1>::Constant(T,
-                std::numeric_limits<double>::quiet_NaN());
             stan::model::assign(lcm17__,
               stan::math::transpose(
                 stan::math::inv_logit(
@@ -589,20 +549,19 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                     stan::model::rvalue(lcm8__, "lcm8__",
                       stan::model::index_uni(i))))),
               "assigning variable lcm17__");
-            double qT = std::numeric_limits<double>::quiet_NaN();
             lcm6__ = stan::math::prod(lcm17__);
-            current_statement__ = 20;
+            current_statement__ = 17;
             stan::model::assign(psi_con, ((lcm4__ * lcm6__) /
               stan::math::fma(lcm4__, lcm6__, (1 - lcm4__))),
               "assigning variable psi_con", stan::model::index_uni(i));
-            current_statement__ = 16;
+            current_statement__ = 13;
             stan::model::assign(z,
               stan::math::bernoulli_rng(
                 stan::model::rvalue(psi_con, "psi_con",
                   stan::model::index_uni(i)), base_rng__),
               "assigning variable z", stan::model::index_uni(i));
           } else {
-            current_statement__ = 19;
+            current_statement__ = 16;
             stan::model::assign(psi_con, 1, "assigning variable psi_con",
               stan::model::index_uni(i));
             current_statement__ = 10;

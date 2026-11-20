@@ -148,17 +148,13 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       current_statement__ = 2;
       auto p_multi_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,1> inline_single_ret_fun_return13__;
+      Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec;
       current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<local_scalar_t__,-1,1> tp_multi_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_return15__;
-      int inline_multi_ret_fun_early_ret_check17__ =
-        std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator18__ = 1; inline_multi_ret_fun_iterator18__
            <= 1; ++inline_multi_ret_fun_iterator18__) {
         Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B16__ =
@@ -219,12 +215,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       auto p_multi_ret_vec =
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,1>>>(5);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_single_ret_vec =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
-      stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_single_ret_fun_return7__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_single_ret_vec;
       current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
@@ -234,8 +225,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                               )));
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
         inline_multi_ret_fun_return9__;
-      int inline_multi_ret_fun_early_ret_check11__ =
-        std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator12__ = 1; inline_multi_ret_fun_iterator12__
            <= 1; ++inline_multi_ret_fun_iterator12__) {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>
@@ -321,13 +310,10 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      Eigen::Matrix<double,-1,1> inline_single_ret_fun_return1__;
       current_statement__ = 3;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<double,-1,1> inline_multi_ret_fun_return3__;
-      int inline_multi_ret_fun_early_ret_check5__ =
-        std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator6__ = 1; inline_multi_ret_fun_iterator6__
            <= 1; ++inline_multi_ret_fun_iterator6__) {
         Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B4__ =
@@ -412,7 +398,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "p_multi_ret_vec",
         "double", std::vector<size_t>{static_cast<size_t>(5)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       current_statement__ = 1;

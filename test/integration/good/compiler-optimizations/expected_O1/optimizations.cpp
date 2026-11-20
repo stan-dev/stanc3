@@ -5,7 +5,7 @@ namespace optimizations_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 107> locations_array__ =
+static constexpr std::array<const char*, 103> locations_array__ =
   {" (found before start of program)",
   " (in '../optimizations.stan', line 20, column 4 to column 15)",
   " (in '../optimizations.stan', line 21, column 4 to column 13)",
@@ -13,8 +13,8 @@ static constexpr std::array<const char*, 107> locations_array__ =
   " (in '../optimizations.stan', line 23, column 4 to column 23)",
   " (in '../optimizations.stan', line 24, column 4 to column 24)",
   " (in '../optimizations.stan', line 27, column 4 to column 11)",
-  " (in '../optimizations.stan', line 28, column 4 to column 19)",
   " (in '../optimizations.stan', line 5, column 8 to column 20)",
+  " (in '../optimizations.stan', line 28, column 4 to column 19)",
   " (in '../optimizations.stan', line 29, column 4 to column 19)",
   " (in '../optimizations.stan', line 9, column 8 to line 10, column 26)",
   " (in '../optimizations.stan', line 8, column 20 to line 12, column 5)",
@@ -64,16 +64,14 @@ static constexpr std::array<const char*, 107> locations_array__ =
   " (in '../optimizations.stan', line 73, column 4 to line 74, column 12)",
   " (in '../optimizations.stan', line 75, column 4 to column 16)",
   " (in '../optimizations.stan', line 78, column 4 to column 16)",
-  " (in '../optimizations.stan', line 80, column 8 to column 19)",
   " (in '../optimizations.stan', line 82, column 8 to column 20)",
   " (in '../optimizations.stan', line 79, column 4 to line 83, column 5)",
-  " (in '../optimizations.stan', line 85, column 8 to column 20)",
   " (in '../optimizations.stan', line 87, column 8 to column 20)",
   " (in '../optimizations.stan', line 84, column 4 to line 88, column 5)",
   " (in '../optimizations.stan', line 90, column 11 to column 23)",
   " (in '../optimizations.stan', line 90, column 4 to column 23)",
-  " (in '../optimizations.stan', line 95, column 4 to column 27)",
   " (in '../optimizations.stan', line 15, column 8 to column 20)",
+  " (in '../optimizations.stan', line 95, column 4 to column 27)",
   " (in '../optimizations.stan', line 97, column 20 to column 26)",
   " (in '../optimizations.stan', line 98, column 4 to column 28)",
   " (in '../optimizations.stan', line 98, column 22 to column 28)",
@@ -92,10 +90,8 @@ static constexpr std::array<const char*, 107> locations_array__ =
   " (in '../optimizations.stan', line 119, column 12 to column 24)",
   " (in '../optimizations.stan', line 118, column 8 to line 121, column 9)",
   " (in '../optimizations.stan', line 117, column 4 to line 127, column 5)",
-  " (in '../optimizations.stan', line 128, column 4 to column 14)",
   " (in '../optimizations.stan', line 132, column 6 to column 21)",
   " (in '../optimizations.stan', line 129, column 4 to line 132, column 21)",
-  " (in '../optimizations.stan', line 134, column 4 to column 15)",
   " (in '../optimizations.stan', line 137, column 8 to column 23)",
   " (in '../optimizations.stan', line 138, column 8 to column 24)",
   " (in '../optimizations.stan', line 135, column 21 to line 139, column 5)",
@@ -143,12 +139,12 @@ nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__, T_lp_accum__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 101;
+    current_statement__ = 97;
     if (stan::math::logical_gt(x, 342)) {
-      current_statement__ = 100;
+      current_statement__ = 96;
       return ;
     }
-    current_statement__ = 8;
+    current_statement__ = 7;
     lp_accum__.add(y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -170,10 +166,10 @@ rfun(const T0__& y, std::ostream* pstream__) {
   try {
     current_statement__ = 10;
     if (stan::math::logical_gt(y, 2)) {
-      current_statement__ = 103;
+      current_statement__ = 99;
       return (y + 24);
     }
-    current_statement__ = 104;
+    current_statement__ = 100;
     return (y + 2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -190,9 +186,9 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 67;
+    current_statement__ = 64;
     lp_accum__.add(2);
-    current_statement__ = 105;
+    current_statement__ = 101;
     return 24;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -269,13 +265,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg31__;
         {
-          current_statement__ = 8;
+          current_statement__ = 7;
           lp_accum__.add(3);
         }
         int inline_rfun_return32__;
-        int inline_rfun_early_ret_check33__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator34__ = 1; inline_rfun_iterator34__ <=
              1; ++inline_rfun_iterator34__) {
           {
@@ -291,7 +285,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           *(pstream__) << std::endl;
         }
         int inline_rfun_return35__;
-        int inline_rfun_early_ret_check36__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator37__ = 1; inline_rfun_iterator37__ <=
              1; ++inline_rfun_iterator37__) {
           {
@@ -311,7 +304,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         int inline_rfun_return38__;
         int inline_rfun_return41__;
-        int inline_rfun_early_ret_check39__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator40__ = 1; inline_rfun_iterator40__ <=
              1; ++inline_rfun_iterator40__) {
           {
@@ -321,7 +313,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           inline_rfun_return38__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check42__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
              1; ++inline_rfun_iterator43__) {
           {
@@ -335,8 +326,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = inline_rfun_return38__; i <= inline_rfun_return41__; ++i) {
           {
             int inline_rfun_return44__;
-            int inline_rfun_early_ret_check45__ =
-              std::numeric_limits<int>::min();
             for (int inline_rfun_iterator46__ = 1; inline_rfun_iterator46__
                  <= 1; ++inline_rfun_iterator46__) {
               {
@@ -348,14 +337,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
             current_statement__ = 15;
             lp_accum__.add(inline_rfun_return44__);
-            double inline_nrfun_lp_x_arg48__;
             {
-              current_statement__ = 8;
+              current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check42__ =
-            std::numeric_limits<int>::min();
           for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
                1; ++inline_rfun_iterator43__) {
             {
@@ -448,31 +434,27 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 57;
         lp_accum__.add(2);
         {
-          local_scalar_t__ y = DUMMY_VAR__;
-          current_statement__ = 59;
+          current_statement__ = 58;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(24));
         }
         {
-          local_scalar_t__ y = DUMMY_VAR__;
-          current_statement__ = 62;
+          current_statement__ = 60;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(245));
+        }
+        {
+          current_statement__ = 62;
+          lp_accum__.add(2);
         }
         {
           current_statement__ = 64;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return49__;
-        {
-          current_statement__ = 67;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 68;
+        current_statement__ = 66;
         while (576) {
           break;
         }
-        int inline_rfun_lp_return51__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         while (24) {
@@ -480,78 +462,73 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             break;
           }
           {
-            current_statement__ = 67;
+            current_statement__ = 64;
             lp_accum__.add(2);
           }
         }
-        current_statement__ = 72;
+        current_statement__ = 70;
         for (int i = 31; i <= 225; ++i) {
           continue;
         }
-        current_statement__ = 74;
+        current_statement__ = 72;
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return53__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
+          lp_accum__.add(2);
+        }
+        current_statement__ = 73;
+        for (int i = 24; i <= 225; ++i) {
+          continue;
+        }
+        {
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         current_statement__ = 75;
         for (int i = 24; i <= 225; ++i) {
-          continue;
-        }
-        int inline_rfun_lp_return55__;
-        {
-          current_statement__ = 67;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 77;
-        for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return57__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         {
-          current_statement__ = 80;
+          current_statement__ = 78;
           lp_accum__.add(1);
-          current_statement__ = 81;
+          current_statement__ = 79;
           lp_accum__.add(24);
         }
         {
-          current_statement__ = 83;
+          current_statement__ = 81;
           lp_accum__.add(1);
         }
-        local_scalar_t__ temp = DUMMY_VAR__;
         {
-          current_statement__ = 87;
+          current_statement__ = 84;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
             *(pstream__) << std::endl;
           }
         }
-        local_scalar_t__ temp2 = DUMMY_VAR__;
-        current_statement__ = 93;
+        current_statement__ = 89;
         for (int i = 2; i <= 3; ++i) {
-          current_statement__ = 90;
+          current_statement__ = 86;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
-          current_statement__ = 91;
+          current_statement__ = 87;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
         }
         local_scalar_t__ dataonlyvar;
-        current_statement__ = 94;
+        current_statement__ = 90;
         dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
-        current_statement__ = 95;
+        current_statement__ = 91;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
         {
-          current_statement__ = 97;
+          current_statement__ = 93;
           paramvar = (theta * 34);
         }
-        current_statement__ = 99;
+        current_statement__ = 95;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -603,13 +580,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg2__;
         {
-          current_statement__ = 8;
+          current_statement__ = 7;
           lp_accum__.add(3);
         }
         int inline_rfun_return3__;
-        int inline_rfun_early_ret_check4__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator5__ = 1; inline_rfun_iterator5__ <=
              1; ++inline_rfun_iterator5__) {
           {
@@ -625,7 +600,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           *(pstream__) << std::endl;
         }
         int inline_rfun_return6__;
-        int inline_rfun_early_ret_check7__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator8__ = 1; inline_rfun_iterator8__ <=
              1; ++inline_rfun_iterator8__) {
           {
@@ -645,7 +619,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         int inline_rfun_return9__;
         int inline_rfun_return12__;
-        int inline_rfun_early_ret_check10__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator11__ = 1; inline_rfun_iterator11__ <=
              1; ++inline_rfun_iterator11__) {
           {
@@ -655,7 +628,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           inline_rfun_return9__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check13__ = std::numeric_limits<int>::min();
         for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
              1; ++inline_rfun_iterator14__) {
           {
@@ -669,8 +641,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = inline_rfun_return9__; i <= inline_rfun_return12__; ++i) {
           {
             int inline_rfun_return15__;
-            int inline_rfun_early_ret_check16__ =
-              std::numeric_limits<int>::min();
             for (int inline_rfun_iterator17__ = 1; inline_rfun_iterator17__
                  <= 1; ++inline_rfun_iterator17__) {
               {
@@ -682,14 +652,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
             current_statement__ = 15;
             lp_accum__.add(inline_rfun_return15__);
-            double inline_nrfun_lp_x_arg19__;
             {
-              current_statement__ = 8;
+              current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check13__ =
-            std::numeric_limits<int>::min();
           for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
                1; ++inline_rfun_iterator14__) {
             {
@@ -782,31 +749,27 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 57;
         lp_accum__.add(2);
         {
-          local_scalar_t__ y = DUMMY_VAR__;
-          current_statement__ = 59;
+          current_statement__ = 58;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(24));
         }
         {
-          local_scalar_t__ y = DUMMY_VAR__;
-          current_statement__ = 62;
+          current_statement__ = 60;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(245));
+        }
+        {
+          current_statement__ = 62;
+          lp_accum__.add(2);
         }
         {
           current_statement__ = 64;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return20__;
-        {
-          current_statement__ = 67;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 68;
+        current_statement__ = 66;
         while (576) {
           break;
         }
-        int inline_rfun_lp_return22__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         while (24) {
@@ -814,78 +777,73 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             break;
           }
           {
-            current_statement__ = 67;
+            current_statement__ = 64;
             lp_accum__.add(2);
           }
         }
-        current_statement__ = 72;
+        current_statement__ = 70;
         for (int i = 31; i <= 225; ++i) {
           continue;
         }
-        current_statement__ = 74;
+        current_statement__ = 72;
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return24__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
+          lp_accum__.add(2);
+        }
+        current_statement__ = 73;
+        for (int i = 24; i <= 225; ++i) {
+          continue;
+        }
+        {
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         current_statement__ = 75;
         for (int i = 24; i <= 225; ++i) {
-          continue;
-        }
-        int inline_rfun_lp_return26__;
-        {
-          current_statement__ = 67;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 77;
-        for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return28__;
         {
-          current_statement__ = 67;
+          current_statement__ = 64;
           lp_accum__.add(2);
         }
         {
-          current_statement__ = 80;
+          current_statement__ = 78;
           lp_accum__.add(1);
-          current_statement__ = 81;
+          current_statement__ = 79;
           lp_accum__.add(24);
         }
         {
-          current_statement__ = 83;
+          current_statement__ = 81;
           lp_accum__.add(1);
         }
-        local_scalar_t__ temp = DUMMY_VAR__;
         {
-          current_statement__ = 87;
+          current_statement__ = 84;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
             *(pstream__) << std::endl;
           }
         }
-        local_scalar_t__ temp2 = DUMMY_VAR__;
-        current_statement__ = 93;
+        current_statement__ = 89;
         for (int i = 2; i <= 3; ++i) {
-          current_statement__ = 90;
+          current_statement__ = 86;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
-          current_statement__ = 91;
+          current_statement__ = 87;
           lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
         }
         local_scalar_t__ dataonlyvar;
-        current_statement__ = 94;
+        current_statement__ = 90;
         dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
-        current_statement__ = 95;
+        current_statement__ = 91;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
         {
-          current_statement__ = 97;
+          current_statement__ = 93;
           paramvar = (theta * 34);
         }
-        current_statement__ = 99;
+        current_statement__ = 95;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -1035,7 +993,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       context__.validate_dims("parameter initialization", "x_cov", "double",
         std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
-      int pos__ = std::numeric_limits<int>::min();
       local_scalar_t__ theta = DUMMY_VAR__;
       current_statement__ = 1;
       stan::io::read_from_context(theta, context__, "theta");

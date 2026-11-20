@@ -138,7 +138,6 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ ret = DUMMY_VAR__;
       local_scalar_t__ inline_outer_lpdf_return12__;
       {
         local_scalar_t__ inline_outer_lpdf_inline_inner_lpdf_return5__13__;
@@ -182,7 +181,6 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ ret = DUMMY_VAR__;
       local_scalar_t__ inline_outer_lpdf_return9__;
       {
         local_scalar_t__ inline_outer_lpdf_inline_inner_lpdf_return5__10__;

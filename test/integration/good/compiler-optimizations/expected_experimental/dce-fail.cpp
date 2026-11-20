@@ -293,23 +293,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm36__;
-      int lcm35__;
-      double lcm34__;
-      double lcm33__;
-      double lcm32__;
-      double lcm31__;
-      double lcm30__;
-      double lcm29__;
-      double lcm28__;
-      double lcm27__;
-      double lcm26__;
-      double lcm25__;
-      double lcm24__;
-      double lcm23__;
-      double lcm22__;
-      Eigen::Matrix<double,-1,1> lcm21__;
-      double lcm20__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -535,23 +518,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm19__;
-      int lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      Eigen::Matrix<double,-1,1> lcm4__;
-      double lcm3__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -790,8 +756,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,

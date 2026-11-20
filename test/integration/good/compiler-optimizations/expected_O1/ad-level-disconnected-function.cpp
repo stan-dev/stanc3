@@ -414,7 +414,6 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "theta", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,-1> row_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 1;

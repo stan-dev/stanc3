@@ -315,14 +315,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm19__;
-      double lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
       current_statement__ = 1;
       auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
@@ -442,14 +434,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm11__;
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      double lcm4__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -586,9 +570,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm3__;
-      int lcm2__;
-      Eigen::Matrix<double,-1,1> lcm1__;
       current_statement__ = 1;
       auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);

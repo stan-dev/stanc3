@@ -9,7 +9,6 @@ static constexpr std::array<const char*, 25> locations_array__ =
   {" (found before start of program)",
   " (in '../inliner-temps.stan', line 22, column 2 to column 39)",
   " (in '../inliner-temps.stan', line 23, column 2 to column 35)",
-  " (in '../inliner-temps.stan', line 3, column 4 to column 20)",
   " (in '../inliner-temps.stan', line 4, column 11 to column 12)",
   " (in '../inliner-temps.stan', line 4, column 14 to column 15)",
   " (in '../inliner-temps.stan', line 4, column 4 to column 25)",
@@ -28,6 +27,7 @@ static constexpr std::array<const char*, 25> locations_array__ =
   " (in '../inliner-temps.stan', line 19, column 2 to column 17)",
   " (in '../inliner-temps.stan', line 23, column 9 to column 10)",
   " (in '../inliner-temps.stan', line 23, column 12 to column 13)",
+  " (in '../inliner-temps.stan', line 3, column 4 to column 20)",
   " (in '../inliner-temps.stan', line 2, column 28 to line 11, column 3)",
   " (in '../inliner-temps.stan', line 13, column 4 to column 17)",
   " (in '../inliner-temps.stan', line 12, column 25 to line 14, column 3)"};
@@ -58,30 +58,25 @@ sign_fix(const T0__& a_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm6__;
-    int lcm5__;
-    int lcm4__;
-    Eigen::Matrix<local_scalar_t__,-1,1> lcm3__;
-    Eigen::Matrix<local_scalar_t__,-1,1> lcm2__;
     int lcm1__;
     {
       int d = std::numeric_limits<int>::min();
       lcm1__ = stan::math::rows(a);
       d = lcm1__;
+      current_statement__ = 3;
+      stan::math::validate_non_negative_index("out", "d", lcm1__);
       current_statement__ = 4;
       stan::math::validate_non_negative_index("out", "d", lcm1__);
-      current_statement__ = 5;
-      stan::math::validate_non_negative_index("out", "d", lcm1__);
       Eigen::Matrix<local_scalar_t__,-1,-1> out;
-      current_statement__ = 6;
+      current_statement__ = 5;
       stan::model::assign(out, a, "assigning variable out");
-      current_statement__ = 11;
+      current_statement__ = 10;
       if (stan::math::logical_gte(lcm1__, 1)) {
-        current_statement__ = 9;
+        current_statement__ = 8;
         if (stan::math::logical_lt(
               stan::model::rvalue(a, "a", stan::model::index_uni(1),
                 stan::model::index_uni(1)), 0)) {
-          current_statement__ = 7;
+          current_statement__ = 6;
           stan::model::assign(out,
             stan::math::minus(
               stan::model::rvalue(a, "a", stan::model::index_omni(),
@@ -89,11 +84,11 @@ sign_fix(const T0__& a_arg__, std::ostream* pstream__) {
             stan::model::index_omni(), stan::model::index_uni(1));
         }
         for (int j = 2; j <= lcm1__; ++j) {
-          current_statement__ = 9;
+          current_statement__ = 8;
           if (stan::math::logical_lt(
                 stan::model::rvalue(a, "a", stan::model::index_uni(1),
                   stan::model::index_uni(j)), 0)) {
-            current_statement__ = 7;
+            current_statement__ = 6;
             stan::model::assign(out,
               stan::math::minus(
                 stan::model::rvalue(a, "a", stan::model::index_omni(),
@@ -102,7 +97,7 @@ sign_fix(const T0__& a_arg__, std::ostream* pstream__) {
           }
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 11;
       return out;
     }
   } catch (const std::exception& e) {
@@ -125,11 +120,8 @@ stan::return_type_t<T0__> self_diff(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm7__;
-    {
-      current_statement__ = 23;
-      return (x - x);
-    }
+    current_statement__ = 23;
+    return (x - x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -163,41 +155,41 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 13;
+      current_statement__ = 12;
       context__.validate_dims("data initialization", "d", "int",
         std::vector<size_t>{});
       d = std::numeric_limits<int>::min();
-      current_statement__ = 13;
+      current_statement__ = 12;
       stan::io::read_from_context(d, context__, "d");
-      current_statement__ = 13;
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "d", d, 2);
+      current_statement__ = 13;
+      stan::math::validate_non_negative_index("L", "d", d);
       current_statement__ = 14;
       stan::math::validate_non_negative_index("L", "d", d);
       current_statement__ = 15;
-      stan::math::validate_non_negative_index("L", "d", d);
-      current_statement__ = 16;
       context__.validate_dims("data initialization", "L", "double",
         std::vector<size_t>{static_cast<size_t>(d), static_cast<size_t>(d)});
       L_data__ = Eigen::Matrix<double,-1,-1>::Constant(d, d,
                    std::numeric_limits<double>::quiet_NaN());
       new (&L) Eigen::Map<Eigen::Matrix<double,-1,-1>>(L_data__.data(), d, d);
-      current_statement__ = 16;
+      current_statement__ = 15;
       stan::io::read_from_context(L, context__, "L");
+      current_statement__ = 16;
+      stan::math::validate_non_negative_index("U", "d", d);
       current_statement__ = 17;
       stan::math::validate_non_negative_index("U", "d", d);
       current_statement__ = 18;
-      stan::math::validate_non_negative_index("U", "d", d);
-      current_statement__ = 19;
       context__.validate_dims("data initialization", "U", "double",
         std::vector<size_t>{static_cast<size_t>(d), static_cast<size_t>(d)});
       U_data__ = Eigen::Matrix<double,-1,-1>::Constant(d, d,
                    std::numeric_limits<double>::quiet_NaN());
       new (&U) Eigen::Map<Eigen::Matrix<double,-1,-1>>(U_data__.data(), d, d);
-      current_statement__ = 19;
+      current_statement__ = 18;
       stan::io::read_from_context(U, context__, "U");
-      current_statement__ = 20;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("a", "d", d);
-      current_statement__ = 21;
+      current_statement__ = 20;
       stan::math::validate_non_negative_index("a", "d", d);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -298,14 +290,6 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm17__;
-      int lcm16__;
-      int lcm15__;
-      int lcm14__;
-      int lcm13__;
-      int lcm12__;
-      Eigen::Matrix<double,-1,1> lcm11__;
-      Eigen::Matrix<double,-1,1> lcm10__;
       double lcm9__;
       int lcm8__;
       if (stan::math::logical_negation(
@@ -320,7 +304,6 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
       current_statement__ = 1;
       double inline_self_diff_x_arg2__ =
         stan::math::normal_rng(0, 1, base_rng__);
-      double inline_self_diff_return1__;
       {
         lcm9__ = (inline_self_diff_x_arg2__ - inline_self_diff_x_arg2__);
       }
@@ -334,24 +317,23 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         stan::math::to_ref(stan::math::multiply(L, U));
       Eigen::Matrix<double,-1,-1> inline_sign_fix_return4__;
       {
-        int inline_sign_fix_d6__ = std::numeric_limits<int>::min();
         lcm8__ = stan::math::rows(inline_sign_fix_a_arg5__);
+        current_statement__ = 3;
+        stan::math::validate_non_negative_index("out", "d", lcm8__);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("out", "d", lcm8__);
-        current_statement__ = 5;
-        stan::math::validate_non_negative_index("out", "d", lcm8__);
         Eigen::Matrix<double,-1,-1> inline_sign_fix_out7__;
-        current_statement__ = 6;
+        current_statement__ = 5;
         stan::model::assign(inline_sign_fix_out7__, inline_sign_fix_a_arg5__,
           "assigning variable inline_sign_fix_out7__");
-        current_statement__ = 11;
+        current_statement__ = 10;
         if (stan::math::logical_gte(lcm8__, 1)) {
-          current_statement__ = 9;
+          current_statement__ = 8;
           if (stan::math::logical_lt(
                 stan::model::rvalue(inline_sign_fix_a_arg5__,
                   "inline_sign_fix_a_arg5__", stan::model::index_uni(1),
                   stan::model::index_uni(1)), 0)) {
-            current_statement__ = 7;
+            current_statement__ = 6;
             stan::model::assign(inline_sign_fix_out7__,
               stan::math::minus(
                 stan::model::rvalue(inline_sign_fix_a_arg5__,
@@ -362,12 +344,12 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
           }
           for (int inline_sign_fix_j8__ = 2; inline_sign_fix_j8__ <=
                lcm8__; ++inline_sign_fix_j8__) {
-            current_statement__ = 9;
+            current_statement__ = 8;
             if (stan::math::logical_lt(
                   stan::model::rvalue(inline_sign_fix_a_arg5__,
                     "inline_sign_fix_a_arg5__", stan::model::index_uni(1),
                     stan::model::index_uni(inline_sign_fix_j8__)), 0)) {
-              current_statement__ = 7;
+              current_statement__ = 6;
               stan::model::assign(inline_sign_fix_out7__,
                 stan::math::minus(
                   stan::model::rvalue(inline_sign_fix_a_arg5__,
@@ -379,7 +361,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
             }
           }
         }
-        current_statement__ = 12;
+        current_statement__ = 11;
         stan::model::assign(inline_sign_fix_return4__,
           inline_sign_fix_out7__,
           "assigning variable inline_sign_fix_return4__");

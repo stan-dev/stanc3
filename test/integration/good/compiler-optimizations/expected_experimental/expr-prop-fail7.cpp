@@ -190,18 +190,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     try {
       int lcm51__;
       int lcm50__;
-      int lcm49__;
-      Eigen::Matrix<double,-1,1> lcm48__;
-      Eigen::Matrix<double,-1,1> lcm47__;
-      Eigen::Matrix<double,-1,1> lcm46__;
-      Eigen::Matrix<double,-1,1> lcm45__;
-      double lcm44__;
       Eigen::Matrix<local_scalar_t__,-1,1> lcm43__;
-      double lcm42__;
-      double lcm41__;
-      double lcm40__;
-      double lcm39__;
-      double lcm38__;
       current_statement__ = 1;
       auto pi =
         in__.template read_constrain_simplex<
@@ -370,18 +359,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     try {
       int lcm37__;
       int lcm36__;
-      int lcm35__;
-      Eigen::Matrix<double,-1,1> lcm34__;
-      Eigen::Matrix<double,-1,1> lcm33__;
-      Eigen::Matrix<double,-1,1> lcm32__;
-      Eigen::Matrix<double,-1,1> lcm31__;
-      double lcm30__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm29__;
-      double lcm28__;
-      double lcm27__;
-      double lcm26__;
-      double lcm25__;
-      double lcm24__;
       current_statement__ = 1;
       auto pi =
         in__.template read_constrain_simplex<
@@ -562,28 +540,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
-      double lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
-      int lcm11__;
-      int lcm10__;
       int lcm9__;
       int lcm8__;
       int lcm7__;
-      Eigen::Matrix<double,-1,1> lcm6__;
-      Eigen::Matrix<double,-1,1> lcm5__;
-      Eigen::Matrix<double,-1,1> lcm4__;
-      Eigen::Matrix<double,-1,1> lcm3__;
-      Eigen::Matrix<double,-1,1> lcm2__;
       Eigen::Matrix<double,-1,1> lcm1__;
       current_statement__ = 1;
       auto pi =

@@ -5,11 +5,10 @@ namespace fuzz_div0_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 4> locations_array__ =
+static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
-  " (in '../fuzz-div0.stan', line 2, column 2 to column 66)",
   " (in '../fuzz-div0.stan', line 2, column 20 to column 25)",
-  " (in '../fuzz-div0.stan', line 3, column 2 to column 38)"};
+  " (in '../fuzz-div0.stan', line 2, column 2 to column 66)"};
 class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
  private:
   
@@ -65,17 +64,13 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<int> T =
-        std::vector<int>(6, std::numeric_limits<int>::min());
-      current_statement__ = 2;
+      current_statement__ = 1;
       {
         std::stringstream errmsg_stream__;
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
         throw std::domain_error(errmsg_stream__.str());
       }
-      std::vector<double> T2 =
-        std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 2;
+      current_statement__ = 1;
       {
         std::stringstream errmsg_stream__;
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
@@ -111,17 +106,13 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<int> T =
-        std::vector<int>(6, std::numeric_limits<int>::min());
-      current_statement__ = 2;
+      current_statement__ = 1;
       {
         std::stringstream errmsg_stream__;
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
         throw std::domain_error(errmsg_stream__.str());
       }
-      std::vector<double> T2 =
-        std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 2;
+      current_statement__ = 1;
       {
         std::stringstream errmsg_stream__;
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
@@ -168,8 +159,6 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

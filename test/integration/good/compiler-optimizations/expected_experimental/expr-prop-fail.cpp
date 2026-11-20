@@ -99,12 +99,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
       current_statement__ = 1;
       auto mu =
         in__.template read_constrain_ordered<
@@ -195,12 +189,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
       current_statement__ = 1;
       auto mu =
         in__.template read_constrain_ordered<
@@ -302,8 +290,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto mu =
         in__.template read_constrain_ordered<

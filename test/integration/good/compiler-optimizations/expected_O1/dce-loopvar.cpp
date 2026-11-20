@@ -5,13 +5,10 @@ namespace dce_loopvar_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 17> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
   " (in '../dce-loopvar.stan', line 10, column 9 to column 19)",
   " (in '../dce-loopvar.stan', line 10, column 2 to column 29)",
-  " (in '../dce-loopvar.stan', line 13, column 4 to column 33)",
-  " (in '../dce-loopvar.stan', line 12, column 28 to line 14, column 3)",
-  " (in '../dce-loopvar.stan', line 12, column 2 to line 14, column 3)",
   " (in '../dce-loopvar.stan', line 15, column 2 to column 25)",
   " (in '../dce-loopvar.stan', line 19, column 6 to column 15)",
   " (in '../dce-loopvar.stan', line 18, column 30 to line 20, column 5)",
@@ -49,47 +46,47 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 12;
+      current_statement__ = 9;
       context__.validate_dims("data initialization", "num_comp", "int",
         std::vector<size_t>{});
       num_comp = std::numeric_limits<int>::min();
-      current_statement__ = 12;
+      current_statement__ = 9;
       stan::io::read_from_context(num_comp, context__, "num_comp");
-      current_statement__ = 12;
+      current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "num_comp", num_comp, 1);
-      current_statement__ = 13;
+      current_statement__ = 10;
       context__.validate_dims("data initialization", "num_groups", "int",
         std::vector<size_t>{});
       num_groups = std::numeric_limits<int>::min();
-      current_statement__ = 13;
+      current_statement__ = 10;
       stan::io::read_from_context(num_groups, context__, "num_groups");
-      current_statement__ = 13;
+      current_statement__ = 10;
       stan::math::check_greater_or_equal(function__, "num_groups",
         num_groups, 1);
-      current_statement__ = 14;
+      current_statement__ = 11;
       context__.validate_dims("data initialization", "num_strata", "int",
         std::vector<size_t>{});
       num_strata = std::numeric_limits<int>::min();
-      current_statement__ = 14;
+      current_statement__ = 11;
       stan::io::read_from_context(num_strata, context__, "num_strata");
-      current_statement__ = 14;
+      current_statement__ = 11;
       stan::math::check_greater_or_equal(function__, "num_strata",
         num_strata, 1);
-      current_statement__ = 15;
+      current_statement__ = 12;
       stan::math::validate_non_negative_index("group_stratum_cid",
         "num_groups", num_groups);
-      current_statement__ = 16;
+      current_statement__ = 13;
       context__.validate_dims("data initialization", "group_stratum_cid",
         "int", std::vector<size_t>{static_cast<size_t>(num_groups)});
       group_stratum_cid = std::vector<int>(num_groups,
                             std::numeric_limits<int>::min());
-      current_statement__ = 16;
+      current_statement__ = 13;
       stan::io::read_from_context(group_stratum_cid, context__,
         "group_stratum_cid");
-      current_statement__ = 16;
+      current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "group_stratum_cid",
         group_stratum_cid, 1);
-      current_statement__ = 16;
+      current_statement__ = 13;
       stan::math::check_less_or_equal(function__, "group_stratum_cid",
         group_stratum_cid, num_strata);
     } catch (const std::exception& e) {
@@ -134,17 +131,13 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
       Eigen::Matrix<local_scalar_t__,-1,1> log_lik =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(num_groups,
           DUMMY_VAR__);
-      current_statement__ = 5;
-      for (int g = 1; g <= num_groups; ++g) {
-        int s = std::numeric_limits<int>::min();
-      }
-      current_statement__ = 6;
+      current_statement__ = 3;
       lp_accum__.add(stan::math::sum(log_lik));
-      current_statement__ = 11;
+      current_statement__ = 8;
       for (int j = 1; j <= num_comp; ++j) {
-        current_statement__ = 9;
+        current_statement__ = 6;
         for (int s = 1; s <= num_strata; ++s) {
-          current_statement__ = 7;
+          current_statement__ = 4;
           if (pstream__) {
             stan::math::stan_print(pstream__, s);
             *(pstream__) << std::endl;
@@ -188,17 +181,13 @@ class dce_loopvar_model final : public model_base_crtp<dce_loopvar_model> {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(num_groups,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      current_statement__ = 5;
-      for (int g = 1; g <= num_groups; ++g) {
-        int s = std::numeric_limits<int>::min();
-      }
-      current_statement__ = 6;
+      current_statement__ = 3;
       lp_accum__.add(stan::math::sum(log_lik));
-      current_statement__ = 11;
+      current_statement__ = 8;
       for (int j = 1; j <= num_comp; ++j) {
-        current_statement__ = 9;
+        current_statement__ = 6;
         for (int s = 1; s <= num_strata; ++s) {
-          current_statement__ = 7;
+          current_statement__ = 4;
           if (pstream__) {
             stan::math::stan_print(pstream__, s);
             *(pstream__) << std::endl;

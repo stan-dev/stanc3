@@ -5,7 +5,7 @@ namespace expr_prop_fail5_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 70> locations_array__ =
+static constexpr std::array<const char*, 67> locations_array__ =
   {" (found before start of program)",
   " (in '../expr-prop-fail5.stan', line 68, column 2 to column 34)",
   " (in '../expr-prop-fail5.stan', line 69, column 2 to column 32)",
@@ -29,8 +29,6 @@ static constexpr std::array<const char*, 70> locations_array__ =
   " (in '../expr-prop-fail5.stan', line 25, column 17 to column 28)",
   " (in '../expr-prop-fail5.stan', line 25, column 4 to column 34)",
   " (in '../expr-prop-fail5.stan', line 28, column 6 to column 32)",
-  " (in '../expr-prop-fail5.stan', line 31, column 8 to column 37)",
-  " (in '../expr-prop-fail5.stan', line 32, column 8 to column 32)",
   " (in '../expr-prop-fail5.stan', line 42, column 8 to line 44, column 44)",
   " (in '../expr-prop-fail5.stan', line 29, column 39 to line 45, column 7)",
   " (in '../expr-prop-fail5.stan', line 29, column 6 to line 45, column 7)",
@@ -69,7 +67,6 @@ static constexpr std::array<const char*, 70> locations_array__ =
   " (in '../expr-prop-fail5.stan', line 7, column 6 to line 8, column 17)",
   " (in '../expr-prop-fail5.stan', line 9, column 4 to column 13)",
   " (in '../expr-prop-fail5.stan', line 5, column 37 to line 10, column 3)",
-  " (in '../expr-prop-fail5.stan', line 15, column 6 to column 32)",
   " (in '../expr-prop-fail5.stan', line 19, column 8 to column 17)",
   " (in '../expr-prop-fail5.stan', line 18, column 6 to line 19, column 17)",
   " (in '../expr-prop-fail5.stan', line 13, column 39 to line 20, column 5)",
@@ -111,27 +108,24 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm4__;
-    int lcm3__;
-    int lcm2__;
     int lcm1__;
     {
       lcm1__ = stan::math::size(y_i);
       if (stan::math::logical_gte(lcm1__, 1)) {
-        current_statement__ = 60;
+        current_statement__ = 58;
         if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(1))) {
-          current_statement__ = 59;
+          current_statement__ = 57;
           return 1;
         }
         for (int k = 2; k <= lcm1__; ++k) {
-          current_statement__ = 60;
+          current_statement__ = 58;
           if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-            current_statement__ = 59;
+            current_statement__ = 57;
             return k;
           }
         }
       }
-      current_statement__ = 61;
+      current_statement__ = 59;
       return 0;
     }
   } catch (const std::exception& e) {
@@ -154,33 +148,28 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm10__;
-    int lcm9__;
-    int lcm8__;
     int lcm7__;
     int lcm6__;
     int lcm5__;
     {
       lcm7__ = (stan::math::size(y_i) - 1);
       if (stan::math::logical_gte(lcm7__, 0)) {
-        int k = std::numeric_limits<int>::min();
         lcm6__ = (stan::math::size(y_i) - 0);
-        current_statement__ = 65;
+        current_statement__ = 62;
         if (y_i[(lcm6__ - 1)]) {
-          current_statement__ = 64;
+          current_statement__ = 61;
           return lcm6__;
         }
         for (int k_rev = 1; k_rev <= lcm7__; ++k_rev) {
-          int k = std::numeric_limits<int>::min();
           lcm5__ = (stan::math::size(y_i) - k_rev);
-          current_statement__ = 65;
+          current_statement__ = 62;
           if (y_i[(lcm5__ - 1)]) {
-            current_statement__ = 64;
+            current_statement__ = 61;
             return lcm5__;
           }
         }
       }
-      current_statement__ = 67;
+      current_statement__ = 64;
       return 0;
     }
   } catch (const std::exception& e) {
@@ -214,15 +203,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
   (void) DUMMY_VAR__;
   try {
     int lcm20__;
-    int lcm19__;
     int lcm18__;
     int lcm17__;
     int lcm16__;
     int lcm15__;
-    local_scalar_t__ lcm14__;
-    local_scalar_t__ lcm13__;
-    local_scalar_t__ lcm12__;
-    local_scalar_t__ lcm11__;
     {
       current_statement__ = 19;
       stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -232,7 +216,7 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
       Eigen::Matrix<local_scalar_t__,-1,-1> chi =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
           DUMMY_VAR__);
-      current_statement__ = 29;
+      current_statement__ = 27;
       if (stan::math::logical_gte(nind, 1)) {
         current_statement__ = 22;
         stan::model::assign(chi, 1.0, "assigning variable chi",
@@ -240,10 +224,8 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
         lcm18__ = (n_occasions - 1);
         lcm20__ = stan::math::logical_gte(lcm18__, 1);
         if (lcm20__) {
-          int t_curr = std::numeric_limits<int>::min();
-          int t_next = std::numeric_limits<int>::min();
           lcm16__ = (lcm18__ + 1);
-          current_statement__ = 25;
+          current_statement__ = 23;
           stan::model::assign(chi,
             stan::math::fma(
               (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -256,11 +238,9 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
                 stan::model::index_uni(lcm18__)))), "assigning variable chi",
             stan::model::index_uni(1), stan::model::index_uni(lcm18__));
           for (int t = 2; t <= lcm18__; ++t) {
-            int t_curr = std::numeric_limits<int>::min();
             lcm17__ = (n_occasions - t);
-            int t_next = std::numeric_limits<int>::min();
             lcm15__ = (lcm17__ + 1);
-            current_statement__ = 25;
+            current_statement__ = 23;
             stan::model::assign(chi,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -279,12 +259,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
           current_statement__ = 22;
           stan::model::assign(chi, 1.0, "assigning variable chi",
             stan::model::index_uni(i), stan::model::index_uni(n_occasions));
-          current_statement__ = 27;
+          current_statement__ = 25;
           if (lcm20__) {
-            int t_curr = std::numeric_limits<int>::min();
-            int t_next = std::numeric_limits<int>::min();
             lcm16__ = (lcm18__ + 1);
-            current_statement__ = 25;
+            current_statement__ = 23;
             stan::model::assign(chi,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(i),
@@ -298,11 +276,9 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
               "assigning variable chi", stan::model::index_uni(i),
               stan::model::index_uni(lcm18__));
             for (int t = 2; t <= lcm18__; ++t) {
-              int t_curr = std::numeric_limits<int>::min();
               lcm17__ = (n_occasions - t);
-              int t_next = std::numeric_limits<int>::min();
               lcm15__ = (lcm17__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(chi,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(i),
@@ -319,7 +295,7 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
           }
         }
       }
-      current_statement__ = 30;
+      current_statement__ = 28;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -362,60 +338,60 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 39;
+      current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
-      current_statement__ = 39;
+      current_statement__ = 37;
       stan::io::read_from_context(nind, context__, "nind");
-      current_statement__ = 39;
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
-      current_statement__ = 40;
+      current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
-      current_statement__ = 40;
+      current_statement__ = 38;
       stan::io::read_from_context(n_occasions, context__, "n_occasions");
-      current_statement__ = 40;
+      current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
-      current_statement__ = 41;
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("y", "nind", nind);
-      current_statement__ = 42;
+      current_statement__ = 40;
       stan::math::validate_non_negative_index("y", "n_occasions", n_occasions);
-      current_statement__ = 43;
+      current_statement__ = 41;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(nind),
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      current_statement__ = 43;
+      current_statement__ = 41;
       stan::io::read_from_context(y, context__, "y");
-      current_statement__ = 43;
+      current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 43;
+      current_statement__ = 41;
       stan::math::check_less_or_equal(function__, "y", y, 1);
-      current_statement__ = 44;
+      current_statement__ = 42;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       lcm134__ = (n_occasions - 1);
       n_occ_minus_1 = lcm134__;
-      current_statement__ = 45;
+      current_statement__ = 43;
       stan::math::validate_non_negative_index("first", "nind", nind);
-      current_statement__ = 46;
+      current_statement__ = 44;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
-      current_statement__ = 47;
+      current_statement__ = 45;
       stan::math::validate_non_negative_index("last", "nind", nind);
-      current_statement__ = 48;
+      current_statement__ = 46;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
       lcm135__ = stan::math::logical_gte(nind, 1);
       if (lcm135__) {
-        current_statement__ = 49;
+        current_statement__ = 47;
         stan::model::assign(first,
           first_capture(
             stan::model::rvalue(y, "y", stan::model::index_uni(1)), pstream__),
           "assigning variable first", stan::model::index_uni(1));
         for (int i = 2; i <= nind; ++i) {
-          current_statement__ = 49;
+          current_statement__ = 47;
           stan::model::assign(first,
             first_capture(
               stan::model::rvalue(y, "y", stan::model::index_uni(i)),
@@ -423,15 +399,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             stan::model::index_uni(i));
         }
       }
-      current_statement__ = 51;
+      current_statement__ = 49;
       if (lcm135__) {
-        current_statement__ = 50;
+        current_statement__ = 48;
         stan::model::assign(last,
           last_capture(
             stan::model::rvalue(y, "y", stan::model::index_uni(1)), pstream__),
           "assigning variable last", stan::model::index_uni(1));
         for (int i = 2; i <= nind; ++i) {
-          current_statement__ = 50;
+          current_statement__ = 48;
           stan::model::assign(last,
             last_capture(
               stan::model::rvalue(y, "y", stan::model::index_uni(i)),
@@ -439,28 +415,28 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             stan::model::index_uni(i));
         }
       }
-      current_statement__ = 46;
+      current_statement__ = 44;
       stan::math::check_greater_or_equal(function__, "first", first, 0);
-      current_statement__ = 46;
+      current_statement__ = 44;
       stan::math::check_less_or_equal(function__, "first", first, n_occasions);
-      current_statement__ = 48;
+      current_statement__ = 46;
       stan::math::check_greater_or_equal(function__, "last", last, 0);
-      current_statement__ = 48;
+      current_statement__ = 46;
       stan::math::check_less_or_equal(function__, "last", last, n_occasions);
-      current_statement__ = 52;
+      current_statement__ = 50;
       stan::math::validate_non_negative_index("epsilon", "nind", nind);
-      current_statement__ = 53;
+      current_statement__ = 51;
       stan::math::validate_non_negative_index("phi", "nind", nind);
-      current_statement__ = 54;
+      current_statement__ = 52;
       stan::math::validate_non_negative_index("phi", "n_occ_minus_1",
         lcm134__);
-      current_statement__ = 55;
+      current_statement__ = 53;
       stan::math::validate_non_negative_index("p", "nind", nind);
-      current_statement__ = 56;
+      current_statement__ = 54;
       stan::math::validate_non_negative_index("p", "n_occ_minus_1", lcm134__);
-      current_statement__ = 57;
+      current_statement__ = 55;
       stan::math::validate_non_negative_index("chi", "nind", nind);
-      current_statement__ = 58;
+      current_statement__ = 56;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
     } catch (const std::exception& e) {
@@ -499,21 +475,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm133__;
       int lcm132__;
       int lcm131__;
       int lcm130__;
       int lcm129__;
-      int lcm128__;
-      int lcm127__;
-      int lcm126__;
-      int lcm125__;
-      int lcm124__;
-      int lcm123__;
       int lcm122__;
       int lcm121__;
-      int lcm120__;
-      int lcm119__;
       int lcm118__;
       int lcm117__;
       int lcm116__;
@@ -524,24 +491,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int lcm111__;
       int lcm110__;
       int lcm109__;
-      double lcm108__;
       local_scalar_t__ lcm107__;
       local_scalar_t__ lcm106__;
       local_scalar_t__ lcm105__;
-      double lcm104__;
-      double lcm103__;
-      double lcm102__;
-      double lcm101__;
-      double lcm100__;
-      double lcm99__;
-      double lcm98__;
-      double lcm97__;
-      double lcm96__;
-      double lcm95__;
-      double lcm94__;
-      double lcm93__;
-      double lcm92__;
-      double lcm91__;
       current_statement__ = 1;
       auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
@@ -659,7 +611,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           inline_prob_uncaptured_chi16__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
-        current_statement__ = 29;
+        current_statement__ = 27;
         if (lcm121__) {
           current_statement__ = 22;
           stan::model::assign(inline_prob_uncaptured_chi16__, 1.0,
@@ -668,12 +620,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           lcm116__ = (n_occasions - 1);
           lcm122__ = stan::math::logical_gte(lcm116__, 1);
           if (lcm122__) {
-            int inline_prob_uncaptured_t_curr17__ =
-              std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next18__ =
-              std::numeric_limits<int>::min();
             lcm112__ = (lcm116__ + 1);
-            current_statement__ = 25;
+            current_statement__ = 23;
             stan::model::assign(inline_prob_uncaptured_chi16__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -690,13 +638,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               stan::model::index_uni(1), stan::model::index_uni(lcm116__));
             for (int inline_prob_uncaptured_t19__ = 2; inline_prob_uncaptured_t19__
                  <= lcm116__; ++inline_prob_uncaptured_t19__) {
-              int inline_prob_uncaptured_t_curr17__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next18__ =
-                std::numeric_limits<int>::min();
               lcm115__ = (n_occasions - inline_prob_uncaptured_t19__);
               lcm111__ = (lcm115__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi16__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -720,14 +664,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               "assigning variable inline_prob_uncaptured_chi16__",
               stan::model::index_uni(inline_prob_uncaptured_i20__),
               stan::model::index_uni(n_occasions));
-            current_statement__ = 27;
+            current_statement__ = 25;
             if (lcm122__) {
-              int inline_prob_uncaptured_t_curr17__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next18__ =
-                std::numeric_limits<int>::min();
               lcm112__ = (lcm116__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi16__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
@@ -748,13 +688,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                 stan::model::index_uni(lcm116__));
               for (int inline_prob_uncaptured_t19__ = 2; inline_prob_uncaptured_t19__
                    <= lcm116__; ++inline_prob_uncaptured_t19__) {
-                int inline_prob_uncaptured_t_curr17__ =
-                  std::numeric_limits<int>::min();
-                int inline_prob_uncaptured_t_next18__ =
-                  std::numeric_limits<int>::min();
                 lcm115__ = (n_occasions - inline_prob_uncaptured_t19__);
                 lcm111__ = (lcm115__ + 1);
-                current_statement__ = 25;
+                current_statement__ = 23;
                 stan::model::assign(inline_prob_uncaptured_chi16__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
@@ -777,7 +713,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             }
           }
         }
-        current_statement__ = 30;
+        current_statement__ = 28;
         stan::model::assign(inline_prob_uncaptured_return15__,
           inline_prob_uncaptured_chi16__,
           "assigning variable inline_prob_uncaptured_return15__");
@@ -800,10 +736,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::check_less_or_equal(function__, "chi",
         inline_prob_uncaptured_return15__, 1);
       {
-        current_statement__ = 31;
+        current_statement__ = 29;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
-        current_statement__ = 38;
+        current_statement__ = 36;
         if (lcm121__) {
           lcm130__ = stan::model::rvalue(first, "first",
                        stan::model::index_uni(1));
@@ -812,7 +748,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                          stan::model::index_uni(1));
             lcm114__ = (lcm130__ + 1);
             if (stan::math::logical_gte(lcm132__, lcm114__)) {
-              current_statement__ = 32;
+              current_statement__ = 30;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(phi, "phi",
                                  stan::model::index_uni(1),
@@ -826,12 +762,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                  stan::model::index_uni(1),
                                  stan::model::index_uni((lcm114__ - 1)))));
               for (int t = lcm110__; t <= lcm132__; ++t) {
-                current_statement__ = 32;
+                current_statement__ = 30;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(1),
                                    stan::model::index_uni((t - 1)))));
-                current_statement__ = 33;
+                current_statement__ = 31;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                  stan::model::rvalue(y, "y",
                                    stan::model::index_uni(1),
@@ -841,7 +777,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                    stan::model::index_uni((t - 1)))));
               }
             }
-            current_statement__ = 35;
+            current_statement__ = 33;
             lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                              stan::model::rvalue(
                                inline_prob_uncaptured_return15__,
@@ -857,7 +793,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                            stan::model::index_uni(i));
               lcm113__ = (lcm129__ + 1);
               if (stan::math::logical_gte(lcm131__, lcm113__)) {
-                current_statement__ = 32;
+                current_statement__ = 30;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(i),
@@ -871,12 +807,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                    stan::model::index_uni(i),
                                    stan::model::index_uni((lcm113__ - 1)))));
                 for (int t = lcm109__; t <= lcm131__; ++t) {
-                  current_statement__ = 32;
+                  current_statement__ = 30;
                   lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                    stan::model::rvalue(phi, "phi",
                                      stan::model::index_uni(i),
                                      stan::model::index_uni((t - 1)))));
-                  current_statement__ = 33;
+                  current_statement__ = 31;
                   lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                    stan::model::rvalue(y, "y",
                                      stan::model::index_uni(i),
@@ -886,7 +822,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                      stan::model::index_uni((t - 1)))));
                 }
               }
-              current_statement__ = 35;
+              current_statement__ = 33;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(
                                  inline_prob_uncaptured_return15__,
@@ -927,21 +863,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm90__;
       int lcm89__;
       int lcm88__;
       int lcm87__;
       int lcm86__;
-      int lcm85__;
-      int lcm84__;
-      int lcm83__;
-      int lcm82__;
-      int lcm81__;
-      int lcm80__;
       int lcm79__;
       int lcm78__;
-      int lcm77__;
-      int lcm76__;
       int lcm75__;
       int lcm74__;
       int lcm73__;
@@ -952,24 +879,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int lcm68__;
       int lcm67__;
       int lcm66__;
-      double lcm65__;
       local_scalar_t__ lcm64__;
       local_scalar_t__ lcm63__;
       local_scalar_t__ lcm62__;
-      double lcm61__;
-      double lcm60__;
-      double lcm59__;
-      double lcm58__;
-      double lcm57__;
-      double lcm56__;
-      double lcm55__;
-      double lcm54__;
-      double lcm53__;
-      double lcm52__;
-      double lcm51__;
-      double lcm50__;
-      double lcm49__;
-      double lcm48__;
       current_statement__ = 1;
       auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
@@ -1086,7 +998,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
-        current_statement__ = 29;
+        current_statement__ = 27;
         if (lcm78__) {
           current_statement__ = 22;
           stan::model::assign(inline_prob_uncaptured_chi9__, 1.0,
@@ -1095,12 +1007,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           lcm73__ = (n_occasions - 1);
           lcm79__ = stan::math::logical_gte(lcm73__, 1);
           if (lcm79__) {
-            int inline_prob_uncaptured_t_curr10__ =
-              std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next11__ =
-              std::numeric_limits<int>::min();
             lcm69__ = (lcm73__ + 1);
-            current_statement__ = 25;
+            current_statement__ = 23;
             stan::model::assign(inline_prob_uncaptured_chi9__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -1116,13 +1024,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               stan::model::index_uni(1), stan::model::index_uni(lcm73__));
             for (int inline_prob_uncaptured_t12__ = 2; inline_prob_uncaptured_t12__
                  <= lcm73__; ++inline_prob_uncaptured_t12__) {
-              int inline_prob_uncaptured_t_curr10__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next11__ =
-                std::numeric_limits<int>::min();
               lcm72__ = (n_occasions - inline_prob_uncaptured_t12__);
               lcm68__ = (lcm72__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi9__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -1146,14 +1050,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               "assigning variable inline_prob_uncaptured_chi9__",
               stan::model::index_uni(inline_prob_uncaptured_i13__),
               stan::model::index_uni(n_occasions));
-            current_statement__ = 27;
+            current_statement__ = 25;
             if (lcm79__) {
-              int inline_prob_uncaptured_t_curr10__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next11__ =
-                std::numeric_limits<int>::min();
               lcm69__ = (lcm73__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi9__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
@@ -1174,13 +1074,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                 stan::model::index_uni(lcm73__));
               for (int inline_prob_uncaptured_t12__ = 2; inline_prob_uncaptured_t12__
                    <= lcm73__; ++inline_prob_uncaptured_t12__) {
-                int inline_prob_uncaptured_t_curr10__ =
-                  std::numeric_limits<int>::min();
-                int inline_prob_uncaptured_t_next11__ =
-                  std::numeric_limits<int>::min();
                 lcm72__ = (n_occasions - inline_prob_uncaptured_t12__);
                 lcm68__ = (lcm72__ + 1);
-                current_statement__ = 25;
+                current_statement__ = 23;
                 stan::model::assign(inline_prob_uncaptured_chi9__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
@@ -1203,7 +1099,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             }
           }
         }
-        current_statement__ = 30;
+        current_statement__ = 28;
         stan::model::assign(inline_prob_uncaptured_return8__,
           inline_prob_uncaptured_chi9__,
           "assigning variable inline_prob_uncaptured_return8__");
@@ -1226,10 +1122,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::check_less_or_equal(function__, "chi",
         inline_prob_uncaptured_return8__, 1);
       {
-        current_statement__ = 31;
+        current_statement__ = 29;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
-        current_statement__ = 38;
+        current_statement__ = 36;
         if (lcm78__) {
           lcm87__ = stan::model::rvalue(first, "first",
                       stan::model::index_uni(1));
@@ -1238,7 +1134,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                         stan::model::index_uni(1));
             lcm71__ = (lcm87__ + 1);
             if (stan::math::logical_gte(lcm89__, lcm71__)) {
-              current_statement__ = 32;
+              current_statement__ = 30;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(phi, "phi",
                                  stan::model::index_uni(1),
@@ -1252,12 +1148,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                  stan::model::index_uni(1),
                                  stan::model::index_uni((lcm71__ - 1)))));
               for (int t = lcm67__; t <= lcm89__; ++t) {
-                current_statement__ = 32;
+                current_statement__ = 30;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(1),
                                    stan::model::index_uni((t - 1)))));
-                current_statement__ = 33;
+                current_statement__ = 31;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                  stan::model::rvalue(y, "y",
                                    stan::model::index_uni(1),
@@ -1267,7 +1163,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                    stan::model::index_uni((t - 1)))));
               }
             }
-            current_statement__ = 35;
+            current_statement__ = 33;
             lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                              stan::model::rvalue(
                                inline_prob_uncaptured_return8__,
@@ -1283,7 +1179,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                           stan::model::index_uni(i));
               lcm70__ = (lcm86__ + 1);
               if (stan::math::logical_gte(lcm88__, lcm70__)) {
-                current_statement__ = 32;
+                current_statement__ = 30;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(i),
@@ -1297,12 +1193,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                    stan::model::index_uni(i),
                                    stan::model::index_uni((lcm70__ - 1)))));
                 for (int t = lcm66__; t <= lcm88__; ++t) {
-                  current_statement__ = 32;
+                  current_statement__ = 30;
                   lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                    stan::model::rvalue(phi, "phi",
                                      stan::model::index_uni(i),
                                      stan::model::index_uni((t - 1)))));
-                  current_statement__ = 33;
+                  current_statement__ = 31;
                   lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
                                    stan::model::rvalue(y, "y",
                                      stan::model::index_uni(i),
@@ -1312,7 +1208,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                      stan::model::index_uni((t - 1)))));
                 }
               }
-              current_statement__ = 35;
+              current_statement__ = 33;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(
                                  inline_prob_uncaptured_return8__,
@@ -1364,15 +1260,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm47__;
       int lcm46__;
       int lcm45__;
-      int lcm44__;
-      int lcm43__;
-      int lcm42__;
-      int lcm41__;
-      int lcm40__;
-      int lcm39__;
       int lcm38__;
       int lcm37__;
       int lcm36__;
@@ -1387,10 +1276,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       double lcm27__;
       double lcm26__;
       double lcm25__;
-      double lcm24__;
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
       current_statement__ = 1;
       auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
@@ -1516,7 +1401,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi2__ =
           Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 29;
+        current_statement__ = 27;
         if (lcm37__) {
           current_statement__ = 22;
           stan::model::assign(inline_prob_uncaptured_chi2__, 1.0,
@@ -1525,12 +1410,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           lcm34__ = (n_occasions - 1);
           lcm38__ = stan::math::logical_gte(lcm34__, 1);
           if (lcm38__) {
-            int inline_prob_uncaptured_t_curr3__ =
-              std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next4__ =
-              std::numeric_limits<int>::min();
             lcm30__ = (lcm34__ + 1);
-            current_statement__ = 25;
+            current_statement__ = 23;
             stan::model::assign(inline_prob_uncaptured_chi2__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -1546,13 +1427,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               stan::model::index_uni(1), stan::model::index_uni(lcm34__));
             for (int inline_prob_uncaptured_t5__ = 2; inline_prob_uncaptured_t5__
                  <= lcm34__; ++inline_prob_uncaptured_t5__) {
-              int inline_prob_uncaptured_t_curr3__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next4__ =
-                std::numeric_limits<int>::min();
               lcm33__ = (n_occasions - inline_prob_uncaptured_t5__);
               lcm29__ = (lcm33__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi2__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
@@ -1576,14 +1453,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               "assigning variable inline_prob_uncaptured_chi2__",
               stan::model::index_uni(inline_prob_uncaptured_i6__),
               stan::model::index_uni(n_occasions));
-            current_statement__ = 27;
+            current_statement__ = 25;
             if (lcm38__) {
-              int inline_prob_uncaptured_t_curr3__ =
-                std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next4__ =
-                std::numeric_limits<int>::min();
               lcm30__ = (lcm34__ + 1);
-              current_statement__ = 25;
+              current_statement__ = 23;
               stan::model::assign(inline_prob_uncaptured_chi2__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
@@ -1604,13 +1477,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                 stan::model::index_uni(lcm34__));
               for (int inline_prob_uncaptured_t5__ = 2; inline_prob_uncaptured_t5__
                    <= lcm34__; ++inline_prob_uncaptured_t5__) {
-                int inline_prob_uncaptured_t_curr3__ =
-                  std::numeric_limits<int>::min();
-                int inline_prob_uncaptured_t_next4__ =
-                  std::numeric_limits<int>::min();
                 lcm33__ = (n_occasions - inline_prob_uncaptured_t5__);
                 lcm29__ = (lcm33__ + 1);
-                current_statement__ = 25;
+                current_statement__ = 23;
                 stan::model::assign(inline_prob_uncaptured_chi2__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
@@ -1633,7 +1502,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             }
           }
         }
-        current_statement__ = 30;
+        current_statement__ = 28;
         stan::model::assign(inline_prob_uncaptured_return1__,
           inline_prob_uncaptured_chi2__,
           "assigning variable inline_prob_uncaptured_return1__");

@@ -35,11 +35,8 @@ stan::return_type_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm1__;
-    {
-      current_statement__ = 2;
-      return (x + 0.5);
-    }
+    current_statement__ = 2;
+    return (x + 0.5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -58,11 +55,8 @@ double dumb(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm2__;
-    {
-      current_statement__ = 4;
-      return (x - 0.5);
-    }
+    current_statement__ = 4;
+    return (x - 0.5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -122,11 +116,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm6__;
-      {
-        current_statement__ = 1;
-        lp_accum__.add(dumb(1.0, pstream__));
-      }
+      current_statement__ = 1;
+      lp_accum__.add(dumb(1.0, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -157,11 +148,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
-      {
-        current_statement__ = 1;
-        lp_accum__.add(dumb(1.0, pstream__));
-      }
+      current_statement__ = 1;
+      lp_accum__.add(dumb(1.0, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -203,8 +191,6 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm4__;
-      int lcm3__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

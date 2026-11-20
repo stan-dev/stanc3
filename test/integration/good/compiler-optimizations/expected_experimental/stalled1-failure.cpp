@@ -177,17 +177,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm30__;
       local_scalar_t__ lcm29__;
-      double lcm28__;
-      double lcm27__;
-      double lcm26__;
-      double lcm25__;
-      double lcm24__;
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
       current_statement__ = 1;
       auto alpha0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -300,17 +290,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm19__;
       local_scalar_t__ lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
       current_statement__ = 1;
       auto alpha0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -435,12 +415,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      int lcm4__;
-      int lcm3__;
       int lcm2__;
       double lcm1__;
       current_statement__ = 1;

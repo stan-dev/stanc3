@@ -108,8 +108,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm6__;
-      double lcm5__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -154,8 +152,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm4__;
-      double lcm3__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -211,8 +207,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       current_statement__ = 2;

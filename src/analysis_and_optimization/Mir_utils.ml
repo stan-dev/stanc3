@@ -308,6 +308,16 @@ let stmt_rhs stmt =
 let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
 let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
+let rec stmt_referenced_names_set Stmt.{pattern; _} : string Set.Poly.t =
+  let names =
+    Stmt.Pattern.fold
+      (fun acc e -> Set.Poly.union acc (expr_var_names_set e))
+      (fun acc s -> Set.Poly.union acc (stmt_referenced_names_set s))
+      Set.Poly.empty pattern in
+  match pattern with
+  | Assignment (lhs, _, _) -> Set.Poly.add (Stmt.Helpers.lhs_variable lhs) names
+  | _ -> names
+
 (** See interface file *)
 let expr_assigned_var Expr.{pattern; _} =
   match pattern with

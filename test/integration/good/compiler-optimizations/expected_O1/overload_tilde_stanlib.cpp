@@ -302,7 +302,6 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "theta", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;

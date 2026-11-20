@@ -1821,9 +1821,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 45;
         stan::math::validate_non_negative_index("cprob", "n_occasions",
           n_occasions);
-        Eigen::Matrix<double,-1,1> cprob =
-          Eigen::Matrix<double,-1,1>::Constant(n_occasions,
-            std::numeric_limits<double>::quiet_NaN());
         Eigen::Matrix<double,-1,1> inline_seq_cprob_return10__;
         {
           int inline_seq_cprob_N11__;
@@ -1888,7 +1885,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           "assigning variable b");
         current_statement__ = 73;
         for (int i = 1; i <= M; ++i) {
-          int f = std::numeric_limits<int>::min();
           current_statement__ = 66;
           const std::vector<int>& inline_first_capture_y_i_arg17__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));

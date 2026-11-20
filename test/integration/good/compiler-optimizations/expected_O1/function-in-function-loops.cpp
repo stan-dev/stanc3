@@ -164,7 +164,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 2;
       stan::model::assign(eta, stan::math::rep_vector(0.0, N),
         "assigning variable eta");
-      local_scalar_t__ out = DUMMY_VAR__;
       local_scalar_t__ inline_summer_return18__;
       {
         int inline_summer_N19__;
@@ -181,8 +180,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           local_scalar_t__ inline_summer_inline_do_something_x_arg6__21__ =
             eta[(inline_summer_n25__ - 1)];
           local_scalar_t__ inline_summer_inline_do_something_return5__22__;
-          int inline_summer_inline_do_something_early_ret_check7__23__ =
-            std::numeric_limits<int>::min();
           for (int inline_summer_inline_do_something_iterator8__24__ = 1; inline_summer_inline_do_something_iterator8__24__
                <= 1; ++inline_summer_inline_do_something_iterator8__24__) {
             inline_summer_inline_do_something_return5__22__ = inline_summer_inline_do_something_x_arg6__21__;
@@ -233,7 +230,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 2;
       stan::model::assign(eta, stan::math::rep_vector(0.0, N),
         "assigning variable eta");
-      local_scalar_t__ out = DUMMY_VAR__;
       local_scalar_t__ inline_summer_return9__;
       {
         int inline_summer_N10__;
@@ -250,8 +246,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           local_scalar_t__ inline_summer_inline_do_something_x_arg6__12__ =
             eta[(inline_summer_n16__ - 1)];
           local_scalar_t__ inline_summer_inline_do_something_return5__13__;
-          int inline_summer_inline_do_something_early_ret_check7__14__ =
-            std::numeric_limits<int>::min();
           for (int inline_summer_inline_do_something_iterator8__15__ = 1; inline_summer_inline_do_something_iterator8__15__
                <= 1; ++inline_summer_inline_do_something_iterator8__15__) {
             inline_summer_inline_do_something_return5__13__ = inline_summer_inline_do_something_x_arg6__12__;

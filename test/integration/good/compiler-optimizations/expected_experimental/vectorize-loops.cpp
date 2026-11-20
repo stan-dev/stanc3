@@ -224,26 +224,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm42__;
       int lcm41__;
-      Eigen::Matrix<double,-1,1> lcm40__;
-      double lcm39__;
-      double lcm38__;
-      Eigen::Matrix<double,-1,1> lcm37__;
-      double lcm36__;
-      double lcm35__;
-      Eigen::Matrix<double,-1,1> lcm34__;
-      double lcm33__;
-      double lcm32__;
-      double lcm31__;
-      double lcm30__;
-      double lcm29__;
-      double lcm28__;
-      double lcm27__;
-      double lcm26__;
-      double lcm25__;
-      Eigen::Matrix<double,-1,1> lcm24__;
-      double lcm23__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -394,26 +375,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm22__;
       int lcm21__;
-      Eigen::Matrix<double,-1,1> lcm20__;
-      double lcm19__;
-      double lcm18__;
-      Eigen::Matrix<double,-1,1> lcm17__;
-      double lcm16__;
-      double lcm15__;
-      Eigen::Matrix<double,-1,1> lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      Eigen::Matrix<double,-1,1> lcm4__;
-      double lcm3__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -579,8 +541,6 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 2;

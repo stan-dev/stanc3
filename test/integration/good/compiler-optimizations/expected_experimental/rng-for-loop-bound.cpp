@@ -48,8 +48,6 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm4__;
-    int lcm3__;
     int lcm1__;
     {
       local_scalar_t__ sum;
@@ -91,22 +89,19 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm6__;
-    {
-      local_scalar_t__ sum;
-      sum = static_cast<double>(0);
-      current_statement__ = 11;
-      if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
+    local_scalar_t__ sum;
+    sum = static_cast<double>(0);
+    current_statement__ = 11;
+    if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
+      current_statement__ = 9;
+      sum = (0 + stan::math::std_normal_rng(base_rng__));
+      for (int i = 1; i <= stan::math::poisson_rng(10, base_rng__); ++i) {
         current_statement__ = 9;
-        sum = (0 + stan::math::std_normal_rng(base_rng__));
-        for (int i = 1; i <= stan::math::poisson_rng(10, base_rng__); ++i) {
-          current_statement__ = 9;
-          sum = (sum + stan::math::std_normal_rng(base_rng__));
-        }
+        sum = (sum + stan::math::std_normal_rng(base_rng__));
       }
-      current_statement__ = 12;
-      return sum;
     }
+    current_statement__ = 12;
+    return sum;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -229,8 +224,6 @@ class rng_for_loop_bound_model final : public model_base_crtp<rng_for_loop_bound
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm8__;
-      int lcm7__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

@@ -51,11 +51,8 @@ bernoulli_lpmf(const T0__& y, const T1__& theta, const T2__& alpha,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm1__;
-    {
-      current_statement__ = 7;
-      return stan::math::log(theta);
-    }
+    current_statement__ = 7;
+    return stan::math::log(theta);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -78,11 +75,8 @@ bar_lp(const T0__& y, const T1__& t_arg__, T_lp__& lp__, T_lp_accum__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm2__;
-    {
-      current_statement__ = 2;
-      lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, t));
-    }
+    current_statement__ = 2;
+    lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, t));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -161,7 +155,6 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm6__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -200,7 +193,6 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -251,8 +243,6 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm4__;
-      int lcm3__;
       current_statement__ = 1;
       auto theta =
         in__.template read_constrain_lub<
@@ -312,7 +302,6 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "theta", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;

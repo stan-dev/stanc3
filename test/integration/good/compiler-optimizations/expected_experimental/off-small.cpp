@@ -179,14 +179,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
-      double lcm18__;
       Eigen::Matrix<local_scalar_t__,-1,1> lcm17__;
-      Eigen::Matrix<double,-1,1> lcm16__;
       Eigen::Matrix<local_scalar_t__,-1,1> lcm15__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
@@ -281,14 +274,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm8__;
-      Eigen::Matrix<double,-1,1> lcm7__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm6__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
@@ -404,10 +390,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm5__;
-      int lcm4__;
       Eigen::Matrix<double,-1,1> lcm3__;
-      Eigen::Matrix<double,-1,1> lcm2__;
       Eigen::Matrix<double,-1,1> lcm1__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();

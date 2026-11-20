@@ -1845,21 +1845,15 @@ let%expect_test "dead code elimination decl" =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      log_prob {
-        {
-          int i;
-        }
+    generate_quantities {
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+      {
+        data int i;
+        FnPrint__(i);
       }
-
-
-      generate_quantities {
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-        {
-          data int i;
-          FnPrint__(i);
-        }
-      } |}]
+    }
+    |}]
 
 let%expect_test "dead code elimination, for loop" =
   let mir =
@@ -3292,14 +3286,11 @@ let%expect_test
   [%expect
     {|
     log_prob {
-      data int lcm6__;
       data int lcm5__;
-      real lcm4__;
       real lcm3__;
       {
         real x;
         int y;
-        real theta;
         if((100000 >= 1)) {
           lcm3__ = bernoulli_logit_lpmf(y, x);
           lcm5__ = (1 + 1);
@@ -3313,8 +3304,6 @@ let%expect_test
 
 
     generate_quantities {
-      data int lcm2__;
-      data int lcm1__;
       if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(!(emit_generated_quantities__)) return;
     }

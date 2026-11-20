@@ -1017,6 +1017,64 @@ let copy_propagation mir =
 let is_skip_break_continue s =
   match s with Stmt.Pattern.Skip | Break | Continue -> true | _ -> false
 
+(** Remove declarations of local variables that are never mentioned again. *)
+let remove_unreferenced_decls globals s =
+  let rec remove_unreferenced_decls_stmt used (s : Stmt.Located.t) =
+    let remove_unreferenced_decls_list used stmts =
+      (* fold_right so that we reach a decl after we have considered every
+         statement after it *)
+      List.fold_right stmts ~init:([], used) ~f:(fun s (acc, used) ->
+          match remove_unreferenced_decls_stmt used s with
+          | None -> (acc, used)
+          | Some (s', used') -> (s' :: acc, used')) in
+    match s.pattern with
+    | Decl {initialize= Assign e; _} when cannot_remove_expr e ->
+        Some (s, Set.Poly.union used (expr_var_names_set e))
+    | Decl {decl_id; _}
+      when not (Set.Poly.mem decl_id globals || Set.Poly.mem decl_id used) ->
+        None
+    | SList l ->
+        let l', used = remove_unreferenced_decls_list used l in
+        Some ({s with pattern= SList l'}, used)
+    | Block l ->
+        (* [Block] and [Profile] are scopes, so locals cannot be used later *)
+        let l', inner = remove_unreferenced_decls_list Set.Poly.empty l in
+        Some ({s with pattern= Block l'}, Set.Poly.union used inner)
+    | Profile (name, l) ->
+        let l', inner = remove_unreferenced_decls_list Set.Poly.empty l in
+        Some ({s with pattern= Profile (name, l')}, Set.Poly.union used inner)
+    | IfElse (e, b1, b2) ->
+        let b1', used1 = clean_statement used b1 in
+        let b2', used2 =
+          match b2 with
+          | Some b ->
+              let b', used' = clean_statement used b in
+              (Some b', used')
+          | None -> (None, used) in
+        Some
+          ( {s with pattern= IfElse (e, b1', b2')}
+          , Set.Poly.union_list [used1; used2; expr_var_names_set e] )
+    | While (e, b) ->
+        let b', used' = clean_statement used b in
+        Some
+          ( {s with pattern= While (e, b')}
+          , Set.Poly.union used' (expr_var_names_set e) )
+    | For {loopvar; lower; upper; body} ->
+        let body', used' = clean_statement used body in
+        Some
+          ( {s with pattern= For {loopvar; lower; upper; body= body'}}
+          , Set.Poly.union_list
+              [used'; expr_var_names_set lower; expr_var_names_set upper] )
+    | Break | Continue | Skip -> Some (s, used)
+    | Decl _ | Assignment _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Return _
+      ->
+        Some (s, Set.Poly.union used (stmt_referenced_names_set s))
+  and clean_statement used stmt =
+    match remove_unreferenced_decls_stmt used stmt with
+    | Some result -> result
+    | None -> ({stmt with pattern= Skip}, used) in
+  fst (clean_statement Set.Poly.empty s)
+
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : Program.Typed.t) =
   (* TODO: think about whether we should treat function bodies as local scopes
@@ -1047,14 +1105,6 @@ let dead_code_elimination (mir : Program.Typed.t) =
                  (Stmt.Helpers.lhs_indices lhs)
           then stmt
           else Skip
-      (* NOTE: we never get rid of declarations as we might not be able to
-         remove an assignment to a variable
-            due to side effects. *)
-      (* TODO: maybe we should revisit that. *)
-      | Decl ({decl_id; initialize= Assign e; _} as decl) ->
-          if Set.Poly.mem decl_id live_variables_s || cannot_remove_expr e then
-            stmt
-          else Decl {decl with initialize= Uninit}
       | Decl _ | TargetPE _ | JacobianPE _
        |NRFunApp (_, _)
        |Break | Continue | Return _ | Skip ->
@@ -1098,7 +1148,8 @@ let dead_code_elimination (mir : Program.Typed.t) =
           SList l' in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base in
-    dead_code_elim_stmt (LabelMap.find 1 flowgraph_to_mir) in
+    dead_code_elim_stmt (LabelMap.find 1 flowgraph_to_mir)
+    |> remove_unreferenced_decls (Monotone_framework.globals mir) in
   transform_program mir transform
 
 let partial_evaluation p =
