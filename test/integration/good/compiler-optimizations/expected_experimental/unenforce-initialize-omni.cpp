@@ -75,14 +75,6 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm26__;
-      double lcm25__;
-      double lcm24__;
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
@@ -230,14 +222,6 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
       current_statement__ = 1;
       auto y =
         in__.template read<
@@ -398,16 +382,6 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
@@ -860,7 +834,6 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
       context__.validate_dims("parameter initialization", "arr", "double",
         std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4),
           static_cast<size_t>(5)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> y =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;

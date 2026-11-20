@@ -1903,7 +1903,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           std::vector<int>(M, std::numeric_limits<int>::min());
         current_statement__ = 71;
         for (int i = 1; i <= M; ++i) {
-          int f = std::numeric_limits<int>::min();
           current_statement__ = 64;
           const std::vector<int>& inline_first_capture_y_i_arg11__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));

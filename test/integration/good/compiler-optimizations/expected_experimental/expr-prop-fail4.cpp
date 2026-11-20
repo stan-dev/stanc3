@@ -198,12 +198,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm23__;
-      Eigen::Matrix<double,-1,1> lcm22__;
-      double lcm21__;
-      int lcm20__;
       local_scalar_t__ lcm19__;
-      double lcm18__;
       current_statement__ = 1;
       auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -270,12 +265,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm17__;
-      Eigen::Matrix<double,-1,1> lcm16__;
-      double lcm15__;
-      int lcm14__;
       local_scalar_t__ lcm13__;
-      double lcm12__;
       current_statement__ = 1;
       auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -355,15 +345,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm11__;
-      int lcm10__;
       int lcm9__;
       Eigen::Matrix<double,-1,1> lcm8__;
-      Eigen::Matrix<double,-1,1> lcm7__;
-      double lcm6__;
-      int lcm5__;
-      double lcm4__;
-      double lcm3__;
       double lcm2__;
       double lcm1__;
       current_statement__ = 1;

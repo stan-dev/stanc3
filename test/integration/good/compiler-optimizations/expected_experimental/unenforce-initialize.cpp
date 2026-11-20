@@ -73,9 +73,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
@@ -163,9 +160,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm8__;
-      double lcm7__;
-      double lcm6__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
@@ -264,9 +258,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
-      int lcm4__;
-      int lcm3__;
       double lcm2__;
       double lcm1__;
       current_statement__ = 1;

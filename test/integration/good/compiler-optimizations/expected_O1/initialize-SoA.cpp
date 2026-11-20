@@ -275,7 +275,6 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       context__.validate_dims("parameter initialization", "arr_vec",
         "double",
         std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> y =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
       current_statement__ = 1;

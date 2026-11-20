@@ -80,8 +80,6 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>> lcm5__;
       current_statement__ = 1;
       auto w = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -125,8 +123,6 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>> lcm4__;
       current_statement__ = 1;
       auto w = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -181,10 +177,6 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>> lcm3__;
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto w = in__.template read<local_scalar_t__>();
       out__.write(w);

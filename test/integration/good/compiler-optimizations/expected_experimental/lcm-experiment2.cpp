@@ -69,8 +69,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm8__;
-      double lcm7__;
       local_scalar_t__ lcm6__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
@@ -118,8 +116,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
-      double lcm4__;
       local_scalar_t__ lcm3__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
@@ -178,8 +174,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       out__.write(x);

@@ -85,11 +85,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
       std::vector<Eigen::Matrix<double,-1,1>> lcm18__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
@@ -208,11 +203,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
-      double lcm13__;
       std::vector<Eigen::Matrix<double,-1,1>> lcm12__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
@@ -342,16 +332,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm11__;
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      int lcm7__;
-      int lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
-      double lcm2__;
       std::vector<Eigen::Matrix<double,-1,1>> lcm1__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();

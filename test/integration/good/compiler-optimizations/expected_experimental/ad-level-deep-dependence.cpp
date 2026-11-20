@@ -89,7 +89,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm20__;
       Eigen::Matrix<double,-1,-1> lcm19__;
       Eigen::Matrix<double,-1,-1> lcm18__;
       Eigen::Matrix<double,-1,-1> lcm17__;
@@ -167,7 +166,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm14__;
       Eigen::Matrix<double,-1,-1> lcm13__;
       Eigen::Matrix<double,-1,-1> lcm12__;
       Eigen::Matrix<double,-1,-1> lcm11__;
@@ -257,8 +255,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm8__;
-      int lcm7__;
       Eigen::Matrix<double,-1,-1> lcm6__;
       Eigen::Matrix<double,-1,-1> lcm5__;
       Eigen::Matrix<double,-1,-1> lcm4__;

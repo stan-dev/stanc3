@@ -162,8 +162,6 @@ class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {

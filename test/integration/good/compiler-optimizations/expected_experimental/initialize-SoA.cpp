@@ -69,9 +69,6 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,1> lcm15__;
-      double lcm14__;
-      double lcm13__;
-      double lcm12__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       current_statement__ = 2;
@@ -135,9 +132,6 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     (void) function__;
     try {
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm11__;
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
       current_statement__ = 1;
       auto y =
         in__.template read<
@@ -217,12 +211,6 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     (void) function__;
     try {
       Eigen::Matrix<double,-1,1> lcm7__;
-      double lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       current_statement__ = 2;
@@ -367,7 +355,6 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       context__.validate_dims("parameter initialization", "arr_vec",
         "double",
         std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4)});
-      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> y =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
       current_statement__ = 1;

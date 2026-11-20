@@ -5,14 +5,12 @@ namespace partial_eval_multiply_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ =
+static constexpr std::array<const char*, 9> locations_array__ =
   {" (found before start of program)",
   " (in '../partial_eval_multiply.stan', line 8, column 2 to column 20)",
   " (in '../partial_eval_multiply.stan', line 9, column 2 to column 20)",
-  " (in '../partial_eval_multiply.stan', line 12, column 2 to column 52)",
-  " (in '../partial_eval_multiply.stan', line 13, column 2 to column 36)",
-  " (in '../partial_eval_multiply.stan', line 14, column 2 to column 36)",
   " (in '../partial_eval_multiply.stan', line 15, column 2 to column 40)",
+  " (in '../partial_eval_multiply.stan', line 12, column 2 to column 52)",
   " (in '../partial_eval_multiply.stan', line 2, column 2 to column 20)",
   " (in '../partial_eval_multiply.stan', line 3, column 2 to column 20)",
   " (in '../partial_eval_multiply.stan', line 4, column 2 to column 20)",
@@ -47,35 +45,35 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 7;
+      current_statement__ = 5;
       context__.validate_dims("data initialization", "m1", "double",
         std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       m1_data__ = Eigen::Matrix<double,-1,-1>::Constant(10, 10,
                     std::numeric_limits<double>::quiet_NaN());
       new (&m1) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m1_data__.data(), 10,
         10);
-      current_statement__ = 7;
+      current_statement__ = 5;
       stan::io::read_from_context(m1, context__, "m1");
-      current_statement__ = 8;
+      current_statement__ = 6;
       context__.validate_dims("data initialization", "m4", "double",
         std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       m4_data__ = Eigen::Matrix<double,-1,-1>::Constant(10, 10,
                     std::numeric_limits<double>::quiet_NaN());
       new (&m4) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m4_data__.data(), 10,
         10);
-      current_statement__ = 8;
+      current_statement__ = 6;
       stan::io::read_from_context(m4, context__, "m4");
-      current_statement__ = 9;
+      current_statement__ = 7;
       context__.validate_dims("data initialization", "idx", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idx = std::vector<int>(10, std::numeric_limits<int>::min());
-      current_statement__ = 9;
+      current_statement__ = 7;
       stan::io::read_from_context(idx, context__, "idx");
-      current_statement__ = 10;
+      current_statement__ = 8;
       context__.validate_dims("data initialization", "idy", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idy = std::vector<int>(10, std::numeric_limits<int>::min());
-      current_statement__ = 10;
+      current_statement__ = 8;
       stan::io::read_from_context(idy, context__, "idy");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -114,7 +112,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm8__;
-      double lcm7__;
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm6__;
       current_statement__ = 1;
       auto m2 =
@@ -123,9 +120,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       auto m3 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        Eigen::Matrix<double,-1,-1> m5 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm8__,
           stan::math::add(
             stan::math::multiply(m1,
@@ -133,15 +127,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
           "assigning variable lcm8__");
-        Eigen::Matrix<double,-1,-1> m6 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm6__, stan::math::fma(m1, m2, m4),
           "assigning variable lcm6__");
-        Eigen::Matrix<double,-1,-1> m7 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 6;
+        current_statement__ = 3;
         lp_accum__.add(((stan::math::sum(lcm8__) + stan::math::sum(lcm6__)) +
           stan::math::sum(lcm6__)));
       }
@@ -176,7 +164,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     (void) function__;
     try {
       stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm5__;
-      double lcm4__;
       stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm3__;
       current_statement__ = 1;
       auto m2 =
@@ -187,9 +174,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        Eigen::Matrix<double,-1,-1> m5 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm5__,
           stan::math::add(
             stan::math::multiply(m1,
@@ -197,15 +181,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
           "assigning variable lcm5__");
-        Eigen::Matrix<double,-1,-1> m6 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm3__, stan::math::fma(m1, m2, m4),
           "assigning variable lcm3__");
-        Eigen::Matrix<double,-1,-1> m7 =
-          Eigen::Matrix<double,-1,-1>::Constant(10, 10,
-            std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 6;
+        current_statement__ = 3;
         lp_accum__.add(((stan::math::sum(lcm5__) + stan::math::sum(lcm3__)) +
           stan::math::sum(lcm3__)));
       }
@@ -250,8 +228,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);

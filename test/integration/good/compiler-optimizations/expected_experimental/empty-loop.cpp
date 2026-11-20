@@ -8,8 +8,8 @@ stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 4> locations_array__ =
   {" (found before start of program)",
   " (in '../empty-loop.stan', line 2, column 2 to column 9)",
-  " (in '../empty-loop.stan', line 5, column 2 to column 13)",
-  " (in '../empty-loop.stan', line 8, column 2 to column 19)"};
+  " (in '../empty-loop.stan', line 8, column 2 to column 19)",
+  " (in '../empty-loop.stan', line 5, column 2 to column 13)"};
 class empty_loop_model final : public model_base_crtp<empty_loop_model> {
  private:
   
@@ -65,15 +65,10 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm10__;
-      double lcm9__;
-      double lcm8__;
-      double lcm7__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
-        double x = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 3;
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
       }
     } catch (const std::exception& e) {
@@ -106,15 +101,10 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm6__;
-      double lcm5__;
-      double lcm4__;
-      double lcm3__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
-        double x = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 3;
+        current_statement__ = 2;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
       }
     } catch (const std::exception& e) {
@@ -158,8 +148,6 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm2__;
-      int lcm1__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       out__.write(y);

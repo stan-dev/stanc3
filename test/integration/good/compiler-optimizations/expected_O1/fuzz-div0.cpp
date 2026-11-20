@@ -5,11 +5,10 @@ namespace fuzz_div0_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 5> locations_array__ =
+static constexpr std::array<const char*, 4> locations_array__ =
   {" (found before start of program)",
   " (in '../fuzz-div0.stan', line 2, column 2 to column 66)",
   " (in '../fuzz-div0.stan', line 2, column 20 to column 25)",
-  " (in '../fuzz-div0.stan', line 3, column 2 to column 38)",
   " (in '../fuzz-div0.stan', line 4, column 2 to column 11)"};
 class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
  private:
@@ -74,9 +73,7 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
         throw std::domain_error(errmsg_stream__.str());
       }
-      std::vector<local_scalar_t__> T2 =
-        std::vector<local_scalar_t__>(4, DUMMY_VAR__);
-      current_statement__ = 4;
+      current_statement__ = 3;
       if (pstream__) {
         stan::math::stan_print(pstream__, T);
         *(pstream__) << std::endl;
@@ -119,9 +116,7 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
         stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
         throw std::domain_error(errmsg_stream__.str());
       }
-      std::vector<local_scalar_t__> T2 =
-        std::vector<local_scalar_t__>(4, DUMMY_VAR__);
-      current_statement__ = 4;
+      current_statement__ = 3;
       if (pstream__) {
         stan::math::stan_print(pstream__, T);
         *(pstream__) << std::endl;

@@ -5,14 +5,13 @@ namespace ad_level_failing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 35> locations_array__ =
+static constexpr std::array<const char*, 34> locations_array__ =
   {" (found before start of program)",
   " (in '../ad-level-failing.stan', line 37, column 2 to column 21)",
   " (in '../ad-level-failing.stan', line 38, column 2 to column 22)",
   " (in '../ad-level-failing.stan', line 39, column 2 to column 19)",
   " (in '../ad-level-failing.stan', line 40, column 2 to column 22)",
   " (in '../ad-level-failing.stan', line 43, column 2 to column 32)",
-  " (in '../ad-level-failing.stan', line 45, column 4 to column 58)",
   " (in '../ad-level-failing.stan', line 44, column 2 to line 47, column 3)",
   " (in '../ad-level-failing.stan', line 50, column 2 to column 24)",
   " (in '../ad-level-failing.stan', line 51, column 2 to column 23)",
@@ -131,13 +130,10 @@ simple_SIR(const T0__& t, const T1__& y, const T2__& theta, const T3__& x_r,
   (void) DUMMY_VAR__;
   try {
     local_scalar_t__ lcm4__;
-    local_scalar_t__ lcm3__;
-    local_scalar_t__ lcm2__;
-    local_scalar_t__ lcm1__;
     {
       std::vector<local_scalar_t__> dydt =
         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
-      current_statement__ = 30;
+      current_statement__ = 29;
       stan::model::assign(dydt,
         (((-(stan::model::rvalue(theta, "theta", stan::model::index_uni(1)))
         * stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
@@ -154,17 +150,17 @@ simple_SIR(const T0__& t, const T1__& y, const T2__& theta, const T3__& x_r,
         stan::model::rvalue(theta, "theta", stan::model::index_uni(2)))) *
         stan::model::rvalue(y, "y", stan::model::index_uni(1))) - lcm4__),
         "assigning variable dydt", stan::model::index_uni(2));
-      current_statement__ = 31;
+      current_statement__ = 30;
       stan::model::assign(dydt, lcm4__, "assigning variable dydt",
         stan::model::index_uni(3));
-      current_statement__ = 32;
+      current_statement__ = 31;
       stan::model::assign(dydt,
         ((stan::model::rvalue(theta, "theta", stan::model::index_uni(4)) *
         stan::model::rvalue(y, "y", stan::model::index_uni(2))) -
         (stan::model::rvalue(theta, "theta", stan::model::index_uni(5)) *
         stan::model::rvalue(y, "y", stan::model::index_uni(4)))),
         "assigning variable dydt", stan::model::index_uni(4));
-      current_statement__ = 33;
+      current_statement__ = 32;
       return dydt;
     }
   } catch (const std::exception& e) {
@@ -204,60 +200,60 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 16;
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "N_t", "int",
         std::vector<size_t>{});
       N_t = std::numeric_limits<int>::min();
-      current_statement__ = 16;
+      current_statement__ = 15;
       stan::io::read_from_context(N_t, context__, "N_t");
-      current_statement__ = 16;
+      current_statement__ = 15;
       stan::math::check_greater_or_equal(function__, "N_t", N_t, 0);
-      current_statement__ = 17;
+      current_statement__ = 16;
       stan::math::validate_non_negative_index("t", "N_t", N_t);
-      current_statement__ = 18;
+      current_statement__ = 17;
       context__.validate_dims("data initialization", "t", "double",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 18;
+      current_statement__ = 17;
       stan::io::read_from_context(t, context__, "t");
-      current_statement__ = 19;
+      current_statement__ = 18;
       context__.validate_dims("data initialization", "y0", "double",
         std::vector<size_t>{static_cast<size_t>(4)});
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 19;
+      current_statement__ = 18;
       stan::io::read_from_context(y0, context__, "y0");
-      current_statement__ = 20;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("stoi_hat", "N_t", N_t);
-      current_statement__ = 21;
+      current_statement__ = 20;
       context__.validate_dims("data initialization", "stoi_hat", "int",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
-      current_statement__ = 21;
+      current_statement__ = 20;
       stan::io::read_from_context(stoi_hat, context__, "stoi_hat");
-      current_statement__ = 22;
+      current_statement__ = 21;
       stan::math::validate_non_negative_index("B_hat", "N_t", N_t);
-      current_statement__ = 23;
+      current_statement__ = 22;
       context__.validate_dims("data initialization", "B_hat", "double",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       B_hat = std::vector<double>(N_t,
                 std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 23;
+      current_statement__ = 22;
       stan::io::read_from_context(B_hat, context__, "B_hat");
-      current_statement__ = 24;
-      current_statement__ = 24;
+      current_statement__ = 23;
+      current_statement__ = 23;
       t0 = static_cast<double>(0);
-      current_statement__ = 25;
+      current_statement__ = 24;
       kappa = std::numeric_limits<double>::quiet_NaN();
       lcm37__ = static_cast<double>(1000000);
       kappa = static_cast<double>(1000000);
-      current_statement__ = 26;
-      x_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 27;
-      x_i = std::vector<int>(0, std::numeric_limits<int>::min());
       current_statement__ = 25;
+      x_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 26;
+      x_i = std::vector<int>(0, std::numeric_limits<int>::min());
+      current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "kappa",
         static_cast<double>(1000000), 0);
-      current_statement__ = 28;
+      current_statement__ = 27;
       stan::math::validate_non_negative_index("y", "N_t", N_t);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -296,16 +292,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     (void) function__;
     try {
       std::vector<local_scalar_t__> lcm35__;
-      int lcm34__;
-      double lcm33__;
-      double lcm32__;
-      double lcm31__;
-      double lcm30__;
       std::vector<std::vector<local_scalar_t__>> lcm29__;
-      double lcm28__;
-      double lcm27__;
-      double lcm26__;
-      double lcm25__;
       current_statement__ = 1;
       auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -326,8 +313,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<std::vector<local_scalar_t__>>(N_t,
           std::vector<local_scalar_t__>(4, DUMMY_VAR__));
       {
-        std::vector<double> theta =
-          std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm35__,
           std::vector<local_scalar_t__>{beta,
             stan::math::promote_scalar<local_scalar_t__>(
@@ -342,19 +327,19 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", lcm29__, 0);
       {
-        current_statement__ = 8;
+        current_statement__ = 7;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta,
                          static_cast<double>(0), 2.5));
-        current_statement__ = 9;
+        current_statement__ = 8;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma,
                          static_cast<double>(0), static_cast<double>(1)));
-        current_statement__ = 10;
+        current_statement__ = 9;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi,
                          static_cast<double>(0), static_cast<double>(25)));
-        current_statement__ = 11;
+        current_statement__ = 10;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta,
                          static_cast<double>(0), static_cast<double>(1)));
-        current_statement__ = 12;
+        current_statement__ = 11;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                          stan::model::rvalue(stoi_hat, "stoi_hat",
                            stan::model::index_uni(1)),
@@ -363,9 +348,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                          stan::model::rvalue(lcm29__, "lcm29__",
                            stan::model::index_uni(1),
                            stan::model::index_uni(1)))));
-        current_statement__ = 14;
+        current_statement__ = 13;
         if (stan::math::logical_gte(N_t, 2)) {
-          current_statement__ = 13;
+          current_statement__ = 12;
           lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                            stan::model::rvalue(stoi_hat, "stoi_hat",
                              stan::model::index_uni(2)),
@@ -376,7 +361,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                              stan::model::index_uni(2),
                              stan::model::index_uni(1)))));
           for (int n = 3; n <= N_t; ++n) {
-            current_statement__ = 13;
+            current_statement__ = 12;
             lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                              stan::model::rvalue(stoi_hat, "stoi_hat",
                                stan::model::index_uni(n)),
@@ -388,7 +373,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                                stan::model::index_uni(1)))));
           }
         }
-        current_statement__ = 15;
+        current_statement__ = 14;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(B_hat,
                          stan::math::log(
                            stan::math::col(stan::math::to_matrix(lcm29__), 4)),
@@ -425,16 +410,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     (void) function__;
     try {
       std::vector<local_scalar_t__> lcm24__;
-      int lcm23__;
-      double lcm22__;
-      double lcm21__;
-      double lcm20__;
-      double lcm19__;
       std::vector<std::vector<local_scalar_t__>> lcm18__;
-      double lcm17__;
-      double lcm16__;
-      double lcm15__;
-      double lcm14__;
       current_statement__ = 1;
       auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
@@ -455,8 +431,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<std::vector<local_scalar_t__>>(N_t,
           std::vector<local_scalar_t__>(4, DUMMY_VAR__));
       {
-        std::vector<double> theta =
-          std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm24__,
           std::vector<local_scalar_t__>{beta,
             stan::math::promote_scalar<local_scalar_t__>(
@@ -471,19 +445,19 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", lcm18__, 0);
       {
-        current_statement__ = 8;
+        current_statement__ = 7;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta,
                          static_cast<double>(0), 2.5));
-        current_statement__ = 9;
+        current_statement__ = 8;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma,
                          static_cast<double>(0), static_cast<double>(1)));
-        current_statement__ = 10;
+        current_statement__ = 9;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi,
                          static_cast<double>(0), static_cast<double>(25)));
-        current_statement__ = 11;
+        current_statement__ = 10;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta,
                          static_cast<double>(0), static_cast<double>(1)));
-        current_statement__ = 12;
+        current_statement__ = 11;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                          stan::model::rvalue(stoi_hat, "stoi_hat",
                            stan::model::index_uni(1)),
@@ -492,9 +466,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                          stan::model::rvalue(lcm18__, "lcm18__",
                            stan::model::index_uni(1),
                            stan::model::index_uni(1)))));
-        current_statement__ = 14;
+        current_statement__ = 13;
         if (stan::math::logical_gte(N_t, 2)) {
-          current_statement__ = 13;
+          current_statement__ = 12;
           lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                            stan::model::rvalue(stoi_hat, "stoi_hat",
                              stan::model::index_uni(2)),
@@ -505,7 +479,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                              stan::model::index_uni(2),
                              stan::model::index_uni(1)))));
           for (int n = 3; n <= N_t; ++n) {
-            current_statement__ = 13;
+            current_statement__ = 12;
             lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                              stan::model::rvalue(stoi_hat, "stoi_hat",
                                stan::model::index_uni(n)),
@@ -517,7 +491,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                                stan::model::index_uni(1)))));
           }
         }
-        current_statement__ = 15;
+        current_statement__ = 14;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(B_hat,
                          stan::math::log(
                            stan::math::col(stan::math::to_matrix(lcm18__), 4)),
@@ -564,13 +538,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm13__;
-      double lcm12__;
-      double lcm11__;
-      double lcm10__;
       std::vector<double> lcm9__;
-      int lcm8__;
-      int lcm7__;
       int lcm6__;
       std::vector<std::vector<double>> lcm5__;
       current_statement__ = 1;
@@ -602,8 +570,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         return ;
       }
       {
-        std::vector<double> theta =
-          std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm9__,
           std::vector<double>{beta, static_cast<double>(1000000), gamma, xi,
             delta}, "assigning variable lcm9__");

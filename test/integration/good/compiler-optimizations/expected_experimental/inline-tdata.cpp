@@ -38,11 +38,8 @@ foo(const T0__& N, const T1__& M, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    Eigen::Matrix<double,-1,-1> lcm1__;
-    {
-      current_statement__ = 8;
-      return stan::math::rep_matrix(static_cast<double>(1), N, M);
-    }
+    current_statement__ = 8;
+    return stan::math::rep_matrix(static_cast<double>(1), N, M);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -131,7 +128,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm5__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       {
@@ -169,7 +165,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm4__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       {
@@ -218,8 +213,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm3__;
-      int lcm2__;
       current_statement__ = 1;
       auto alpha = in__.template read<local_scalar_t__>();
       out__.write(alpha);

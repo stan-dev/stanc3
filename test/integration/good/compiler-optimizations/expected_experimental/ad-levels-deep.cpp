@@ -84,7 +84,6 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm8__;
       Eigen::Matrix<double,-1,-1> lcm7__;
       current_statement__ = 1;
       auto X_p =
@@ -133,7 +132,6 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm6__;
       Eigen::Matrix<double,-1,-1> lcm5__;
       current_statement__ = 1;
       auto X_p =
@@ -197,8 +195,6 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm4__;
-      int lcm3__;
       Eigen::Matrix<double,-1,-1> lcm2__;
       Eigen::Matrix<double,-1,-1> lcm1__;
       current_statement__ = 1;

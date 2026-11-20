@@ -164,9 +164,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm10__;
       local_scalar_t__ lcm9__;
-      double lcm8__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -233,9 +231,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lcm7__;
       local_scalar_t__ lcm6__;
-      double lcm5__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -315,9 +311,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm4__;
-      int lcm3__;
-      Eigen::Matrix<double,-1,1> lcm2__;
       double lcm1__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
