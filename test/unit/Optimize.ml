@@ -1117,12 +1117,13 @@ let%expect_test "inline function void return" =
 
     log_prob {
       {
-        data real inline_f_x_arg2__ = -(1.6);
-        {
-          if((inline_f_x_arg2__ < 0)) {
-            {
-
-            }
+        data real inline_f_x_arg3__ = -(1.6);
+        data int inline_f_early_ret_check1__;
+        inline_f_early_ret_check1__ = 0;
+        for(inline_f_iterator2__ in 1:1) {
+          if((inline_f_x_arg3__ < 0)) {
+            inline_f_early_ret_check1__ = 1;
+            break;
           }
           FnReject__("positive x");
         }
