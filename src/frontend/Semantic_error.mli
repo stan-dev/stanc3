@@ -184,11 +184,7 @@ val cannot_assign_to_read_only :
   Location_span.t -> string -> Location_span.t option -> t
 
 val cannot_assign_to_global :
-     Location_span.t
-  -> string
-  -> Environment.originblock
-  -> Location_span.t option
-  -> t
+  Location_span.t -> string -> Block.t -> Location_span.t option -> t
 
 val cannot_assign_function : Location_span.t -> string -> UnsizedType.t -> t
 val cannot_assign_to_multiindex : Location_span.t -> t
@@ -214,7 +210,7 @@ val expression_return_outside_returning_fn : Location_span.t -> t
 val void_outside_nonreturning_fn : Location_span.t -> t
 
 val non_data_variable_size_decl :
-  Location_span.t -> Environment.originblock -> Location_span.t -> t
+  Location_span.t -> Block.t -> Location_span.t -> t
 
 val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
@@ -233,6 +229,7 @@ val fn_decl_redefined :
 
 val stan_math_fn_redefined : Location_span.t -> string -> UnsizedType.t -> t
 val fn_decl_exists : Location_span.t -> string -> Location_span.t -> t
+val fn_extern_defined : Location_span.t -> string -> Location_span.t -> t
 val fn_decl_without_def : Location_span.t -> string -> t
 val non_real_prob_fn_def : Location_span.t -> UnsizedType.returntype -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t

@@ -1,0 +1,3 @@
+parameters {
+ @gpuified theta;
+}

@@ -3,22 +3,9 @@
 
 open Middle
 
-(** Origin blocks, to keep track of where variables are declared *)
-type originblock =
-  | MathLibrary
-  | Functions
-  | Data
-  | TData
-  | Param
-  | TParam
-  | Model
-  | GQuant
-
-val block_name : originblock -> string
-
 (** Information available for each variable *)
 type varinfo =
-  {origin: originblock; global: bool; readonly: bool; location: Location_span.t}
+  {origin: Block.t; global: bool; readonly: bool; location: Location_span.t}
 
 type info =
   { type_: UnsizedType.t

@@ -1,5 +1,6 @@
 module Location_span = Middle.Location_span
 module Location = Middle.Location
+module UnsizedType = Middle.UnsizedType
 
 type t =
   | StancJsInclude of string
@@ -20,6 +21,8 @@ type t =
   | OdeDeprecation of Location_span.t * string * (int * int) * string
   | Pedantic of Location_span.t * string
   | OptimizationHazard of Location_span.t * string * (Format.formatter -> unit)
+  | UnknownAnnotation of Location_span.t * string
+  | UnsupportedAnnotation of Location_span.t * unit Fmt.t
 
 let stancjs_bad_include msg = StancJsInclude msg
 let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
@@ -40,8 +43,13 @@ let function_deprecation loc name version rename =
 let ode_deprecation loc name version rename =
   OdeDeprecation (loc, name, version, rename)
 
+let unknown_annotation (span, ann) = UnknownAnnotation (span, ann)
+let unsupported_annotation (span, pp) = UnsupportedAnnotation (span, pp)
 let pedantic_warning (span, msg) = Pedantic (span, msg)
 let optimization_hazard (loc, pass, pp) = OptimizationHazard (loc, pass, pp)
+
+let ignored_annotation =
+  Grace.Diagnostic.Message.create "This will be ignored by the compiler."
 
 let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
@@ -192,6 +200,14 @@ let to_grace ?printed_filename ?code warn =
       make_warning ~notes ~summary loc "Use %s instead." rename
   | OptimizationHazard (loc, pass, pp) ->
       make_warning loc "Optimization hazard (%s): %t" pass pp
+  | UnknownAnnotation (loc, a) ->
+      let summary = Message.createf "Unknown annotation '%@%s'." a in
+      make_warning ~summary ~notes:[ignored_annotation] loc
+        "Unknown annotation."
+  | UnsupportedAnnotation (loc, pp) ->
+      let summary = Message.createf "%a" pp () in
+      make_warning loc ~summary ~notes:[ignored_annotation]
+        "Unsupported annotation."
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in

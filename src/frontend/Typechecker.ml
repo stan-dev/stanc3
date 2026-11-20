@@ -36,6 +36,24 @@ let needs_higher_order_autodiff fn =
 (* model name - don't love this here *)
 let model_name = ref ""
 
+let classify_annotations : Annotation.annotation_classifier ref =
+  ref (fun _ _ _ -> Error None)
+
+let check_decl_annotations id loc anns target =
+  List.fold_left anns ~init:false ~f:(fun acc (a : Annotation.t) ->
+      match !classify_annotations a.name a.args target with
+      | Ok () -> true
+      | Error None ->
+          add_warning (Warnings.unknown_annotation (a.loc, a.name));
+          acc
+      | Error (Some pp) -> (
+          match target with
+          | Function {has_body= true; _} when a.name = "extern" ->
+              Semantic_error.fn_extern_defined loc id.name a.loc |> error
+          | _ ->
+              add_warning (Warnings.unsupported_annotation (a.loc, pp));
+              acc))
+
 type function_indicator =
   | NotInFunction
   | NonReturning of Fun_kind.suffix
@@ -44,7 +62,7 @@ type function_indicator =
 (* Record structure holding flags and other markers about context to be used for
    error reporting. *)
 type context_flags_record =
-  { current_block: Env.originblock
+  { current_block: Block.t
   ; in_toplevel_decl: bool
   ; containing_function: function_indicator
   ; loop_depth: int }
@@ -80,7 +98,7 @@ let rec calculate_autodifftype cf origin ut =
   match (origin, ut) with
   | _, UTuple ts ->
       UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
-  | Env.(Param | TParam | Model | Functions), _
+  | Block.(Param | TParam | Model | Functions), _
     when not (UnsizedType.is_discrete_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _, _ -> DataOnly
@@ -292,13 +310,12 @@ let check_id cf tenv id =
   | {kind= `Variable {origin; _}; type_; _} ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined _ | `UserDeclared _
-    ; type_= UFun (args, rt, FnDist _, mem_pattern)
-    ; _ } ->
+    ; type_= UFun (args, rt, FnDist _, mem_pattern) } ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       (calculate_autodifftype cf Functions type_, type_)
-  | {kind= `UserDefined _ | `UserDeclared _; type_; _} ->
+  | {kind= `UserDefined _ | `UserDeclared _; type_} ->
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
@@ -1984,7 +2001,7 @@ and check_transformation cf tenv ut trans =
       TupleTransformation tes
 
 and check_var_decl loc cf tenv sized_ty trans
-    (variables : untyped_expression Ast.variable list) is_global =
+    (variables : untyped_expression Ast.variable list) annotations is_global =
   let checked_type =
     check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
   let unsized_type = SizedType.to_unsized checked_type in
@@ -2006,11 +2023,17 @@ and check_var_decl loc cf tenv sized_ty trans
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans;
   verify_transformed_param_ty loc cf is_global unsized_type;
+  let _ : bool =
+    check_decl_annotations (List.hd_exn variables).identifier loc annotations
+      Annotation.(
+        Variable {type_= unsized_type; block= cf.current_block; is_global})
+  in
   let stmt =
     VarDecl
       { decl_type= checked_type
       ; transformation= checked_trans
       ; variables= tvariables
+      ; annotations
       ; is_global } in
   (tenv, mk_typed_statement ~stmt ~loc ~flow_type:incomplete)
 
@@ -2058,13 +2081,33 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
     verify_unique_signature tenv loc id arg_tys rt;
   verify_name_fresh tenv id ~is_udf:true
 
-and get_fn_decl_or_defn loc tenv id arg_tys rt body =
+and get_fn_decl_or_defn loc tenv id arg_tys rt (body : Ast.untyped_statement)
+    annotations =
+  let verify_fun_annotations has_body =
+    check_decl_annotations id body.smeta.loc annotations
+      Annotation.(
+        Function
+          { type_=
+              UnsizedType.UFun
+                ( arg_tys
+                , rt
+                , Fun_kind.suffix_from_name id.Ast.name
+                , Mem_pattern.AoS )
+          ; has_body }) in
   match body with
   | {stmt= Skip; _} -> (
       match exists_matching_fn_declared tenv id arg_tys rt with
       | Some prev -> Semantic_error.fn_decl_exists loc id.name prev |> error
-      | None -> `UserDeclared id.id_loc)
-  | _ -> `UserDefined id.id_loc
+      | None ->
+          (* Forward declarations are deprecated and cannot have annotations. A
+             valid annotation means the backend knows where to find the function
+             definition. Invalid annotations are ignored so that they do not
+             prevent the error on missing function defintion. *)
+          if verify_fun_annotations false then `UserDefined id.id_loc
+          else `UserDeclared id.id_loc)
+  | _ ->
+      let _ : bool = verify_fun_annotations true in
+      `UserDefined id.id_loc
 
 and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
@@ -2120,7 +2163,7 @@ and add_function tenv id type_ defined =
       Env.set_raw tenv id.name (new_fn :: defns)
   | _ -> Env.add tenv id.name type_ defined
 
-and check_fundef loc cf tenv return_ty id args body =
+and check_fundef loc cf tenv return_ty id args annotations body =
   List.iter args ~f:(fun (_, _, id) -> verify_identifier id);
   verify_identifier id;
   let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
@@ -2137,7 +2180,7 @@ and check_fundef loc cf tenv return_ty id args body =
   let arg_types_internal =
     List.map
       ~f:(function
-        | UnsizedType.DataOnly, ut -> (Env.Data, ut)
+        | UnsizedType.DataOnly, ut -> (Block.Data, ut)
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
             Common.ICE.internal_error
@@ -2163,8 +2206,11 @@ and check_fundef loc cf tenv return_ty id args body =
   verify_fundef_return_tys loc return_ty checked_body;
   let stmt =
     FunDef
-      {returntype= return_ty; funname= id; arguments= args; body= checked_body}
-  in
+      { returntype= return_ty
+      ; funname= id
+      ; arguments= args
+      ; annotations
+      ; body= checked_body } in
   (* NB: **not** tenv_body, so args don't leak out *)
   (tenv, mk_typed_statement ~flow_type:incomplete ~loc ~stmt)
 
@@ -2198,10 +2244,11 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
   (* these two are special in that they're allowed to change the type
      environment *)
-  | VarDecl {decl_type; transformation; variables; is_global} ->
-      check_var_decl loc cf tenv decl_type transformation variables is_global
-  | FunDef {returntype; funname; arguments; body} ->
-      check_fundef loc cf tenv returntype funname arguments body
+  | VarDecl {decl_type; transformation; variables; is_global; annotations} ->
+      check_var_decl loc cf tenv decl_type transformation variables annotations
+        is_global
+  | FunDef {returntype; funname; arguments; body; annotations} ->
+      check_fundef loc cf tenv returntype funname arguments annotations body
 
 let add_userdefined_functions tenv stmts_opt =
   match stmts_opt with
@@ -2209,12 +2256,13 @@ let add_userdefined_functions tenv stmts_opt =
   | Some {stmts; _} ->
       let f tenv (s : Ast.untyped_statement) =
         match s with
-        | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->
+        | { stmt= FunDef {returntype; funname; arguments; body; annotations}
+          ; smeta= {loc} } ->
             let arg_types = Ast.type_of_arguments arguments in
             verify_fundef_overloaded loc tenv funname arg_types returntype;
             let defined =
               get_fn_decl_or_defn loc tenv funname arg_types returntype body
-            in
+                annotations in
             add_function tenv funname
               (UFun
                  ( arg_types
@@ -2292,6 +2340,9 @@ let check_program_exn ~allow_undefined_functions
   verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
-let check_program ?(allow_undefined_functions = false) ast =
+let check_program ?(allow_undefined_functions = false)
+    ?(allowed_annotations : Annotation.annotation_classifier =
+      fun _ _ _ -> Error None) ast =
+  classify_annotations := allowed_annotations;
   try Result.Ok (check_program_exn ~allow_undefined_functions ast)
   with TypecheckerException err -> Result.Error err

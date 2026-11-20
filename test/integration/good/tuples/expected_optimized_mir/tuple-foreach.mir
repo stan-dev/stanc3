@@ -3,7 +3,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -16,7 +16,7 @@
         (SArray (STuple (SReal SReal))
          ((pattern (Lit Int 100))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -37,7 +37,8 @@
              (Block
               (((pattern
                  (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id t)
-                  (decl_type (Unsized (UTuple (UReal UReal)))) (initialize Default)))
+                  (decl_type (Unsized (UTuple (UReal UReal)))) (initialize Default)
+                  (decl_annotations ())))
                 (meta <opaque>))
                ((pattern
                  (Assignment ((LVariable t) ()) (UTuple (UReal UReal))

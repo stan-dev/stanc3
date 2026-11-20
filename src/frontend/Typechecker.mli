@@ -17,6 +17,7 @@ open Ast
 
 val check_program :
      ?allow_undefined_functions:bool
+  -> ?allowed_annotations:Middle.Annotation.annotation_classifier
   -> untyped_program
   -> (typed_program * Warnings.t list, Semantic_error.t) result
 (** Type check a Stan program, returning a typed program and warnings or an

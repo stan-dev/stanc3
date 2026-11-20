@@ -304,7 +304,7 @@ Flags not used elsewhere in the tests
        (((stmt
           (VarDecl (decl_type SInt)
            (transformation (Lower ((expr (IntNumeral 0)) (emeta ((loc <opaque>))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name N) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>))))
         ((stmt
@@ -315,7 +315,7 @@ Flags not used elsewhere in the tests
            (transformation
             (LowerUpper ((expr (IntNumeral 0)) (emeta ((loc <opaque>))))
              ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name y) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>))))))
       (xloc <opaque>))))
@@ -327,7 +327,7 @@ Flags not used elsewhere in the tests
            (transformation
             (LowerUpper ((expr (IntNumeral 0)) (emeta ((loc <opaque>))))
              ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name theta) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>))))))
       (xloc <opaque>))))
@@ -364,7 +364,7 @@ Flags not used elsewhere in the tests
             (Lower
              ((expr (IntNumeral 0))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name N) (id_loc <opaque>))) (initial_value ()))))))
          (smeta
           ((loc <opaque>)
@@ -381,7 +381,7 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))
              ((expr (IntNumeral 1))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name y) (id_loc <opaque>))) (initial_value ()))))))
          (smeta
           ((loc <opaque>)
@@ -398,7 +398,7 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))
              ((expr (IntNumeral 1))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
-           (is_global true)
+           (is_global true) (annotations ())
            (variables (((identifier ((name theta) (id_loc <opaque>))) (initial_value ()))))))
          (smeta
           ((loc <opaque>)
@@ -607,7 +607,7 @@ Flags not used elsewhere in the tests
     2 │  
       = Expected "functions {", "data {", "transformed data {", "parameters {",
         "transformed parameters {", "model {", or "generated quantities {".
-        (Parse error state 444)
+        (Parse error state 464)
   [1]
 <<<<<<< HEAD
 ||||||| parent of 994559f8c (dune promote)

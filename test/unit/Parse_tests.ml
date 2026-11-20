@@ -76,7 +76,7 @@ let%expect_test "parse minus unary" =
         (((stmts
            (((stmt
               (VarDecl (decl_type SReal) (transformation Identity)
-               (is_global false)
+               (is_global false) (annotations ())
                (variables
                 (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
              (smeta ((loc <opaque>))))
@@ -107,7 +107,7 @@ let%expect_test "parse unary over binary" =
       (((stmts
          (((stmt
             (VarDecl (decl_type SReal) (transformation Identity)
-             (is_global false)
+             (is_global false) (annotations ())
              (variables
               (((identifier ((name x) (id_loc <opaque>)))
                 (initial_value
@@ -148,7 +148,7 @@ let%expect_test "parse indices, two different colons" =
          (decl_type
           (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
            ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))))
-         (transformation Identity) (is_global false)
+         (transformation Identity) (is_global false) (annotations ())
          (variables
           (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
        (smeta ((loc <opaque>))))
@@ -369,7 +369,7 @@ let%expect_test "parse crazy truncation example" =
                 (SArray
                  (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
-               (transformation Identity) (is_global false)
+               (transformation Identity) (is_global false) (annotations ())
                (variables
                 (((identifier ((name T) (id_loc <opaque>)))
                   (initial_value
@@ -458,7 +458,7 @@ let%expect_test "parse crazy truncation example" =
       (((stmts
          (((stmt
             (VarDecl (decl_type SReal) (transformation Identity)
-             (is_global false)
+             (is_global false) (annotations ())
              (variables
               (((identifier ((name a) (id_loc <opaque>))) (initial_value ()))
                ((identifier ((name b) (id_loc <opaque>))) (initial_value ()))))))
@@ -484,4 +484,5 @@ let%expect_test "parse crazy truncation example" =
                (emeta ((loc <opaque>)))))))
            (smeta ((loc <opaque>))))))
         (xloc <opaque>))))
-     (generatedquantitiesblock ()) (comments <opaque>)) |}]
+     (generatedquantitiesblock ()) (comments <opaque>))
+    |}]

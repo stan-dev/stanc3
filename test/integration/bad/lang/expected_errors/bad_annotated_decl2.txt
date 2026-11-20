@@ -1,0 +1,8 @@
+/* $ stanc ../bad_annotated_decl2.stan : [exit 1] */
+error: Syntax error: Ill-formed declaration.
+    ┌─ ../bad_annotated_decl2.stan:2:5
+  1 │  parameters {
+  2 │   @g puified real theta;
+    │      ^^^^^^^ here.
+  3 │  }
+    = Expected a type or more annotations following the annotation.

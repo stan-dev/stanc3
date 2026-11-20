@@ -173,6 +173,7 @@ type ('e, 's, 'l, 'f) statement =
       { decl_type: 'e SizedType.t
       ; transformation: 'e Transformation.t
       ; is_global: bool
+      ; annotations: Annotation.t list
       ; variables: 'e variable list }
   | FunDef of
       { returntype: UnsizedType.returntype
@@ -180,6 +181,7 @@ type ('e, 's, 'l, 'f) statement =
       ; arguments:
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
+      ; annotations: Annotation.t list
       ; body: 's }
 [@@deriving sexp_of, compare, map, fold]
 
