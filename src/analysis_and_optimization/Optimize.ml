@@ -171,7 +171,7 @@ let handle_early_returns (fname : string) opt_var stmt =
             ICE.internal_error
               "Expected a void function but found a non-empty return statement."
             [@coverage off])
-    | Stmt.Pattern.For _ as loop when num_returns > 1 ->
+    | Stmt.Pattern.(For _ | While _) as loop when num_returns > 1 ->
         Stmt.Pattern.SList
           [ Stmt.{pattern= loop; meta= Location_span.empty}
           ; Stmt.

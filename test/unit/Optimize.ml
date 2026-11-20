@@ -1062,6 +1062,7 @@ let%expect_test "inline function return inside while" =
             inline_f_return1__ = (promote(-(4), real, data) * inline_f_x_arg2__);
             break;
           }
+          if(inline_f_early_ret_check3__) break;
           inline_f_early_ret_check3__ = 1;
           inline_f_return1__ = (inline_f_x_arg2__ + promote(7, real, data));
           break;
