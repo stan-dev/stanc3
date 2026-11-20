@@ -315,8 +315,7 @@ let rec stmt_referenced_names_set Stmt.{pattern; _} : string Set.Poly.t =
       (fun acc s -> Set.Poly.union acc (stmt_referenced_names_set s))
       Set.Poly.empty pattern in
   match pattern with
-  | Assignment (lhs, _, _) ->
-      Set.Poly.union names (Set.Poly.singleton (Stmt.Helpers.lhs_variable lhs))
+  | Assignment (lhs, _, _) -> Set.Poly.add (Stmt.Helpers.lhs_variable lhs) names
   | _ -> names
 
 (** See interface file *)
