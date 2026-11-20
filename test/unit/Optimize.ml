@@ -1781,6 +1781,62 @@ let%expect_test "copy propagation" =
         if(!(emit_generated_quantities__)) return;
       } |}]
 
+let%expect_test "copy propagation after assigning a global" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      data {
+        real x;
+        real y;
+      }
+      generated quantities {
+        real a = x;
+        real b;
+        {
+          real c = a;
+          a = y;
+          b = c;
+        }
+      }
+      |}
+  in
+  let mir = copy_propagation mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    input_vars {
+      real x;
+      real y;
+    }
+
+    prepare_data {
+      data real x;
+      data real y;
+    }
+
+
+
+    generate_quantities {
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+      data real a;
+      a = x;
+      data real b;
+      {
+        data real c;
+        c = a;
+        a = y;
+        b = c;
+      }
+    }
+
+
+    output_vars {
+      generated_quantities real a; //real
+      generated_quantities real b; //real
+    }
+    |}]
+
 let%expect_test "dead code elimination" =
   let mir =
     reset_and_mir_of_string
