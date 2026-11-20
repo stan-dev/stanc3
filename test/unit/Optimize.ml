@@ -1081,6 +1081,64 @@ let%expect_test "inline function return inside while" =
     }
     |}]
 
+let%expect_test "inline function void return" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        void f(real x) {
+          if (x < 0) {
+            return;
+          }
+          reject("positive x");
+        }
+      }
+      model {
+        f(-1.6);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      void f(real x) {
+        {
+          if((x < 0)) {
+            return;
+          }
+          FnReject__("positive x");
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        data real inline_f_x_arg2__ = -(1.6);
+        {
+          if((inline_f_x_arg2__ < 0)) {
+            {
+
+            }
+          }
+          FnReject__("positive x");
+        }
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
 let%expect_test "inline function indices " =
   let mir =
     reset_and_mir_of_string
