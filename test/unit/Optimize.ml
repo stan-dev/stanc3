@@ -1191,6 +1191,73 @@ let%expect_test "inline function or " =
     }
     |}]
 
+let%expect_test "inlining evaluates a condition with a draw once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real f_rng() {
+          return normal_rng(0, 1);
+        }
+        void g(real x) {
+        }
+      }
+      generated quantities {
+        if (0.5 > normal_rng(0, 1) || 1) {
+          print("a");
+        }
+        real b = 0.5 > normal_rng(0, 1) && f_rng() > 0;
+        g(normal_rng(0, 1) > 1 ? 1.0 : 2.0);
+        real c = normal_rng(0, 1) > 1 ? f_rng() : 2.0;
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" (Fmt.list Stmt.Located.pp) mir.generate_quantities
+  |> print_endline;
+  [%expect
+    {|
+    if(emit_transformed_parameters__) ; else {
+
+    }
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+    if(!(emit_generated_quantities__)) return;
+    if((0.5 > normal_rng(0, 1))) ; else {
+
+    }
+    if((0.5 > normal_rng(0, 1)) || 1) {
+      FnPrint__("a");
+    }
+    data real b;
+    data real inline_f_rng_return1__;
+    if((0.5 > normal_rng(0, 1))) {
+      {
+        inline_f_rng_return1__ = promote(normal_rng(0, 1), real, var);
+      }
+    }
+    b = promote((0.5 > normal_rng(0, 1)) && (inline_f_rng_return1__ > 0), real,
+                data);
+    data real inline_g_x_arg4__ = ((normal_rng(0, 1) > 1) ? 1.0 : 2.0);
+    if((normal_rng(0, 1) > 1)) {
+
+    } else {
+
+    }
+    {
+
+    }
+    data real c;
+    data real inline_f_rng_return5__;
+    if((normal_rng(0, 1) > 1)) {
+      {
+        inline_f_rng_return5__ = promote(normal_rng(0, 1), real, var);
+      }
+    } else {
+
+    }
+    c = ((normal_rng(0, 1) > 1) ? inline_f_rng_return5__ : 2.0);
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string
