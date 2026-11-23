@@ -117,13 +117,28 @@ let subst_args_stmt args es =
   let m = String.Map.of_list (List.combine args es) in
   subst_stmt m
 
-(** Count the number of returns that happen in a statement *)
-let rec count_returns Stmt.{pattern; _} : int =
-  Stmt.Pattern.fold Fun.const
-    (fun acc -> function
-      | Stmt.{pattern= Return _; _} -> acc + 1
-      | stmt -> acc + count_returns stmt)
-    0 pattern
+let has_early_returns s =
+  let rec return_behavior s =
+    match s.Stmt.pattern with
+    | Return _ -> `FinalReturn
+    | Block l | SList l | Profile (_, l) ->
+        let rec find = function
+          | [] -> `NoReturn
+          | [s] -> return_behavior s
+          | s :: tl -> (
+              match return_behavior s with
+              | `NoReturn -> find tl
+              | `FinalReturn | `EarlyReturn -> `EarlyReturn) in
+        find l
+    | For {body; _} | While (_, body) -> (
+        match return_behavior body with `FinalReturn -> `EarlyReturn | r -> r)
+    | IfElse (_, thn, els) -> (
+        match (return_behavior thn, Option.map ~f:return_behavior els) with
+        | `EarlyReturn, _ | _, Some `EarlyReturn -> `EarlyReturn
+        | `FinalReturn, _ | _, Some `FinalReturn -> `FinalReturn
+        | `NoReturn, (None | Some `NoReturn) -> `NoReturn)
+    | _ -> `NoReturn in
+  return_behavior s = `EarlyReturn
 
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in those
@@ -134,27 +149,24 @@ let rec count_returns Stmt.{pattern; _} : int =
    dummy loop. *)
 let handle_early_returns (fname : string) opt_var stmt =
   let returned = gen_inline_var fname "early_ret_check" in
-  let generate_inner_breaks num_returns stmt_pattern =
+  let set_returned =
+    Stmt.
+      { pattern=
+          Assignment (Stmt.Helpers.lvariable returned, UInt, Expr.Helpers.one)
+      ; meta= Location_span.empty } in
+  let has_early_return = has_early_returns stmt in
+  let generate_inner_breaks stmt_pattern =
     match stmt_pattern with
     | Stmt.Pattern.Return opt_ret -> (
         match (opt_var, opt_ret) with
-        | None, None when num_returns > 1 -> Stmt.Pattern.Break
-        | None, None -> Stmt.Pattern.Block []
-        | Some name, Some e when num_returns > 1 ->
+        | None, None when has_early_return ->
+            Stmt.Pattern.SList
+              [ set_returned
+              ; {pattern= Stmt.Pattern.Break; meta= Location_span.empty} ]
+        | None, None -> Block []
+        | Some name, Some e when has_early_return ->
             SList
-              [ Stmt.
-                  { pattern=
-                      Assignment
-                        ( Stmt.Helpers.lvariable returned
-                        , UInt
-                        , Expr.
-                            { pattern= Lit (Int, "1")
-                            ; meta=
-                                Expr.Typed.Meta.
-                                  { type_= UInt
-                                  ; adlevel= DataOnly
-                                  ; loc= Location_span.empty } } )
-                  ; meta= Location_span.empty }
+              [ set_returned
               ; Stmt.
                   { pattern=
                       Assignment
@@ -171,7 +183,7 @@ let handle_early_returns (fname : string) opt_var stmt =
             ICE.internal_error
               "Expected a void function but found a non-empty return statement."
             [@coverage off])
-    | Stmt.Pattern.For _ as loop when num_returns > 1 ->
+    | Stmt.Pattern.(For _ | While _) as loop when has_early_return ->
         Stmt.Pattern.SList
           [ Stmt.{pattern= loop; meta= Location_span.empty}
           ; Stmt.
@@ -188,8 +200,7 @@ let handle_early_returns (fname : string) opt_var stmt =
                     , None )
               ; meta= Location_span.empty } ]
     | x -> x in
-  let num_returns = count_returns stmt in
-  if num_returns > 1 then
+  if has_early_return then
     Stmt.Pattern.SList
       [ Stmt.
           { pattern=
@@ -231,10 +242,9 @@ let handle_early_returns (fname : string) opt_var stmt =
                         { type_= UInt
                         ; adlevel= DataOnly
                         ; loc= Location_span.empty } }
-                ; body=
-                    map_rec_stmt_loc (generate_inner_breaks num_returns) stmt }
+                ; body= map_rec_stmt_loc generate_inner_breaks stmt }
           ; meta= Location_span.empty } ]
-  else (map_rec_stmt_loc (generate_inner_breaks num_returns) stmt).pattern
+  else (map_rec_stmt_loc generate_inner_breaks stmt).pattern
 
 let inline_list f es =
   let dse_list = List.map ~f es in

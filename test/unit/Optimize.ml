@@ -1016,6 +1016,130 @@ let%expect_test "inline function multiple returns " =
     }
     |}]
 
+let%expect_test "inline function return inside while" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real f(real x) {
+          while (x < -1) {
+            return -4 * x;
+          }
+          return x + 7;
+        }
+      }
+      model {
+        print(f(-1.6));
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      real f(real x) {
+        {
+          while((x < -(1))) {
+            return (promote(-(4), real, data) * x);
+          }
+          return (x + promote(7, real, data));
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        data real inline_f_x_arg2__ = -(1.6);
+        real inline_f_return1__;
+        data int inline_f_early_ret_check3__;
+        inline_f_early_ret_check3__ = 0;
+        for(inline_f_iterator4__ in 1:1) {
+          while((inline_f_x_arg2__ < -(1))) {
+            inline_f_early_ret_check3__ = 1;
+            inline_f_return1__ = (promote(-(4), real, data) * inline_f_x_arg2__);
+            break;
+          }
+          if(inline_f_early_ret_check3__) break;
+          inline_f_early_ret_check3__ = 1;
+          inline_f_return1__ = (inline_f_x_arg2__ + promote(7, real, data));
+          break;
+        }
+        FnPrint__(inline_f_return1__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
+let%expect_test "inline function void return" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        void f(real x) {
+          if (x < 0) {
+            return;
+          }
+          reject("positive x");
+        }
+      }
+      model {
+        f(-1.6);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      void f(real x) {
+        {
+          if((x < 0)) {
+            return;
+          }
+          FnReject__("positive x");
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        data real inline_f_x_arg3__ = -(1.6);
+        data int inline_f_early_ret_check1__;
+        inline_f_early_ret_check1__ = 0;
+        for(inline_f_iterator2__ in 1:1) {
+          if((inline_f_x_arg3__ < 0)) {
+            inline_f_early_ret_check1__ = 1;
+            break;
+          }
+          FnReject__("positive x");
+        }
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
 let%expect_test "inline function indices " =
   let mir =
     reset_and_mir_of_string

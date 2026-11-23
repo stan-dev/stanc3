@@ -13,14 +13,14 @@ static constexpr std::array<const char*, 16> locations_array__ =
   " (in '../function-in-function-loops.stan', line 10, column 4 to column 21)",
   " (in '../function-in-function-loops.stan', line 11, column 4 to column 25)",
   " (in '../function-in-function-loops.stan', line 13, column 8 to column 43)",
-  " (in '../function-in-function-loops.stan', line 3, column 4 to line 6, column 15)",
-  " (in '../function-in-function-loops.stan', line 2, column 27 to line 7, column 3)",
   " (in '../function-in-function-loops.stan', line 12, column 21 to line 14, column 5)",
   " (in '../function-in-function-loops.stan', line 12, column 4 to line 14, column 5)",
   " (in '../function-in-function-loops.stan', line 15, column 4 to column 23)",
   " (in '../function-in-function-loops.stan', line 27, column 2 to column 16)",
   " (in '../function-in-function-loops.stan', line 21, column 2 to column 8)",
   " (in '../function-in-function-loops.stan', line 6, column 6 to column 15)",
+  " (in '../function-in-function-loops.stan', line 3, column 4 to line 6, column 15)",
+  " (in '../function-in-function-loops.stan', line 2, column 27 to line 7, column 3)",
   " (in '../function-in-function-loops.stan', line 9, column 24 to line 16, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
@@ -49,7 +49,7 @@ do_something(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 14;
+    current_statement__ = 12;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -79,14 +79,14 @@ summer(const T0__& et_arg__, std::ostream* pstream__) {
     local_scalar_t__ running_sum;
     current_statement__ = 5;
     running_sum = stan::math::promote_scalar<local_scalar_t__>(0);
-    current_statement__ = 10;
+    current_statement__ = 8;
     for (int n = 1; n <= N; ++n) {
       current_statement__ = 6;
       running_sum = (running_sum +
         do_something(
           stan::model::rvalue(et, "et", stan::model::index_uni(n)), pstream__));
     }
-    current_statement__ = 11;
+    current_statement__ = 9;
     return running_sum;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -116,11 +116,11 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 13;
+      current_statement__ = 11;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 13;
+      current_statement__ = 11;
       stan::io::read_from_context(N, context__, "N");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -164,36 +164,30 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 2;
       stan::model::assign(eta, stan::math::rep_vector(0.0, N),
         "assigning variable eta");
-      local_scalar_t__ inline_summer_return18__;
+      local_scalar_t__ inline_summer_return14__;
       {
-        int inline_summer_N19__;
+        int inline_summer_N15__;
         current_statement__ = 4;
-        inline_summer_N19__ = stan::math::size(eta);
-        local_scalar_t__ inline_summer_running_sum20__;
+        inline_summer_N15__ = stan::math::size(eta);
+        local_scalar_t__ inline_summer_running_sum16__;
         current_statement__ = 5;
-        inline_summer_running_sum20__ = stan::math::promote_scalar<
+        inline_summer_running_sum16__ = stan::math::promote_scalar<
                                           local_scalar_t__>(0);
-        current_statement__ = 10;
-        for (int inline_summer_n25__ = 1; inline_summer_n25__ <=
-             inline_summer_N19__; ++inline_summer_n25__) {
+        current_statement__ = 8;
+        for (int inline_summer_n19__ = 1; inline_summer_n19__ <=
+             inline_summer_N15__; ++inline_summer_n19__) {
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg6__21__ =
-            eta[(inline_summer_n25__ - 1)];
-          local_scalar_t__ inline_summer_inline_do_something_return5__22__;
-          for (int inline_summer_inline_do_something_iterator8__24__ = 1; inline_summer_inline_do_something_iterator8__24__
-               <= 1; ++inline_summer_inline_do_something_iterator8__24__) {
-            inline_summer_inline_do_something_return5__22__ = inline_summer_inline_do_something_x_arg6__21__;
-            break;
-          }
+          local_scalar_t__ inline_summer_inline_do_something_x_arg5__17__ =
+            eta[(inline_summer_n19__ - 1)];
           current_statement__ = 6;
-          inline_summer_running_sum20__ = (inline_summer_running_sum20__ +
-            inline_summer_inline_do_something_return5__22__);
+          inline_summer_running_sum16__ = (inline_summer_running_sum16__ +
+            inline_summer_inline_do_something_x_arg5__17__);
         }
-        current_statement__ = 11;
-        inline_summer_return18__ = inline_summer_running_sum20__;
+        current_statement__ = 9;
+        inline_summer_return14__ = inline_summer_running_sum16__;
       }
-      current_statement__ = 12;
-      lp_accum__.add(inline_summer_return18__);
+      current_statement__ = 10;
+      lp_accum__.add(inline_summer_return14__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -230,36 +224,30 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 2;
       stan::model::assign(eta, stan::math::rep_vector(0.0, N),
         "assigning variable eta");
-      local_scalar_t__ inline_summer_return9__;
+      local_scalar_t__ inline_summer_return7__;
       {
-        int inline_summer_N10__;
+        int inline_summer_N8__;
         current_statement__ = 4;
-        inline_summer_N10__ = stan::math::size(eta);
-        local_scalar_t__ inline_summer_running_sum11__;
+        inline_summer_N8__ = stan::math::size(eta);
+        local_scalar_t__ inline_summer_running_sum9__;
         current_statement__ = 5;
-        inline_summer_running_sum11__ = stan::math::promote_scalar<
-                                          local_scalar_t__>(0);
-        current_statement__ = 10;
-        for (int inline_summer_n16__ = 1; inline_summer_n16__ <=
-             inline_summer_N10__; ++inline_summer_n16__) {
+        inline_summer_running_sum9__ = stan::math::promote_scalar<
+                                         local_scalar_t__>(0);
+        current_statement__ = 8;
+        for (int inline_summer_n12__ = 1; inline_summer_n12__ <=
+             inline_summer_N8__; ++inline_summer_n12__) {
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg6__12__ =
-            eta[(inline_summer_n16__ - 1)];
-          local_scalar_t__ inline_summer_inline_do_something_return5__13__;
-          for (int inline_summer_inline_do_something_iterator8__15__ = 1; inline_summer_inline_do_something_iterator8__15__
-               <= 1; ++inline_summer_inline_do_something_iterator8__15__) {
-            inline_summer_inline_do_something_return5__13__ = inline_summer_inline_do_something_x_arg6__12__;
-            break;
-          }
+          local_scalar_t__ inline_summer_inline_do_something_x_arg5__10__ =
+            eta[(inline_summer_n12__ - 1)];
           current_statement__ = 6;
-          inline_summer_running_sum11__ = (inline_summer_running_sum11__ +
-            inline_summer_inline_do_something_return5__13__);
+          inline_summer_running_sum9__ = (inline_summer_running_sum9__ +
+            inline_summer_inline_do_something_x_arg5__10__);
         }
-        current_statement__ = 11;
-        inline_summer_return9__ = inline_summer_running_sum11__;
+        current_statement__ = 9;
+        inline_summer_return7__ = inline_summer_running_sum9__;
       }
-      current_statement__ = 12;
-      lp_accum__.add(inline_summer_return9__);
+      current_statement__ = 10;
+      lp_accum__.add(inline_summer_return7__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
