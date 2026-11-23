@@ -806,6 +806,73 @@ let%expect_test "inline function in while loop" =
     }
     |}]
 
+let%expect_test "inline function in while condition, body continues" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        int g(int z) {
+          return z * 1;
+        }
+      }
+      model {
+        int i = 0;
+        while (g(i) < 3) {
+          i += 1;
+          if (i < 10) continue;
+        }
+        print(i);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      int g(int z) {
+        {
+          return (z * 1);
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        int i;
+        i = 0;
+        int inline_g_return1__;
+        {
+          inline_g_return1__ = (i * 1);
+        }
+        while((inline_g_return1__ < 3)) {
+          {
+            i = (i + 1);
+            if((i < 10)) {
+                           inline_g_return1__ = (i * 1);
+                         }
+                         continue;
+          }
+          {
+            inline_g_return1__ = (i * 1);
+          }
+        }
+        FnPrint__(i);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
 let%expect_test "inline function in if then else" =
   let mir =
     reset_and_mir_of_string
@@ -1004,6 +1071,130 @@ let%expect_test "inline function multiple returns " =
           break;
         }
         FnPrint__(inline_f_return1__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
+let%expect_test "inline function return inside while" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real f(real x) {
+          while (x < -1) {
+            return -4 * x;
+          }
+          return x + 7;
+        }
+      }
+      model {
+        print(f(-1.6));
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      real f(real x) {
+        {
+          while((x < -(1))) {
+            return (promote(-(4), real, data) * x);
+          }
+          return (x + promote(7, real, data));
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        real inline_f_return1__;
+        data real inline_f_x_arg2__ = -(1.6);
+        data int inline_f_early_ret_check3__;
+        inline_f_early_ret_check3__ = 0;
+        for(inline_f_iterator4__ in 1:1) {
+          while((inline_f_x_arg2__ < -(1))) {
+            inline_f_early_ret_check3__ = 1;
+            inline_f_return1__ = (promote(-(4), real, data) * inline_f_x_arg2__);
+            break;
+          }
+          if(inline_f_early_ret_check3__) break;
+          inline_f_early_ret_check3__ = 1;
+          inline_f_return1__ = (inline_f_x_arg2__ + promote(7, real, data));
+          break;
+        }
+        FnPrint__(inline_f_return1__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
+let%expect_test "inline function void return" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        void f(real x) {
+          if (x < 0) {
+            return;
+          }
+          reject("positive x");
+        }
+      }
+      model {
+        f(-1.6);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      void f(real x) {
+        {
+          if((x < 0)) {
+            return;
+          }
+          FnReject__("positive x");
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        data real inline_f_x_arg3__ = -(1.6);
+        data int inline_f_early_ret_check1__;
+        inline_f_early_ret_check1__ = 0;
+        for(inline_f_iterator2__ in 1:1) {
+          if((inline_f_x_arg3__ < 0)) {
+            inline_f_early_ret_check1__ = 1;
+            break;
+          }
+          FnReject__("positive x");
+        }
       }
     }
 
