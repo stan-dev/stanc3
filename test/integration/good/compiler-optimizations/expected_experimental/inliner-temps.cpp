@@ -312,10 +312,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
       Eigen::Matrix<double,-1,-1> a =
         Eigen::Matrix<double,-1,-1>::Constant(d, d,
           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double,-1,-1> inline_sign_fix_return4__;
       current_statement__ = 2;
       decltype(auto) inline_sign_fix_a_arg5__ =
         stan::math::to_ref(stan::math::multiply(L, U));
-      Eigen::Matrix<double,-1,-1> inline_sign_fix_return4__;
       {
         lcm8__ = stan::math::rows(inline_sign_fix_a_arg5__);
         current_statement__ = 3;

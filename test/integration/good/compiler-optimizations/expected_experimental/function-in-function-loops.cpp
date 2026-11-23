@@ -182,20 +182,20 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           current_statement__ = 6;
           if (stan::math::logical_gte(lcm17__, 1)) {
             current_statement__ = 4;
-            double inline_summer_inline_do_something_x_arg5__17__ =
+            double inline_summer_inline_do_something_x_arg5__18__ =
               stan::model::rvalue(lcm16__, "lcm16__",
                 stan::model::index_uni(1));
             current_statement__ = 4;
             inline_summer_running_sum16__ = (0 +
-              inline_summer_inline_do_something_x_arg5__17__);
+              inline_summer_inline_do_something_x_arg5__18__);
             for (int inline_summer_n19__ = 2; inline_summer_n19__ <=
                  lcm17__; ++inline_summer_n19__) {
               current_statement__ = 4;
-              double inline_summer_inline_do_something_x_arg5__17__ =
+              double inline_summer_inline_do_something_x_arg5__18__ =
                 lcm16__[(inline_summer_n19__ - 1)];
               current_statement__ = 4;
               inline_summer_running_sum16__ = (inline_summer_running_sum16__
-                + inline_summer_inline_do_something_x_arg5__17__);
+                + inline_summer_inline_do_something_x_arg5__18__);
             }
           }
           current_statement__ = 7;
@@ -249,19 +249,19 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           current_statement__ = 6;
           if (stan::math::logical_gte(lcm9__, 1)) {
             current_statement__ = 4;
-            double inline_summer_inline_do_something_x_arg5__10__ =
+            double inline_summer_inline_do_something_x_arg5__11__ =
               stan::model::rvalue(lcm8__, "lcm8__", stan::model::index_uni(1));
             current_statement__ = 4;
             inline_summer_running_sum9__ = (0 +
-              inline_summer_inline_do_something_x_arg5__10__);
+              inline_summer_inline_do_something_x_arg5__11__);
             for (int inline_summer_n12__ = 2; inline_summer_n12__ <=
                  lcm9__; ++inline_summer_n12__) {
               current_statement__ = 4;
-              double inline_summer_inline_do_something_x_arg5__10__ =
+              double inline_summer_inline_do_something_x_arg5__11__ =
                 lcm8__[(inline_summer_n12__ - 1)];
               current_statement__ = 4;
               inline_summer_running_sum9__ = (inline_summer_running_sum9__ +
-                inline_summer_inline_do_something_x_arg5__10__);
+                inline_summer_inline_do_something_x_arg5__11__);
             }
           }
           current_statement__ = 7;

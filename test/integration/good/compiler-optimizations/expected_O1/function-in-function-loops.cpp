@@ -177,11 +177,11 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         for (int inline_summer_n19__ = 1; inline_summer_n19__ <=
              inline_summer_N15__; ++inline_summer_n19__) {
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg5__17__ =
+          local_scalar_t__ inline_summer_inline_do_something_x_arg5__18__ =
             eta[(inline_summer_n19__ - 1)];
           current_statement__ = 6;
           inline_summer_running_sum16__ = (inline_summer_running_sum16__ +
-            inline_summer_inline_do_something_x_arg5__17__);
+            inline_summer_inline_do_something_x_arg5__18__);
         }
         current_statement__ = 9;
         inline_summer_return14__ = inline_summer_running_sum16__;
@@ -237,11 +237,11 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         for (int inline_summer_n12__ = 1; inline_summer_n12__ <=
              inline_summer_N8__; ++inline_summer_n12__) {
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg5__10__ =
+          local_scalar_t__ inline_summer_inline_do_something_x_arg5__11__ =
             eta[(inline_summer_n12__ - 1)];
           current_statement__ = 6;
           inline_summer_running_sum9__ = (inline_summer_running_sum9__ +
-            inline_summer_inline_do_something_x_arg5__10__);
+            inline_summer_inline_do_something_x_arg5__11__);
         }
         current_statement__ = 9;
         inline_summer_return7__ = inline_summer_running_sum9__;

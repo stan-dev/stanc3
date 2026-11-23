@@ -511,23 +511,24 @@ let%expect_test "recursive functions" =
 
     log_prob {
       {
-        int inline_fib_return1__;
-        data int inline_fib_early_ret_check2__;
-        inline_fib_early_ret_check2__ = 0;
-        for(inline_fib_iterator3__ in 1:1) {
-          if((5 == 0)) ; else {
+        int inline_fib_return3__;
+        data int inline_fib_early_ret_check5__;
+        inline_fib_early_ret_check5__ = 0;
+        for(inline_fib_iterator6__ in 1:1) {
+          data int inline_fib_inline_eor_test2__4__ = (5 == 0);
+          if(inline_fib_inline_eor_test2__4__) ; else {
 
           }
-          if((5 == 0) || (5 == 1)) {
-            inline_fib_early_ret_check2__ = 1;
-            inline_fib_return1__ = 5;
+          if(inline_fib_inline_eor_test2__4__ || (5 == 1)) {
+            inline_fib_early_ret_check5__ = 1;
+            inline_fib_return3__ = 5;
             break;
           }
-          inline_fib_early_ret_check2__ = 1;
-          inline_fib_return1__ = (fib((5 - 1)) + fib((5 - 2)));
+          inline_fib_early_ret_check5__ = 1;
+          inline_fib_return3__ = (fib((5 - 1)) + fib((5 - 2)));
           break;
         }
-        FnReject__(inline_fib_return1__);
+        FnReject__(inline_fib_return3__);
       }
     }
 
@@ -1119,8 +1120,8 @@ let%expect_test "inline function return inside while" =
 
     log_prob {
       {
-        data real inline_f_x_arg2__ = -(1.6);
         real inline_f_return1__;
+        data real inline_f_x_arg2__ = -(1.6);
         data int inline_f_early_ret_check3__;
         inline_f_early_ret_check3__ = 0;
         for(inline_f_iterator4__ in 1:1) {
@@ -1379,6 +1380,114 @@ let%expect_test "inline function or " =
       }
       if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
+let%expect_test "inlining evaluates a condition with a draw once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real f_rng() {
+          return normal_rng(0, 1);
+        }
+        void g(real x) {
+        }
+      }
+      generated quantities {
+        if (0.5 > normal_rng(0, 1) || 1) {
+          print("a");
+        }
+        real b = 0.5 > normal_rng(0, 1) && f_rng() > 0;
+        g(normal_rng(0, 1) > 1 ? 1.0 : 2.0);
+        real c = normal_rng(0, 1) > 1 ? f_rng() : 2.0;
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" (Fmt.list Stmt.Located.pp) mir.generate_quantities
+  |> print_endline;
+  [%expect
+    {|
+    if(emit_transformed_parameters__) ; else {
+
+    }
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+    if(!(emit_generated_quantities__)) return;
+    data int inline_eor_test1__ = (0.5 > normal_rng(0, 1));
+    if(inline_eor_test1__) ; else {
+
+    }
+    if(inline_eor_test1__ || 1) {
+      FnPrint__("a");
+    }
+    data real b;
+    data real inline_f_rng_return3__;
+    data int inline_eand_test2__ = (0.5 > normal_rng(0, 1));
+    if(inline_eand_test2__) {
+      {
+        inline_f_rng_return3__ = promote(normal_rng(0, 1), real, var);
+      }
+    }
+    b = promote(inline_eand_test2__ && (inline_f_rng_return3__ > 0), real, data);
+    data int inline_ternary_test6__ = (normal_rng(0, 1) > 1);
+    if(inline_ternary_test6__) {
+
+    } else {
+
+    }
+    data real inline_g_x_arg7__ = (inline_ternary_test6__ ? 1.0 : 2.0);
+    {
+
+    }
+    data real c;
+    data real inline_f_rng_return9__;
+    data int inline_ternary_test8__ = (normal_rng(0, 1) > 1);
+    if(inline_ternary_test8__) {
+      {
+        inline_f_rng_return9__ = promote(normal_rng(0, 1), real, var);
+      }
+    } else {
+
+    }
+    c = (inline_ternary_test8__ ? inline_f_rng_return9__ : 2.0);
+    |}]
+
+let%expect_test "inline bind dependency ordering" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+functions {
+  int g(int z) {
+    return z * 1;
+  }
+}
+model {
+  print((g(1) > g(2)) ? 0 : 1);
+}
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" (Fmt.list Stmt.Located.pp) mir.log_prob |> print_endline;
+  [%expect
+    {|
+    {
+      int inline_g_return3__;
+      int inline_g_return1__;
+      {
+        inline_g_return3__ = (2 * 1);
+      }
+      {
+        inline_g_return1__ = (1 * 1);
+      }
+      data int
+        inline_ternary_test5__ = (inline_g_return1__ > inline_g_return3__);
+      if(inline_ternary_test5__) {
+
+      } else {
+
+      }
+      FnPrint__((inline_ternary_test5__ ? 0 : 1));
     }
     |}]
 

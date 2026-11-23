@@ -320,6 +320,16 @@ let constant_propagation_transfer ?(preserve_stability = false)
                   ->
                     String.Map.add m ~key:s ~data:e'
                 | _ -> String.Map.remove s m)
+            | Decl {decl_id= s; decl_adtype; initialize= Assign e; _} -> (
+                match Partial_evaluator.try_eval_expr (subst_expr m e) with
+                | { pattern=
+                      Promotion ({pattern= Lit (_, _); _}, _, _) | Lit (_, _)
+                  ; _ } as e'
+                  when not
+                         (preserve_stability
+                         && UnsizedType.is_autodifftype decl_adtype) ->
+                    String.Map.add m ~key:s ~data:e'
+                | _ -> String.Map.remove s m)
             | Decl {decl_id= s; _} -> String.Map.remove s m
             | Assignment (lhs, _, _) ->
                 String.Map.remove (Middle.Stmt.Helpers.lhs_variable lhs) m

@@ -99,10 +99,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
+        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return4__;
         current_statement__ = 2;
         decltype(auto) inline_foo_i_arg5__ =
           stan::math::to_ref(stan::math::add(p, p));
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return4__;
         {
           current_statement__ = 3;
           stan::model::assign(inline_foo_return4__,
@@ -148,11 +148,11 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>
+          inline_foo_return1__;
         current_statement__ = 2;
         decltype(auto) inline_foo_i_arg2__ =
           stan::math::to_ref(stan::math::add(p, p));
-        stan::math::var_value<Eigen::Matrix<double,-1,-1>>
-          inline_foo_return1__;
         {
           current_statement__ = 3;
           stan::model::assign(inline_foo_return1__,
