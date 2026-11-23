@@ -805,6 +805,73 @@ let%expect_test "inline function in while loop" =
     }
     |}]
 
+let%expect_test "inline function in while condition, body continues" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        int g(int z) {
+          return z * 1;
+        }
+      }
+      model {
+        int i = 0;
+        while (g(i) < 3) {
+          i += 1;
+          if (i < 10) continue;
+        }
+        print(i);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      int g(int z) {
+        {
+          return (z * 1);
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        int i;
+        i = 0;
+        int inline_g_return1__;
+        {
+          inline_g_return1__ = (i * 1);
+        }
+        while((inline_g_return1__ < 3)) {
+          {
+            i = (i + 1);
+            if((i < 10)) {
+                           inline_g_return1__ = (i * 1);
+                         }
+                         continue;
+          }
+          {
+            inline_g_return1__ = (i * 1);
+          }
+        }
+        FnPrint__(i);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
+
 let%expect_test "inline function in if then else" =
   let mir =
     reset_and_mir_of_string
