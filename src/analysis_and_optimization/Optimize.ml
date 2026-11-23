@@ -118,26 +118,27 @@ let subst_args_stmt args es =
   subst_stmt m
 
 let has_early_returns s =
-  let rec count_returns Stmt.{pattern; _} : int =
-    Stmt.Pattern.fold Fun.const
-      (fun acc -> function
-        | Stmt.{pattern= Return _; _} -> acc + 1
-        | stmt -> acc + count_returns stmt)
-      0 pattern in
-  let rec ends_with_return Stmt.{pattern; _} =
-    match pattern with
-    | Return _ -> true
-    | Block l | SList l -> (
-        match List.rev l with last :: _ -> ends_with_return last | [] -> false)
-    | _ -> false in
-  let returns = count_returns s in
-  (* A function that has sucessfully typechecked only has 'early' returns if:
-
-     1) there is more than one `return` statement or
-
-     2) there is exactly one return statement and it is not at the end (e.g.
-     dead code, or an early return in a void function) *)
-  returns > 1 || (returns = 1 && not (ends_with_return s))
+  let rec return_behavior s =
+    match s.Stmt.pattern with
+    | Return _ -> `FinalReturn
+    | Block l | SList l | Profile (_, l) ->
+        let rec find = function
+          | [] -> `NoReturn
+          | [s] -> return_behavior s
+          | s :: tl -> (
+              match return_behavior s with
+              | `NoReturn -> find tl
+              | `FinalReturn | `EarlyReturn -> `EarlyReturn) in
+        find l
+    | For {body; _} | While (_, body) -> (
+        match return_behavior body with `FinalReturn -> `EarlyReturn | r -> r)
+    | IfElse (_, thn, els) -> (
+        match (return_behavior thn, Option.map ~f:return_behavior els) with
+        | `EarlyReturn, _ | _, Some `EarlyReturn -> `EarlyReturn
+        | `FinalReturn, _ | _, Some `FinalReturn -> `FinalReturn
+        | `NoReturn, (None | Some `NoReturn) -> `NoReturn)
+    | _ -> `NoReturn in
+  return_behavior s = `EarlyReturn
 
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in those
