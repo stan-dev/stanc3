@@ -414,7 +414,8 @@ and inline_function_index propto adt fim i =
       let dl, sl, e = inline_expr e in
       (dl, sl, MultiIndex e)
 
-let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
+let rec inline_function_statement propto adt fim ?(on_continue = [])
+    Stmt.{pattern; meta} =
   let inline_expr = inline_function_expression propto adt fim in
   Stmt.
     { pattern=
@@ -471,20 +472,23 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat ~meta (d @ s)
               (IfElse
                  ( e
-                 , inline_function_statement propto adt fim s1
-                 , Option.map ~f:(inline_function_statement propto adt fim) s2
-                 ))
+                 , inline_function_statement propto adt fim ~on_continue s1
+                 , Option.map
+                     ~f:(inline_function_statement propto adt fim ~on_continue)
+                     s2 ))
         | While (expr, stmt) ->
             let d', s', e = inline_expr expr in
             slist_concat ~meta (d' @ s')
               (While
                  ( e
                  , if List.is_empty s' then
-                     inline_function_statement propto adt fim stmt
+                     inline_function_statement propto adt fim ~on_continue:s'
+                       stmt
                    else
                      { pattern=
                          Block
-                           ([inline_function_statement propto adt fim stmt]
+                           ([ inline_function_statement propto adt fim
+                                ~on_continue:s' stmt ]
                            @ map_no_loc s')
                      ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
@@ -498,20 +502,28 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ; upper
                  ; body=
                      (if List.is_empty s_upper then
-                        inline_function_statement propto adt fim body
+                        inline_function_statement propto adt fim
+                          ~on_continue:s_upper body
                       else
                         { pattern=
                             Block
-                              ([inline_function_statement propto adt fim body]
+                              ([ inline_function_statement propto adt fim
+                                   ~on_continue:s_upper body ]
                               @ map_no_loc s_upper)
                         ; meta= Location_span.empty }) })
         | Profile (name, l) ->
             Profile
-              (name, List.map l ~f:(inline_function_statement propto adt fim))
+              ( name
+              , List.map l
+                  ~f:(inline_function_statement propto adt ~on_continue fim) )
         | Block l ->
-            Block (List.map l ~f:(inline_function_statement propto adt fim))
+            Block
+              (List.map l
+                 ~f:(inline_function_statement propto adt ~on_continue fim))
         | SList l ->
-            SList (List.map l ~f:(inline_function_statement propto adt fim))
+            SList
+              (List.map l
+                 ~f:(inline_function_statement propto adt ~on_continue fim))
         | Decl
             { decl_adtype
             ; decl_id
@@ -529,7 +541,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | Decl r -> Decl r
         | Skip -> Skip
         | Break -> Break
-        | Continue -> Continue)
+        | Continue -> slist_concat ~meta on_continue Continue)
     ; meta }
 
 let create_function_inline_map adt l =

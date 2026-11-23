@@ -849,7 +849,10 @@ let%expect_test "inline function in while condition, body continues" =
         while((inline_g_return1__ < 3)) {
           {
             i = (i + 1);
-            if((i < 10)) continue;
+            if((i < 10)) {
+                           inline_g_return1__ = (i * 1);
+                         }
+                         continue;
           }
           {
             inline_g_return1__ = (i * 1);
