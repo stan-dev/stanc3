@@ -1262,6 +1262,44 @@ let%expect_test "inlining evaluates a condition with a draw once" =
     c = (inline_ternary_test8__ ? inline_f_rng_return9__ : 2.0);
     |}]
 
+let%expect_test "inline bind dependency ordering" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+functions {
+  int g(int z) {
+    return z * 1;
+  }
+}
+model {
+  print((g(1) > g(2)) ? 0 : 1);
+}
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" (Fmt.list Stmt.Located.pp) mir.log_prob |> print_endline;
+  [%expect
+    {|
+    {
+      int inline_g_return3__;
+      int inline_g_return1__;
+      data int
+        inline_ternary_test5__ = (inline_g_return1__ > inline_g_return3__);
+      {
+        inline_g_return3__ = (2 * 1);
+      }
+      {
+        inline_g_return1__ = (1 * 1);
+      }
+      if(inline_ternary_test5__) {
+
+      } else {
+
+      }
+      FnPrint__((inline_ternary_test5__ ? 0 : 1));
+    }
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string
