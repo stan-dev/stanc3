@@ -88,6 +88,11 @@ end
 module Helpers = struct
   let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, Int.to_string i)}
 
+  let int_literal_value (expr : 'a t) =
+    match expr.pattern with
+    | Lit (Int, digits) -> Int.of_string_opt digits
+    | _ -> None
+
   let float i =
     { meta= {Typed.Meta.empty with type_= UReal}
     ; pattern= Lit (Real, Float.to_string i) }
@@ -150,6 +155,11 @@ module Helpers = struct
     in
     { meta= {Typed.Meta.empty with type_= UArray type_}
     ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
+
+  let array_literal_elements (expr : 'a t) =
+    match expr.pattern with
+    | FunApp (CompilerInternal FnMakeArray, elements) -> Some elements
+    | _ -> None
 
   let tuple_expr l =
     let type_ = UnsizedType.UTuple (List.map ~f:Typed.type_of l) in

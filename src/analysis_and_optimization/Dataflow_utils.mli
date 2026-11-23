@@ -6,19 +6,35 @@ val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
   -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
-  -> label Set.Poly.t
-     * label Set.Poly.t LabelMap.t
-     * label Set.Poly.t LabelMap.t
-(** Simultaneously builds the controlflow parent graph, the predecessor graph
-    and the exit set of a statement. It's advantageous to build them together
-    because they both rely on some of the same Break, Continue and Return
-    bookkeeping.
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * controls LabelMap.t
+(** Simultaneously builds control information, the predecessor graph and the
+    exit set of a statement. It's advantageous to build them together because
+    they both rely on some of the same Break, Continue and Return bookkeeping.
 
     Takes a statement map and returns the triple: (exit set, predecessor graph,
-    controlflow parent graph) where
+    control information) where
     - (exit set, predecessor graph) is the return value of
       build_predecessor_graph
-    - (controlflow parent graph) is the return value of build_cf_graph *)
+    - (control information) is the return value of build_controls *)
+
+val build_controls :
+  ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t -> controls LabelMap.t
+(** Returns the controls of each label of the statement map. *)
+
+val control_parent_ids : controls -> label Set.Poly.t
+(** [control_parent_ids controls] returns the labels of the statements that
+    directly control whether a given statement runs. It takes the [break],
+    [continue], and [return] labels recorded in [controls.jump_ids] and adds the
+    label of the nearest enclosing [if], [for], or [while], if there is one.
+
+    For example, in [for (i in 1:N) { if (skip) continue; print(i); }], the
+    result for [print(i)] contains the labels of the [for] and the [continue].
+    The loop starts the iteration, and the [continue] can skip the print. *)
+
+val enclosing_loop_ids :
+  label -> ('e, 's) Stmt.Pattern.t -> controls -> label list
+(** Loop labels from outermost to innermost. For a [for] or [while] header, the
+    last label is the header itself. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

@@ -473,42 +473,33 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
 let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** The transfer function for a reaching definitions analysis *)
+(** The transfer function for indexed reaching definitions. *)
 let reaching_definitions_transfer
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
+    (accesses_by_statement : Dependence.accesses LabelMap.t) written_vars =
+  let generated_definitions =
+    LabelMap.mapi accesses_by_statement
+      ~f:(fun statement_id statement_accesses ->
+        statement_accesses.Dependence.writes
+        |> List.map ~f:(fun write_location ->
+            (write_location, Some statement_id))
+        |> Set.Poly.of_list) in
   (module struct
     type labels = int
-    type properties = (string * labels option) Set.Poly.t
+    type properties = (Dependence.location * labels option) Set.Poly.t
 
-    let transfer_function l p =
-      let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let gen =
-        Set.Poly.map
-          ~f:(fun x -> (x, Some l))
-          (assigned_or_declared_vars_stmt mir_node) in
-      let kill =
-        match mir_node with
-        | Decl {decl_id= x; _}
-         |Assignment ((LVariable x, []), _, _)
-         |For {loopvar= x; _} ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ | JacobianPE _ ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp
-            ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian)) )
-            , _ ) ->
-            Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp (_, _)
-         |Break | Continue | Return _ | Skip
-         |IfElse (_, _, _)
-         |While (_, _)
-         |Profile _ | Block _ | SList _ | Assignment _ ->
-            Set.Poly.empty in
-      transfer_gen_kill p gen kill
+    let transfer_function statement_id incoming_definitions =
+      let writes =
+        (LabelMap.find statement_id accesses_by_statement).Dependence.writes
+      in
+      let is_overwritten (previous_write, _) =
+        List.exists writes ~f:(fun write ->
+            Dependence.is_overwritten written_vars previous_write write) in
+      incoming_definitions
+      |> Set.Poly.filter ~f:(fun definition -> not (is_overwritten definition))
+      |> Set.Poly.union (LabelMap.find statement_id generated_definitions)
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string * int option) Set.Poly.t)
+     and type properties = (Dependence.location * int option) Set.Poly.t)
 
 (** The transfer function for an initialized variables analysis *)
 let initialized_vars_transfer
@@ -927,24 +918,26 @@ let propagation_mfp (prog : Program.Typed.t)
 let reaching_definitions_mfp (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
-    (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
+    (accesses_by_statement : Dependence.accesses LabelMap.t) written_vars =
   let variables =
     (module struct
-      type vals = string
+      type vals = Dependence.location
 
       let initial =
-        Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ]
+        Set.Poly.of_list
+          (List.map
+             (List.map mir.input_vars ~f:fst3 @ List.map mir.output_vars ~f:fst3)
+             ~f:(fun variable -> Dependence.{variable; path= []}))
     end : INITIALTYPE
-      with type vals = string) in
+      with type vals = Dependence.location) in
   let labels =
     (module struct
       type vals = int
     end : TYPE
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  let (module Transfer) =
+    reaching_definitions_transfer accesses_by_statement written_vars in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in
