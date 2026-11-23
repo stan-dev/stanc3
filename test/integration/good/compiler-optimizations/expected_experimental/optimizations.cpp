@@ -271,118 +271,118 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return32__;
-        for (int inline_rfun_iterator34__ = 1; inline_rfun_iterator34__ <=
-             1; ++inline_rfun_iterator34__) {
+        int inline_rfun_return29__;
+        for (int inline_rfun_iterator31__ = 1; inline_rfun_iterator31__ <=
+             1; ++inline_rfun_iterator31__) {
           {
-            inline_rfun_return32__ = 27;
+            inline_rfun_return29__ = 27;
             break;
           }
-          inline_rfun_return32__ = 5;
+          inline_rfun_return29__ = 5;
           break;
         }
         current_statement__ = 9;
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return32__);
+          stan::math::stan_print(pstream__, inline_rfun_return29__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return35__;
-        for (int inline_rfun_iterator37__ = 1; inline_rfun_iterator37__ <=
-             1; ++inline_rfun_iterator37__) {
+        int inline_rfun_return32__;
+        for (int inline_rfun_iterator34__ = 1; inline_rfun_iterator34__ <=
+             1; ++inline_rfun_iterator34__) {
           {
-            inline_rfun_return35__ = 28;
+            inline_rfun_return32__ = 28;
             break;
           }
-          inline_rfun_return35__ = 6;
+          inline_rfun_return32__ = 6;
           break;
         }
         current_statement__ = 12;
-        if (inline_rfun_return35__) {
+        if (inline_rfun_return32__) {
           current_statement__ = 13;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
+        int inline_rfun_return35__;
         int inline_rfun_return38__;
-        int inline_rfun_return41__;
+        for (int inline_rfun_iterator37__ = 1; inline_rfun_iterator37__ <=
+             1; ++inline_rfun_iterator37__) {
+          {
+            inline_rfun_return35__ = 31;
+            break;
+          }
+          inline_rfun_return35__ = 9;
+          break;
+        }
         for (int inline_rfun_iterator40__ = 1; inline_rfun_iterator40__ <=
              1; ++inline_rfun_iterator40__) {
           {
-            inline_rfun_return38__ = 31;
+            inline_rfun_return38__ = 29;
             break;
           }
-          inline_rfun_return38__ = 9;
-          break;
-        }
-        for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
-             1; ++inline_rfun_iterator43__) {
-          {
-            inline_rfun_return41__ = 29;
-            break;
-          }
-          inline_rfun_return41__ = 7;
+          inline_rfun_return38__ = 7;
           break;
         }
         current_statement__ = 14;
-        if (stan::math::logical_gte(inline_rfun_return41__,
-              inline_rfun_return38__)) {
+        if (stan::math::logical_gte(inline_rfun_return38__,
+              inline_rfun_return35__)) {
           {
-            int inline_rfun_return44__;
-            for (int inline_rfun_iterator46__ = 1; inline_rfun_iterator46__
-                 <= 1; ++inline_rfun_iterator46__) {
+            int inline_rfun_return41__;
+            for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__
+                 <= 1; ++inline_rfun_iterator43__) {
               {
-                inline_rfun_return44__ = 32;
+                inline_rfun_return41__ = 32;
                 break;
               }
-              inline_rfun_return44__ = 10;
+              inline_rfun_return41__ = 10;
               break;
             }
             current_statement__ = 15;
-            lp_accum__.add(inline_rfun_return44__);
+            lp_accum__.add(inline_rfun_return41__);
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          lcm33__ = (inline_rfun_return38__ + 1);
-          for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__ <=
-               1; ++inline_rfun_iterator43__) {
+          lcm33__ = (inline_rfun_return35__ + 1);
+          for (int inline_rfun_iterator40__ = 1; inline_rfun_iterator40__ <=
+               1; ++inline_rfun_iterator40__) {
             {
-              inline_rfun_return41__ = 29;
-              lcm33__ = (inline_rfun_return38__ + 1);
+              inline_rfun_return38__ = 29;
+              lcm33__ = (inline_rfun_return35__ + 1);
               break;
             }
-            inline_rfun_return41__ = 7;
-            lcm33__ = (inline_rfun_return38__ + 1);
+            inline_rfun_return38__ = 7;
+            lcm33__ = (inline_rfun_return35__ + 1);
             break;
           }
-          for (int i = lcm33__; i <= inline_rfun_return41__; ++i) {
+          for (int i = lcm33__; i <= inline_rfun_return38__; ++i) {
             {
-              int inline_rfun_return44__;
-              for (int inline_rfun_iterator46__ = 1; inline_rfun_iterator46__
-                   <= 1; ++inline_rfun_iterator46__) {
+              int inline_rfun_return41__;
+              for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__
+                   <= 1; ++inline_rfun_iterator43__) {
                 {
-                  inline_rfun_return44__ = 32;
+                  inline_rfun_return41__ = 32;
                   break;
                 }
-                inline_rfun_return44__ = 10;
+                inline_rfun_return41__ = 10;
                 break;
               }
               current_statement__ = 15;
-              lp_accum__.add(inline_rfun_return44__);
+              lp_accum__.add(inline_rfun_return41__);
               {
                 current_statement__ = 7;
                 lp_accum__.add(3);
               }
             }
-            for (int inline_rfun_iterator43__ = 1; inline_rfun_iterator43__
-                 <= 1; ++inline_rfun_iterator43__) {
+            for (int inline_rfun_iterator40__ = 1; inline_rfun_iterator40__
+                 <= 1; ++inline_rfun_iterator40__) {
               {
-                inline_rfun_return41__ = 29;
+                inline_rfun_return38__ = 29;
                 break;
               }
-              inline_rfun_return41__ = 7;
+              inline_rfun_return38__ = 7;
               break;
             }
           }
@@ -773,118 +773,118 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return3__;
-        for (int inline_rfun_iterator5__ = 1; inline_rfun_iterator5__ <=
-             1; ++inline_rfun_iterator5__) {
+        int inline_rfun_return2__;
+        for (int inline_rfun_iterator4__ = 1; inline_rfun_iterator4__ <=
+             1; ++inline_rfun_iterator4__) {
           {
-            inline_rfun_return3__ = 27;
+            inline_rfun_return2__ = 27;
             break;
           }
-          inline_rfun_return3__ = 5;
+          inline_rfun_return2__ = 5;
           break;
         }
         current_statement__ = 9;
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return3__);
+          stan::math::stan_print(pstream__, inline_rfun_return2__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return6__;
-        for (int inline_rfun_iterator8__ = 1; inline_rfun_iterator8__ <=
-             1; ++inline_rfun_iterator8__) {
+        int inline_rfun_return5__;
+        for (int inline_rfun_iterator7__ = 1; inline_rfun_iterator7__ <=
+             1; ++inline_rfun_iterator7__) {
           {
-            inline_rfun_return6__ = 28;
+            inline_rfun_return5__ = 28;
             break;
           }
-          inline_rfun_return6__ = 6;
+          inline_rfun_return5__ = 6;
           break;
         }
         current_statement__ = 12;
-        if (inline_rfun_return6__) {
+        if (inline_rfun_return5__) {
           current_statement__ = 13;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
-        int inline_rfun_return9__;
-        int inline_rfun_return12__;
-        for (int inline_rfun_iterator11__ = 1; inline_rfun_iterator11__ <=
-             1; ++inline_rfun_iterator11__) {
+        int inline_rfun_return8__;
+        int inline_rfun_return11__;
+        for (int inline_rfun_iterator10__ = 1; inline_rfun_iterator10__ <=
+             1; ++inline_rfun_iterator10__) {
           {
-            inline_rfun_return9__ = 31;
+            inline_rfun_return8__ = 31;
             break;
           }
-          inline_rfun_return9__ = 9;
+          inline_rfun_return8__ = 9;
           break;
         }
-        for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
-             1; ++inline_rfun_iterator14__) {
+        for (int inline_rfun_iterator13__ = 1; inline_rfun_iterator13__ <=
+             1; ++inline_rfun_iterator13__) {
           {
-            inline_rfun_return12__ = 29;
+            inline_rfun_return11__ = 29;
             break;
           }
-          inline_rfun_return12__ = 7;
+          inline_rfun_return11__ = 7;
           break;
         }
         current_statement__ = 14;
-        if (stan::math::logical_gte(inline_rfun_return12__,
-              inline_rfun_return9__)) {
+        if (stan::math::logical_gte(inline_rfun_return11__,
+              inline_rfun_return8__)) {
           {
-            int inline_rfun_return15__;
-            for (int inline_rfun_iterator17__ = 1; inline_rfun_iterator17__
-                 <= 1; ++inline_rfun_iterator17__) {
+            int inline_rfun_return14__;
+            for (int inline_rfun_iterator16__ = 1; inline_rfun_iterator16__
+                 <= 1; ++inline_rfun_iterator16__) {
               {
-                inline_rfun_return15__ = 32;
+                inline_rfun_return14__ = 32;
                 break;
               }
-              inline_rfun_return15__ = 10;
+              inline_rfun_return14__ = 10;
               break;
             }
             current_statement__ = 15;
-            lp_accum__.add(inline_rfun_return15__);
+            lp_accum__.add(inline_rfun_return14__);
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          lcm9__ = (inline_rfun_return9__ + 1);
-          for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__ <=
-               1; ++inline_rfun_iterator14__) {
+          lcm9__ = (inline_rfun_return8__ + 1);
+          for (int inline_rfun_iterator13__ = 1; inline_rfun_iterator13__ <=
+               1; ++inline_rfun_iterator13__) {
             {
-              inline_rfun_return12__ = 29;
-              lcm9__ = (inline_rfun_return9__ + 1);
+              inline_rfun_return11__ = 29;
+              lcm9__ = (inline_rfun_return8__ + 1);
               break;
             }
-            inline_rfun_return12__ = 7;
-            lcm9__ = (inline_rfun_return9__ + 1);
+            inline_rfun_return11__ = 7;
+            lcm9__ = (inline_rfun_return8__ + 1);
             break;
           }
-          for (int i = lcm9__; i <= inline_rfun_return12__; ++i) {
+          for (int i = lcm9__; i <= inline_rfun_return11__; ++i) {
             {
-              int inline_rfun_return15__;
-              for (int inline_rfun_iterator17__ = 1; inline_rfun_iterator17__
-                   <= 1; ++inline_rfun_iterator17__) {
+              int inline_rfun_return14__;
+              for (int inline_rfun_iterator16__ = 1; inline_rfun_iterator16__
+                   <= 1; ++inline_rfun_iterator16__) {
                 {
-                  inline_rfun_return15__ = 32;
+                  inline_rfun_return14__ = 32;
                   break;
                 }
-                inline_rfun_return15__ = 10;
+                inline_rfun_return14__ = 10;
                 break;
               }
               current_statement__ = 15;
-              lp_accum__.add(inline_rfun_return15__);
+              lp_accum__.add(inline_rfun_return14__);
               {
                 current_statement__ = 7;
                 lp_accum__.add(3);
               }
             }
-            for (int inline_rfun_iterator14__ = 1; inline_rfun_iterator14__
-                 <= 1; ++inline_rfun_iterator14__) {
+            for (int inline_rfun_iterator13__ = 1; inline_rfun_iterator13__
+                 <= 1; ++inline_rfun_iterator13__) {
               {
-                inline_rfun_return12__ = 29;
+                inline_rfun_return11__ = 29;
                 break;
               }
-              inline_rfun_return12__ = 7;
+              inline_rfun_return11__ = 7;
               break;
             }
           }

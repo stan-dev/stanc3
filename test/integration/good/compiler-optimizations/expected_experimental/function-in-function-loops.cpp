@@ -181,33 +181,33 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           inline_summer_running_sum20__ = static_cast<double>(0);
           current_statement__ = 8;
           if (stan::math::logical_gte(lcm17__, 1)) {
+            double inline_summer_inline_do_something_return5__21__;
             current_statement__ = 4;
-            double inline_summer_inline_do_something_x_arg6__21__ =
+            double inline_summer_inline_do_something_x_arg6__22__ =
               stan::model::rvalue(lcm16__, "lcm16__",
                 stan::model::index_uni(1));
-            double inline_summer_inline_do_something_return5__22__;
             for (int inline_summer_inline_do_something_iterator8__24__ = 1; inline_summer_inline_do_something_iterator8__24__
                  <= 1; ++inline_summer_inline_do_something_iterator8__24__) {
-              inline_summer_inline_do_something_return5__22__ = inline_summer_inline_do_something_x_arg6__21__;
+              inline_summer_inline_do_something_return5__21__ = inline_summer_inline_do_something_x_arg6__22__;
               break;
             }
             current_statement__ = 4;
             inline_summer_running_sum20__ = (0 +
-              inline_summer_inline_do_something_return5__22__);
+              inline_summer_inline_do_something_return5__21__);
             for (int inline_summer_n25__ = 2; inline_summer_n25__ <=
                  lcm17__; ++inline_summer_n25__) {
+              double inline_summer_inline_do_something_return5__21__;
               current_statement__ = 4;
-              double inline_summer_inline_do_something_x_arg6__21__ =
+              double inline_summer_inline_do_something_x_arg6__22__ =
                 lcm16__[(inline_summer_n25__ - 1)];
-              double inline_summer_inline_do_something_return5__22__;
               for (int inline_summer_inline_do_something_iterator8__24__ = 1; inline_summer_inline_do_something_iterator8__24__
                    <= 1; ++inline_summer_inline_do_something_iterator8__24__) {
-                inline_summer_inline_do_something_return5__22__ = inline_summer_inline_do_something_x_arg6__21__;
+                inline_summer_inline_do_something_return5__21__ = inline_summer_inline_do_something_x_arg6__22__;
                 break;
               }
               current_statement__ = 4;
               inline_summer_running_sum20__ = (inline_summer_running_sum20__
-                + inline_summer_inline_do_something_return5__22__);
+                + inline_summer_inline_do_something_return5__21__);
             }
           }
           current_statement__ = 9;
@@ -260,32 +260,32 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           inline_summer_running_sum11__ = static_cast<double>(0);
           current_statement__ = 8;
           if (stan::math::logical_gte(lcm9__, 1)) {
+            double inline_summer_inline_do_something_return5__12__;
             current_statement__ = 4;
-            double inline_summer_inline_do_something_x_arg6__12__ =
+            double inline_summer_inline_do_something_x_arg6__13__ =
               stan::model::rvalue(lcm8__, "lcm8__", stan::model::index_uni(1));
-            double inline_summer_inline_do_something_return5__13__;
             for (int inline_summer_inline_do_something_iterator8__15__ = 1; inline_summer_inline_do_something_iterator8__15__
                  <= 1; ++inline_summer_inline_do_something_iterator8__15__) {
-              inline_summer_inline_do_something_return5__13__ = inline_summer_inline_do_something_x_arg6__12__;
+              inline_summer_inline_do_something_return5__12__ = inline_summer_inline_do_something_x_arg6__13__;
               break;
             }
             current_statement__ = 4;
             inline_summer_running_sum11__ = (0 +
-              inline_summer_inline_do_something_return5__13__);
+              inline_summer_inline_do_something_return5__12__);
             for (int inline_summer_n16__ = 2; inline_summer_n16__ <=
                  lcm9__; ++inline_summer_n16__) {
+              double inline_summer_inline_do_something_return5__12__;
               current_statement__ = 4;
-              double inline_summer_inline_do_something_x_arg6__12__ =
+              double inline_summer_inline_do_something_x_arg6__13__ =
                 lcm8__[(inline_summer_n16__ - 1)];
-              double inline_summer_inline_do_something_return5__13__;
               for (int inline_summer_inline_do_something_iterator8__15__ = 1; inline_summer_inline_do_something_iterator8__15__
                    <= 1; ++inline_summer_inline_do_something_iterator8__15__) {
-                inline_summer_inline_do_something_return5__13__ = inline_summer_inline_do_something_x_arg6__12__;
+                inline_summer_inline_do_something_return5__12__ = inline_summer_inline_do_something_x_arg6__13__;
                 break;
               }
               current_statement__ = 4;
               inline_summer_running_sum11__ = (inline_summer_running_sum11__
-                + inline_summer_inline_do_something_return5__13__);
+                + inline_summer_inline_do_something_return5__12__);
             }
           }
           current_statement__ = 9;

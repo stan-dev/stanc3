@@ -370,15 +370,22 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+(** like [inline_function_expression] but the resulting expression is guaranteed
+    to be 'simple', i.e. a variable or literal. This variable should be treated
+    as 'local', only in scope after the returned statements. *)
 and inline_bind ?(f = Fun.id) name tag propto adt fim e =
   let decls, stmts, e = inline_function_expression propto adt fim e in
   match e.pattern with
-  | Var _ | Lit _ -> (decls, stmts, e)
+  | Var _ | Lit _
+   |Promotion ({pattern= Var _; _}, _, _)
+   |Promotion ({pattern= Lit _; _}, _, _) ->
+      (decls, stmts, e)
   | _ ->
       (* nontrivial values get bound to a variable to avoid re-evaluation *)
       let temp = gen_inline_var name tag in
       let e = f e in
       ( decls
+      , stmts (* NB: Breaking the usual pattern on purpose *)
         @ [ Stmt.Pattern.Decl
               { decl_adtype= e.meta.adlevel
               ; decl_type=
@@ -386,7 +393,6 @@ and inline_bind ?(f = Fun.id) name tag propto adt fim e =
               ; decl_id= temp
               ; decl_annotations= []
               ; initialize= Assign e } ]
-      , stmts
       , {e with pattern= Var temp} )
 
 and inline_function_arguments fname propto adt fim args es =

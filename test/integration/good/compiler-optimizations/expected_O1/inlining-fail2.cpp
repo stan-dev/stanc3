@@ -1885,10 +1885,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           "assigning variable b");
         current_statement__ = 73;
         for (int i = 1; i <= M; ++i) {
+          int inline_first_capture_return16__;
           current_statement__ = 66;
           const std::vector<int>& inline_first_capture_y_i_arg17__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));
-          int inline_first_capture_return16__;
           int inline_first_capture_early_ret_check19__;
           inline_first_capture_early_ret_check19__ = 0;
           for (int inline_first_capture_iterator20__ = 1; inline_first_capture_iterator20__

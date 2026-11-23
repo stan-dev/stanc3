@@ -176,18 +176,18 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         current_statement__ = 10;
         for (int inline_summer_n25__ = 1; inline_summer_n25__ <=
              inline_summer_N19__; ++inline_summer_n25__) {
+          local_scalar_t__ inline_summer_inline_do_something_return5__21__;
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg6__21__ =
+          local_scalar_t__ inline_summer_inline_do_something_x_arg6__22__ =
             eta[(inline_summer_n25__ - 1)];
-          local_scalar_t__ inline_summer_inline_do_something_return5__22__;
           for (int inline_summer_inline_do_something_iterator8__24__ = 1; inline_summer_inline_do_something_iterator8__24__
                <= 1; ++inline_summer_inline_do_something_iterator8__24__) {
-            inline_summer_inline_do_something_return5__22__ = inline_summer_inline_do_something_x_arg6__21__;
+            inline_summer_inline_do_something_return5__21__ = inline_summer_inline_do_something_x_arg6__22__;
             break;
           }
           current_statement__ = 6;
           inline_summer_running_sum20__ = (inline_summer_running_sum20__ +
-            inline_summer_inline_do_something_return5__22__);
+            inline_summer_inline_do_something_return5__21__);
         }
         current_statement__ = 11;
         inline_summer_return18__ = inline_summer_running_sum20__;
@@ -242,18 +242,18 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         current_statement__ = 10;
         for (int inline_summer_n16__ = 1; inline_summer_n16__ <=
              inline_summer_N10__; ++inline_summer_n16__) {
+          local_scalar_t__ inline_summer_inline_do_something_return5__12__;
           current_statement__ = 6;
-          local_scalar_t__ inline_summer_inline_do_something_x_arg6__12__ =
+          local_scalar_t__ inline_summer_inline_do_something_x_arg6__13__ =
             eta[(inline_summer_n16__ - 1)];
-          local_scalar_t__ inline_summer_inline_do_something_return5__13__;
           for (int inline_summer_inline_do_something_iterator8__15__ = 1; inline_summer_inline_do_something_iterator8__15__
                <= 1; ++inline_summer_inline_do_something_iterator8__15__) {
-            inline_summer_inline_do_something_return5__13__ = inline_summer_inline_do_something_x_arg6__12__;
+            inline_summer_inline_do_something_return5__12__ = inline_summer_inline_do_something_x_arg6__13__;
             break;
           }
           current_statement__ = 6;
           inline_summer_running_sum11__ = (inline_summer_running_sum11__ +
-            inline_summer_inline_do_something_return5__13__);
+            inline_summer_inline_do_something_return5__12__);
         }
         current_statement__ = 11;
         inline_summer_return9__ = inline_summer_running_sum11__;

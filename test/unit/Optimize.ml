@@ -1231,8 +1231,8 @@ let%expect_test "inlining evaluates a condition with a draw once" =
       FnPrint__("a");
     }
     data real b;
-    data int inline_eand_test2__ = (0.5 > normal_rng(0, 1));
     data real inline_f_rng_return3__;
+    data int inline_eand_test2__ = (0.5 > normal_rng(0, 1));
     if(inline_eand_test2__) {
       {
         inline_f_rng_return3__ = promote(normal_rng(0, 1), real, var);
@@ -1240,18 +1240,18 @@ let%expect_test "inlining evaluates a condition with a draw once" =
     }
     b = promote(inline_eand_test2__ && (inline_f_rng_return3__ > 0), real, data);
     data int inline_ternary_test6__ = (normal_rng(0, 1) > 1);
-    data real inline_g_x_arg7__ = (inline_ternary_test6__ ? 1.0 : 2.0);
     if(inline_ternary_test6__) {
 
     } else {
 
     }
+    data real inline_g_x_arg7__ = (inline_ternary_test6__ ? 1.0 : 2.0);
     {
 
     }
     data real c;
-    data int inline_ternary_test8__ = (normal_rng(0, 1) > 1);
     data real inline_f_rng_return9__;
+    data int inline_ternary_test8__ = (normal_rng(0, 1) > 1);
     if(inline_ternary_test8__) {
       {
         inline_f_rng_return9__ = promote(normal_rng(0, 1), real, var);
@@ -1283,14 +1283,14 @@ model {
     {
       int inline_g_return3__;
       int inline_g_return1__;
-      data int
-        inline_ternary_test5__ = (inline_g_return1__ > inline_g_return3__);
       {
         inline_g_return3__ = (2 * 1);
       }
       {
         inline_g_return1__ = (1 * 1);
       }
+      data int
+        inline_ternary_test5__ = (inline_g_return1__ > inline_g_return3__);
       if(inline_ternary_test5__) {
 
       } else {
