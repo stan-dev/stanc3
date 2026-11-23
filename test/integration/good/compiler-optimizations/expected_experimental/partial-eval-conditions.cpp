@@ -5,13 +5,11 @@ namespace partial_eval_conditions_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ =
+static constexpr std::array<const char*, 5> locations_array__ =
   {" (found before start of program)",
   " (in '../partial-eval-conditions.stan', line 4, column 2 to column 31)",
-  " (in '../partial-eval-conditions.stan', line 6, column 2 to line 7, column 25)",
-  " (in '../partial-eval-conditions.stan', line 7, column 4 to column 25)",
-  " (in '../partial-eval-conditions.stan', line 9, column 2 to line 10, column 23)",
   " (in '../partial-eval-conditions.stan', line 10, column 4 to column 23)",
+  " (in '../partial-eval-conditions.stan', line 9, column 2 to line 10, column 23)",
   " (in '../partial-eval-conditions.stan', line 2, column 2 to column 12)"};
 class partial_eval_conditions_model final : public model_base_crtp<partial_eval_conditions_model> {
  private:
@@ -69,30 +67,12 @@ class partial_eval_conditions_model final : public model_base_crtp<partial_eval_
     (void) function__;
     try {
       current_statement__ = 1;
-      int inline_ternary_test4__ = 1;
-      current_statement__ = 1;
       if (pstream__) {
-        stan::math::stan_print(pstream__, (inline_ternary_test4__ ? 42 : (1 /
-          0)));
+        stan::math::stan_print(pstream__, 42);
         *(pstream__) << std::endl;
       }
-      current_statement__ = 2;
-      int inline_eand_test5__ = 0;
-      current_statement__ = 2;
-      if ((stan::math::primitive_value(inline_eand_test5__) &&
-          stan::math::primitive_value(stan::math::logical_eq((1 / 0), 0)))) {
-        current_statement__ = 3;
-        if (pstream__) {
-          stan::math::stan_print(pstream__, "unreachable");
-          *(pstream__) << std::endl;
-        }
-      }
-      current_statement__ = 4;
-      int inline_eor_test6__ = 1;
-      current_statement__ = 4;
-      if ((stan::math::primitive_value(inline_eor_test6__) ||
-          stan::math::primitive_value(stan::math::logical_eq((1 / 0), 0)))) {
-        current_statement__ = 5;
+      {
+        current_statement__ = 2;
         if (pstream__) {
           stan::math::stan_print(pstream__, "reachable");
           *(pstream__) << std::endl;
@@ -129,30 +109,12 @@ class partial_eval_conditions_model final : public model_base_crtp<partial_eval_
     (void) function__;
     try {
       current_statement__ = 1;
-      int inline_ternary_test1__ = 1;
-      current_statement__ = 1;
       if (pstream__) {
-        stan::math::stan_print(pstream__, (inline_ternary_test1__ ? 42 : (1 /
-          0)));
+        stan::math::stan_print(pstream__, 42);
         *(pstream__) << std::endl;
       }
-      current_statement__ = 2;
-      int inline_eand_test2__ = 0;
-      current_statement__ = 2;
-      if ((stan::math::primitive_value(inline_eand_test2__) &&
-          stan::math::primitive_value(stan::math::logical_eq((1 / 0), 0)))) {
-        current_statement__ = 3;
-        if (pstream__) {
-          stan::math::stan_print(pstream__, "unreachable");
-          *(pstream__) << std::endl;
-        }
-      }
-      current_statement__ = 4;
-      int inline_eor_test3__ = 1;
-      current_statement__ = 4;
-      if ((stan::math::primitive_value(inline_eor_test3__) ||
-          stan::math::primitive_value(stan::math::logical_eq((1 / 0), 0)))) {
-        current_statement__ = 5;
+      {
+        current_statement__ = 2;
         if (pstream__) {
           stan::math::stan_print(pstream__, "reachable");
           *(pstream__) << std::endl;

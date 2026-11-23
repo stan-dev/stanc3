@@ -233,12 +233,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
         current_statement__ = 17;
-        int inline_eand_test2__ = 1;
-        current_statement__ = 17;
         if (pstream__) {
-          stan::math::stan_print(pstream__,
-            (stan::math::primitive_value(inline_eand_test2__) &&
-            stan::math::primitive_value(0)));
+          stan::math::stan_print(pstream__, 0);
           *(pstream__) << std::endl;
         }
       }
@@ -331,12 +327,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
         current_statement__ = 17;
-        int inline_eand_test1__ = 1;
-        current_statement__ = 17;
         if (pstream__) {
-          stan::math::stan_print(pstream__,
-            (stan::math::primitive_value(inline_eand_test1__) &&
-            stan::math::primitive_value(0)));
+          stan::math::stan_print(pstream__, 0);
           *(pstream__) << std::endl;
         }
       }
