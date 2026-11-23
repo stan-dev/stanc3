@@ -171,8 +171,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      std::complex<double> lcm20__;
       std::complex<double> lcm19__;
-      std::complex<double> lcm18__;
       current_statement__ = 1;
       auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
@@ -211,18 +211,22 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                          static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
-        lcm19__ = stan::math::to_complex(7, 5);
+        lcm20__ = stan::math::to_complex(7, 5);
         current_statement__ = 12;
         if (pstream__) {
-          stan::math::stan_print(pstream__, lcm19__);
+          stan::math::stan_print(pstream__, lcm20__);
           *(pstream__) << std::endl;
         }
-        lcm18__ = stan::math::to_complex(5, 4);
+        lcm19__ = stan::math::to_complex(5, 4);
         current_statement__ = 13;
-        lp_accum__.add(stan::math::get_real(lcm18__));
+        lp_accum__.add(stan::math::get_real(lcm19__));
+        current_statement__ = 14;
+        int inline_eand_test2__ = 1;
         current_statement__ = 14;
         if (pstream__) {
-          stan::math::stan_print(pstream__, 0);
+          stan::math::stan_print(pstream__,
+            (stan::math::primitive_value(inline_eand_test2__) &&
+            stan::math::primitive_value(0)));
           *(pstream__) << std::endl;
         }
       }
@@ -309,8 +313,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 13;
         lp_accum__.add(stan::math::get_real(lcm10__));
         current_statement__ = 14;
+        int inline_eand_test1__ = 1;
+        current_statement__ = 14;
         if (pstream__) {
-          stan::math::stan_print(pstream__, 0);
+          stan::math::stan_print(pstream__,
+            (stan::math::primitive_value(inline_eand_test1__) &&
+            stan::math::primitive_value(0)));
           *(pstream__) << std::endl;
         }
       }

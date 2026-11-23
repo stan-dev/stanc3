@@ -328,7 +328,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               let s_list = s_list @ s_list2 in
               (d_list, s_list, e)))
   | TernaryIf (e1, e2, e3) ->
-      let dl1, sl1, e1 = inline_expr e1 in
+      let dl1, sl1, e1 = inline_bind "ternary" "test" propto adt fim e1 in
       let dl2, sl2, e2 = inline_expr e2 in
       let dl3, sl3, e3 = inline_expr e3 in
       ( dl1 @ dl2 @ dl3
@@ -349,7 +349,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       let dl, sl, e' = inline_expr e' in
       (dl, sl, {e with pattern= TupleProjection (e', ix)})
   | EAnd (e1, e2) ->
-      let dl1, sl1, e1 = inline_expr e1 in
+      let dl1, sl1, e1 = inline_bind "eand" "test" propto adt fim e1 in
       let dl2, sl2, e2 = inline_expr e2 in
       let sl2 =
         [ Stmt.(
@@ -359,7 +359,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               , None )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EAnd (e1, e2)})
   | EOr (e1, e2) ->
-      let dl1, sl1, e1 = inline_expr e1 in
+      let dl1, sl1, e1 = inline_bind "eor" "test" propto adt fim e1 in
       let dl2, sl2, e2 = inline_expr e2 in
       let sl2 =
         [ Stmt.(
@@ -370,30 +370,33 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+and inline_bind ?(f = Fun.id) name tag propto adt fim e =
+  let decls, stmts, e = inline_function_expression propto adt fim e in
+  match e.pattern with
+  | Var _ | Lit _ -> (decls, stmts, e)
+  | _ ->
+      (* nontrivial values get bound to a variable to avoid re-evaluation *)
+      let temp = gen_inline_var name tag in
+      let e = f e in
+      ( decls
+        @ [ Stmt.Pattern.Decl
+              { decl_adtype= e.meta.adlevel
+              ; decl_type=
+                  Sized (unsafe_unsized_to_sized_type (Unsized e.meta.type_))
+              ; decl_id= temp
+              ; decl_annotations= []
+              ; initialize= Assign e } ]
+      , stmts
+      , {e with pattern= Var temp} )
+
 and inline_function_arguments fname propto adt fim args es =
   let inline_function_argument (name, e) =
-    let decls, stmts, e = inline_function_expression propto adt fim e in
-    match e.pattern with
-    | Var _ | Lit _ -> (decls, stmts, e)
-    | _ ->
-        (* nontrivial function arguments get bound to a variable to avoid
-           re-evaluation *)
-        let temp = gen_inline_var fname (name ^ "_arg") in
-        let e =
-          if UnsizedType.is_container e.meta.type_ then
-            (* Avoid copies *)
-            Expr.Helpers.internal_funapp FnToRef [e] e.meta
-          else e in
-        ( decls
-          @ [ Stmt.Pattern.Decl
-                { decl_adtype= e.meta.adlevel
-                ; decl_type=
-                    Sized (unsafe_unsized_to_sized_type (Unsized e.meta.type_))
-                ; decl_id= temp
-                ; decl_annotations= []
-                ; initialize= Assign e } ]
-        , stmts
-        , {e with pattern= Var temp} ) in
+    let f (e : Expr.Typed.t) =
+      if UnsizedType.is_container e.meta.type_ then
+        (* Avoid copies *)
+        Expr.Helpers.internal_funapp FnToRef [e] e.meta
+      else e in
+    inline_bind ~f (fname ^ "_" ^ name) "arg" propto adt fim e in
   inline_list inline_function_argument (List.combine args es)
 
 and inline_function_index propto adt fim i =
