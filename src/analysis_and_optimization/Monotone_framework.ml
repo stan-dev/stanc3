@@ -413,7 +413,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
             | Assignment
                 ((LVariable assignee, []), _, {pattern= Var assigner; meta}) ->
                 let m' = kill_var assignee expr_map in
-                if Set.Poly.mem assignee globals then expr_map
+                if Set.Poly.mem assignee globals then m'
                 else
                   String.Map.add m' ~key:assignee
                     ~data:Expr.{pattern= Var assigner; meta}
