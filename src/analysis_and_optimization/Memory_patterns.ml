@@ -502,7 +502,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       ; decl_annotations= _ } ->
       if not (UnsizedType.is_autodifftype decl_adtype) then
         (* generated e.g. by inlining a `data` function argument *)
-        Set.Poly.singleton decl_id
+        Set.Poly.add decl_id acc
       else
         let complex_name =
           if SizedType.is_complex_type st then (
