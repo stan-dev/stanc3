@@ -977,6 +977,14 @@ and vectorize_stmt_inner outer_info Stmt.{pattern; meta} :
       else
         ( {loop_info with writes= Set.Poly.add lhs loop_info.writes}
         , {pattern; meta} )
+  | Decl {decl_id= lhs; initialize= Assign _; _} ->
+      let loop_info, _ = collect_reads outer_info pattern in
+      if Set.Poly.mem lhs loop_info.writes then
+        ( {loop_info with conflicts= Set.Poly.add lhs loop_info.conflicts}
+        , {pattern; meta} )
+      else
+        ( {loop_info with writes= Set.Poly.add lhs loop_info.writes}
+        , {pattern; meta} )
   | Break | Continue -> ({outer_info with breaks= true}, {pattern; meta})
   | (For _ | While _) as pattern ->
       let loop_info, pattern = collect_reads outer_info pattern in
