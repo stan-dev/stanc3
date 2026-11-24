@@ -275,7 +275,7 @@ and query_initial_demotable_funs (in_loop : bool) (loc : Location_span.t)
       if not (Set.Poly.is_empty fail_names) then
         user_warning_op loc (MakeArrayOrRowVector (Set.Poly.to_list fail_names));
       Set.Poly.union acc demoted_and_top_level_names
-  | CompilerInternal (_ : 'a Internal_fun.t) -> acc
+  | CompilerInternal _ -> Set.Poly.union acc demoted_eigen_names
   | UserDefined ((_ : string), (_ : Fun_kind.suffix)) ->
       let fail_names = Set.Poly.diff demoted_and_top_level_names acc in
       if not (Set.Poly.is_empty fail_names) then

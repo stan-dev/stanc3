@@ -1566,6 +1566,10 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
+    | Stmt.Pattern.Decl ({decl_id; decl_type; initialize= Assign e; _} as decl)
+      when Set.Poly.mem decl_id variable_set
+           && UnsizedType.contains_tuple (Type.to_unsized decl_type) ->
+        Stmt.Pattern.Decl {decl with decl_adtype= Expr.Typed.adlevel_of e}
     | Stmt.Pattern.Decl ({decl_id; decl_type; _} as decl)
       when Set.Poly.mem decl_id variable_set ->
         Stmt.Pattern.Decl
