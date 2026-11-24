@@ -1,15 +1,29 @@
 /* $ stanc ../unknown_annotation.stan : [exit 0] */
-warning: Unknown annotation '@not_a_real_annotation'.
+warning: Annotation '@silent' can only be applied to variables, but was applied here to a function.
     ┌─ ../unknown_annotation.stan:2:3
-  1 │  parameters {
-  2 │    @not_a_real_annotation real sigma;
+  1 │  functions {
+  2 │    @silent real foo(real theta){ return 2 * theta; }
+    │    ^^^^^^^ Unsupported annotation.
+  3 │  }
+    = This will be ignored by the compiler.
+warning: Annotation '@silent' can only be to output variables, but was here applied to a variable in the transformed data block.
+    ┌─ ../unknown_annotation.stan:6:3
+  5 │  transformed data {
+  6 │    @silent int bar;
+    │    ^^^^^^^ Unsupported annotation.
+  7 │  }
+    = This will be ignored by the compiler.
+warning: Unknown annotation '@not_a_real_annotation'.
+    ┌─ ../unknown_annotation.stan:10:3
+  9 │  parameters {
+ 10 │    @not_a_real_annotation real sigma;
     │    ^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation.
-  3 │  
+ 11 │  
     = This will be ignored by the compiler.
 warning: Annotation '@extern' can only be applied to functions, but was applied here to type real.
-    ┌─ ../unknown_annotation.stan:5:3
-  4 │  
-  5 │    @extern real theta;
+    ┌─ ../unknown_annotation.stan:13:3
+ 12 │  
+ 13 │    @extern real theta;
     │    ^^^^^^^ Unsupported annotation.
-  6 │  }
+ 14 │  }
     = This will be ignored by the compiler.
