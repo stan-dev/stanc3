@@ -977,6 +977,14 @@ and vectorize_stmt_inner outer_info Stmt.{pattern; meta} :
       else
         ( {loop_info with writes= Set.Poly.add lhs loop_info.writes}
         , {pattern; meta} )
+  | Decl {decl_id= lhs; initialize= Assign _; _} ->
+      let loop_info, _ = collect_reads outer_info pattern in
+      if Set.Poly.mem lhs loop_info.writes then
+        ( {loop_info with conflicts= Set.Poly.add lhs loop_info.conflicts}
+        , {pattern; meta} )
+      else
+        ( {loop_info with writes= Set.Poly.add lhs loop_info.writes}
+        , {pattern; meta} )
   | Break | Continue -> ({outer_info with breaks= true}, {pattern; meta})
   | (For _ | While _) as pattern ->
       let loop_info, pattern = collect_reads outer_info pattern in
@@ -1529,6 +1537,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
                 @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
         ->
           Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
+      | Decl {decl_id; initialize= Assign e; _}
+        when expr_reads_target e
+             || UnsizedType.is_autodifftype
+                @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
+        ->
+          Set.Poly.singleton decl_id
       | _ -> Set.Poly.empty in
     let kill =
       match mir_node with
@@ -1560,6 +1574,10 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
+    | Stmt.Pattern.Decl ({decl_id; decl_type; initialize= Assign e; _} as decl)
+      when Set.Poly.mem decl_id variable_set
+           && UnsizedType.contains_tuple (Type.to_unsized decl_type) ->
+        Stmt.Pattern.Decl {decl with decl_adtype= Expr.Typed.adlevel_of e}
     | Stmt.Pattern.Decl ({decl_id; decl_type; _} as decl)
       when Set.Poly.mem decl_id variable_set ->
         Stmt.Pattern.Decl
