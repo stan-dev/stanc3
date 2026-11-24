@@ -95,7 +95,7 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm8__;
+      Eigen::Matrix<local_scalar_t__,-1,-1> lcm8__;
       current_statement__ = 1;
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
@@ -142,10 +142,11 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm5__;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm5__;
       current_statement__ = 1;
       auto p =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
+        in__.template read<
+          stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
         current_statement__ = 2;
         decltype(auto) inline_foo_i_arg2__ =

@@ -448,6 +448,10 @@ let rec update_expr_ad_levels ?(keep_promotions = false) autodiffable_variables
       let l = all_or_nothing l in
       { pattern= FunApp (CompilerInternal internal, l)
       ; meta= {e.meta with adlevel= return_adlevel l} }
+  | FunApp (CompilerInternal FnToRef, [arg]) ->
+      let arg = inner arg in
+      { pattern= FunApp (CompilerInternal FnToRef, [arg])
+      ; meta= {e.meta with adlevel= arg.meta.adlevel} }
   | FunApp (CompilerInternal FnMakeTuple, l) ->
       let l = List.map ~f:inner l in
       { pattern= FunApp (CompilerInternal FnMakeTuple, l)

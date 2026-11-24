@@ -1529,6 +1529,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
                 @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
         ->
           Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
+      | Decl {decl_id; initialize= Assign e; _}
+        when expr_reads_target e
+             || UnsizedType.is_autodifftype
+                @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
+        ->
+          Set.Poly.singleton decl_id
       | _ -> Set.Poly.empty in
     let kill =
       match mir_node with
